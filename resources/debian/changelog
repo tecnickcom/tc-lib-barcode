@@ -1,0 +1,5 @@
+php-tc-lib-barcode (~#VERSION#~) UNRELEASED; urgency=low
+
+  * Please check the https://github.com/tecnickcom/tc-lib-barcode commit history
+
+ -- Nicola Asuni <info@tecnick.com>  ~#DATE#~

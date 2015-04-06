@@ -1,0 +1,5 @@
+vendor
+target
+phpunit.xml
+**/.DS_Store
+**/.vagrant
