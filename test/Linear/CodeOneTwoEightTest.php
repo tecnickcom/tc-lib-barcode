@@ -100,5 +100,10 @@ class CodeOneTwoEightTest extends \PHPUnit_Framework_TestCase
         $expected = "110100100001000101100010010110000100100111101000010110010001111010100001001101011001"
             ."00001101100110010011100110111011000101100011101011\n";
         $this->assertEquals($expected, $grid);
+        
+        $bobj = $this->obj->getBarcodeObj('C128', "C1\tC2\tC3");
+        $grid = $bobj->getGrid();
+        $expected = "110100100001000100011011001011100100001100101100011101011\n";
+        $this->assertEquals($expected, $grid);
     }
 }

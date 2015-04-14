@@ -46,7 +46,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
         $sequence = array();
         // get A sequences (if any)
         $numseq = array();
-        preg_match_all('/([\0-\31])/', $code, $numseq, PREG_OFFSET_CAPTURE);
+        preg_match_all('/([\x00-\x1f])/', $code, $numseq, PREG_OFFSET_CAPTURE);
         if (isset($numseq[1]) && !empty($numseq[1])) {
             $end_offset = 0;
             foreach ($numseq[1] as $val) {
