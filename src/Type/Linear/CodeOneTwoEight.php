@@ -290,10 +290,10 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     {
         $tmpchr = ord($seq[1][0]);
         if (($seq[2] == 1)
-        && ($tmpchr >= 241)
-        && ($tmpchr <= 244)
-        && isset($sequence[($key + 1)])
-        && ($sequence[($key + 1)][0] != 'B')) {
+            && ($tmpchr >= 241)
+            && ($tmpchr <= 244)
+            && isset($sequence[($key + 1)])
+            && ($sequence[($key + 1)][0] != 'B')) {
             switch ($sequence[($key + 1)][0]) {
                 case 'A':
                     $startid = 103;
@@ -306,7 +306,6 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
                     $code_data[] = $this->fnc_a[$tmpchr];
                     break;
             }
-            break;
         } else {
             $startid = 104;
         }

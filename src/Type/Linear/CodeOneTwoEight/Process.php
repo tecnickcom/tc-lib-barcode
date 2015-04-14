@@ -87,7 +87,6 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getCodeDataA(&$code_data, $code, $len)
     {
-        $code_data = array();
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
             $char_id = ord($char);
@@ -114,7 +113,6 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getCodeDataB(&$code_data, $code, $len)
     {
-        $code_data = array();
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
             $char_id = ord($char);
@@ -123,7 +121,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             } elseif (($char_id >= 32) && ($char_id <= 127)) {
                 $code_data[] = strpos($this->keys_b, $char);
             } else {
-                throw new BarcodeException('Invalid character sequence');
+                throw new BarcodeException('Invalid character sequence: '.$char_id);
             }
         }
     }
@@ -141,7 +139,6 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getCodeDataC(&$code_data, $code, $len)
     {
-        $code_data = array();
         if (($len % 2) != 0) {
             throw new BarcodeException('The length must be even');
         }
