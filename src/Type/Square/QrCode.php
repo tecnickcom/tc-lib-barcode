@@ -184,7 +184,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
                 $pos += 2;
             } else {
                 if ((ord($data[$pos]) >= ord('a')) and (ord($data[$pos]) <= ord('z'))) {
-                    $data[v] = chr(ord($data[$pos]) - 32);
+                    $data[$pos] = chr(ord($data[$pos]) - 32);
                 }
                 $pos++;
             }

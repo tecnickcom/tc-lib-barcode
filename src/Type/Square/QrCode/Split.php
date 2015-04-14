@@ -146,7 +146,7 @@ class Split
                 + $this->bsObj->estimateBitsModeAn(1)        // + 4 + la
                 - $this->bsObj->estimateBitsModeAn($pos + 1);// - 4 - la
             if ($dif > 0) {
-                return $this->eatAn();
+                return $this->eatAn($data);
             }
         }
         $this->items = $this->bsObj->appendNewInputItem(
