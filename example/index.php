@@ -20,8 +20,7 @@ require ('../vendor/autoload.php');
 //require ('/usr/share/php/Com/Tecnick/Barcode/autoload.php');
 
 $barcode = new \Com\Tecnick\Barcode\Barcode();
-//$bobj = $barcode->getBarcodeObj('QRCODE,H', 'http://www.tecnick.com', -4, -4, 'black');
-$bobj = $barcode->getBarcodeObj('C128', "HI34567A", -4, -100, 'black');
+$bobj = $barcode->getBarcodeObj('QRCODE,H', 'http://www.tecnick.com', -4, -4, 'black');
 
 echo "
 <!DOCTYPE html>
