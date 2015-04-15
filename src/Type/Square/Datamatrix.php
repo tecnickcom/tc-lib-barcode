@@ -121,7 +121,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         
         // check size
         if ($ncw > 1558) {
-            throw new BarcodeException('the imput is too large to fit the barcode');
+            throw new BarcodeException('the input is too large to fit the barcode');
         }
         
         // get minimum required matrix size.
@@ -132,7 +132,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
         if ($params[11] < $ncw) {
             // too much data
-            throw new BarcodeException('the imput is too large to fit the barcode');
+            throw new BarcodeException('the input is too large to fit the barcode');
         } elseif ($params[11] > $ncw) {
             $this->addPadding($params[11], $ncw);
         }
