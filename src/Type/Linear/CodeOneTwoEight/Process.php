@@ -34,6 +34,52 @@ use \Com\Tecnick\Barcode\Exception as BarcodeException;
 abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
 {
     /**
+     * Get the numeric sequence (if any)
+     *
+     * @param string $code Code to parse
+     *
+     * @return array
+     *
+     * @throws BarcodeException in case of error
+     */
+    protected function getNumericSequence($code)
+    {
+        $sequence = array();
+        $len = strlen($code);
+        // get numeric sequences (if any)
+        $numseq = array();
+        preg_match_all('/([0-9]{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
+        if (!empty($numseq[1])) {
+            $end_offset = 0;
+            foreach ($numseq[1] as $val) {
+                $offset = $val[1];
+                if ($offset > $end_offset) {
+                    // non numeric sequence
+                    $sequence = array_merge(
+                        $sequence,
+                        $this->get128ABsequence(substr($code, $end_offset, ($offset - $end_offset)))
+                    );
+                }
+                // numeric sequence
+                $slen = strlen($val[0]);
+                if (($slen % 2) != 0) {
+                    // the length must be even
+                    --$slen;
+                }
+                $sequence[] = array('C', substr($code, $offset, $slen), $slen);
+                $end_offset = $offset + $slen;
+            }
+            if ($end_offset < $len) {
+                $sequence = array_merge($sequence, $this->get128ABsequence(substr($code, $end_offset)));
+            }
+        } else {
+            // text code (non C mode)
+            $sequence = array_merge($sequence, $this->get128ABsequence($code));
+        }
+        return $sequence;
+    }
+
+    /**
      * Split text code in A/B sequence for 128 code
      *
      * @param string $code Code to split
@@ -45,11 +91,13 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
         $len = strlen($code);
         $sequence = array();
         // get A sequences (if any)
-        $numseq = array();
-        preg_match_all('/([\x00-\x1f])/', $code, $numseq, PREG_OFFSET_CAPTURE);
-        if (isset($numseq[1]) && !empty($numseq[1])) {
+        $aseq = array();
+        preg_match_all('/([\x00-\x1f])/', $code, $aseq, PREG_OFFSET_CAPTURE);
+        if (!empty($aseq[1])) {
+            // get the entire A sequence (excluding FNC1-FNC4)
+            preg_match_all('/([\x00-\x5f]+)/', $code, $aseq, PREG_OFFSET_CAPTURE);
             $end_offset = 0;
-            foreach ($numseq[1] as $val) {
+            foreach ($aseq[1] as $val) {
                 $offset = $val[1];
                 if ($offset > $end_offset) {
                     // B sequence
@@ -73,6 +121,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
         }
         return $sequence;
     }
+
 
     /**
      * Get the A code point array
@@ -150,52 +199,6 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
                 throw new BarcodeException('Invalid character sequence');
             }
         }
-    }
-
-    /**
-     * Get the numeric sequence (if any)
-     *
-     * @param string $code Code to parse
-     *
-     * @return array
-     *
-     * @throws BarcodeException in case of error
-     */
-    protected function getNumericSequence($code)
-    {
-        $sequence = array();
-        $len = strlen($code);
-        // get numeric sequences (if any)
-        $numseq = array();
-        preg_match_all('/([0-9]{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
-        if (isset($numseq[1]) && !empty($numseq[1])) {
-            $end_offset = 0;
-            foreach ($numseq[1] as $val) {
-                $offset = $val[1];
-                if ($offset > $end_offset) {
-                    // non numeric sequence
-                    $sequence = array_merge(
-                        $sequence,
-                        $this->get128ABsequence(substr($code, $end_offset, ($offset - $end_offset)))
-                    );
-                }
-                // numeric sequence
-                $slen = strlen($val[0]);
-                if (($slen % 2) != 0) {
-                    // the length must be even
-                    --$slen;
-                }
-                $sequence[] = array('C', substr($code, $offset, $slen), $slen);
-                $end_offset = $offset + $slen;
-            }
-            if ($end_offset < $len) {
-                $sequence = array_merge($sequence, $this->get128ABsequence(substr($code, $end_offset)));
-            }
-        } else {
-            // text code (non C mode)
-            $sequence = array_merge($sequence, $this->get128ABsequence($code));
-        }
-        return $sequence;
     }
 
     /**
