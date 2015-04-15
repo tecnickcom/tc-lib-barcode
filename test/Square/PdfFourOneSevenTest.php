@@ -36,6 +36,19 @@ class PdfFourOneSevenTest extends \PHPUnit_Framework_TestCase
         $this->obj = new \Com\Tecnick\Barcode\Barcode;
     }
 
+    public function testInvalidInput()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $this->obj->getBarcodeObj('PDF417', '');
+    }
+
+    public function testTooLong()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $code = str_pad('', 1000, 'X1');
+        $this->obj->getBarcodeObj('PDF417', $code);
+    }
+
     public function testGetGrid()
     {
         $bobj = $this->obj->getBarcodeObj('PDF417', '0123456789');
@@ -60,11 +73,15 @@ class PdfFourOneSevenTest extends \PHPUnit_Framework_TestCase
             ."000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\n"
             ."000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\n";
         $this->assertEquals($expected, $grid);
-    }
 
-    public function testInvalidInput()
-    {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
-        $this->obj->getBarcodeObj('PDF417', '');
+        $code = str_pad('', 1750, 'X');
+        $bobj = $this->obj->getBarcodeObj('PDF417,2,8,1,0,0,0,1,2', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('f0874a35e15f11f9aa8bc070a4be24bf', md5($grid));
+
+        $code = str_pad('', 1750, 'X');
+        $bobj = $this->obj->getBarcodeObj('PDF417,15,8,1,0,0,0,1,2', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('0288f0a87cc069fc34d6168d7a9f7846', md5($grid));
     }
 }
