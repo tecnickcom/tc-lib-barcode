@@ -53,11 +53,23 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
             ."110111010010\n"
             ."111111111111\n";
         $this->assertEquals($expected, $grid);
+
+        $code = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('bc53889dfd9edf601acb8270860979da', md5($grid));
     }
 
     public function testInvalidInput()
     {
         $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
         $this->obj->getBarcodeObj('DATAMATRIX', '');
+    }
+
+    public function testLongInput()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $code = str_pad('', 1750, 'X');
+        $this->obj->getBarcodeObj('DATAMATRIX', $code);
     }
 }
