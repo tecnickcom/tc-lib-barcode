@@ -83,7 +83,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         // check for extended character
         if ($chr & 0x80) {
             if ($enc == Data::ENC_X12) {
-                return false;
+                throw new BarcodeException('TXTC40 Error');
             }
             $chr = ($chr & 0x7f);
             $temp_cw[] = 1; // shift 2
