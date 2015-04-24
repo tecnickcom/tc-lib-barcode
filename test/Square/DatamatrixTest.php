@@ -78,19 +78,24 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
             .'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd';
         $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
         $grid = $bobj->getGrid();
-        $this->assertEquals('d2c815beb2274c987262f1c16e773f19', md5($grid));
+        $this->assertEquals('296d2971c50f3302ad993d4b722a055f', md5($grid));
 
         $code = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
             .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
             .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\';
         $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
         $grid = $bobj->getGrid();
-        $this->assertEquals('2f47b4d790ce0a577602c9d948534716', md5($grid));
+        $this->assertEquals('62e6552f3bbb51b0e2e22fbd5bbdc2bf', md5($grid));
 
         $code = chr(128).chr(138).chr(148).chr(158);
         $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
         $grid = $bobj->getGrid();
         $this->assertEquals('01aa230c9a4c35ea69f23ecbc58d8e3e', md5($grid));
+
+        $code = '!"£$%^&*()-+_={}[]\'#@~;:/?,.<>|';
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('03e8a96b0d0e41bded21c22f865da9c7', md5($grid));
     }
 
     public function testInvalidInput()

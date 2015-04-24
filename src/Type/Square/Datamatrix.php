@@ -43,13 +43,6 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected $format = 'DATAMATRIX';
 
     /**
-     * Store last used encoding for data codewords.
-     *
-     * @var int
-     */
-    protected $last_enc = 0;
-
-    /**
      * Array of codewords.
      *
      * @var array
@@ -82,10 +75,10 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     {
         // add padding
         if ((($size - $ncw) > 1) && ($this->cdw[($ncw - 1)] != 254)) {
-            if ($this->last_enc == Data::ENC_EDF) {
+            if ($this->dmx->last_enc == Data::ENC_EDF) {
                 // switch to ASCII encoding
                 $this->cdw[] = 124;
-            } elseif (($this->last_enc != Data::ENC_ASCII) && ($this->last_enc != Data::ENC_BASE256)) {
+            } elseif (($this->dmx->last_enc != Data::ENC_ASCII) && ($this->dmx->last_enc != Data::ENC_BASE256)) {
                 // switch to ASCII encoding
                 $this->cdw[] = 254;
             }
@@ -199,7 +192,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $data_length = strlen($data); // number of chars
         while ($pos < $data_length) {
             // set last used encoding
-            $this->last_enc = $enc;
+            $this->dmx->last_enc = $enc;
             switch ($enc) {
                 case Data::ENC_ASCII: // STEP B. While in ASCII encodation
                     $this->dmx->encodeASCII($cdw, $cdw_num, $pos, $data_length, $data, $enc);
@@ -216,7 +209,6 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                     $this->dmx->encodeBase256($cdw, $cdw_num, $pos, $data_length, $field_length, $data, $enc);
                     break;
             }
-            $this->last_enc = $this->dmx->last_enc;
         }
         return $cdw;
     }
@@ -229,7 +221,6 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected function setBars()
     {
         $this->dmx = new Encode;
-        $this->dmx->last_enc = $this->last_enc;
         $params = $this->getCodewords();
         // initialize empty arrays
         $this->grid = array_fill(0, ($params[2] * $params[3]), 0);
