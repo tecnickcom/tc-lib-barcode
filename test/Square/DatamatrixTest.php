@@ -57,7 +57,40 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
         $code = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
         $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
         $grid = $bobj->getGrid();
-        $this->assertEquals('bc53889dfd9edf601acb8270860979da', md5($grid));
+        $this->assertEquals('3dee31111519b71fdf624efda75e4b4a', md5($grid));
+
+        $code = '10f27ce-acb7-4e4e-a7ae-a0b98da6ed4a';
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('67b3bd23c0ab6de2e90a8ebd2143ed2b', md5($grid));
+
+        $code = 'Hello World';
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('e72650689027fe75d1f9377ec759c710', md5($grid));
+
+        $code = 'https://github.com/tecnickcom/tc-lib-barcode';
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('ff3faf34d07c75fb99051fd2b9d72e21', md5($grid));
+
+        $code = 'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd'
+            .'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd';
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('d2c815beb2274c987262f1c16e773f19', md5($grid));
+
+        $code = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
+            .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
+            .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\';
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('2f47b4d790ce0a577602c9d948534716', md5($grid));
+
+        $code = chr(128).chr(138).chr(148).chr(158);
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('01aa230c9a4c35ea69f23ecbc58d8e3e', md5($grid));
     }
 
     public function testInvalidInput()
@@ -69,7 +102,7 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
     public function testLongInput()
     {
         $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
-        $code = str_pad('', 1750, 'X');
+        $code = str_pad('', 3000, 'X');
         $this->obj->getBarcodeObj('DATAMATRIX', $code);
     }
 }

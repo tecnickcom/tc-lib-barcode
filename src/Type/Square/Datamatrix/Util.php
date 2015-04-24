@@ -30,7 +30,7 @@ use \Com\Tecnick\Barcode\Exception as BarcodeException;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnick.com/tc-lib-barcode
  */
-abstract class Util extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
+abstract class Util
 {
     /**
      * Product of two numbers in a Power-of-Two Galois Field

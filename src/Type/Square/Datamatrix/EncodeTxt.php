@@ -72,6 +72,8 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * @param int    $ptr
      * @param int    $epos
      * @param array  $charset
+     *
+     * @return int   Curent character code
      */
     public function encodeTXTC40(&$data, &$enc, &$temp_cw, &$ptr, &$epos, &$charset)
     {
@@ -94,11 +96,13 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         } else {
             $this->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
         }
+        return $chr;
     }
 
     /**
      * Encode TXTC40 last
      *
+     * @param int $chr
      * @param int    $cdw
      * @param int    $cdw_num
      * @param int    $enc
@@ -106,7 +110,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * @param int    $ptr
      * @param int    $epos
      */
-    public function encodeTXTC40last(&$cdw, &$cdw_num, &$enc, &$temp_cw, &$ptr, &$epos)
+    public function encodeTXTC40last($chr, &$cdw, &$cdw_num, &$enc, &$temp_cw, &$ptr, &$epos)
     {
         // get remaining number of data symbols
         $cdwr = ($this->getMaxDataCodewords($cdw_num) - $cdw_num);
@@ -175,7 +179,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         // get basic charset for current encoding
         $charset = Data::$chset[$set_id];
         do {
-            $this->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
+            $chr = $this->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
             if ($ptr >= 3) {
                 $ch1 = array_shift($temp_cw);
                 $ch2 = array_shift($temp_cw);
@@ -207,7 +211,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         } while (($ptr > 0) && ($epos < $data_length));
         // process last data (if any)
         if ($ptr > 0) {
-            $this->encodeTXTC40last($cdw, $cdw_num, $enc, $temp_cw, $ptr, $epos);
+            $this->encodeTXTC40last($chr, $cdw, $cdw_num, $enc, $temp_cw, $ptr, $epos);
         }
     }
 }

@@ -216,6 +216,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                     $this->dmx->encodeBase256($cdw, $cdw_num, $pos, $data_length, $field_length, $data, $enc);
                     break;
             }
+            $this->last_enc = $this->dmx->last_enc;
         }
         return $cdw;
     }
@@ -228,6 +229,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected function setBars()
     {
         $this->dmx = new Encode;
+        $this->dmx->last_enc = $this->last_enc;
         $params = $this->getCodewords();
         // initialize empty arrays
         $this->grid = array_fill(0, ($params[2] * $params[3]), 0);

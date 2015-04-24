@@ -69,7 +69,10 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
             $this->stepP($chr, $numch);
             $this->stepQ($chr, $numch);
             if ($charscount >= 4) {
-                return $this->stepR($numch, $pos, $data_length, $charscount, $data);
+                $ret = $this->stepR($numch, $pos, $data_length, $charscount, $data);
+                if (!empty($ret)) {
+                    return $ret;
+                }
             }
         }
         throw new BarcodeException('LookAhead Error');
@@ -242,6 +245,8 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      * @param int    $data_length
      * @param int    $charscount
      * @param string $data
+     *
+     * @return int   Encoding mode
      */
     protected function stepRf(&$numch, &$pos, &$data_length, &$charscount, &$data)
     {
@@ -269,6 +274,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
                 return Data::ENC_C40;
             }
         }
+        return null;
     }
 
     /**
