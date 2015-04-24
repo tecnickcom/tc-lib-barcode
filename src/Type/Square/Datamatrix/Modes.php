@@ -77,7 +77,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
     protected function isCharMode($chr, $mode)
     {
         $map = array(
-            Data::ENC_ASCII     => 'isASCIIMode',
+            //Data::ENC_ASCII     => 'isASCIIMode',
             Data::ENC_C40       => 'isC40Mode',
             Data::ENC_TXT       => 'isTXTMode',
             Data::ENC_X12       => 'isX12Mode',
@@ -90,17 +90,17 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
         return $this->$method($chr);
     }
 
-    /**
-     * Tell if char is ASCII character 0 to 127
-     *
-     * @param int $chr  Character (byte) to check.
-     *
-     * @return boolean
-     */
-    protected function isASCIIMode($chr)
-    {
-        return (($chr >= 0) && ($chr <= 127));
-    }
+    ///**
+    // * Tell if char is ASCII character 0 to 127
+    // *
+    // * @param int $chr  Character (byte) to check.
+    // *
+    // * @return boolean
+    // */
+    //protected function isASCIIMode($chr)
+    //{
+    //    return (($chr >= 0) && ($chr <= 127));
+    //}
 
     /**
      * Tell if char is Upper-case alphanumeric
@@ -195,12 +195,14 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      */
     protected function getMaxDataCodewords($numcw)
     {
+        $mdc = 0;
         foreach (Data::$symbattr as $matrix) {
             if ($matrix[11] >= $numcw) {
-                return $matrix[11];
+                $mdc = $matrix[11];
+                break;
             }
         }
-        return 0;
+        return $mdc;
     }
 
     /**
