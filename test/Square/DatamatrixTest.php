@@ -83,7 +83,7 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
             array('DATA MATRIX', 'df3239390d1b76ba848b5bf7899fbb5d'),
             array('123ABCD89', '7ce2f8433b82c16e80f4a4c59cad5d10'),
             array('AB/C123-X', '703318e1964c63d5d500d14a821827cd'),
-            array(str_pad('', 300, chr(254).chr(253).chr(252).chr(251)), 'b9f1929925d2ee3c88ddbd7c50bffc87')
+            array(str_pad('', 300, chr(254).chr(253).chr(252).chr(251)), 'b9f1929925d2ee3c88ddbd7c50bffc87'),
         );
     }
 
