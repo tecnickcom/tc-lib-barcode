@@ -112,6 +112,11 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
         $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
         $grid = $bobj->getGrid();
         $this->assertEquals('b9f1929925d2ee3c88ddbd7c50bffc87', md5($grid));
+
+        $code = 'aABCDEFG';
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $grid = $bobj->getGrid();
+        $this->assertEquals('368e35b2aea50a4477f54560d1456599', md5($grid));
     }
 
     public function testInvalidInput()
