@@ -129,18 +129,4 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
         $code = str_pad('', 3000, 'X');
         $this->obj->getBarcodeObj('DATAMATRIX', $code);
     }
-
-    /*public function testRandom()
-    {
-        for ($i = 0; $i  < 10; ++$i) {
-            $len = rand(400, 600);
-            $code = '';
-            for ($j = 0; $j < $len; ++$j) {
-                $code .= chr(rand(1, 254));
-            }
-            echo "\n".$code."\n";
-            $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
-            $grid = $bobj->getGrid();
-        }
-    }*/
 }
