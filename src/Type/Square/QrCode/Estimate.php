@@ -132,7 +132,7 @@ abstract class Estimate
                 return $idx;
             }
         }
-        // the size of input data is greater than Data::QR capacity, try to lover the error correction mode
+        // the size of input data is greater than Data::QR capacity, try to lower the error correction mode
         return -1;
     }
 
