@@ -180,6 +180,76 @@ class QrCodeTest extends \PHPUnit_Framework_TestCase
                 .chr(211).chr(165).chr(33).chr(10).chr(189).chr(28).chr(219),
                 'f4bf6b42c6964562a3a91e054fc8ec51'
             ),
+            array(
+                ',H,NM',
+                chr(26).chr(151).chr(224).chr(193).chr(71).chr(32).chr(162).chr(191).chr(30).chr(98).chr(82).chr(13)
+                .chr(153).chr(145).chr(69).chr(3).chr(123).chr(227).chr(50).chr(200).chr(24).chr(234).chr(128).chr(81)
+                .chr(232).chr(112).chr(147).chr(45).chr(25).chr(8).chr(38).chr(51).chr(158).chr(7).chr(243).chr(229)
+                .chr(39).chr(150).chr(165).chr(69).chr(247).chr(246).chr(81).chr(146).chr(137).chr(149).chr(148).chr(6)
+                .chr(122).chr(197),
+                '4f6fd3799489b48fa07e1a7aef0561fc'
+            ),
+            array(
+                ',H,AN',
+                chr(205).chr(146).chr(176).chr(79).chr(226).chr(154).chr(191).chr(118).chr(198).chr(215).chr(126)
+                .chr(236).chr(12).chr(29).chr(243).chr(254).chr(4).chr(27).chr(150).chr(168).chr(96).chr(142).chr(160)
+                .chr(176).chr(34).chr(42).chr(71).chr(182).chr(48).chr(192).chr(125).chr(252).chr(84).chr(46).chr(77)
+                .chr(55).chr(200).chr(13).chr(173).chr(144).chr(227).chr(44).chr(125).chr(238).chr(73).chr(113)
+                .chr(238).chr(76).chr(140).chr(133),
+                '55cd590ed76d12591c6df3b673904530'
+            ),
+            array(
+                ',H,KJ',
+                chr(244).chr(235).chr(21).chr(149).chr(157).chr(54).chr(191).chr(227).chr(235).chr(238).chr(165)
+                .chr(105).chr(236).chr(248).chr(151).chr(58).chr(49).chr(97).chr(70).chr(221).chr(240).chr(43).chr(11)
+                .chr(111).chr(27).chr(83).chr(223).chr(10).chr(159).chr(109).chr(142).chr(148).chr(89).chr(163).chr(42)
+                .chr(246).chr(216).chr(233).chr(218).chr(197).chr(216).chr(129).chr(48).chr(197).chr(122).chr(199)
+                .chr(1).chr(170).chr(41).chr(70),
+                '92e82c296965d97d35ab7168ece11dd0'
+            ),
+            array(
+                ',H,8B',
+                chr(137).chr(27).chr(112).chr(147).chr(137).chr(138).chr(230).chr(106).chr(148).chr(134).chr(214)
+                .chr(36).chr(27).chr(49).chr(198).chr(69).chr(40).chr(160).chr(47).chr(4).chr(103).chr(9).chr(133)
+                .chr(150).chr(206).chr(254).chr(95).chr(206).chr(170).chr(136).chr(22).chr(53).chr(162).chr(134)
+                .chr(199).chr(45).chr(18).chr(174).chr(150).chr(165).chr(54).chr(109).chr(201).chr(81).chr(158)
+                .chr(144).chr(150).chr(198).chr(50).chr(196),
+                '68799fdb9685b5e2f258245833006425'
+            ),
+            array(
+                ',H,ST',
+                chr(201).chr(152).chr(205).chr(79).chr(47).chr(157).chr(79).chr(142).chr(108).chr(249).chr(23).chr(130)
+                .chr(47).chr(185).chr(9).chr(246).chr(229).chr(26).chr(166).chr(124).chr(191).chr(219).chr(233)
+                .chr(137).chr(45).chr(137).chr(27).chr(194).chr(80).chr(76).chr(136).chr(27).chr(227).chr(87).chr(106)
+                .chr(20).chr(243).chr(184).chr(161).chr(97).chr(179).chr(184).chr(226).chr(226).chr(114).chr(235)
+                .chr(217).chr(88).chr(6).chr(129),
+                '6fb328c418ea40c6c94277f420ba9357'
+            ),
+            array(
+                '',
+                'w(fa`nC]e=}OY(K^ 3xN1Vz1g<F=P%!H-h*nWNL>kKnFS;&TN $`W~r?;9\\l?]5MF@<~oh>\\4-#hH*=w*AYaAL!]f^J&<`Tc!'
+                .'pcpZ"Nn0RWY\\uQf8+HZXJ8?*bFGDz+Eln7Gqe6"8n[te.\\}:&YrQq3[UY#yU.@B}Xio>!rWoNMV]*Uw0/kb!~>WYAR0PrROK'
+                .'=?j>3B/boe@z;8,K$nM$-%]OWm KAOv^oa}#%-ets&p/?|[Dk)Hy.\'IfuI27y*viktmq#Tfv[X\'zUb?Bkh=zofbe1t|+~tuk'
+                .'id]l9Edt}kpTO0w<x57h|yO.oM:oB1[-u:z/`_%_Lu4{\',9 BPi?K:M;gh,+yh8p#3!ds&D@|X=$eV%((oGS*uor^{}Ye6JhJ'
+                .'LM>Sr^PK|T2SZ:[Jb0UX!I8}Grc^>L)jzG>n\'n:%DMX g5KKF!$GJ=Er0*QOVZ:R#YA+H\\0m*inr :>G;Cof`5Yq@,Avg\\J'
+                .'j6lv_J(MUq<IrWg:s,*Zl@5_`B"X*^$utqlT<t#rg@<[w%uk1!G~A]^# `\\*?` 5RmiocmcL. (&&~r7 :6BwuFwW##wc#-7q'
+                .'w(Uek#sl+zr*m*+)AN!8tyow|h\\!vssn|IUiMJVXEJc4To>v>?03:!+8ig9`\\-PZW\'D%Qz^wEC,z3JrQj#d&$p>nYXP6f!p'
+                .'?)5EZ1$RWH_S[+F-vIr|Nc<==tmT\\oF{x\\ASnF\'FnfyKr@YijLg91$VOyD%V4KS-(tav;h>+P8VCY0.D]u^nz6?tZDLoo }'
+                .'xt_p1I0=zIs?#%MHbD(R?>q4y7ai(ah"WIrir$\'nM{.P![yd "7@@*T:A7%IxmKP7?:+CAyp>)B?e<$e><\'_F\\yhs~2ll^>'
+                .'%~X1Bz+494VYys^`2zhrBEl+9l>&Y}D_|}p@y|T32,m- Ln3HW&j|sv6`6=;5bz2alS[i(o{5]*6*xIRPP>NE6d&L#Abe=tG+H'
+                .'$tQsqgQ{}\\tH0FyNt?eZE2]gtD&jl14p\'fdxO7uMskv$2pS(19bWLA@BeF-RXBD_*)YY@O\'5;~9NolV!\':YS[yuA@$tyF9'
+                .'YPC3*cc2y~13N"!%$(@][{WR>xV4r|MMNp`YUDkPD|cr~ex#m9`J69}T2Th&R7S")4[_YG0~EtqDZkHI&*t<CrpVHZ\\zr0|{E'
+                .'X[ !l~Faqk<]4fd?[!bNr:vMvr@(p=MJyMKfMrH?^e}sLb3)cuWV0O%(CF04c]_],,EY~ny^TwR"[e+@[cwl3|uWD&l(dLfqY,'
+                .'LXzF7P?iRzO^<,B4yV2o.Vvz^[HFM"Ry[NAr~`]R\\.1x;S.5*@%9v|4VX]|\'_P";~C/~%mQa{c[77iMB+R["PpY)NV1/(3K('
+                .'W[\'\\IY?E={]Uf+wq^Ts/EM9t%J$-]P65,=rUw2{6.ZktedgE:\\U`+nU09Z>w+T.8r!mk4j"CEn9+S!Qn]\'Ohu%y0`9)lm7'
+                .'%a9sMN^Oq$?,0r.ablh2U_8PoxixeX1k;K_hy>9lBXxRL\'5/s~BJ^Z{OSfI:?[&[\'eD!$^mG8gzen1uc08/or+@Fria2FgnM'
+                .'N3NRr=z+%uqt\'gY8 h(rtI:g4{zZdi(3}Wfpta|zXoo`WIxX3"L)Kgp_cl:IVB\\UyCGo&Ej^5[?m&8F::rCfZ4F?"`hX$F/~'
+                .'iVoo{[O17n~>(FXC9{*t1P532}l7E{7/R\' ObO`y?`9G(qjBmu7 GM3ZK!qp|)!P1" sRanqC(:Ky&mh{&hDS|~ }qqzzrL,u'
+                .'L!H/o:RwU}r[l\\XrE|FB{FAm9=i-iv#7wKFgfx`<wTxd1QWVN~yKF<9_Y$lDzo[r<#[${=Atq:Y#k2Z;1UfXq!8K%&p vMs3P'
+                .'O7MlYB^s{b`/=|@rcxde21j9#k0P`C!0[N}5p]*m@k|^h>RM883KI~dMkt}L9 ]uN[,@:6/[",:jKl8c%L/OKs}7i{c#{BxK}%'
+                .'k9<zt>(0*S}C7#oGS;<QS&N8)KZ"vY(crD_hchxm<v1Tz!{N=9!p?P*H{dKs>TW2x8z]!sK=k]rf',
+                '83747986cf0df320b915587609232076'
+            ),
         );
     }
 
@@ -187,5 +257,12 @@ class QrCodeTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
         $this->obj->getBarcodeObj('QRCODE', '');
+    }
+
+    public function testLong()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $code = str_pad('', 4000, 'iVoo{[O17n~>(FXC9{*t1P532}l7E{7/R\' ObO`y?`9G(qjBmu7 GM3ZK!qp|)!P1" sRanqC(:Ky');
+        $this->obj->getBarcodeObj('QRCODE', $code);
     }
 }

@@ -159,12 +159,10 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
             $items = $cbs[0];
             $bits = $cbs[1];
             if ($bits < 0) {
-                return -1;
+                throw new BarcodeException('Negative Bits value');
             }
             $ver = $this->getMinimumVersion((int)(($bits + 7) / 8), $this->level);
-            if ($ver < 0) {
-                return -1;
-            } elseif ($ver > $this->version) {
+            if ($ver > $this->version) {
                 $this->version = $ver;
             } else {
                 break;

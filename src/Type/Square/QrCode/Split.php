@@ -138,7 +138,7 @@ class Split
                 + $this->bsObj->estimateBitsMode8(1)         // + 4 + l8
                 - $this->bsObj->estimateBitsMode8($pos + 1); // - 4 - l8
             if ($dif > 0) {
-                return $this->eat8();
+                return $this->eat8($data);
             }
         }
         if ($mode == Data::$encodingModes['AN']) {
@@ -192,7 +192,7 @@ class Split
                 + $this->bsObj->estimateBitsMode8(1) // + 4 + l8
                 - $this->bsObj->estimateBitsMode8($pos + 1); // - 4 - l8
             if ($dif > 0) {
-                return $this->eat8();
+                return $this->eat8($data);
             }
         }
         $this->items = $this->bsObj->appendNewInputItem(
