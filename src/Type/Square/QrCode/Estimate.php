@@ -134,7 +134,9 @@ abstract class Estimate
                 return $idx;
             }
         }
-        throw new BarcodeException('The size of input data is greater than Data::QR capacity, try to lower the error correction mode');
+        throw new BarcodeException(
+            'The size of input data is greater than Data::QR capacity, try to lower the error correction mode'
+        );
     }
 
     /**
