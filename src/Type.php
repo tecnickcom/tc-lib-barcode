@@ -315,11 +315,8 @@ abstract class Type
      */
     public function getPngData($imagick = true)
     {
-        if ($imagick) {
-            try {
-                return $this->getPngDataImagick();
-            } catch (BarcodeException $e) {
-            }
+        if ($imagick && extension_loaded('imagick')) {
+            return $this->getPngDataImagick();
         }
         $img = $this->getGd();
         ob_start();
@@ -337,9 +334,6 @@ abstract class Type
      */
     public function getPngDataImagick()
     {
-        if (!extension_loaded('imagick')) {
-            throw new BarcodeException('The Imagick library is not installed');
-        }
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
         $bar_color = new \imagickpixel('rgb('.$rgbcolor['R'].','.$rgbcolor['G'].','.$rgbcolor['B'].')');
         $img = new \Imagick();
@@ -367,9 +361,6 @@ abstract class Type
      */
     public function getGd()
     {
-        if (!function_exists('imagecreate')) {
-            throw new BarcodeException('The GD library is not installed');
-        }
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
         $img = imagecreate($this->width, $this->height);
         $background_color = imagecolorallocate($img, 255, 255, 255);
@@ -441,12 +432,8 @@ abstract class Type
             return '00';
         }
         while ($number > 0) {
-            if ($number == 0) {
-                array_push($hex, '0');
-            } else {
-                array_push($hex, strtoupper(dechex(bcmod($number, '16'))));
-                $number = bcdiv($number, '16', 0);
-            }
+            array_push($hex, strtoupper(dechex(bcmod($number, '16'))));
+            $number = bcdiv($number, '16', 0);
         }
         $hex = array_reverse($hex);
         return implode($hex);

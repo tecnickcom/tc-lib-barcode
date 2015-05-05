@@ -34,128 +34,6 @@ use \Com\Tecnick\Barcode\Exception as BarcodeException;
 abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
 {
     /**
-     * Split text code in A/B sequence for 128 code
-     *
-     * @param string $code Code to split
-     *
-     * @return array sequence
-     */
-    protected function get128ABsequence($code)
-    {
-        $len = strlen($code);
-        $sequence = array();
-        // get A sequences (if any)
-        $numseq = array();
-        preg_match_all('/([\0-\31])/', $code, $numseq, PREG_OFFSET_CAPTURE);
-        if (isset($numseq[1]) && !empty($numseq[1])) {
-            $end_offset = 0;
-            foreach ($numseq[1] as $val) {
-                $offset = $val[1];
-                if ($offset > $end_offset) {
-                    // B sequence
-                    $sequence[] = array(
-                        'B',
-                        substr($code, $end_offset, ($offset - $end_offset)),
-                        ($offset - $end_offset)
-                    );
-                }
-                // A sequence
-                $slen = strlen($val[0]);
-                $sequence[] = array('A', substr($code, $offset, $slen), $slen);
-                $end_offset = $offset + $slen;
-            }
-            if ($end_offset < $len) {
-                $sequence[] = array('B', substr($code, $end_offset), ($len - $end_offset));
-            }
-        } else {
-            // only B sequence
-            $sequence[] = array('B', $code, $len);
-        }
-        return $sequence;
-    }
-
-    /**
-     * Get the A code point array
-     *
-     * @param array  $code_data  Array of codepoints to alter
-     * @param string $code       Code to process
-     * @param int    $len        Number of characters to process
-     *
-     * @retun array
-     *
-     * @throws BarcodeException in case of error
-     */
-    protected function getCodeDataA(&$code_data, $code, $len)
-    {
-        $code_data = array();
-        for ($pos = 0; $pos < $len; ++$pos) {
-            $char = $code[$pos];
-            $char_id = ord($char);
-            if (($char_id >= 241) && ($char_id <= 244)) {
-                $code_data[] = $this->fnc_a[$char_id];
-            } elseif (($char_id >= 0) && ($char_id <= 95)) {
-                $code_data[] = strpos($this->keys_a, $char);
-            } else {
-                throw new BarcodeException('Invalid character sequence');
-            }
-        }
-    }
-
-    /**
-     * Get the B code point array
-     *
-     * @param array  $code_data  Array of codepoints to alter
-     * @param string $code       Code to process
-     * @param int    $len        Number of characters to process
-     *
-     * @retun array
-     *
-     * @throws BarcodeException in case of error
-     */
-    protected function getCodeDataB(&$code_data, $code, $len)
-    {
-        $code_data = array();
-        for ($pos = 0; $pos < $len; ++$pos) {
-            $char = $code[$pos];
-            $char_id = ord($char);
-            if (($char_id >= 241) && ($char_id <= 244)) {
-                $code_data[] = $this->fnc_b[$char_id];
-            } elseif (($char_id >= 32) && ($char_id <= 127)) {
-                $code_data[] = strpos($this->keys_b, $char);
-            } else {
-                throw new BarcodeException('Invalid character sequence');
-            }
-        }
-    }
-
-    /**
-     * Get the C code point array
-     *
-     * @param array  $code_data  Array of codepoints to alter
-     * @param string $code       Code to process
-     * @param int    $len        Number of characters to process
-     *
-     * @retun array
-     *
-     * @throws BarcodeException in case of error
-     */
-    protected function getCodeDataC(&$code_data, $code, $len)
-    {
-        $code_data = array();
-        if (($len % 2) != 0) {
-            throw new BarcodeException('The length must be even');
-        }
-        for ($pos = 0; $pos < $len; $pos += 2) {
-            $chrnum = $code[$pos].$code[($pos + 1)];
-            if (preg_match('/([0-9]{2})/', $chrnum) > 0) {
-                $code_data[] = intval($chrnum);
-            } else {
-                throw new BarcodeException('Invalid character sequence');
-            }
-        }
-    }
-
-    /**
      * Get the numeric sequence (if any)
      *
      * @param string $code Code to parse
@@ -171,7 +49,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
         // get numeric sequences (if any)
         $numseq = array();
         preg_match_all('/([0-9]{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
-        if (isset($numseq[1]) && !empty($numseq[1])) {
+        if (!empty($numseq[1])) {
             $end_offset = 0;
             foreach ($numseq[1] as $val) {
                 $offset = $val[1];
@@ -199,6 +77,128 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             $sequence = array_merge($sequence, $this->get128ABsequence($code));
         }
         return $sequence;
+    }
+
+    /**
+     * Split text code in A/B sequence for 128 code
+     *
+     * @param string $code Code to split
+     *
+     * @return array sequence
+     */
+    protected function get128ABsequence($code)
+    {
+        $len = strlen($code);
+        $sequence = array();
+        // get A sequences (if any)
+        $aseq = array();
+        preg_match_all('/([\x00-\x1f])/', $code, $aseq, PREG_OFFSET_CAPTURE);
+        if (!empty($aseq[1])) {
+            // get the entire A sequence (excluding FNC1-FNC4)
+            preg_match_all('/([\x00-\x5f]+)/', $code, $aseq, PREG_OFFSET_CAPTURE);
+            $end_offset = 0;
+            foreach ($aseq[1] as $val) {
+                $offset = $val[1];
+                if ($offset > $end_offset) {
+                    // B sequence
+                    $sequence[] = array(
+                        'B',
+                        substr($code, $end_offset, ($offset - $end_offset)),
+                        ($offset - $end_offset)
+                    );
+                }
+                // A sequence
+                $slen = strlen($val[0]);
+                $sequence[] = array('A', substr($code, $offset, $slen), $slen);
+                $end_offset = $offset + $slen;
+            }
+            if ($end_offset < $len) {
+                $sequence[] = array('B', substr($code, $end_offset), ($len - $end_offset));
+            }
+        } else {
+            // only B sequence
+            $sequence[] = array('B', $code, $len);
+        }
+        return $sequence;
+    }
+
+
+    /**
+     * Get the A code point array
+     *
+     * @param array  $code_data  Array of codepoints to alter
+     * @param string $code       Code to process
+     * @param int    $len        Number of characters to process
+     *
+     * @retun array
+     *
+     * @throws BarcodeException in case of error
+     */
+    protected function getCodeDataA(&$code_data, $code, $len)
+    {
+        for ($pos = 0; $pos < $len; ++$pos) {
+            $char = $code[$pos];
+            $char_id = ord($char);
+            if (($char_id >= 241) && ($char_id <= 244)) {
+                $code_data[] = $this->fnc_a[$char_id];
+            } elseif (($char_id >= 0) && ($char_id <= 95)) {
+                $code_data[] = strpos($this->keys_a, $char);
+            } else {
+                throw new BarcodeException('Invalid character sequence');
+            }
+        }
+    }
+
+    /**
+     * Get the B code point array
+     *
+     * @param array  $code_data  Array of codepoints to alter
+     * @param string $code       Code to process
+     * @param int    $len        Number of characters to process
+     *
+     * @retun array
+     *
+     * @throws BarcodeException in case of error
+     */
+    protected function getCodeDataB(&$code_data, $code, $len)
+    {
+        for ($pos = 0; $pos < $len; ++$pos) {
+            $char = $code[$pos];
+            $char_id = ord($char);
+            if (($char_id >= 241) && ($char_id <= 244)) {
+                $code_data[] = $this->fnc_b[$char_id];
+            } elseif (($char_id >= 32) && ($char_id <= 127)) {
+                $code_data[] = strpos($this->keys_b, $char);
+            } else {
+                throw new BarcodeException('Invalid character sequence: '.$char_id);
+            }
+        }
+    }
+
+    /**
+     * Get the C code point array
+     *
+     * @param array  $code_data  Array of codepoints to alter
+     * @param string $code       Code to process
+     * @param int    $len        Number of characters to process
+     *
+     * @retun array
+     *
+     * @throws BarcodeException in case of error
+     */
+    protected function getCodeDataC(&$code_data, $code, $len)
+    {
+        if (($len % 2) != 0) {
+            throw new BarcodeException('The length must be even');
+        }
+        for ($pos = 0; $pos < $len; $pos += 2) {
+            $chrnum = $code[$pos].$code[($pos + 1)];
+            if (preg_match('/([0-9]{2})/', $chrnum) > 0) {
+                $code_data[] = intval($chrnum);
+            } else {
+                throw new BarcodeException('Invalid character sequence');
+            }
+        }
     }
 
     /**

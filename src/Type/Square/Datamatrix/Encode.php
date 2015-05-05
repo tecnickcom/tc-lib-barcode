@@ -35,6 +35,13 @@ use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
 class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
 {
     /**
+     * Store last used encoding for data codewords.
+     *
+     * @var int
+     */
+    public $last_enc;
+
+    /**
      * Encode ASCII
      *
      * @param int    $cdw
@@ -87,20 +94,24 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
     /**
      * Encode EDF4
      *
+     * @param int    $epos
      * @param int    $cdw
      * @param int    $cdw_num
      * @param int    $pos
      * @param int    $data_length
      * @param int    $field_length
      * @param int    $enc
+     * @param array  $temp_cw
+     *
+     * @return boolean true to break the loop
      */
-    public function encodeEDFfour(&$cdw, &$cdw_num, &$pos, &$data_length, &$field_length, &$enc)
+    public function encodeEDFfour($epos, &$cdw, &$cdw_num, &$pos, &$data_length, &$field_length, &$enc, &$temp_cw)
     {
         if (($epos == $data_length) && ($field_length < 3)) {
             $enc = Data::ENC_ASCII;
             $cdw[] = $this->getSwitchEncodingCodeword($enc);
             ++$cdw_num;
-            break;
+            return true;
         }
         if ($field_length < 4) {
             // set unlatch character
@@ -133,8 +144,9 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
         $pos = $epos;
         $field_length = 0;
         if ($enc == Data::ENC_ASCII) {
-            break; // exit from EDIFACT mode
+            return true; // exit from EDIFACT mode
         }
+        return false;
     }
 
     /**
@@ -166,7 +178,9 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
                 || ($epos == $data_length)
                 || !$this->isCharMode($chr, Data::ENC_EDF)
             ) {
-                $this->encodeEDFfour($cdw, $cdw_num, $pos, $data_length, $field_length, $enc);
+                if ($this->encodeEDFfour($epos, $cdw, $cdw_num, $pos, $data_length, $field_length, $enc, $temp_cw)) {
+                    break;
+                }
             }
         } while ($epos < $data_length);
     }

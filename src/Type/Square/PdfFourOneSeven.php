@@ -118,8 +118,10 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      */
     protected function setMacroBlockParam()
     {
-        if (isset($this->params[4]) && ($this->params[2] !== '')
-            && ($this->params[3] !== '') && ($this->params[4] !== '')
+        if (isset($this->params[4])
+            && ($this->params[2] !== '')
+            && ($this->params[3] !== '')
+            && ($this->params[4] !== '')
         ) {
             $this->macro['segment_total'] = intval($this->params[2]);
             $this->macro['segment_index'] = intval($this->params[3]);

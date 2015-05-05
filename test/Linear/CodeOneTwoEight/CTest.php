@@ -45,7 +45,8 @@ class CTest extends \PHPUnit_Framework_TestCase
 
         $bobj = $this->obj->getBarcodeObj('C128C', chr(241).'0123456789');
         $grid = $bobj->getGrid();
-        $expected = "110100111001100110110011101101110101110110001000010110011011011110100001101001100011101011\n";
+        $expected = "11010011100111101011101100110110011101101110101110110001000010110011011011110111101101101100"
+            ."011101011\n";
         $this->assertEquals($expected, $grid);
     }
 

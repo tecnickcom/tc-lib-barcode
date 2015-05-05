@@ -43,13 +43,6 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected $format = 'DATAMATRIX';
 
     /**
-     * Store last used encoding for data codewords.
-     *
-     * @var int
-     */
-    protected $last_enc = 0;
-
-    /**
      * Array of codewords.
      *
      * @var array
@@ -82,10 +75,10 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     {
         // add padding
         if ((($size - $ncw) > 1) && ($this->cdw[($ncw - 1)] != 254)) {
-            if ($this->last_enc == Data::ENC_EDF) {
+            if ($this->dmx->last_enc == Data::ENC_EDF) {
                 // switch to ASCII encoding
                 $this->cdw[] = 124;
-            } elseif (($this->last_enc != Data::ENC_ASCII) && ($this->last_enc != Data::ENC_BASE256)) {
+            } elseif (($this->dmx->last_enc != Data::ENC_ASCII) && ($this->dmx->last_enc != Data::ENC_BASE256)) {
                 // switch to ASCII encoding
                 $this->cdw[] = 254;
             }
@@ -120,8 +113,8 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $ncw = count($this->cdw);
         
         // check size
-        if ($ncw > 1558) {
-            throw new BarcodeException('the imput is too large to fit the barcode');
+        if ($ncw > 1560) {
+            throw new BarcodeException('the input is too large to fit the barcode');
         }
         
         // get minimum required matrix size.
@@ -130,10 +123,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                 break;
             }
         }
-        if ($params[11] < $ncw) {
-            // too much data
-            throw new BarcodeException('the imput is too large to fit the barcode');
-        } elseif ($params[11] > $ncw) {
+        if ($params[11] > $ncw) {
             $this->addPadding($params[11], $ncw);
         }
 
@@ -202,7 +192,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $data_length = strlen($data); // number of chars
         while ($pos < $data_length) {
             // set last used encoding
-            $this->last_enc = $enc;
+            $this->dmx->last_enc = $enc;
             switch ($enc) {
                 case Data::ENC_ASCII: // STEP B. While in ASCII encodation
                     $this->dmx->encodeASCII($cdw, $cdw_num, $pos, $data_length, $data, $enc);

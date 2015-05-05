@@ -38,6 +38,12 @@ class ATest extends \PHPUnit_Framework_TestCase
 
     public function testGetGrid()
     {
+        $bobj = $this->obj->getBarcodeObj('C128A', 'ABCDEFG');
+        $grid = $bobj->getGrid();
+        $expected = "110100001001010001100010001011000100010001101011000100010001101000100011000101101"
+            ."0001000100110010001100011101011\n";
+        $this->assertEquals($expected, $grid);
+
         $bobj = $this->obj->getBarcodeObj('C128A', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "110100001001001110110010011100110110011100101100101110011001001110110111001001100"

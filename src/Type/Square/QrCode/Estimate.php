@@ -123,6 +123,8 @@ abstract class Estimate
      * @param int $level Error correction level
      *
      * @return int version number
+     *
+     * @throws BarcodeException
      */
     protected function getMinimumVersion($size, $level)
     {
@@ -132,8 +134,9 @@ abstract class Estimate
                 return $idx;
             }
         }
-        // the size of input data is greater than Data::QR capacity, try to lover the error correction mode
-        return -1;
+        throw new BarcodeException(
+            'The size of input data is greater than Data::QR capacity, try to lower the error correction mode'
+        );
     }
 
     /**

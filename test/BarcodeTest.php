@@ -146,10 +146,10 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $hdiv);
 
         $pngik = $bobj->getPngData(true);
-        $this->assertEquals('545252fdd858ae7c242c0074acb9d78e', md5($pngik));
+        $this->assertEquals('Imagick', get_class($pngik));
         
         $pnggd = $bobj->getPngData(false);
-        $this->assertEquals('ba3ae02bc238ea6067e95e8c3ab3f7d9', md5($pnggd));
+        $this->assertEquals('PNG', substr($pnggd, 1, 3));
     }
     
     /**
@@ -185,6 +185,6 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $bobj->getPng();
         $png = ob_get_clean();
-        $this->assertEquals('545252fdd858ae7c242c0074acb9d78e', md5($png));
+        $this->assertEquals('PNG', substr($png, 1, 3));
     }
 }
