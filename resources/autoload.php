@@ -6,7 +6,7 @@
  *
  * @since       2015-03-04
  * @category    Library
- * @package     Color
+ * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
  * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
