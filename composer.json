@@ -4,7 +4,7 @@
     "type": "library",
     "homepage": "http://www.tecnick.com",
     "license": "GNU-LGPL v3",
-    "keywords": ["tc-lib-barcode", "barcode", "CODE 39", "ANSI MH10.8M-1983", "USD-3", "3 of 9", "CODE 93", "USS-93", "Standard 2 of 5", "Interleaved 2 of 5", "CODE 128 A/B/C", "UPC", "EAN 8", "EAN 13", "UPC-A", "UPC-E", "MSI", "POSTNET", "PLANET", "RMS4CC", "Royal Mail", "CBC", "KIX", "Klant", "Intelligent Mail Barcode", "Onecode", "USPS-B-3200", "CODABAR", "CODE 11", "PHARMACODE", "PHARMACODE TWO-TRACKS", "Datamatrix", "ECC200", "QR-Code", "PDF417"],
+    "keywords": ["tc-lib-barcode", "barcode", "CODE 39", "ANSI MH10.8M-1983", "USD-3", "3 of 9", "CODE 93", "USS-93", "Standard 2 of 5", "Interleaved 2 of 5", "CODE 128 A B C", "UPC", "EAN 8", "EAN 13", "UPC-A", "UPC-E", "MSI", "POSTNET", "PLANET", "RMS4CC", "Royal Mail", "CBC", "KIX", "Klant", "Intelligent Mail Barcode", "Onecode", "USPS-B-3200", "CODABAR", "CODE 11", "PHARMACODE", "PHARMACODE TWO-TRACKS", "Datamatrix", "ECC200", "QR-Code", "PDF417"],
     "authors": [
         {
             "name": "Nicola Asuni",
