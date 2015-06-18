@@ -17,13 +17,13 @@
         "tecnick.com/tc-lib-color": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "dev-master",
-        "pdepend/pdepend" : "2.0.*",
+        "phpunit/phpunit": "4.7.*",
+        "pdepend/pdepend" : "2.1.*",
         "squizlabs/php_codesniffer": "2.3.*",
         "phpmd/phpmd" : "2.2.*",
         "sebastian/phpcpd" : "2.0.*",
-        "phploc/phploc" : "2.0.*",
-        "phpdocumentor/phpdocumentor" : "2.5.0"
+        "phploc/phploc" : "2.1.*",
+        "phpdocumentor/phpdocumentor" : "2.5.*"
     },
     "autoload": {
         "psr-4":{
