@@ -108,7 +108,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
         if (!isset($this->params[3])) {
             $this->params[3] = 1;
         }
-        $this->case_sensitive = boolval($this->params[3]);
+        $this->case_sensitive = ($this->params[3] ? true : false);
     }
 
     /**
