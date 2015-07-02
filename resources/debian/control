@@ -1,4 +1,4 @@
-Source: php-tc-lib-barcode
+Source: php-tecnickcom-tc-lib-barcode
 Maintainer: Nicola Asuni <info@tecnick.com>
 Section: php
 Priority: optional
@@ -7,10 +7,10 @@ Standards-Version: 3.9.5
 Homepage: https://github.com/tecnickcom/tc-lib-barcode
 Vcs-Git: https://github.com/tecnickcom/tc-lib-barcode.git
 
-Package: php-tc-lib-barcode
+Package: php-tecnickcom-tc-lib-barcode
+Provides: php-tc-lib-barcode
 Architecture: all
-Depends: php-tc-lib-color (>=1.4.4)
-Recommends: php5
+Depends: php5, php-tecnickcom-tc-lib-color (>=1.5.0)
 Description: PHP Barcode library
  This library includes PHP classes to generate linear
  and bidimensional barcodes:

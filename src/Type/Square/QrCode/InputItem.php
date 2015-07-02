@@ -92,7 +92,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
         if ($size <= 0) {
             return false;
         }
-        switch($mode) {
+        switch ($mode) {
             case Data::$encodingModes['NM']:
                 return $this->checkModeNum($size, $data);
             case Data::$encodingModes['AN']:

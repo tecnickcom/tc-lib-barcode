@@ -194,18 +194,24 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
             // set last used encoding
             $this->dmx->last_enc = $enc;
             switch ($enc) {
-                case Data::ENC_ASCII: // STEP B. While in ASCII encodation
+                case Data::ENC_ASCII:
+                    // STEP B. While in ASCII encodation
                     $this->dmx->encodeASCII($cdw, $cdw_num, $pos, $data_length, $data, $enc);
                     break;
-                case Data::ENC_C40: // Upper-case alphanumeric
-                case Data::ENC_TXT: // Lower-case alphanumeric
-                case Data::ENC_X12: // ANSI X12
+                case Data::ENC_C40:
+                    // Upper-case alphanumeric
+                case Data::ENC_TXT:
+                    // Lower-case alphanumeric
+                case Data::ENC_X12:
+                    // ANSI X12
                     $this->dmx->encodeTXT($cdw, $cdw_num, $pos, $data_length, $data, $enc);
                     break;
-                case Data::ENC_EDF: // F. While in EDIFACT (EDF) encodation
+                case Data::ENC_EDF:
+                    // F. While in EDIFACT (EDF) encodation
                     $this->dmx->encodeEDF($cdw, $cdw_num, $pos, $data_length, $field_length, $data, $enc);
                     break;
-                case Data::ENC_BASE256: // G. While in Base 256 (B256) encodation
+                case Data::ENC_BASE256:
+                    // G. While in Base 256 (B256) encodation
                     $this->dmx->encodeBase256($cdw, $cdw_num, $pos, $data_length, $field_length, $data, $enc);
                     break;
             }

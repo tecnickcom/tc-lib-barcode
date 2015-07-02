@@ -193,18 +193,22 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
     protected function getCompaction($mode, $code, $addmode = true)
     {
         $codewords = array(); // array of codewords to return
-        switch($mode) {
-            case 900: // Text Compaction mode latch
+        switch ($mode) {
+            case 900:
+                // Text Compaction mode latch
                 $this->processTextCompaction($code, $codewords);
                 break;
             case 901:
-            case 924: // Byte Compaction mode latch
+            case 924:
+                // Byte Compaction mode latch
                 $this->processByteCompaction($code, $codewords);
                 break;
-            case 902: // Numeric Compaction mode latch
+            case 902:
+                // Numeric Compaction mode latch
                 $this->processNumericCompaction($code, $codewords);
                 break;
-            case 913: // Byte Compaction mode shift
+            case 913:
+                // Byte Compaction mode shift
                 $codewords[] = ord($code);
                 break;
         }

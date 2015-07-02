@@ -12,10 +12,16 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # List special make targets that are not associated with files
-.PHONY: help all test docs phpcs phpcs_test phpcbf phpcbf_test phpmd phpmd_test phpcpd phploc phpdep report qa qa_test qa_all clean build build_dev update server install uninstall rpm deb
+.PHONY: help all test docs phpcs phpcs_test phpcbf phpcbf_test phpmd phpmd_test phpcpd phploc phpdep phpcmpinfo report qa qa_test qa_all clean build build_dev update server install uninstall rpm deb
 
-# Detect the type of package to build based on the current operating system
-OSPKG=$(shell if [ -f "/etc/redhat-release" ]; then echo "rpm"; else echo "deb"; fi )
+# Project owner
+OWNER=tecnickcom
+
+# Project vendor
+VENDOR=tecnick.com
+
+# Project name
+PROJECT=tc-lib-barcode
 
 # Project version
 VERSION=`cat VERSION`
@@ -23,14 +29,20 @@ VERSION=`cat VERSION`
 # Project release number (packaging build number)
 RELEASE=`cat RELEASE`
 
-# name of RPM or DEB package
-PKGNAME=php-tc-lib-barcode
+# Name of RPM or DEB package
+PKGNAME=php-${OWNER}-${PROJECT}
+
+# Data dir
+DATADIR=usr/share
+
+# PHP home folder
+PHPHOME=${DATADIR}/php/Com/Tecnick
 
 # Default installation path for code
-LIBPATH=usr/share/php/Com/Tecnick/Barcode/
+LIBPATH=${PHPHOME}/Barcode/
 
 # Default installation path for documentation
-DOCPATH=usr/share/doc/$(PKGNAME)/
+DOCPATH=${DATADIR}/doc/$(PKGNAME)/
 
 # Installation path for the code
 PATHINSTBIN=$(DESTDIR)/$(LIBPATH)
@@ -58,7 +70,7 @@ COMPOSER=$(shell which php) -d "apc.enable_cli=0" $(shell which composer)
 # Display general help about this command
 help:
 	@echo ""
-	@echo "Welcome to tc-lib-barcode make."
+	@echo "Welcome to ${PROJECT} make."
 	@echo "The following commands are available:"
 	@echo ""
 	@echo "    make qa          : Run the targets: test, phpcs and phpmd"
@@ -79,7 +91,8 @@ help:
 	@echo "    make phpcpd      : Run PHP Copy/Paste Detector"
 	@echo "    make phploc      : Run PHPLOC to analyze the structure of the project"
 	@echo "    make phpdep      : Run JDepend static analysis and generate graphs"
-	@echo "    make report      : Run the targets: phpcpd, phploc and phpdep"
+	@echo "    make phpcmpinfo  : Find out the minimum version and extensions required"
+	@echo "    make report      : Generates various static-analisys reports"
 	@echo ""
 	@echo "    make docs        : Generate source code documentation"
 	@echo ""
@@ -88,13 +101,13 @@ help:
 	@echo "    make build_dev   : Clean and download the composer dependencies including dev ones"
 	@echo "    make update      : Update composer dependencies"
 	@echo ""
-	@echo "    make server     : Run the example server at http://localhost:"$(PORT)
+	@echo "    make server      : Run the example server at http://localhost:"$(PORT)
 	@echo ""
-	@echo "    make install    : Install this library"
-	@echo "    make uninstall  : Remove all installed files"
+	@echo "    make install     : Install this library"
+	@echo "    make uninstall   : Remove all installed files"
 	@echo ""
-	@echo "    make rpm        : Build an RPM package"
-	@echo "    make deb        : Build a DEB package"
+	@echo "    make rpm         : Build an RPM package"
+	@echo "    make deb         : Build a DEB package"
 	@echo ""
 
 # alias for help target
@@ -106,7 +119,7 @@ test:
 
 # generate docs using phpDocumentor
 docs:
-	@rm -rf target/phpdocs && ./vendor/phpdocumentor/phpdocumentor/bin/phpdoc project:run --target="target/phpdocs/" --directory="src/" --ignore="vendor/" --encoding="UTF-8" --title="tc-lib-barcode" --parseprivate
+	@rm -rf target/phpdocs && ./vendor/phpdocumentor/phpdocumentor/bin/phpdoc project:run --target="target/phpdocs/" --directory="src/" --ignore="vendor/" --encoding="UTF-8" --title="${PROJECT}" --parseprivate
 
 # run PHPCS on the source code and show any style violations
 phpcs:
@@ -147,8 +160,12 @@ phpdep:
 	mkdir -p ./target/report/
 	@./vendor/bin/pdepend --jdepend-xml=./target/report/dependencies.xml --summary-xml=./target/report/metrics.xml --jdepend-chart=./target/report/dependecies.svg --overview-pyramid=./target/report/overview-pyramid.svg --ignore=vendor ./src
 
-# run the targets: phpcpd, phploc and phpdep
-report: phpcpd phploc phpdep
+# parse any data source to find out the minimum version and extensions required for it to run
+phpcmpinfo:
+	@./vendor/bartlett/php-compatinfo/bin/phpcompatinfo --no-ansi analyser:run src/ > ./target/report/phpcompatinfo.txt
+
+# generate various reports
+report: phpcpd phploc phpdep phpcmpinfo
 
 # alias to run targets: test, phpcs and phpmd
 qa: test phpcs phpmd
@@ -200,9 +217,9 @@ uninstall:
 # --- PACKAGING ---
 
 # Build the RPM package for RedHat-like Linux distributions
-rpm: build
+rpm:
 	rm -rf $(PATHRPMPKG)
-	rpmbuild --define "_topdir $(PATHRPMPKG)" --define "_package $(PKGNAME)" --define "_version $(VERSION)" --define "_release $(RELEASE)" --define "_current_directory $(CURRENTDIR)" --define "_libpath /$(LIBPATH)" --define "_docpath /$(DOCPATH)" --define "_configpath $(CONFIGPATH)" -bb resources/rpm/rpm.spec
+	rpmbuild --define "_topdir $(PATHRPMPKG)" --define "_vendor $(VENDOR)" --define "_owner $(OWNER)" --define "_project $(PROJECT)" --define "_package $(PKGNAME)" --define "_version $(VERSION)" --define "_release $(RELEASE)" --define "_current_directory $(CURRENTDIR)" --define "_libpath /$(LIBPATH)" --define "_docpath /$(DOCPATH)" --define "_configpath $(CONFIGPATH)" -bb resources/rpm/rpm.spec
 
 # Build the DEB package for Debian-like Linux distributions
 deb: build

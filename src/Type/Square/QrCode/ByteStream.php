@@ -215,7 +215,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
             $inputitem['bstream'] = $this->appendBitstream($inputitem['bstream'], $st1['bstream']);
             $inputitem['bstream'] = $this->appendBitstream($inputitem['bstream'], $st2['bstream']);
         } else {
-            switch($inputitem['mode']) {
+            switch ($inputitem['mode']) {
                 case Data::$encodingModes['NM']:
                     $inputitem = $this->encodeModeNum($inputitem, $version);
                     break;
