@@ -42,7 +42,7 @@ abstract class Estimate
     {
         $wdt = (int)($size / 3);
         $bits = ($wdt * 10);
-        switch($size - ($wdt * 3)) {
+        switch ($size - ($wdt * 3)) {
             case 1:
                 $bits += 4;
                 break;
@@ -154,7 +154,7 @@ abstract class Estimate
             $version = 1;
         }
         foreach ($items as $item) {
-            switch($item['mode']) {
+            switch ($item['mode']) {
                 case Data::$encodingModes['NM']:
                     $bits = $this->estimateBitsModeNum($item['size']);
                     break;
