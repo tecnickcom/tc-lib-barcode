@@ -194,7 +194,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = ord($code[$chr]);
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = $this->chbar[$char][$pos];
+                $bar_width = intval($this->chbar[$char][$pos]);
                 if (($pos % 2) == 0) {
                     $this->bars[] = array($this->ncols, 0, $bar_width, 1);
                 }

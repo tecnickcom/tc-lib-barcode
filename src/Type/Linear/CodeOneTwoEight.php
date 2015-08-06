@@ -380,12 +380,11 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
             $seq = $this->chbar[$val];
             for ($pos = 0; $pos < 6; ++$pos) {
                 $bar_width = intval($seq[$pos]);
-                if (($pos % 2) == 0) {
+                if ((($pos % 2) == 0) && ($bar_width > 0)) {
                     $this->bars[] = array($this->ncols, 0, $bar_width, 1);
                 }
                 $this->ncols += $bar_width;
             }
         }
-        --$this->ncols;
     }
 }

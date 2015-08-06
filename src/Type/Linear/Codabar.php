@@ -97,7 +97,7 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
                 throw new BarcodeException('Invalid character: chr('.ord($char).')');
             }
             for ($pos = 0; $pos < 8; ++$pos) {
-                $bar_width = $this->chbar[$char][$pos];
+                $bar_width = intval($this->chbar[$char][$pos]);
                 if (($pos % 2) == 0) {
                     $this->bars[] = array($this->ncols, 0, $bar_width, 1);
                 }
