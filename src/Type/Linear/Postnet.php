@@ -113,7 +113,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
                 throw new BarcodeException('Invalid character: chr('.ord($char).')');
             }
             for ($pos = 0; $pos < 5; ++$pos) {
-                $bar_height = $this->chbar[$char][$pos];
+                $bar_height = intval($this->chbar[$char][$pos]);
                 $this->bars[] = array($this->ncols, floor(1 / $bar_height), 1, $bar_height);
                 $this->ncols += 2;
             }

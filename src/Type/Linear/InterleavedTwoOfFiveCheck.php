@@ -104,8 +104,8 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
             }
             $seqlen = strlen($seq);
             for ($pos = 0; $pos < $seqlen; ++$pos) {
-                $bar_width = $seq[$pos];
-                if (($pos % 2) == 0) {
+                $bar_width = intval($seq[$pos]);
+                if ((($pos % 2) == 0) && ($bar_width > 0)) {
                     $this->bars[] = array($this->ncols, 0, $bar_width, 1);
                 }
                 $this->ncols += $bar_width;

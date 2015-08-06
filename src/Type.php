@@ -251,6 +251,9 @@ abstract class Type
             ."\t".'<g id="bars" fill="'.$this->color_obj->getCssColor().'"'
             .' stroke="none" stroke-width="0" stroke-linecap="square">'."\n";
         foreach ($this->bars as $bar) {
+            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
+                continue;
+            }
             $svg .= "\t\t".'<rect'
                 .' x="'.sprintf('%F', ($bar[0] * $this->width_ratio)).'"'
                 .' y="'.sprintf('%F', ($bar[1] * $this->height_ratio)).'"'
@@ -275,6 +278,9 @@ abstract class Type
             .'position:relative;'
             .'font-size:0;">'."\n";
         foreach ($this->bars as $bar) {
+            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
+                continue;
+            }
             $html .= "\t".'<div style="background-color:'.$this->color_obj->getCssColor().';'
                 .'left:'.sprintf('%F', ($bar[0] * $this->width_ratio)).'px;'
                 .'top:'.sprintf('%F', ($bar[1] * $this->height_ratio)).'px;'
@@ -341,11 +347,14 @@ abstract class Type
         $barcode = new \imagickdraw();
         $barcode->setfillcolor($bar_color);
         foreach ($this->bars as $bar) {
+            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
+                continue;
+            }
             $barcode->rectangle(
-                round($bar[0] * $this->width_ratio),
-                round($bar[1] * $this->height_ratio),
-                (round(($bar[0] + $bar[2]) * $this->width_ratio) - 1),
-                (round(($bar[1] + $bar[3]) * $this->height_ratio) - 1)
+                ($bar[0] * $this->width_ratio),
+                ($bar[1] * $this->height_ratio),
+                ((($bar[0] + $bar[2]) * $this->width_ratio) - 1),
+                ((($bar[1] + $bar[3]) * $this->height_ratio) - 1)
             );
         }
         $img->drawimage($barcode);
@@ -367,12 +376,15 @@ abstract class Type
         imagecolortransparent($img, $background_color);
         $bar_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
         foreach ($this->bars as $bar) {
+            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
+                continue;
+            }
             imagefilledrectangle(
                 $img,
-                round($bar[0] * $this->width_ratio),
-                round($bar[1] * $this->height_ratio),
-                (round(($bar[0] + $bar[2]) * $this->width_ratio) - 1),
-                (round(($bar[1] + $bar[3]) * $this->height_ratio) - 1),
+                ($bar[0] * $this->width_ratio),
+                ($bar[1] * $this->height_ratio),
+                ((($bar[0] + $bar[2]) * $this->width_ratio) - 1),
+                ((($bar[1] + $bar[3]) * $this->height_ratio) - 1),
                 $bar_color
             );
         }
@@ -391,6 +403,9 @@ abstract class Type
     {
         $raw = array_fill(0, $this->nrows, array_fill(0, $this->ncols, $space_char));
         foreach ($this->bars as $bar) {
+            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
+                continue;
+            }
             for ($vert = 0; $vert < $bar[3]; ++$vert) {
                 for ($horiz = 0; $horiz < $bar[2]; ++$horiz) {
                     $raw[($bar[1] + $vert)][($bar[0] + $horiz)] = $bar_char;
