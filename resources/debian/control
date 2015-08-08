@@ -10,7 +10,7 @@ Vcs-Git: https://github.com/tecnickcom/tc-lib-barcode.git
 Package: php-tecnickcom-tc-lib-barcode
 Provides: php-tc-lib-barcode
 Architecture: all
-Depends: php5, php-tecnickcom-tc-lib-color (>=1.5.0)
+Depends: php5 (>= 5.3.0), php-tecnickcom-tc-lib-color (>=1.5.0)
 Description: PHP Barcode library
  This library includes PHP classes to generate linear
  and bidimensional barcodes:
