@@ -89,18 +89,28 @@ class Barcode
     /**
      * Get the barcode object
      *
-     * @param string $type Barcode type
-     * @param string $code Barcode content
-     * @param int    $width  Barcode width in user units (0 = automatic value)
-     * @param int    $height Barcode height in user units (0 = automatic value)
-     * @param string $color  Foreground color in Web notation (color name, or hexadecimal code, or CSS syntax)
+     * @param string $type    Barcode type
+     * @param string $code    Barcode content
+     * @param int    $width   Barcode width in user units (excluding padding).
+     *                        A negative value indicates the multiplication factor for each column.
+     * @param int    $height  Barcode height in user units (excluding padding).
+     *                        A negative value indicates the multiplication factor for each row.
+     * @param string $color   Foreground color in Web notation (color name, or hexadecimal code, or CSS syntax)
+     * @param array  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
+     *                        A negative value indicates the multiplication factor for each row or column.
      *
      * @return array
      *
      * @throws BarcodeException in case of error
      */
-    public function getBarcodeObj($type, $code, $width = 0, $height = 0, $color = 'black')
-    {
+    public function getBarcodeObj(
+        $type,
+        $code,
+        $width = -1,
+        $height = -1,
+        $color = 'black',
+        $padding = array(0, 0, 0, 0)
+    ) {
         // extract extra parameters (if any)
         $params = explode(',', $type);
         $type = array_shift($params);
@@ -109,6 +119,6 @@ class Barcode
             throw new BarcodeException('Unsupported barcode type: '.$type);
         }
         $bclass = '\\Com\\Tecnick\\Barcode\\Type\\'.self::$typeclass[$type];
-        return new $bclass($code, $width, $height, $color, $params);
+        return new $bclass($code, $width, $height, $color, $params, $padding);
     }
 }

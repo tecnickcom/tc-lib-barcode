@@ -54,6 +54,19 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSetPaddingException()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $this->obj->getBarcodeObj(
+            'LRAW,AB,12,E3F',
+            '01001100011100001111,10110011100011110000',
+            -2,
+            -2,
+            'purple',
+            array(10)
+        );
+    }
+
     public function testEmptyColumns()
     {
         $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
@@ -73,7 +86,8 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
             '01001100011100001111,10110011100011110000',
             -2,
             -2,
-            'purple'
+            'purple',
+            array(-2, 3, 0, 1)
         );
 
         $barr = $bobj->getArray();
@@ -87,6 +101,10 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $barr['height']);
         $this->assertEquals(2, $barr['width_ratio']);
         $this->assertEquals(2, $barr['height_ratio']);
+        $this->assertEquals(array('T' => 4, 'R' => 3, 'B' => 0, 'L' => 1), $barr['padding']);
+        $this->assertEquals(44, $barr['full_width']);
+        $this->assertEquals(8, $barr['full_height']);
+
         $expected = array(
             array(1,0,1,1),
             array(4,0,2,1),
@@ -107,39 +125,39 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
         $svg = $bobj->getSvgCode();
         $expected = '<?xml version="1.0" standalone="no" ?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="40.000000" height="4.000000" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<svg width="44.000000" height="8.000000" version="1.1" xmlns="http://www.w3.org/2000/svg">
 	<desc>01001100011100001111,10110011100011110000</desc>
 	<g id="bars" fill="rgba(50%,0%,50%,1)" stroke="none" stroke-width="0" stroke-linecap="square">
-		<rect x="2.000000" y="0.000000" width="2.000000" height="2.000000" />
-		<rect x="8.000000" y="0.000000" width="4.000000" height="2.000000" />
-		<rect x="18.000000" y="0.000000" width="6.000000" height="2.000000" />
-		<rect x="32.000000" y="0.000000" width="8.000000" height="2.000000" />
-		<rect x="0.000000" y="2.000000" width="2.000000" height="2.000000" />
-		<rect x="4.000000" y="2.000000" width="4.000000" height="2.000000" />
-		<rect x="12.000000" y="2.000000" width="6.000000" height="2.000000" />
-		<rect x="24.000000" y="2.000000" width="8.000000" height="2.000000" />
+		<rect x="3.000000" y="4.000000" width="2.000000" height="2.000000" />
+		<rect x="9.000000" y="4.000000" width="4.000000" height="2.000000" />
+		<rect x="19.000000" y="4.000000" width="6.000000" height="2.000000" />
+		<rect x="33.000000" y="4.000000" width="8.000000" height="2.000000" />
+		<rect x="1.000000" y="6.000000" width="2.000000" height="2.000000" />
+		<rect x="5.000000" y="6.000000" width="4.000000" height="2.000000" />
+		<rect x="13.000000" y="6.000000" width="6.000000" height="2.000000" />
+		<rect x="25.000000" y="6.000000" width="8.000000" height="2.000000" />
 	</g>
 </svg>
 ';
         $this->assertEquals($expected, $svg);
 
         $hdiv = $bobj->getHtmlDiv();
-        $expected = '<div style="width:40.000000px;height:4.000000px;position:relative;font-size:0;">
-	<div style="background-color:rgba(50%,0%,50%,1);left:2.000000px;top:0.000000px;'
+        $expected = '<div style="width:44.000000px;height:8.000000px;position:relative;font-size:0;">
+	<div style="background-color:rgba(50%,0%,50%,1);left:3.000000px;top:4.000000px;'
         .'width:2.000000px;height:2.000000px;position:absolute;">&nbsp;</div>
-	<div style="background-color:rgba(50%,0%,50%,1);left:8.000000px;top:0.000000px;'
+	<div style="background-color:rgba(50%,0%,50%,1);left:9.000000px;top:4.000000px;'
         .'width:4.000000px;height:2.000000px;position:absolute;">&nbsp;</div>
-	<div style="background-color:rgba(50%,0%,50%,1);left:18.000000px;top:0.000000px;'
+	<div style="background-color:rgba(50%,0%,50%,1);left:19.000000px;top:4.000000px;'
         .'width:6.000000px;height:2.000000px;position:absolute;">&nbsp;</div>
-	<div style="background-color:rgba(50%,0%,50%,1);left:32.000000px;top:0.000000px;'
+	<div style="background-color:rgba(50%,0%,50%,1);left:33.000000px;top:4.000000px;'
         .'width:8.000000px;height:2.000000px;position:absolute;">&nbsp;</div>
-	<div style="background-color:rgba(50%,0%,50%,1);left:0.000000px;top:2.000000px;'
+	<div style="background-color:rgba(50%,0%,50%,1);left:1.000000px;top:6.000000px;'
         .'width:2.000000px;height:2.000000px;position:absolute;">&nbsp;</div>
-	<div style="background-color:rgba(50%,0%,50%,1);left:4.000000px;top:2.000000px;'
+	<div style="background-color:rgba(50%,0%,50%,1);left:5.000000px;top:6.000000px;'
         .'width:4.000000px;height:2.000000px;position:absolute;">&nbsp;</div>
-	<div style="background-color:rgba(50%,0%,50%,1);left:12.000000px;top:2.000000px;'
+	<div style="background-color:rgba(50%,0%,50%,1);left:13.000000px;top:6.000000px;'
         .'width:6.000000px;height:2.000000px;position:absolute;">&nbsp;</div>
-	<div style="background-color:rgba(50%,0%,50%,1);left:24.000000px;top:2.000000px;'
+	<div style="background-color:rgba(50%,0%,50%,1);left:25.000000px;top:6.000000px;'
         .'width:8.000000px;height:2.000000px;position:absolute;">&nbsp;</div>
 </div>
 ';
