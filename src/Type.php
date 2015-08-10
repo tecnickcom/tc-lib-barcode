@@ -295,10 +295,12 @@ abstract class Type
 
     /**
      * Get Barcode as PNG Image (requires GD or Imagick library)
+     *
+     * @param int    $border   Additional space around the barcode
      */
-    public function getPng()
+    public function getPng($border = 0)
     {
-        $data = $this->getPngData();
+        $data = $this->getPngData(true, $border);
         header('Content-Type: image/png');
         header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
         header('Pragma: public');
@@ -316,15 +318,16 @@ abstract class Type
      * Get the barcode as PNG image (requires GD or Imagick library)
      *
      * @param bool $imagick If true try to use the Imagick extension
+     * @param int  $border  Additional space around the barcode
      *
      * @return string PNG image data
      */
-    public function getPngData($imagick = true)
+    public function getPngData($imagick = true, $border = 0)
     {
         if ($imagick && extension_loaded('imagick')) {
-            return $this->getPngDataImagick();
+            return $this->getPngDataImagick($border);
         }
-        $img = $this->getGd();
+        $img = $this->getGd($border);
         ob_start();
         imagepng($img);
         $png = ob_get_clean();
@@ -334,16 +337,18 @@ abstract class Type
     /**
      * Get the barcode as PNG image (requires Imagick library)
      *
+     * @param int    $border   Additional space around the barcode
+     *
      * @return object
      *
      * @throws BarcodeException if the Imagick library is not installed
      */
-    public function getPngDataImagick()
+    public function getPngDataImagick($border = 0)
     {
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
         $bar_color = new \imagickpixel('rgb('.$rgbcolor['R'].','.$rgbcolor['G'].','.$rgbcolor['B'].')');
         $img = new \Imagick();
-        $img->newImage($this->width, $this->height, 'none', 'png');
+        $img->newImage($this->width + $border + $border, $this->height + $border + $border, 'none', 'png');
         $barcode = new \imagickdraw();
         $barcode->setfillcolor($bar_color);
         foreach ($this->bars as $bar) {
@@ -351,10 +356,10 @@ abstract class Type
                 continue;
             }
             $barcode->rectangle(
-                ($bar[0] * $this->width_ratio),
-                ($bar[1] * $this->height_ratio),
-                ((($bar[0] + $bar[2]) * $this->width_ratio) - 1),
-                ((($bar[1] + $bar[3]) * $this->height_ratio) - 1)
+                $border + ($bar[0] * $this->width_ratio),
+                $border + ($bar[1] * $this->height_ratio),
+                $border + ((($bar[0] + $bar[2]) * $this->width_ratio) - 1),
+                $border + ((($bar[1] + $bar[3]) * $this->height_ratio) - 1)
             );
         }
         $img->drawimage($barcode);
@@ -364,14 +369,16 @@ abstract class Type
     /**
      * Get the barcode as GD image object (requires GD library)
      *
+     * @param int    $border   Additional space around the barcode
+     *
      * @return object
      *
      * @throws BarcodeException if the GD library is not installed
      */
-    public function getGd()
+    public function getGd($border=0)
     {
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
-        $img = imagecreate($this->width, $this->height);
+        $img = imagecreate($this->width + $border + $border, $this->height + $border + $border);
         $background_color = imagecolorallocate($img, 255, 255, 255);
         imagecolortransparent($img, $background_color);
         $bar_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
@@ -381,10 +388,10 @@ abstract class Type
             }
             imagefilledrectangle(
                 $img,
-                ($bar[0] * $this->width_ratio),
-                ($bar[1] * $this->height_ratio),
-                ((($bar[0] + $bar[2]) * $this->width_ratio) - 1),
-                ((($bar[1] + $bar[3]) * $this->height_ratio) - 1),
+                $border + ($bar[0] * $this->width_ratio),
+                $border + ($bar[1] * $this->height_ratio),
+                $border + ((($bar[0] + $bar[2]) * $this->width_ratio) - 1),
+                $border + ((($bar[1] + $bar[3]) * $this->height_ratio) - 1),
                 $bar_color
             );
         }
