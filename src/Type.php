@@ -96,6 +96,14 @@ abstract class Type
      * @var float
      */
     protected $height;
+
+    /**
+     * Additional padding to add around the barcode (top, right, bottom, left) in user units.
+     * A negative value indicates the multiplication factor for each row or column.
+     *
+     * @var array
+     */
+    protected $padding = array('T' => 0, 'R' => 0, 'B' => 0, 'L' => 0);
     
     /**
      * Ratio between the barcode width and the number of rows
@@ -122,23 +130,31 @@ abstract class Type
      * Initialize a new barcode object
      *
      * @param string $code    Barcode content
-     * @param int    $width   Barcode width in user units.
-     *                        A negative values indicate the multiplication factor for each column.
-     * @param int    $height  Barcode height in user units
-     *                        A negative values indicate the multiplication factor for each row.
+     * @param int    $width   Barcode width in user units (excluding padding).
+     *                        A negative value indicates the multiplication factor for each column.
+     * @param int    $height  Barcode height in user units (excluding padding).
+     *                        A negative value indicates the multiplication factor for each row.
      * @param string $color   Foreground color in Web notation (color name, or hexadecimal code, or CSS syntax)
      * @param array  $params  Array containing extra parameters for the specified barcode type
+     * @param array  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
+     *                        A negative value indicates the number or rows or columns.
      *
      * @throws BarcodeException in case of error
      * @throws ColorException in case of color error
      */
-    public function __construct($code, $width = -1, $height = -1, $color = 'black', $params = array())
-    {
+    public function __construct(
+        $code,
+        $width = -1,
+        $height = -1,
+        $color = 'black',
+        $params = array(),
+        $padding = array(0, 0, 0, 0)
+    ) {
         $this->code = $code;
         $this->params = $params;
         $this->setParameters();
         $this->setBars();
-        $this->setSize($width, $height);
+        $this->setSize($width, $height, $padding);
         $this->setColor($color);
     }
 
@@ -159,12 +175,14 @@ abstract class Type
     /**
      * Set the size of the barcode to be exported
      *
-     * @param int    $width  Barcode width in user units.
-     *                       A negative values indicate the multiplication factor for each column.
-     * @param int    $height Barcode height in user units
-     *                       A negative values indicate the multiplication factor for each row.
+     * @param int    $width   Barcode width in user units (excluding padding).
+     *                        A negative value indicates the multiplication factor for each column.
+     * @param int    $height  Barcode height in user units (excluding padding).
+     *                        A negative value indicates the multiplication factor for each row.
+     * @param array  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
+     *                        A negative value indicates the number or rows or columns.
      */
-    public function setSize($width, $height)
+    public function setSize($width, $height, $padding = array(0, 0, 0, 0))
     {
         $this->width = intval($width);
         if ($this->width <= 0) {
@@ -178,6 +196,36 @@ abstract class Type
 
         $this->width_ratio = ($this->width / $this->ncols);
         $this->height_ratio = ($this->height / $this->nrows);
+
+        $this->setPadding($padding);
+    }
+
+    /**
+     * Set the barcode padding
+     *
+     * @param array  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
+     *                        A negative value indicates the number or rows or columns.
+     *
+     * @throws BarcodeException in case of error
+     */
+    protected function setPadding($padding)
+    {
+        if (!is_array($padding) || (count($padding) != 4)) {
+            throw new BarcodeException('Invalid padding, expecting an array of 4 numbers (top, right, bottom, left)');
+        }
+        $map = array(
+            array('T', $this->height_ratio),
+            array('R', $this->width_ratio),
+            array('B', $this->height_ratio),
+            array('L', $this->width_ratio)
+        );
+        foreach ($padding as $key => $val) {
+            $val = intval($val);
+            if ($val < 0) {
+                $val = (abs(min(-1, $val)) * $map[$key][1]);
+            }
+            $this->padding[$map[$key][0]] = $val;
+        }
     }
 
     /**
@@ -212,6 +260,9 @@ abstract class Type
             'height'       => $this->height,
             'width_ratio'  => $this->width_ratio,
             'height_ratio' => $this->height_ratio,
+            'padding'      => $this->padding,
+            'full_width'   => ($this->width + $this->padding['L'] + $this->padding['R']),
+            'full_height'  => ($this->height + $this->padding['T'] + $this->padding['B']),
             'color_obj'    => $this->color_obj,
             'bars'         => $this->bars
         );
@@ -245,21 +296,21 @@ abstract class Type
     {
         $svg = '<?xml version="1.0" standalone="no" ?>'."\n"
             .'<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'."\n"
-            .'<svg width="'.sprintf('%F', $this->width).'" height="'.sprintf('%F', $this->height).'"'
+            .'<svg width="'.sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R']))
+            .'" height="'.sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B'])).'"'
             .' version="1.1" xmlns="http://www.w3.org/2000/svg">'."\n"
             ."\t".'<desc>'.htmlspecialchars($this->code, ENT_XML1, 'UTF-8').'</desc>'."\n"
             ."\t".'<g id="bars" fill="'.$this->color_obj->getCssColor().'"'
             .' stroke="none" stroke-width="0" stroke-linecap="square">'."\n";
         foreach ($this->bars as $bar) {
-            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
-                continue;
+            if (($bar[2] > 0) && ($bar[3] > 0)) {
+                $svg .= "\t\t".'<rect'
+                    .' x="'.sprintf('%F', ($this->padding['L'] + ($bar[0] * $this->width_ratio))).'"'
+                    .' y="'.sprintf('%F', ($this->padding['T'] + ($bar[1] * $this->height_ratio))).'"'
+                    .' width="'.sprintf('%F', ($bar[2] * $this->width_ratio)).'"'
+                    .' height="'.sprintf('%F', ($bar[3] * $this->height_ratio)).'"'
+                    .' />'."\n";
             }
-            $svg .= "\t\t".'<rect'
-                .' x="'.sprintf('%F', ($bar[0] * $this->width_ratio)).'"'
-                .' y="'.sprintf('%F', ($bar[1] * $this->height_ratio)).'"'
-                .' width="'.sprintf('%F', ($bar[2] * $this->width_ratio)).'"'
-                .' height="'.sprintf('%F', ($bar[3] * $this->height_ratio)).'"'
-                .' />'."\n";
         }
         $svg .= "\t".'</g>'."\n".'</svg>'."\n";
         return $svg;
@@ -273,21 +324,20 @@ abstract class Type
     public function getHtmlDiv()
     {
         $html = '<div style="'
-            .'width:'.sprintf('%F', $this->width).'px;'
-            .'height:'.sprintf('%F', $this->height).'px;'
+            .'width:'.sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R'])).'px;'
+            .'height:'.sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B'])).'px;'
             .'position:relative;'
             .'font-size:0;">'."\n";
         foreach ($this->bars as $bar) {
-            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
-                continue;
+            if (($bar[2] > 0) && ($bar[3] > 0)) {
+                $html .= "\t".'<div style="background-color:'.$this->color_obj->getCssColor().';'
+                    .'left:'.sprintf('%F', ($this->padding['L'] + ($bar[0] * $this->width_ratio))).'px;'
+                    .'top:'.sprintf('%F', ($this->padding['T'] + ($bar[1] * $this->height_ratio))).'px;'
+                    .'width:'.sprintf('%F', ($bar[2] * $this->width_ratio)).'px;'
+                    .'height:'.sprintf('%F', ($bar[3] * $this->height_ratio)).'px;'
+                    .'position:absolute;'
+                    .'">&nbsp;</div>'."\n";
             }
-            $html .= "\t".'<div style="background-color:'.$this->color_obj->getCssColor().';'
-                .'left:'.sprintf('%F', ($bar[0] * $this->width_ratio)).'px;'
-                .'top:'.sprintf('%F', ($bar[1] * $this->height_ratio)).'px;'
-                .'width:'.sprintf('%F', ($bar[2] * $this->width_ratio)).'px;'
-                .'height:'.sprintf('%F', ($bar[3] * $this->height_ratio)).'px;'
-                .'position:absolute;'
-                .'">&nbsp;</div>'."\n";
         }
         $html .= '</div>'."\n";
         return $html;
@@ -343,19 +393,23 @@ abstract class Type
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
         $bar_color = new \imagickpixel('rgb('.$rgbcolor['R'].','.$rgbcolor['G'].','.$rgbcolor['B'].')');
         $img = new \Imagick();
-        $img->newImage($this->width, $this->height, 'none', 'png');
+        $img->newImage(
+            ($this->width + $this->padding['L'] + $this->padding['R']),
+            ($this->height + $this->padding['T'] + $this->padding['B']),
+            'none',
+            'png'
+        );
         $barcode = new \imagickdraw();
         $barcode->setfillcolor($bar_color);
         foreach ($this->bars as $bar) {
-            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
-                continue;
+            if (($bar[2] > 0) && ($bar[3] > 0)) {
+                $barcode->rectangle(
+                    ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
+                    ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
+                    ($this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1),
+                    ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1)
+                );
             }
-            $barcode->rectangle(
-                ($bar[0] * $this->width_ratio),
-                ($bar[1] * $this->height_ratio),
-                ((($bar[0] + $bar[2]) * $this->width_ratio) - 1),
-                ((($bar[1] + $bar[3]) * $this->height_ratio) - 1)
-            );
         }
         $img->drawimage($barcode);
         return $img;
@@ -371,28 +425,30 @@ abstract class Type
     public function getGd()
     {
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
-        $img = imagecreate($this->width, $this->height);
+        $img = imagecreate(
+            ($this->width + $this->padding['L'] + $this->padding['R']),
+            ($this->height + $this->padding['T'] + $this->padding['B'])
+        );
         $background_color = imagecolorallocate($img, 255, 255, 255);
         imagecolortransparent($img, $background_color);
         $bar_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
         foreach ($this->bars as $bar) {
-            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
-                continue;
+            if (($bar[2] > 0) && ($bar[3] > 0)) {
+                imagefilledrectangle(
+                    $img,
+                    ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
+                    ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
+                    ($this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1),
+                    ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1),
+                    $bar_color
+                );
             }
-            imagefilledrectangle(
-                $img,
-                ($bar[0] * $this->width_ratio),
-                ($bar[1] * $this->height_ratio),
-                ((($bar[0] + $bar[2]) * $this->width_ratio) - 1),
-                ((($bar[1] + $bar[3]) * $this->height_ratio) - 1),
-                $bar_color
-            );
         }
         return $img;
     }
 
     /**
-     * Get a raw barcode string representation using 0 and 1
+     * Get a raw barcode string representation using characters
      *
      * @param string $space_char Character or string to use for filling empty spaces
      * @param string $bar_char   Character or string to use for filling bars
@@ -403,12 +459,11 @@ abstract class Type
     {
         $raw = array_fill(0, $this->nrows, array_fill(0, $this->ncols, $space_char));
         foreach ($this->bars as $bar) {
-            if (($bar[2] <= 0) || ($bar[3] <= 0)) {
-                continue;
-            }
-            for ($vert = 0; $vert < $bar[3]; ++$vert) {
-                for ($horiz = 0; $horiz < $bar[2]; ++$horiz) {
-                    $raw[($bar[1] + $vert)][($bar[0] + $horiz)] = $bar_char;
+            if (($bar[2] > 0) && ($bar[3] > 0)) {
+                for ($vert = 0; $vert < $bar[3]; ++$vert) {
+                    for ($horiz = 0; $horiz < $bar[2]; ++$horiz) {
+                        $raw[($bar[1] + $vert)][($bar[0] + $horiz)] = $bar_char;
+                    }
                 }
             }
         }
@@ -442,10 +497,10 @@ abstract class Type
      */
     protected function convertDecToHex($number)
     {
-        $hex = array();
         if ($number == 0) {
             return '00';
         }
+        $hex = array();
         while ($number > 0) {
             array_push($hex, strtoupper(dechex(bcmod($number, '16'))));
             $number = bcdiv($number, '16', 0);
