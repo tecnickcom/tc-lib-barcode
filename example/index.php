@@ -14,7 +14,9 @@
  */
 
 // autoloader when using Composer
-require ('../vendor/autoload.php');
+require (dirname(__DIR__) . '/vendor/autoload.php');
+
+use \Com\Tecnick\Barcode\Barcode;
 
 // autoloader when using RPM or DEB package installation
 //require ('/usr/share/php/Com/Tecnick/Barcode/autoload.php');
@@ -61,21 +63,19 @@ $square = array(
     'SRAW'       => array('0101,1010',  '2D RAW MODE (comma-separated rows of 01 strings)'),
 );
 
-$barcode = new \Com\Tecnick\Barcode\Barcode();
-
 $examples = '<h3>Linear</h3>'."\n";
 foreach ($linear as $type => $code) {
-    $bobj = $barcode->getBarcodeObj($type, $code[0], -3, -30, 'black', array(0, 0, 0, 0));
+    $bobj = Barcode::getBarcodeObj($type, $code[0], -3, -30, 'black', array(0, 0, 0, 0));
     $examples .= '<h4>[<span>'.$type.'</span>] '.$code[1].'</h4><p style="font-family:monospace;">'.$bobj->getHtmlDiv().'</p>'."\n";
 }
 
 $examples .= '<h3>Square</h3>'."\n";
 foreach ($square as $type => $code) {
-    $bobj = $barcode->getBarcodeObj($type, $code[0], -4, -4, 'black', array(0, 0, 0, 0));
+    $bobj = Barcode::getBarcodeObj($type, $code[0], -4, -4, 'black', array(0, 0, 0, 0));
     $examples .= '<h4>[<span>'.$type.'</span>] '.$code[1].'</h4><p style="font-family:monospace;">'.$bobj->getHtmlDiv().'</p>'."\n";
 }
 
-$bobj = $barcode->getBarcodeObj('QRCODE,H', 'http://www.tecnick.com', -4, -4, 'black', array(-2, -2, -2, -2));
+$bobj = Barcode::getBarcodeObj('QRCODE,H', 'http://www.tecnick.com', -4, -4, 'black', array(-2, -2, -2, -2));
 
 echo "
 <!DOCTYPE html>
