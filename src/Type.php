@@ -198,6 +198,8 @@ abstract class Type
         $this->height_ratio = ($this->height / $this->nrows);
 
         $this->setPadding($padding);
+
+        return $this;
     }
 
     /**
@@ -240,6 +242,8 @@ abstract class Type
         $webcolor = new \Com\Tecnick\Color\Web();
         $rgb = $webcolor->getColorObj($color)->toRgbArray();
         $this->color_obj = new \Com\Tecnick\Color\Model\Rgb($rgb);
+
+        return $this;
     }
 
     /**
