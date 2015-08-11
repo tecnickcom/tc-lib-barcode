@@ -81,7 +81,7 @@ class Barcode
      *
      * @return array
      */
-    public function getTypes()
+    public static function getTypes()
     {
         return array_keys(self::$typeclass);
     }
@@ -103,7 +103,7 @@ class Barcode
      *
      * @throws BarcodeException in case of error
      */
-    public function getBarcodeObj(
+    public static function getBarcodeObj(
         $type,
         $code,
         $width = -1,
