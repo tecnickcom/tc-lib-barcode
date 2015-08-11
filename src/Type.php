@@ -198,6 +198,8 @@ abstract class Type
         $this->height_ratio = ($this->height / $this->nrows);
 
         $this->setPadding($padding);
+
+        return $this;
     }
 
     /**
@@ -208,7 +210,7 @@ abstract class Type
      *
      * @throws BarcodeException in case of error
      */
-    protected function setPadding($padding)
+    public function setPadding($padding)
     {
         if (!is_array($padding) || (count($padding) != 4)) {
             throw new BarcodeException('Invalid padding, expecting an array of 4 numbers (top, right, bottom, left)');
@@ -226,6 +228,8 @@ abstract class Type
             }
             $this->padding[$map[$key][0]] = $val;
         }
+
+        return $this;
     }
 
     /**
@@ -240,6 +244,8 @@ abstract class Type
         $webcolor = new \Com\Tecnick\Color\Web();
         $rgb = $webcolor->getColorObj($color)->toRgbArray();
         $this->color_obj = new \Com\Tecnick\Color\Model\Rgb($rgb);
+
+        return $this;
     }
 
     /**
