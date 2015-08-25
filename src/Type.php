@@ -303,7 +303,7 @@ abstract class Type
             .'<svg width="'.sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R']))
             .'" height="'.sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B'])).'"'
             .' version="1.1" xmlns="http://www.w3.org/2000/svg">'."\n"
-            ."\t".'<desc>'.htmlspecialchars($this->code, ENT_XML1, 'UTF-8').'</desc>'."\n"
+            ."\t".'<desc>'.htmlspecialchars($this->code, (defined('ENT_XML1')?ENT_XML1:ENT_NOQUOTES), 'UTF-8').'</desc>'."\n"
             ."\t".'<g id="bars" fill="'.$this->color_obj->getCssColor().'"'
             .' stroke="none" stroke-width="0" stroke-linecap="square">'."\n";
         foreach ($this->bars as $bar) {
