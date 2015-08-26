@@ -31,7 +31,7 @@ use \Com\Tecnick\Color\Exception as ColorException;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnick.com/tc-lib-barcode
  */
-abstract class Type
+abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
 {
     /**
      * Barcode type (linear or square)
@@ -298,12 +298,17 @@ abstract class Type
      */
     public function getSvgCode()
     {
+        // flags for htmlspecialchars
+        $hflag = ENT_NOQUOTES;
+        if (defined('ENT_XML1')) {
+            $hflag = ENT_XML1;
+        }
         $svg = '<?xml version="1.0" standalone="no" ?>'."\n"
             .'<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'."\n"
             .'<svg width="'.sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R']))
             .'" height="'.sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B'])).'"'
             .' version="1.1" xmlns="http://www.w3.org/2000/svg">'."\n"
-            ."\t".'<desc>'.htmlspecialchars($this->code, ENT_XML1, 'UTF-8').'</desc>'."\n"
+            ."\t".'<desc>'.htmlspecialchars($this->code, $hflag, 'UTF-8').'</desc>'."\n"
             ."\t".'<g id="bars" fill="'.$this->color_obj->getCssColor().'"'
             .' stroke="none" stroke-width="0" stroke-linecap="square">'."\n";
         foreach ($this->bars as $bar) {
@@ -476,59 +481,5 @@ abstract class Type
             $grid .= implode($row)."\n";
         }
         return $grid;
-    }
-
-    /**
-     * Import a binary sequence of comma-separated 01 strings
-     *
-     * @param string $code Code to process
-     */
-    protected function processBinarySequence($code)
-    {
-        $raw = new \Com\Tecnick\Barcode\Type\Raw($code, $this->width, $this->height);
-        $data = $raw->getArray();
-        $this->ncols = $data['ncols'];
-        $this->nrows = $data['nrows'];
-        $this->bars = $data['bars'];
-    }
-
-    /**
-     * Convert large integer number to hexadecimal representation.
-     *
-     * @param string $number Number to convert (as string)
-     *
-     * @return string hexadecimal representation
-     */
-    protected function convertDecToHex($number)
-    {
-        if ($number == 0) {
-            return '00';
-        }
-        $hex = array();
-        while ($number > 0) {
-            array_push($hex, strtoupper(dechex(bcmod($number, '16'))));
-            $number = bcdiv($number, '16', 0);
-        }
-        $hex = array_reverse($hex);
-        return implode($hex);
-    }
-
-    /**
-     * Convert large hexadecimal number to decimal representation (string).
-     *
-     * @param string $hex Hexadecimal number to convert (as string)
-     *
-     * @return string hexadecimal representation
-     */
-    protected function convertHexToDec($hex)
-    {
-        $dec = 0;
-        $bitval = 1;
-        $len = strlen($hex);
-        for ($pos = ($len - 1); $pos >= 0; --$pos) {
-            $dec = bcadd($dec, bcmul(hexdec($hex[$pos]), $bitval));
-            $bitval = bcmul($bitval, 16);
-        }
-        return $dec;
     }
 }
