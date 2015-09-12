@@ -1,5 +1,5 @@
 {
-    "name": "tecnick.com/tc-lib-barcode",
+    "name": "tecnickcom/tc-lib-barcode",
     "description": "PHP library to generate linear and bidimensional barcodes",
     "type": "library",
     "homepage": "http://www.tecnick.com",
@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "tecnick.com/tc-lib-color": "dev-master"
+        "tecnickcom/tc-lib-color": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "4.7.*",
