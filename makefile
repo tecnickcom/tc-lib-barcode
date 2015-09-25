@@ -18,7 +18,7 @@
 OWNER=tecnickcom
 
 # Project vendor
-VENDOR=tecnick.com
+VENDOR=${OWNER}
 
 # Project name
 PROJECT=tc-lib-barcode
