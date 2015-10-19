@@ -10,19 +10,16 @@
 	stopOnFailure="false"
 	syntaxCheck="false"
 	verbose="true">
-
 	<testsuites>
 		<testsuite name="tc-lib-barcode Test Suite">
 			<directory>./test</directory>
 		</testsuite>
 	</testsuites>
-
 	<filter>
 		<whitelist>
 			<directory suffix="php">src</directory>
 		</whitelist>
 	</filter>
-
 	<logging>
 		<log type="coverage-html" target="target/coverage" charset="UTF-8"/>
 		<log type="junit" target="target/logs/junit.xml" logIncompleteSkipped="false"/>

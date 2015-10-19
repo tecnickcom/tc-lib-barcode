@@ -12,7 +12,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # List special make targets that are not associated with files
-.PHONY: help all test docs phpcs phpcs_test phpcbf phpcbf_test phpmd phpmd_test phpcpd phploc phpdep phpcmpinfo report qa qa_test qa_all clean build build_dev update server install uninstall rpm deb
+.PHONY: help all test docs phpcs phpcs_test phpcbf phpcbf_test phpmd phpmd_test phpcpd phploc phpdep phpcmpinfo report qa qa_test qa_all clean build build_dev update server install uninstall rpm deb archive
 
 # Project owner
 OWNER=tecnickcom
@@ -24,10 +24,10 @@ VENDOR=${OWNER}
 PROJECT=tc-lib-barcode
 
 # Project version
-VERSION=`cat VERSION`
+VERSION=$(shell cat VERSION)
 
 # Project release number (packaging build number)
-RELEASE=`cat RELEASE`
+RELEASE=$(shell cat RELEASE)
 
 # Name of RPM or DEB package
 PKGNAME=php-${OWNER}-${PROJECT}
@@ -51,7 +51,7 @@ PATHINSTBIN=$(DESTDIR)/$(LIBPATH)
 PATHINSTDOC=$(DESTDIR)/$(DOCPATH)
 
 # Current directory
-CURRENTDIR=`pwd`
+CURRENTDIR=$(shell pwd)
 
 # RPM Packaging path (where RPMs will be stored)
 PATHRPMPKG=$(CURRENTDIR)/target/RPM
@@ -73,7 +73,7 @@ help:
 	@echo "Welcome to ${PROJECT} make."
 	@echo "The following commands are available:"
 	@echo ""
-	@echo "    make qa          : Run the targets: test, phpcs and phpmd"
+	@echo "    make qa          : Run the targets: test, phpcs, phpmd and phpcpd"
 	@echo "    make qa_test     : Run the targets: phpcs_test and phpmd_test"
 	@echo "    make qa_all      : Run the targets: qa and qa_all"
 	@echo ""
@@ -108,6 +108,7 @@ help:
 	@echo ""
 	@echo "    make rpm         : Build an RPM package"
 	@echo "    make deb         : Build a DEB package"
+	@echo "    make archive     : Build a tar bz2 (tbz2) compressed archive"
 	@echo ""
 
 # alias for help target
@@ -119,7 +120,7 @@ test:
 
 # generate docs using phpDocumentor
 docs:
-	@rm -rf target/phpdocs && ./vendor/phpdocumentor/phpdocumentor/bin/phpdoc project:run --target="target/phpdocs/" --directory="src/" --ignore="vendor/" --encoding="UTF-8" --title="${PROJECT}" --parseprivate
+	@rm -rf target/phpdocs && ./vendor/apigen/apigen/bin/apigen generate --source="src/" --destination="target/phpdocs/" --exclude="vendor" --access-levels="public,protected,private" --charset="UTF-8" --title="${PROJECT}"
 
 # run PHPCS on the source code and show any style violations
 phpcs:
@@ -147,17 +148,17 @@ phpmd_test:
 
 # run PHP Copy/Paste Detector
 phpcpd:
-	mkdir -p ./target/report/
+	@mkdir -p ./target/report/
 	@./vendor/bin/phpcpd src --exclude vendor > ./target/report/phpcpd.txt
 
 # run PHPLOC to analyze the structure of the project
 phploc:
-	mkdir -p ./target/report/
+	@mkdir -p ./target/report/
 	@./vendor/bin/phploc src --exclude vendor > ./target/report/phploc.txt
 
 # PHP static analysis
 phpdep:
-	mkdir -p ./target/report/
+	@mkdir -p ./target/report/
 	@./vendor/bin/pdepend --jdepend-xml=./target/report/dependencies.xml --summary-xml=./target/report/metrics.xml --jdepend-chart=./target/report/dependecies.svg --overview-pyramid=./target/report/overview-pyramid.svg --ignore=vendor ./src
 
 # parse any data source to find out the minimum version and extensions required for it to run
@@ -165,10 +166,10 @@ phpcmpinfo:
 	@./vendor/bartlett/php-compatinfo/bin/phpcompatinfo --no-ansi analyser:run src/ > ./target/report/phpcompatinfo.txt
 
 # generate various reports
-report: phpcpd phploc phpdep phpcmpinfo
+report: phploc phpdep phpcmpinfo
 
 # alias to run targets: test, phpcs and phpmd
-qa: test phpcs phpmd
+qa: test phpcs phpmd phpcpd
 
 # alias to run targets: phpcs_test and phpmd_test
 qa_test: phpcs_test phpmd_test
@@ -238,3 +239,10 @@ deb: build
 	echo "README.md $(DOCPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
 	echo "VERSION $(DOCPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
 	cd $(PATHDEBPKG)/$(PKGNAME)-$(VERSION) && debuild -us -uc 
+
+# build a compressed archive
+archive:
+	rm -rf ./target/archive/
+	mkdir -p ./target/archive/
+	make install DESTDIR=./target/archive/
+	tar -jcvf ./target/$(PKGNAME)-$(VERSION)-$(RELEASE).tbz2 -C ./target/archive/$(DATADIR) .

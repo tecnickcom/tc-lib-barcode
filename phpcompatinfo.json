@@ -2,7 +2,7 @@
     "source-providers": [
         {
             "in": "src as source",
-	    "exclude": "vendor",
+            "exclude": "vendor",
             "name": "/\\.(php)$/"
         }
     ],
