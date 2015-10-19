@@ -1,5 +1,12 @@
 vendor
 target
 phpunit.xml
-**/.DS_Store
+**/auth.json
 **/.vagrant
+**/nbproject
+**/.idea
+**/.DS_Store
+**/.#*
+**/._*
+**/*.tmp
+**/*.bak
