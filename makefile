@@ -118,7 +118,7 @@ all: help
 test:
 	./vendor/bin/phpunit test
 
-# generate docs using phpDocumentor
+# generate docs
 docs:
 	@rm -rf target/phpdocs && ./vendor/apigen/apigen/bin/apigen generate --source="src/" --destination="target/phpdocs/" --exclude="vendor" --access-levels="public,protected,private" --charset="UTF-8" --title="${PROJECT}"
 

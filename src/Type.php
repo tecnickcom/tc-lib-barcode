@@ -309,7 +309,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
             .'" height="'.sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B'])).'"'
             .' version="1.1" xmlns="http://www.w3.org/2000/svg">'."\n"
             ."\t".'<desc>'.htmlspecialchars($this->code, $hflag, 'UTF-8').'</desc>'."\n"
-            ."\t".'<g id="bars" fill="'.$this->color_obj->getCssColor().'"'
+            ."\t".'<g id="bars" fill="'.$this->color_obj->getRgbHexColor().'"'
             .' stroke="none" stroke-width="0" stroke-linecap="square">'."\n";
         foreach ($this->bars as $bar) {
             if (($bar[2] > 0) && ($bar[3] > 0)) {
