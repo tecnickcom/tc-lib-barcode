@@ -339,7 +339,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
             .'font-size:0;">'."\n";
         foreach ($this->bars as $bar) {
             if (($bar[2] > 0) && ($bar[3] > 0)) {
-                $html .= "\t".'<div style="background-color:'.$this->color_obj->getRgbHexColor().';'
+                $html .= "\t".'<div style="background-color:'.$this->color_obj->getCssColor().';'
                     .'left:'.sprintf('%F', ($this->padding['L'] + ($bar[0] * $this->width_ratio))).'px;'
                     .'top:'.sprintf('%F', ($this->padding['T'] + ($bar[1] * $this->height_ratio))).'px;'
                     .'width:'.sprintf('%F', ($bar[2] * $this->width_ratio)).'px;'
