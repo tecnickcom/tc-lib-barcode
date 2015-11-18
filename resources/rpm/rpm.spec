@@ -1,4 +1,4 @@
-# spec file
+# SPEC file
 
 %global c_vendor    %{_vendor}
 %global gh_owner    %{_owner}
@@ -53,6 +53,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(-,root,root) %{_libpath}
 %attr(-,root,root) %{_docpath}
 %docdir %{_docpath}
+#%config(noreplace) %{_configpath}*
 
 %changelog
 * Tue Jul 02 2015 Nicola Asuni <info@tecnick.com> 1.2.0-1

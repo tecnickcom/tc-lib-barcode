@@ -1,14 +1,14 @@
-Source: php-tecnickcom-tc-lib-barcode
+Source: ~#PKGNAME#~
 Maintainer: Nicola Asuni <info@tecnick.com>
 Section: php
 Priority: optional
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.5
-Homepage: https://github.com/tecnickcom/tc-lib-barcode
-Vcs-Git: https://github.com/tecnickcom/tc-lib-barcode.git
+Homepage: https://github.com/~#VENDOR#~/~#PROJECT#~
+Vcs-Git: https://github.com/~#VENDOR#~/~#PROJECT#~.git
 
-Package: php-tecnickcom-tc-lib-barcode
-Provides: php-tc-lib-barcode
+Package: ~#PKGNAME#~
+Provides: php-~#PROJECT#~
 Architecture: all
 Depends: php5 (>= 5.3.0), php-tecnickcom-tc-lib-color (>=1.5.0)
 Description: PHP Barcode library

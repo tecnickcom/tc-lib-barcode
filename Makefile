@@ -12,7 +12,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # List special make targets that are not associated with files
-.PHONY: help all test docs phpcs phpcs_test phpcbf phpcbf_test phpmd phpmd_test phpcpd phploc phpdep phpcmpinfo report qa qa_test qa_all clean build build_dev update server install uninstall rpm deb archive
+.PHONY: help all test docs phpcs phpcs_test phpcbf phpcbf_test phpmd phpmd_test phpcpd phploc phpdep phpcmpinfo report qa qa_test qa_all clean build build_dev update server install uninstall rpm deb bz2
 
 # Project owner
 OWNER=tecnickcom
@@ -41,11 +41,17 @@ PHPHOME=${DATADIR}/php/Com/Tecnick
 # Default installation path for code
 LIBPATH=${PHPHOME}/Barcode/
 
+# Path for configuration files (etc/$(PKGNAME)/)
+CONFIGPATH=
+
 # Default installation path for documentation
 DOCPATH=${DATADIR}/doc/$(PKGNAME)/
 
 # Installation path for the code
 PATHINSTBIN=$(DESTDIR)/$(LIBPATH)
+
+# Installation path for the configuration files
+PATHINSTCFG=$(DESTDIR)/$(CONFIGPATH)
 
 # Installation path for documentation
 PATHINSTDOC=$(DESTDIR)/$(DOCPATH)
@@ -58,6 +64,9 @@ PATHRPMPKG=$(CURRENTDIR)/target/RPM
 
 # DEB Packaging path (where DEBs will be stored)
 PATHDEBPKG=$(CURRENTDIR)/target/DEB
+
+# BZ2 Packaging path (where BZ2s will be stored)
+PATHBZ2PKG=$(CURRENTDIR)/target/BZ2
 
 # Default port number for the example server
 PORT?=8000
@@ -208,7 +217,15 @@ install: uninstall
 	cp -f ./LICENSE.TXT $(PATHINSTDOC)
 	cp -f ./README.md $(PATHINSTDOC)
 	cp -f ./VERSION $(PATHINSTDOC)
+	cp -f ./RELEASE $(PATHINSTDOC)
 	chmod -R 644 $(PATHINSTDOC)*
+ifneq ($(strip $(CONFIGPATH)),)
+	mkdir -p $(PATHINSTCFG)
+	touch -c $(PATHINSTCFG)*
+	cp -ru ./resources/${CONFIGPATH}/* $(PATHINSTCFG)
+	find $(PATHINSTCFG) -type d -exec chmod 755 {} \;
+	find $(PATHINSTCFG) -type f -exec chmod 644 {} \;
+endif
 
 # Remove all installed files
 uninstall:
@@ -225,24 +242,26 @@ rpm:
 # Build the DEB package for Debian-like Linux distributions
 deb: build
 	rm -rf $(PATHDEBPKG)
-	mkdir -p $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)
-	cp -rf $(CURRENTDIR)/src $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)
-	cp -f ./resources/autoload.php $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/src
-	cp -f ./README.md $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)
-	cp -f ./VERSION $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)
+	make install DESTDIR=$(PATHDEBPKG)/$(PKGNAME)-$(VERSION)
 	tar -zcvf $(PATHDEBPKG)/$(PKGNAME)_$(VERSION).orig.tar.gz -C $(PATHDEBPKG)/ $(PKGNAME)-$(VERSION)
 	cp -rf ./resources/debian $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian
-	sed -ri "s/~#VERSION#~/$(VERSION)/" $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/changelog
-	sed -ri "s/~#DATE#~/`date -R`/" $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/changelog
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#VERSION#~/$(VERSION)/" {} \;
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#DATE#~/`date -R`/" {} \;
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#VENDOR#~/$(VENDOR)/" {} \;
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#PROJECT#~/$(PROJECT)/" {} \;
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#PKGNAME#~/$(PKGNAME)/" {} \;
 	echo $(LIBPATH) > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).dirs
-	echo "src/* $(LIBPATH)" > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
-	echo "README.md $(DOCPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
-	echo "VERSION $(DOCPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
-	cd $(PATHDEBPKG)/$(PKGNAME)-$(VERSION) && debuild -us -uc 
+	echo "$(LIBPATH)* $(LIBPATH)" > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
+	echo $(DOCPATH) >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).dirs
+	echo "$(DOCPATH)* $(DOCPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
+ifneq ($(strip $(CONFIGPATH)),)
+	echo $(CONFIGPATH) >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).dirs
+	echo "$(CONFIGPATH)* $(CONFIGPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
+endif
+	cd $(PATHDEBPKG)/$(PKGNAME)-$(VERSION) && debuild -us -uc
 
-# build a compressed archive
-archive:
-	rm -rf ./target/archive/
-	mkdir -p ./target/archive/
-	make install DESTDIR=./target/archive/
-	tar -jcvf ./target/$(PKGNAME)-$(VERSION)-$(RELEASE).tbz2 -C ./target/archive/$(DATADIR) .
+# build a compressed bz2 archive
+bz2: build
+	rm -rf $(PATHBZ2PKG)
+	make install DESTDIR=$(PATHBZ2PKG)
+	tar -jcvf $(PATHBZ2PKG)/$(PKGNAME)-$(VERSION)-$(RELEASE).tbz2 -C $(PATHBZ2PKG) $(DATADIR)
