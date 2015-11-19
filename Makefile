@@ -117,7 +117,7 @@ help:
 	@echo ""
 	@echo "    make rpm         : Build an RPM package"
 	@echo "    make deb         : Build a DEB package"
-	@echo "    make archive     : Build a tar bz2 (tbz2) compressed archive"
+	@echo "    make bz2         : Build a tar bz2 (tbz2) compressed archive"
 	@echo ""
 
 # alias for help target
