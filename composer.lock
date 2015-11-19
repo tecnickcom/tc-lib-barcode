@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/tc-lib-color.git",
-                "reference": "ad1560a8a08658fe42c278fab1a158ff2fed98ff"
+                "reference": "086004787ff2d67f4f15819c69aec107b104ee77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/tc-lib-color/zipball/ad1560a8a08658fe42c278fab1a158ff2fed98ff",
-                "reference": "ad1560a8a08658fe42c278fab1a158ff2fed98ff",
+                "url": "https://api.github.com/repos/tecnickcom/tc-lib-color/zipball/086004787ff2d67f4f15819c69aec107b104ee77",
+                "reference": "086004787ff2d67f4f15819c69aec107b104ee77",
                 "shasum": ""
             },
             "require": {
@@ -67,10 +67,10 @@
                 "web"
             ],
             "support": {
-                "source": "https://github.com/tecnickcom/tc-lib-color/tree/1.6.6",
+                "source": "https://github.com/tecnickcom/tc-lib-color/tree/1.6.7",
                 "issues": "https://github.com/tecnickcom/tc-lib-color/issues"
             },
-            "time": "2015-11-19 17:20:38"
+            "time": "2015-11-19 17:58:48"
         }
     ],
     "packages-dev": [
