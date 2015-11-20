@@ -5,7 +5,7 @@
 # @package     Barcode
 # @author      Nicola Asuni <info@tecnick.com>
 # @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
-# @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+# @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE)
 # @link        https://github.com/tecnickcom/tc-lib-barcode
 #
 # This file is part of tc-lib-barcode software library.
@@ -214,7 +214,7 @@ install: uninstall
 	find $(PATHINSTBIN) -type d -exec chmod 755 {} \;
 	find $(PATHINSTBIN) -type f -exec chmod 644 {} \;
 	mkdir -p $(PATHINSTDOC)
-	cp -f ./LICENSE.TXT $(PATHINSTDOC)
+	cp -f ./LICENSE $(PATHINSTDOC)
 	cp -f ./README.md $(PATHINSTDOC)
 	cp -f ./VERSION $(PATHINSTDOC)
 	cp -f ./RELEASE $(PATHINSTDOC)
@@ -243,6 +243,7 @@ rpm:
 deb: build
 	rm -rf $(PATHDEBPKG)
 	make install DESTDIR=$(PATHDEBPKG)/$(PKGNAME)-$(VERSION)
+	rm -f $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/$(DOCPATH)LICENSE
 	tar -zcvf $(PATHDEBPKG)/$(PKGNAME)_$(VERSION).orig.tar.gz -C $(PATHDEBPKG)/ $(PKGNAME)-$(VERSION)
 	cp -rf ./resources/debian $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian
 	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#VERSION#~/$(VERSION)/" {} \;
