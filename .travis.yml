@@ -15,6 +15,12 @@ matrix:
     - php: hhvm
     - php: nightly
 
+before_install:
+  - sudo add-apt-repository -y ppa:moti-p/cc
+  - sudo apt-get update
+  - sudo apt-get -y --reinstall install imagemagick
+  - printf "\n" | pecl install imagick-beta
+
 before_script:
   - composer self-update
   - flags=""
