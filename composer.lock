@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/tc-lib-color.git",
-                "reference": "53e228c710f7cd9e0361c8299902cea57a613f36"
+                "reference": "13a40d990b3001bac7ecca3509aeac69ea2595d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/tc-lib-color/zipball/53e228c710f7cd9e0361c8299902cea57a613f36",
-                "reference": "53e228c710f7cd9e0361c8299902cea57a613f36",
+                "url": "https://api.github.com/repos/tecnickcom/tc-lib-color/zipball/13a40d990b3001bac7ecca3509aeac69ea2595d7",
+                "reference": "13a40d990b3001bac7ecca3509aeac69ea2595d7",
                 "shasum": ""
             },
             "require": {
@@ -67,10 +67,10 @@
                 "web"
             ],
             "support": {
-                "source": "https://github.com/tecnickcom/tc-lib-color/tree/1.6.10",
+                "source": "https://github.com/tecnickcom/tc-lib-color/tree/1.6.11",
                 "issues": "https://github.com/tecnickcom/tc-lib-color/issues"
             },
-            "time": "2015-11-20 14:56:43"
+            "time": "2015-11-22 15:04:30"
         }
     ],
     "packages-dev": [
@@ -297,16 +297,16 @@
         },
         {
             "name": "bartlett/php-compatinfo",
-            "version": "4.5.1",
+            "version": "4.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/llaville/php-compat-info.git",
-                "reference": "e4c5d42dce0820f59939bc7fbd2a8995bac66000"
+                "reference": "4fc02f5dc9e07039e3baafe53a287547dd8675bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/llaville/php-compat-info/zipball/e4c5d42dce0820f59939bc7fbd2a8995bac66000",
-                "reference": "e4c5d42dce0820f59939bc7fbd2a8995bac66000",
+                "url": "https://api.github.com/repos/llaville/php-compat-info/zipball/4fc02f5dc9e07039e3baafe53a287547dd8675bd",
+                "reference": "4fc02f5dc9e07039e3baafe53a287547dd8675bd",
                 "shasum": ""
             },
             "require": {
@@ -368,7 +368,7 @@
                 "compatibility",
                 "version"
             ],
-            "time": "2015-10-09 17:49:03"
+            "time": "2015-11-21 09:23:59"
         },
         {
             "name": "bartlett/php-reflect",
@@ -3035,20 +3035,20 @@
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.3.1",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/jsonlint.git",
-                "reference": "863ae85c6d3ef60ca49cb12bd051c4a0648c40c4"
+                "reference": "66834d3e3566bb5798db7294619388786ae99394"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/863ae85c6d3ef60ca49cb12bd051c4a0648c40c4",
-                "reference": "863ae85c6d3ef60ca49cb12bd051c4a0648c40c4",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/66834d3e3566bb5798db7294619388786ae99394",
+                "reference": "66834d3e3566bb5798db7294619388786ae99394",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^5.3 || ^7.0"
             },
             "bin": [
                 "bin/jsonlint"
@@ -3077,7 +3077,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2015-01-04 21:18:15"
+            "time": "2015-11-21 02:21:41"
         },
         {
             "name": "squizlabs/php_codesniffer",

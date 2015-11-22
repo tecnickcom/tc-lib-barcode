@@ -1,0 +1,41 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+  - nightly
+
+matrix:
+  allow_failures:
+    - php: 7.0
+    - php: hhvm
+    - php: nightly
+
+before_script:
+  - composer self-update
+  - flags=""
+  - if [ `phpenv version-name` == "5.3" ]; then flags="--ignore-platform-reqs"; fi
+  - composer -n install --no-interaction $flags
+  - composer require satooshi/php-coveralls:dev-master --no-interaction $flags
+
+script:
+  - make qa_all
+  - make report
+
+after_success:
+  - cat ./target/report/phploc.txt
+  - cat ./target/report/phpcompatinfo.txt
+
+after_failure:
+  - cat ./target/logs/junit.xml
+  - cat ./target/report/phpcpd.txt
+
+after_script:
+ - "echo 'src_dir: src' > .coveralls.yml"
+ - "echo 'coverage_clover: target/coverage/coverage.xml' >> .coveralls.yml"
+ - "echo 'json_path: target/coverage/coveralls-upload.json' >> .coveralls.yml"
+ - php vendor/bin/coveralls -v
