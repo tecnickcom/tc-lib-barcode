@@ -9,6 +9,13 @@
 * **license**     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
 * **link**        https://github.com/tecnickcom/tc-lib-barcode
 
+## Status
+* **MASTER**: [![Build Status](https://secure.travis-ci.org/tecnickcom/tc-lib-barcode.png?branch=master)](https://travis-ci.org/tecnickcom/tc-lib-barcode?branch=master)
+[![Coverage Status](https://coveralls.io/repos/tecnickcom/tc-lib-barcode/badge.svg?branch=master&service=github)](https://coveralls.io/github/tecnickcom/tc-lib-barcode?branch=master)
+* **DEVELOP**: [![Build Status](https://secure.travis-ci.org/tecnickcom/tc-lib-barcode.png?branch=develop)](https://travis-ci.org/tecnickcom/tc-lib-barcode?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/tecnickcom/tc-lib-barcode/badge.svg?branch=develop&service=github)](https://coveralls.io/github/tecnickcom/tc-lib-barcode?branch=develop)
+
+
 ## Description
 
 This library includes utility PHP classes to generate linear and bidimensional barcodes:
