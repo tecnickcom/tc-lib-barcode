@@ -1,5 +1,7 @@
 language: php
 
+sudo: false
+
 php:
   - 5.3
   - 5.4
@@ -15,11 +17,19 @@ matrix:
     - php: hhvm
     - php: nightly
 
-before_script:
+addons:
+  apt:
+    packages:
+    - imagemagick
+
+before_install:
   - composer self-update
+  - printf "\n" | pecl install imagick-beta
+
+before_script:
   - flags=""
   - if [ `phpenv version-name` == "5.3" ]; then flags="--ignore-platform-reqs"; fi
-  - composer -n install --no-interaction $flags
+  - composer install --no-interaction $flags
   - composer require satooshi/php-coveralls:dev-master --no-interaction $flags
 
 script:
