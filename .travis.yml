@@ -2,6 +2,15 @@ language: php
 
 sudo: false
 
+branches:
+  except:
+    - release
+
+branches:
+  only:
+    - master
+    - develop
+
 php:
   - 5.3
   - 5.4
@@ -24,7 +33,7 @@ addons:
 
 before_install:
   - composer self-update
-  - printf "\n" | pecl install imagick-beta
+  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" && "$TRAVIS_PHP_VERSION" != "7.0" && "$TRAVIS_PHP_VERSION" != "nightly" ]; then printf "\n" | pecl install imagick-beta -v; fi;
 
 before_script:
   - flags=""
@@ -48,4 +57,4 @@ after_script:
  - "echo 'src_dir: src' > .coveralls.yml"
  - "echo 'coverage_clover: target/coverage/coverage.xml' >> .coveralls.yml"
  - "echo 'json_path: target/coverage/coveralls-upload.json' >> .coveralls.yml"
- - php vendor/bin/coveralls -v
+ - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then php vendor/bin/coveralls -v; fi;
