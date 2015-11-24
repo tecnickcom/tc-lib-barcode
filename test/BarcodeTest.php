@@ -163,8 +163,10 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
 ';
         $this->assertEquals($expected, $hdiv);
 
-        $pngik = $bobj->getPngData(true);
-        $this->assertEquals('Imagick', get_class($pngik));
+        if (extension_loaded('imagick')) {
+            $pngik = $bobj->getPngData(true);
+            $this->assertEquals('PNG', substr($pngik, 1, 3));
+        }
         
         $pnggd = $bobj->getPngData(false);
         $this->assertEquals('PNG', substr($pnggd, 1, 3));

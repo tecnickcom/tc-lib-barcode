@@ -421,7 +421,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
             }
         }
         $img->drawimage($barcode);
-        return $img;
+        return $img->getImageBlob();
     }
 
     /**
