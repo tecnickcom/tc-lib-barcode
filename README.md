@@ -1,6 +1,18 @@
 # tc-lib-barcode
+*PHP barcode library*
 
-*Please consider supporting this project by making a donation to <paypal@tecnick.com>*
+[![Latest Stable Version](https://poser.pugx.org/tecnickcom/tc-lib-barcode/version)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
+[![Master Build Status](https://secure.travis-ci.org/tecnickcom/tc-lib-barcode.png?branch=master)](https://travis-ci.org/tecnickcom/tc-lib-barcode?branch=master)
+[![Master Coverage Status](https://coveralls.io/repos/tecnickcom/tc-lib-barcode/badge.svg?branch=master&service=github)](https://coveralls.io/github/tecnickcom/tc-lib-barcode?branch=master)
+[![License](https://poser.pugx.org/tecnickcom/tc-lib-barcode/license)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
+[![Total Downloads](https://poser.pugx.org/tecnickcom/tc-lib-barcode/downloads)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
+*
+[![Develop Branch](https://img.shields.io/badge/-develop:-gray.svg)](https://github.com/tecnickcom/tc-lib-barcode/tree/develop)
+[![Develop Build Status](https://secure.travis-ci.org/tecnickcom/tc-lib-barcode.png?branch=develop)](https://travis-ci.org/tecnickcom/tc-lib-barcode?branch=develop)
+[![Develop Coverage Status](https://coveralls.io/repos/tecnickcom/tc-lib-barcode/badge.svg?branch=develop&service=github)](https://coveralls.io/github/tecnickcom/tc-lib-barcode?branch=develop)
+
+[![Donate via PayPal](https://img.shields.io/badge/donate-paypal-87ceeb.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tc-lib-barcode%20project)
+*Please consider supporting this project by making a donation via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tc-lib-barcode%20project)*
 
 * **category**    Library
 * **package**     \Com\Tecnick\Barcode
@@ -8,13 +20,6 @@
 * **copyright**   2015-2015 Nicola Asuni - Tecnick.com LTD
 * **license**     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
 * **link**        https://github.com/tecnickcom/tc-lib-barcode
-
-## Status
-* **MASTER**: [![Build Status](https://secure.travis-ci.org/tecnickcom/tc-lib-barcode.png?branch=master)](https://travis-ci.org/tecnickcom/tc-lib-barcode?branch=master)
-[![Coverage Status](https://coveralls.io/repos/tecnickcom/tc-lib-barcode/badge.svg?branch=master&service=github)](https://coveralls.io/github/tecnickcom/tc-lib-barcode?branch=master)
-* **DEVELOP**: [![Build Status](https://secure.travis-ci.org/tecnickcom/tc-lib-barcode.png?branch=develop)](https://travis-ci.org/tecnickcom/tc-lib-barcode?branch=develop)
-[![Coverage Status](https://coveralls.io/repos/tecnickcom/tc-lib-barcode/badge.svg?branch=develop&service=github)](https://coveralls.io/github/tecnickcom/tc-lib-barcode?branch=develop)
-
 
 ## Description
 
@@ -57,7 +62,7 @@ This library includes utility PHP classes to generate linear and bidimensional b
 * RAW        : 2D RAW MODE comma-separated rows
 * RAW2       : 2D RAW MODE rows enclosed in square parentheses
 
-The initial source code has been extracted from TCPDF (<http://www.tcpdf.org>).
+The initial source code has been derived from [TCPDF](<http://www.tcpdf.org>).
 
 
 ## Getting started
@@ -112,7 +117,7 @@ Please check all the available options using `make help`.
 
 Examples are located in the `example` directory.
 
-Start a development server (requires PHP 5.5) using the command:
+Start a development server (requires PHP 5.4) using the command:
 
 ```
 make server
