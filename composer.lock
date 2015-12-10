@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fb7d79a2f95606b93fa1b59c524b0a9d",
-    "content-hash": "f333a4e8dc560a1d679a43c90b8057cf",
+    "hash": "53135a7ad9009bacf549f5270d8fc504",
+    "content-hash": "f9a3fa54ed3fcbb493bb82cebddd060e",
     "packages": [
         {
             "name": "tecnickcom/tc-lib-color",
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/tc-lib-color.git",
-                "reference": "43cf1b73483f21544545aa60691f1fc636b67360"
+                "reference": "6772a04face3c4af160bf51349a3c4d4d7a00c48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/tc-lib-color/zipball/43cf1b73483f21544545aa60691f1fc636b67360",
-                "reference": "43cf1b73483f21544545aa60691f1fc636b67360",
+                "url": "https://api.github.com/repos/tecnickcom/tc-lib-color/zipball/6772a04face3c4af160bf51349a3c4d4d7a00c48",
+                "reference": "6772a04face3c4af160bf51349a3c4d4d7a00c48",
                 "shasum": ""
             },
             "require": {
@@ -30,7 +30,7 @@
                 "pdepend/pdepend": "2.2.*",
                 "phploc/phploc": "2.1.*",
                 "phpmd/phpmd": "2.3.*",
-                "phpunit/phpunit": "4.8.19|5.*",
+                "phpunit/phpunit": "4.8.19",
                 "sebastian/phpcpd": "2.0.*",
                 "squizlabs/php_codesniffer": "2.3.*"
             },
@@ -67,10 +67,10 @@
                 "web"
             ],
             "support": {
-                "source": "https://github.com/tecnickcom/tc-lib-color/tree/1.7.1",
+                "source": "https://github.com/tecnickcom/tc-lib-color/tree/1.7.2",
                 "issues": "https://github.com/tecnickcom/tc-lib-color/issues"
             },
-            "time": "2015-12-10 19:27:10"
+            "time": "2015-12-10 20:38:27"
         }
     ],
     "packages-dev": [
