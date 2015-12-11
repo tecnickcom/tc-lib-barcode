@@ -157,6 +157,8 @@ When this library is installed using an RPM or DEB package, you can use it your 
 require_once ('/usr/share/php/Com/Tecnick/Barcode/autoload.php');
 ```
 
+**NOTE:** Updated RPM and Debian packages of this library can be downloaded from: https://bintray.com/tecnickcom
+
 ## Developer(s) Contact
 
 * Nicola Asuni <info@tecnick.com>

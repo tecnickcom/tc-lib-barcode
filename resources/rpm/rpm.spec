@@ -16,8 +16,9 @@ URL:       https://github.com/%{gh_owner}/%{gh_project}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: noarch
 
-Requires:  php(language) >= 5.3.3
-Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.7.0
+Requires:  php(language) >= 5.4.0
+Requires:  php-composer(%{c_vendor}/tc-lib-color) < 2.0.0
+Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.8.0
 Requires:  php-bcmath
 Requires:  php-date
 Requires:  php-gd
