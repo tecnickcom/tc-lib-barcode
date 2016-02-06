@@ -54,7 +54,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
         '5' => '11101011101010',
         '6' => '10111011101010',
         '7' => '10101011101110',
-        '8' => '10101110111010',
+        '8' => '11101010111010',
         '9' => '10111010111010'
     );
 
@@ -107,7 +107,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
             // add leading zero if code-length is odd
             $code = '0'.$code;
         }
-        $seq = '11011010';
+        $seq = '1110111010';
         $clen = strlen($code);
         for ($idx = 0; $idx < $clen; ++$idx) {
             $digit = $code[$idx];
@@ -116,7 +116,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
             }
             $seq .= $this->chbar[$digit];
         }
-        $seq .= '1101011';
+        $seq .= '111010111';
         $this->processBinarySequence($seq);
     }
 }
