@@ -39,7 +39,7 @@ before_script:
   - flags=""
   - if [ `phpenv version-name` == "5.3" ]; then flags="--ignore-platform-reqs"; fi
   - composer install --no-interaction $flags
-  - composer require satooshi/php-coveralls:dev-master --no-interaction $flags
+  - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then composer require satooshi/php-coveralls:dev-master --no-interaction; fi $flags
 
 script:
   - make qa_all
@@ -54,7 +54,6 @@ after_failure:
   - cat ./target/report/phpcpd.txt
 
 after_script:
- - "echo 'src_dir: src' > .coveralls.yml"
  - "echo 'coverage_clover: target/coverage/coverage.xml' >> .coveralls.yml"
  - "echo 'json_path: target/coverage/coveralls-upload.json' >> .coveralls.yml"
  - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then php vendor/bin/coveralls -v; fi;
