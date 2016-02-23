@@ -99,7 +99,7 @@ class Barcode
      * @param array  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
      *                        A negative value indicates the multiplication factor for each row or column.
      *
-     * @return array
+     * @return Type
      *
      * @throws BarcodeException in case of error
      */
