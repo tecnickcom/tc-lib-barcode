@@ -187,14 +187,12 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
     }
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
         $code = $this->getExtendCode(strtoupper($this->code));
-        return '*'.$code.$this->getChecksum($code).'*';
+        $this->extcode = '*'.$code.$this->getChecksum($code).'*';
     }
 
     /**
@@ -209,10 +207,10 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols = 0;
         $this->nrows = 1;
         $this->bars = array();
-        $code = $this->formatCode();
-        $clen = strlen($code);
+        $this->formatCode();
+        $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
-            $char = $code[$chr];
+            $char = $this->extcode[$chr];
             if (!isset($this->chbar[$char])) {
                 throw new BarcodeException('Invalid character: chr('.ord($char).')');
             }

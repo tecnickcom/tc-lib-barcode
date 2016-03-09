@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -60,6 +60,13 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @var string
      */
     protected $code = '';
+
+    /**
+     * Resulting code after applying checksum etc.
+     *
+     * @var string
+     */
+    protected $extcode = '';
 
     /**
      * Total number of columns
@@ -151,6 +158,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         $padding = array(0, 0, 0, 0)
     ) {
         $this->code = $code;
+        $this->extcode = $code;
         $this->params = $params;
         $this->setParameters();
         $this->setBars();
@@ -258,6 +266,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
             'format'       => $this->format,
             'params'       => $this->params,
             'code'         => $this->code,
+            'extcode'      => $this->extcode,
             'ncols'        => $this->ncols,
             'nrows'        => $this->nrows,
             'width'        => $this->width,
@@ -270,6 +279,16 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
             'color_obj'    => $this->color_obj,
             'bars'         => $this->bars
         );
+    }
+
+    /**
+     * Get the extended code (code + checksum)
+     *
+     * @return string
+     */
+    public function getExtendedCode()
+    {
+        return $this->extcode;
     }
 
     /**
@@ -386,8 +405,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         $img = $this->getGd();
         ob_start();
         imagepng($img);
-        $png = ob_get_clean();
-        return $png;
+        return ob_get_clean();
     }
 
     /**

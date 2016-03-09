@@ -158,14 +158,12 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     }
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
         $code = str_pad($this->code, ($this->code_length - 1), '0', STR_PAD_LEFT);
-        return $code.$this->getChecksum($code);
+        $this->extcode = $code.$this->getChecksum($code);
     }
     
     /**
@@ -178,16 +176,16 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
         if (!is_numeric($this->code)) {
             throw new BarcodeException('Inpout code must be a number');
         }
-        $code = $this->formatCode();
+        $this->formatCode();
         $seq = '101'; // left guard bar
         $half_len = intval(ceil($this->code_length / 2));
-        $parity = $this->parities[$code[0]];
+        $parity = $this->parities[$this->extcode[0]];
         for ($pos = 1; $pos < $half_len; ++$pos) {
-            $seq .= $this->chbar[$parity[($pos - 1)]][$code[$pos]];
+            $seq .= $this->chbar[$parity[($pos - 1)]][$this->extcode[$pos]];
         }
         $seq .= '01010'; // center guard bar
         for ($pos = $half_len; $pos < $this->code_length; ++$pos) {
-            $seq .= $this->chbar['C'][$code[$pos]];
+            $seq .= $this->chbar['C'][$this->extcode[$pos]];
         }
         $seq .= '101'; // right guard bar
         $this->processBinarySequence($seq);

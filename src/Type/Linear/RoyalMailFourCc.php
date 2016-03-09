@@ -157,14 +157,12 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     }
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
         $code = strtoupper($this->code);
-        return $code.$this->getChecksum($code);
+        $this->extcode = $code.$this->getChecksum($code);
     }
     
     /**
@@ -174,10 +172,10 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getCoreBars()
     {
-        $code = $this->formatCode();
-        $clen = strlen($code);
+        $this->formatCode();
+        $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
-            $char = $code[$chr];
+            $char = $this->extcode[$chr];
             for ($pos = 0; $pos < 4; ++$pos) {
                 switch ($this->chbar[$char][$pos]) {
                     case '1':

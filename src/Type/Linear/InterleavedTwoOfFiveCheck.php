@@ -61,13 +61,11 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
     );
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
-        return $this->code.$this->getChecksum($this->code);
+        $this->extcode = $this->code.$this->getChecksum($this->code);
     }
     
     /**
@@ -79,20 +77,20 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
      */
     protected function setBars()
     {
-        $code = $this->formatCode();
-        if ((strlen($code) % 2) != 0) {
+        $this->formatCode();
+        if ((strlen($this->extcode) % 2) != 0) {
             // add leading zero if code-length is odd
-            $code = '0'.$code;
+            $this->extcode = '0'.$this->extcode;
         }
         // add start and stop codes
-        $code = 'AA'.strtolower($code).'ZA';
+        $this->extcode = 'AA'.strtolower($this->extcode).'ZA';
         $this->ncols = 0;
         $this->nrows = 1;
         $this->bars = array();
-        $clen = strlen($code);
+        $clen = strlen($this->extcode);
         for ($idx = 0; $idx < $clen; $idx = ($idx + 2)) {
-            $char_bar = $code[$idx];
-            $char_space = $code[($idx + 1)];
+            $char_bar = $this->extcode[$idx];
+            $char_space = $this->extcode[($idx + 1)];
             if ((!isset($this->chbar[$char_bar])) || (!isset($this->chbar[$char_space]))) {
                 throw new BarcodeException('Invalid character sequence: '.$char_bar.$char_space);
             }

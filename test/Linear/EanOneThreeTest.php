@@ -42,6 +42,8 @@ class EanOneThreeTest extends \PHPUnit_Framework_TestCase
         $grid = $bobj->getGrid();
         $expected = "10100011010001101001100100100110111101010001101010100111010100001000100100100011101001001110101\n";
         $this->assertEquals($expected, $grid);
+
+        $this->assertEquals('0001234567895', $bobj->getExtendedCode());
     }
 
     public function testInvalidInput()
