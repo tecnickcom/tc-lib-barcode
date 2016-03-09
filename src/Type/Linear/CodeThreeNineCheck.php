@@ -41,13 +41,11 @@ class CodeThreeNineCheck extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineE
     protected $format = 'C39+';
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
         $code = strtoupper($this->code);
-        return '*'.$code.$this->getChecksum($code).'*';
+        $this->extcode = '*'.$code.$this->getChecksum($code).'*';
     }
 }

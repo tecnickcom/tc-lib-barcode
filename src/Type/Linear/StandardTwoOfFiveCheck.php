@@ -84,13 +84,11 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
     }
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
-        return $this->code.$this->getChecksum($this->code);
+        $this->extcode = $this->code.$this->getChecksum($this->code);
     }
     
     /**
@@ -102,15 +100,15 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars()
     {
-        $code = $this->formatCode();
-        if ((strlen($code) % 2) != 0) {
+        $this->formatCode();
+        if ((strlen($this->extcode) % 2) != 0) {
             // add leading zero if code-length is odd
-            $code = '0'.$code;
+            $this->extcode = '0'.$this->extcode;
         }
         $seq = '1110111010';
-        $clen = strlen($code);
+        $clen = strlen($this->extcode);
         for ($idx = 0; $idx < $clen; ++$idx) {
-            $digit = $code[$idx];
+            $digit = $this->extcode[$idx];
             if (!isset($this->chbar[$digit])) {
                 throw new BarcodeException('Invalid character: chr('.ord($digit).')');
             }

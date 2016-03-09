@@ -41,12 +41,10 @@ class Msi extends \Com\Tecnick\Barcode\Type\Linear\MsiCheck
     protected $format = 'MSI';
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
-        return $this->code;
+        $this->extcode = $this->code;
     }
 }

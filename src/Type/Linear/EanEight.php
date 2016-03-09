@@ -54,15 +54,15 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      */
     protected function setBars()
     {
-        $code = $this->formatCode();
+        $this->formatCode();
         $seq = '101'; // left guard bar
         $half_len = intval(ceil($this->code_length / 2));
         for ($pos = 0; $pos < $half_len; ++$pos) {
-            $seq .= $this->chbar['A'][$code[$pos]];
+            $seq .= $this->chbar['A'][$this->extcode[$pos]];
         }
         $seq .= '01010'; // center guard bar
         for ($pos = $half_len; $pos < $this->code_length; ++$pos) {
-            $seq .= $this->chbar['C'][$code[$pos]];
+            $seq .= $this->chbar['C'][$this->extcode[$pos]];
         }
         $seq .= '101'; // right guard bar
         $this->processBinarySequence($seq);

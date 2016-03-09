@@ -189,10 +189,10 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         $this->ncols = 0;
         $this->nrows = 1;
         $this->bars = array();
-        $code = $this->formatCode();
-        $clen = strlen($code);
+        $this->formatCode();
+        $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
-            $char = ord($code[$chr]);
+            $char = ord($this->extcode[$chr]);
             for ($pos = 0; $pos < 6; ++$pos) {
                 $bar_width = intval($this->chbar[$char][$pos]);
                 if (($pos % 2) == 0) {

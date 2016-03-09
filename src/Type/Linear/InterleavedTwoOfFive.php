@@ -41,12 +41,10 @@ class InterleavedTwoOfFive extends \Com\Tecnick\Barcode\Type\Linear\InterleavedT
     protected $format = 'I25';
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
-        return $this->code;
+        $this->extcode = $this->code;
     }
 }

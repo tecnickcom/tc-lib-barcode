@@ -48,15 +48,13 @@ class UpcA extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
     protected $code_length = 12;
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format the code
      */
     protected function formatCode()
     {
         $code = str_pad($this->code, ($this->code_length - 1), '0', STR_PAD_LEFT);
         $code .= $this->getChecksum($code);
         ++$this->code_length;
-        return '0'.$code;
+        $this->extcode = '0'.$code;
     }
 }

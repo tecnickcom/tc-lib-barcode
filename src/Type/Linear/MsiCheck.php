@@ -91,13 +91,11 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
     }
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
-        return $this->code.$this->getChecksum($this->code);
+        $this->extcode = $this->code.$this->getChecksum($this->code);
     }
     
     /**
@@ -109,11 +107,11 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars()
     {
-        $code = $this->formatCode();
+        $this->formatCode();
         $seq = '110'; // left guard
-        $clen = strlen($code);
+        $clen = strlen($this->extcode);
         for ($pos = 0; $pos < $clen; ++$pos) {
-            $digit = $code[$pos];
+            $digit = $this->extcode[$pos];
             if (!isset($this->chbar[$digit])) {
                 throw new BarcodeException('Invalid character: chr('.ord($digit).')');
             }

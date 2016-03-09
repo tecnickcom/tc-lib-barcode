@@ -79,7 +79,7 @@ COMPOSER=$(shell which php) -d "apc.enable_cli=0" $(shell which composer)
 # Display general help about this command
 help:
 	@echo ""
-	@echo "Welcome to ${PROJECT} make."
+	@echo "${PROJECT} Makefile."
 	@echo "The following commands are available:"
 	@echo ""
 	@echo "    make qa          : Run the targets: test, phpcs, phpmd and phpcpd"

@@ -41,12 +41,10 @@ class CodeThreeNineExt extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExt
     protected $format = 'C39E';
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
-        return '*'.$this->getExtendCode(strtoupper($this->code)).'*';
+        $this->extcode = '*'.$this->getExtendCode(strtoupper($this->code)).'*';
     }
 }

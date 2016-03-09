@@ -80,14 +80,12 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
     }
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
         $code = preg_replace('/[-\s]+/', '', $this->code);
-        return $code.$this->getChecksum($code);
+        $this->extcode = $code.$this->getChecksum($code);
     }
 
     /**
@@ -102,13 +100,13 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols = 0;
         $this->nrows = 2;
         $this->bars = array();
-        $code = $this->formatCode();
-        $clen = strlen($code);
+        $this->formatCode();
+        $clen = strlen($this->extcode);
         // start bar
         $this->bars[] = array($this->ncols, 0, 1, 2);
         $this->ncols += 2;
         for ($chr = 0; $chr < $clen; ++$chr) {
-            $char = $code[$chr];
+            $char = $this->extcode[$chr];
             if (!isset($this->chbar[$char])) {
                 throw new BarcodeException('Invalid character: chr('.ord($char).')');
             }

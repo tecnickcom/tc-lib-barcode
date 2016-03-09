@@ -104,7 +104,7 @@ echo "
         <h3>HTML DIV</h3>
         <p style=\"font-family:monospace;\">".$bobj->getHtmlDiv()."</p>
         <h3>Unicode String</h3>
-        <pre style=\"font-family:monospace;line-height:0.61em;font-size:6px;\">".$bobj->getGrid(json_decode('"\u00A0"'), json_decode('"\u2b1b"'))."</pre>
+        <pre style=\"font-family:monospace;line-height:0.61em;font-size:6px;\">".$bobj->getGrid(json_decode('"\u00A0"'), json_decode('"\u2584"'))."</pre>
         <h3>Binary String</h3>
         <pre style=\"font-family:monospace;\">".$bobj->getGrid()."</pre>
         <h2>Barcode Types</h2>

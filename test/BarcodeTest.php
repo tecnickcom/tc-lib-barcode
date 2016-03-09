@@ -90,11 +90,14 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
             array(-2, 3, 0, 1)
         );
 
+        $this->assertEquals('01001100011100001111,10110011100011110000', $bobj->getExtendedCode());
+
         $barr = $bobj->getArray();
         $this->assertEquals('linear', $barr['type']);
         $this->assertEquals('LRAW', $barr['format']);
         $this->assertEquals(array('AB', '12', 'E3F'), $barr['params']);
         $this->assertEquals('01001100011100001111,10110011100011110000', $barr['code']);
+        $this->assertEquals('01001100011100001111,10110011100011110000', $barr['extcode']);
         $this->assertEquals(20, $barr['ncols']);
         $this->assertEquals(2, $barr['nrows']);
         $this->assertEquals(40, $barr['width']);

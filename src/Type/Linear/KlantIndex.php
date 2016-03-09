@@ -41,13 +41,11 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
     protected $format = 'KIX';
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
-        return strtoupper($this->code);
+        $this->extcode = strtoupper($this->code);
     }
     
     /**

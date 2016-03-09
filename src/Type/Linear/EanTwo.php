@@ -104,13 +104,11 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
     }
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
-        return str_pad($this->code, $this->code_length, '0', STR_PAD_LEFT);
+        $this->extcode = str_pad($this->code, $this->code_length, '0', STR_PAD_LEFT);
     }
     
     /**
@@ -120,15 +118,15 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars()
     {
-        $code = $this->formatCode();
-        $chk = $this->getChecksum($code);
+        $this->formatCode();
+        $chk = $this->getChecksum($this->extcode);
         $parity = $this->parities[$chk];
         $seq = '1011'; // left guard bar
-        $seq .= $this->chbar[$parity[0]][$code[0]];
-        $len = strlen($code);
+        $seq .= $this->chbar[$parity[0]][$this->extcode[0]];
+        $len = strlen($this->extcode);
         for ($pos = 1; $pos < $len; ++$pos) {
             $seq .= '01'; // separator
-            $seq .= $this->chbar[$parity[$pos]][$code[$pos]];
+            $seq .= $this->chbar[$parity[$pos]][$this->extcode[$pos]];
         }
         $this->processBinarySequence($seq);
     }

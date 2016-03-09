@@ -41,12 +41,10 @@ class StandardTwoOfFive extends \Com\Tecnick\Barcode\Type\Linear\StandardTwoOfFi
     protected $format = 'S25';
 
     /**
-     * Get the pre-formatted code
-     *
-     * @return string
+     * Format code
      */
     protected function formatCode()
     {
-        return $this->code;
+        $this->extcode = $this->code;
     }
 }
