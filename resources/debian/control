@@ -3,7 +3,7 @@ Maintainer: Nicola Asuni <info@tecnick.com>
 Section: php
 Priority: optional
 Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.5
+Standards-Version: 3.9.7
 Homepage: https://github.com/~#VENDOR#~/~#PROJECT#~
 Vcs-Git: https://github.com/~#VENDOR#~/~#PROJECT#~.git
 
