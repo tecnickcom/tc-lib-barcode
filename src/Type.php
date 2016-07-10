@@ -322,10 +322,13 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         if (defined('ENT_XML1')) {
             $hflag = ENT_XML1;
         }
+        
+        $width = sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R']));
+        $height = sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B']));
         $svg = '<?xml version="1.0" standalone="no" ?>'."\n"
             .'<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'."\n"
-            .'<svg width="'.sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R']))
-            .'" height="'.sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B'])).'"'
+            .'<svg width="'.$width.'" height="'.$height.'"'
+            .' viewBox="0 0 '.$width.' '.$height.'"'
             .' version="1.1" xmlns="http://www.w3.org/2000/svg">'."\n"
             ."\t".'<desc>'.htmlspecialchars($this->code, $hflag, 'UTF-8').'</desc>'."\n"
             ."\t".'<g id="bars" fill="'.$this->color_obj->getRgbHexColor().'"'
