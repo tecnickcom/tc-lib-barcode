@@ -128,7 +128,8 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
         $svg = $bobj->getSvgCode();
         $expected = '<?xml version="1.0" standalone="no" ?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="44.000000" height="8.000000" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<svg width="44.000000" height="8.000000"'
+    .' viewBox="0 0 44.000000 8.000000" version="1.1" xmlns="http://www.w3.org/2000/svg">
 	<desc>01001100011100001111,10110011100011110000</desc>
 	<g id="bars" fill="#800080" stroke="none" stroke-width="0" stroke-linecap="square">
 		<rect x="3.000000" y="4.000000" width="2.000000" height="2.000000" />
@@ -190,7 +191,7 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
         ob_start();
         $bobj->getSvg();
         $svg = ob_get_clean();
-        $this->assertEquals('6f2e7cfe5d74e614dd8e0d10aff0dee2', md5($svg));
+        $this->assertEquals('ec63f360eedd343b83610814a101ae56', md5($svg));
     }
     
     /**
