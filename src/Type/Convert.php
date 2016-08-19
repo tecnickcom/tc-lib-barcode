@@ -86,4 +86,117 @@ abstract class Convert
         }
         return $dec;
     }
+
+    /**
+     * Get a raw barcode grid array
+     *
+     * @param string $space_char Character or string to use for filling empty spaces
+     * @param string $bar_char   Character or string to use for filling bars
+     *
+     * @return array
+     */
+    public function getGridArray($space_char = '0', $bar_char = '1')
+    {
+        $raw = array_fill(0, $this->nrows, array_fill(0, $this->ncols, $space_char));
+        foreach ($this->bars as $bar) {
+            if (($bar[2] > 0) && ($bar[3] > 0)) {
+                for ($vert = 0; $vert < $bar[3]; ++$vert) {
+                    for ($horiz = 0; $horiz < $bar[2]; ++$horiz) {
+                        $raw[($bar[1] + $vert)][($bar[0] + $horiz)] = $bar_char;
+                    }
+                }
+            }
+        }
+        return $raw;
+    }
+
+    /**
+     * Returns the bars array ordered by columns
+     *
+     * @return array
+     */
+    protected function getRotatedBarArray()
+    {
+        $grid = $this->getGridArray();
+        $cols = call_user_func_array('array_map', array(-1 => null) + $grid);
+        $bars = array();
+        foreach ($cols as $posx => $col) {
+            $prevrow = '';
+            $bar_height = 0;
+            $col[] = '0';
+            for ($posy = 0; $posy <= $this->nrows; ++$posy) {
+                if ($col[$posy] != $prevrow) {
+                    if ($prevrow == '1') {
+                        $bars[] = array($posx, ($posy - $bar_height), 1, $bar_height);
+                    }
+                    $bar_height = 0;
+                }
+                ++$bar_height;
+                $prevrow = $col[$posy];
+            }
+        }
+        return $bars;
+    }
+
+    /**
+     * Get the adjusted rectangular coordinates (x1,y1,x2,y2) for the specified bar
+     *
+     * @param array Raw bar coordinates
+     *
+     * @return array Bar coordinates
+     */
+    protected function getBarRectXYXY($bar)
+    {
+        return array(
+            ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
+            ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
+            ($this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1),
+            ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1)
+        );
+    }
+
+    /**
+     * Get the adjusted rectangular coordinates (x,y,w,h) for the specified bar
+     *
+     * @param array Raw bar coordinates
+     *
+     * @return array Bar coordinates
+     */
+    protected function getBarRectXYWH($bar)
+    {
+        return array(
+            ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
+            ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
+            ($bar[2] * $this->width_ratio),
+            ($bar[3] * $this->height_ratio)
+        );
+    }
+
+    /**
+     * Get the array containing all the formatted bars coordinates
+     *
+     * @param string $type Type of coordinates to return: 'XYXY' or 'XYWH'
+     *
+     * @return array
+     */
+    protected function getBarsArray($type = 'XYXY')
+    {
+        $mtd = 'getBarRect'.$type;
+        $rect = array();
+        foreach ($this->bars as $bar) {
+            if (($bar[2] > 0) && ($bar[3] > 0)) {
+                $rect[] = $this->$mtd($bar);
+            }
+        }
+        if ($this->nrows > 1) {
+            // reprint rotated to cancel row gaps
+            $rot = $this->getRotatedBarArray();
+            foreach ($rot as $bar) {
+                if (($bar[2] > 0) && ($bar[3] > 0)) {
+                    $rect[] = $this->$mtd($bar);
+                }
+            }
+        }
+        return $rect;
+    }
 }
