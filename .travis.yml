@@ -56,6 +56,6 @@ after_failure:
 after_success:
   - cat ./target/report/phploc.txt
   - cat ./target/report/phpcompatinfo.txt
- - "echo 'coverage_clover: target/coverage/coverage.xml' >> .coveralls.yml"
- - "echo 'json_path: target/coverage/coveralls-upload.json' >> .coveralls.yml"
- - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then php vendor/bin/coveralls -v; fi;
+  - "echo 'coverage_clover: target/coverage/coverage.xml' >> .coveralls.yml"
+  - "echo 'json_path: target/coverage/coveralls-upload.json' >> .coveralls.yml"
+  - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then php vendor/bin/coveralls -v; fi;
