@@ -247,8 +247,8 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      */
     public function setColor($color)
     {
-        $webcolor = new \Com\Tecnick\Color\Web();
-        $rgb = $webcolor->getColorObj($color)->toRgbArray();
+        $webcolor = new \Com\Tecnick\Color\Pdf();
+        $rgb = $webcolor->getColorObject($color)->toRgbArray();
         $this->color_obj = new \Com\Tecnick\Color\Model\Rgb($rgb);
 
         return $this;
