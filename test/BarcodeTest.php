@@ -79,6 +79,19 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
         $this->obj->getBarcodeObj('LRAW', array());
     }
 
+    public function testSpotColor()
+    {
+        $bobj = $this->obj->getBarcodeObj(
+            'LRAW',
+            '01001100011100001111,10110011100011110000',
+            -2,
+            -2,
+            'all',
+            array(-2, 3, 0, 1)
+        );
+        $this->assertEquals('#000000ff', $bobj->getArray()['color_obj']->getRgbaHexColor());
+    }
+
     public function testExportMethods()
     {
         $bobj = $this->obj->getBarcodeObj(
