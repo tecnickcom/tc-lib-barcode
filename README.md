@@ -26,7 +26,7 @@
 
 ## Description
 
-This library includes utility PHP classes to generate linear and bidimensional barcodes:
+This library includes utility PHP classes to generate [linear and bidimensional](BARCODE_TYPES.md) barcodes:
 
 * C39        : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9
 * C39+       : CODE 39 with checksum
@@ -64,6 +64,14 @@ This library includes utility PHP classes to generate linear and bidimensional b
 * QRCODE     : QR-CODE
 * RAW        : 2D RAW MODE comma-separated rows
 * RAW2       : 2D RAW MODE rows enclosed in square parentheses
+
+### Output Formats
+
+* PNG Image
+* SVG Image
+* HTML DIV
+* Unicode String
+* Binary String
 
 The initial source code has been derived from [TCPDF](<http://www.tcpdf.org>).
 
@@ -116,7 +124,7 @@ Other make options allows you to install this library globally and build an RPM 
 Please check all the available options using `make help`.
 
 
-## Example
+## Examples
 
 Examples are located in the `example` directory.
 
@@ -127,6 +135,27 @@ make server
 ```
 
 and point your browser to <http://localhost:8000/index.php>
+
+
+### Simple Code Example
+
+```
+// instantiate the barcode class
+$barcode = new \Com\Tecnick\Barcode\Barcode();
+
+// generate a barcode
+$bobj = $barcode->getBarcodeObj(
+    'QRCODE,H',                     // barcode type and additional comma-separated parameters
+    'https://tecnick.com',          // data string to encode
+    -4,                             // bar height (use absolute or negative value as multiplication factor)
+    -4,                             // bar width (use absolute or negative value as multiplication factor)
+    'black',                        // foreground color
+    array(-2, -2, -2, -2)           // padding (use absolute or negative values as multiplication factors)
+    )->setBackgroundColor('white'); // background color
+
+// output the barcode as HTML div (see other output formats in the documentation and examples)
+$bobj->getHtmlDiv();
+```
 
 
 ## Installation
