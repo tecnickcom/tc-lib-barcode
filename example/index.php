@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -75,7 +75,7 @@ foreach ($square as $type => $code) {
     $examples .= '<h4>[<span>'.$type.'</span>] '.$code[1].'</h4><p style="font-family:monospace;">'.$bobj->getHtmlDiv().'</p>'."\n";
 }
 
-$bobj = $barcode->getBarcodeObj('QRCODE,H', 'http://www.tecnick.com', -4, -4, 'black', array(-2, -2, -2, -2));
+$bobj = $barcode->getBarcodeObj('QRCODE,H', 'https://tecnick.com', -4, -4, 'black', array(-2, -2, -2, -2))->setBackgroundColor('#f0f0f0');
 
 echo "
 <!DOCTYPE html>
