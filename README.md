@@ -26,7 +26,7 @@
 
 ## Description
 
-This library includes utility PHP classes to generate [linear and bidimensional](BARCODE_TYPES.md) barcodes:
+This library includes utility PHP classes to generate linear and bidimensional barcodes:
 
 * C39        : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9
 * C39+       : CODE 39 with checksum
