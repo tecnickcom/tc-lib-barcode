@@ -129,4 +129,42 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
         $code = str_pad('', 3000, 'X');
         $this->obj->getBarcodeObj('DATAMATRIX', $code);
     }
+
+    /**
+     * @dataProvider getStringDataProvider
+     */
+    public function testStrings($code)
+    {
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $this->assertNotNull($bobj);
+    }
+
+    public function getStringDataProvider()
+    {
+        return \Test\TestStrings::getDataProvider();
+    }
+ 
+    public function testEncodeTXTC40shiftException()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
+        $chr = null;
+        $enc = null;
+        $temp_cw = null;
+        $ptr = null;
+        $obj->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
+    }
+ 
+    public function testEncodeTXTC40Exception()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
+        $data = array(chr(0x80));
+        $enc = \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data::ENC_X12;
+        $temp_cw = null;
+        $ptr = null;
+        $epos = 0;
+        $charset = null;
+        $obj->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
+    }
 }

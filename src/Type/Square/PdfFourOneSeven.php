@@ -142,7 +142,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      */
     protected function setBars()
     {
-        if (empty($this->code)) {
+        if (strlen((string)$this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
         $barcode = $this->getBinSequence();
@@ -222,7 +222,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         // count number of codewords
         $numcw = count($codewords);
         if ($numcw > 925) {
-            throw new BarcodeException('The maximum codeword capaciy has been reached');
+            throw new BarcodeException('The maximum codeword capaciy has been reached: '.$numcw.' > 925');
         }
         $macrocw = $this->getMacroBlock($numcw);
         // set error correction level
@@ -248,13 +248,8 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         // calculate padding
         $pad = ($size - $nce);
         if ($pad > 0) {
-            if (($size - $rows) == $nce) {
-                --$rows;
-                $size -= $rows;
-            } else {
-                // add padding
-                $codewords = array_merge($codewords, array_fill(0, $pad, 900));
-            }
+            // add padding
+            $codewords = array_merge($codewords, array_fill(0, $pad, 900));
         }
         if (!empty($macrocw)) {
             // add macro section

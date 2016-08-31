@@ -118,7 +118,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function setBars()
     {
-        if (empty($this->code)) {
+        if (strlen((string)$this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
         $this->bsObj = new ByteStream($this->hint, $this->version, $this->level);
