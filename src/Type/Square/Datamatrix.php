@@ -102,7 +102,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function getCodewords()
     {
-        if (empty($this->code)) {
+        if (strlen((string)$this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
 

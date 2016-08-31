@@ -165,11 +165,10 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
     protected function processNumericCompaction($code, &$codewords)
     {
         while (($codelen = strlen($code)) > 0) {
+            $rest = '';
             if ($codelen > 44) {
                 $rest = substr($code, 44);
                 $code = substr($code, 0, 44);
-            } else {
-                $rest = '';
             }
             $tdg = '1'.$code;
             do {

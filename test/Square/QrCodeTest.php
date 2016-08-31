@@ -265,4 +265,18 @@ class QrCodeTest extends \PHPUnit_Framework_TestCase
         $code = str_pad('', 4000, 'iVoo{[O17n~>(FXC9{*t1P532}l7E{7/R\' ObO`y?`9G(qjBmu7 GM3ZK!qp|)!P1" sRanqC(:Ky');
         $this->obj->getBarcodeObj('QRCODE', $code);
     }
+
+    /**
+     * @dataProvider getStringDataProvider
+     */
+    public function testStrings($code)
+    {
+        $bobj = $this->obj->getBarcodeObj('QRCODE', $code);
+        $this->assertNotNull($bobj);
+    }
+
+    public function getStringDataProvider()
+    {
+        return \Test\TestStrings::getDataProvider();
+    }
 }

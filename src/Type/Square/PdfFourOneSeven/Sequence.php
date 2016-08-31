@@ -158,7 +158,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
         $sequence_array = array(); // array to be returned
         $numseq = array();
         // get numeric sequences
-        preg_match_all('/([0-9]{13,44})/', $code, $numseq, PREG_OFFSET_CAPTURE);
+        preg_match_all('/([0-9]{13,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
         $numseq[1][] = array('', strlen($code));
         $offset = 0;
         foreach ($numseq[1] as $seq) {

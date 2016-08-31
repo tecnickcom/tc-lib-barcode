@@ -62,10 +62,12 @@ class PdfFourOneSevenTest extends \PHPUnit_Framework_TestCase
     public function getGridDataProvider()
     {
         return array(
+            array('', str_pad('', 1850, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), '38e205c911b94a62c72b7d20fa4361f8'), // max text
+            array('', str_pad('', 2710, '123456789'), '32ba9be56f3e66559b4d4a50f6276da7'), // max digits
             array('', '0123456789', '4f9cdac81d62f0020beb93fc3ecdd8ad'),
             array(',2,8,1,0,0,0,1,2', str_pad('', 1750, 'X'), 'f0874a35e15f11f9aa8bc070a4be24bf'),
             array(',15,8,1,0,0,0,1,2', str_pad('', 1750, 'X'), '0288f0a87cc069fc34d6168d7a9f7846'),
-            array('', str_pad('', 350, '0123456789'), '0cc58a566988776b05f9ec1eb046bd7c'),
+            array('', str_pad('', 350, '0123456789'), '394d93048831fee232413da29fb709fb'),
             array('', 'abcdefghijklmnopqrstuvwxyz01234567890123456789', 'bd4f4215aca0bbc3452a35b81fcf7bdb'),
             array(
                 '',
@@ -191,5 +193,19 @@ class PdfFourOneSevenTest extends \PHPUnit_Framework_TestCase
                 'de62e1eb076ba66cb4fb7fb54943a328'
             ),
         );
+    }
+
+    /**
+     * @dataProvider getStringDataProvider
+     */
+    public function testStrings($code)
+    {
+        $bobj = $this->obj->getBarcodeObj('PDF417', $code);
+        $this->assertNotNull($bobj);
+    }
+
+    public function getStringDataProvider()
+    {
+        return \Test\TestStrings::getDataProvider();
     }
 }
