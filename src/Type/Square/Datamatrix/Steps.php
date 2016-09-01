@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -27,7 +27,7 @@ use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
@@ -70,7 +70,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
             $this->stepQ($chr, $numch);
             if ($charscount >= 4) {
                 $ret = $this->stepR($numch, $pos, $data_length, $charscount, $data);
-                if (!empty($ret)) {
+                if ($ret !== null) {
                     return $ret;
                 }
             }
@@ -248,7 +248,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      *
      * @return int   Encoding mode
      */
-    protected function stepRf(&$numch, &$pos, &$data_length, &$charscount, &$data)
+    protected function stepRf($numch, $pos, $data_length, $charscount, $data)
     {
         if (($numch[Data::ENC_C40] + 1) < min(
             $numch[Data::ENC_ASCII],
@@ -286,7 +286,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      * @param int    $charscount
      * @param string $data
      */
-    protected function stepR(&$numch, &$pos, &$data_length, &$charscount, &$data)
+    protected function stepR($numch, $pos, $data_length, $charscount, $data)
     {
         if (($numch[Data::ENC_ASCII] + 1) <= min(
             $numch[Data::ENC_C40],

@@ -563,4 +563,32 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         }
         return $grid;
     }
+
+    /**
+     * Get the array containing all the formatted bars coordinates
+     *
+     * @param string $type Type of coordinates to return: 'XYXY' or 'XYWH'
+     *
+     * @return array
+     */
+    public function getBarsArray($type = 'XYXY')
+    {
+        $mtd = 'getBarRect'.$type;
+        $rect = array();
+        foreach ($this->bars as $bar) {
+            if (($bar[2] > 0) && ($bar[3] > 0)) {
+                $rect[] = $this->$mtd($bar);
+            }
+        }
+        if ($this->nrows > 1) {
+            // reprint rotated to cancel row gaps
+            $rot = $this->getRotatedBarArray();
+            foreach ($rot as $bar) {
+                if (($bar[2] > 0) && ($bar[3] > 0)) {
+                    $rect[] = $this->$mtd($bar);
+                }
+            }
+        }
+        return $rect;
+    }
 }
