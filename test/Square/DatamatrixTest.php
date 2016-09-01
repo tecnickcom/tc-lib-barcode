@@ -36,6 +36,43 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
         $this->obj = new \Com\Tecnick\Barcode\Barcode;
     }
 
+    public function testInvalidInput()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $this->obj->getBarcodeObj('DATAMATRIX', '');
+    }
+
+    public function testCapacityException()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $code = str_pad('', 3000, 'X');
+        $this->obj->getBarcodeObj('DATAMATRIX', $code);
+    }
+ 
+    public function testEncodeTXTC40shiftException()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
+        $chr = null;
+        $enc = null;
+        $temp_cw = null;
+        $ptr = null;
+        $obj->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
+    }
+ 
+    public function testEncodeTXTC40Exception()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
+        $data = array(chr(0x80));
+        $enc = \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data::ENC_X12;
+        $temp_cw = null;
+        $ptr = null;
+        $epos = 0;
+        $charset = null;
+        $obj->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
+    }
+
     /**
      * @dataProvider getGridDataProvider
      */
@@ -64,7 +101,7 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
                 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
                 .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
                 .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\',
-                '62e6552f3bbb51b0e2e22fbd5bbdc2bf'
+                '0b2921466e097ff9cc1ad63719430540'
             ),
             array(chr(128).chr(138).chr(148).chr(158), '01aa230c9a4c35ea69f23ecbc58d8e3e'),
             array('!"£$%^&*()-+_={}[]\'#@~;:/?,.<>|', '03e8a96b0d0e41bded21c22f865da9c7'),
@@ -112,22 +149,9 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
                 .chr(29).chr(28).chr(27).chr(26).chr(25).chr(24).chr(23).chr(22).chr(21).chr(20).chr(19).chr(18)
                 .chr(17).chr(16).chr(15).chr(14).chr(13).chr(12).chr(11).chr(10).chr(9).chr(8).chr(7).chr(6)
                 .chr(5).chr(4).chr(3).chr(2).chr(1),
-                '68ba2d30df6290f73e0e89d379bb5623'
+                '7097885c0a5c42f00dabd0e3034319e8'
             ),
         );
-    }
-
-    public function testInvalidInput()
-    {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
-        $this->obj->getBarcodeObj('DATAMATRIX', '');
-    }
-
-    public function testLongInput()
-    {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
-        $code = str_pad('', 3000, 'X');
-        $this->obj->getBarcodeObj('DATAMATRIX', $code);
     }
 
     /**
@@ -141,30 +165,6 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
 
     public function getStringDataProvider()
     {
-        return \Test\TestStrings::getDataProvider();
-    }
- 
-    public function testEncodeTXTC40shiftException()
-    {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
-        $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
-        $chr = null;
-        $enc = null;
-        $temp_cw = null;
-        $ptr = null;
-        $obj->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
-    }
- 
-    public function testEncodeTXTC40Exception()
-    {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
-        $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
-        $data = array(chr(0x80));
-        $enc = \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data::ENC_X12;
-        $temp_cw = null;
-        $ptr = null;
-        $epos = 0;
-        $charset = null;
-        $obj->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
+        return \Test\TestStrings::$data;
     }
 }

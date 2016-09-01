@@ -42,7 +42,7 @@ class PdfFourOneSevenTest extends \PHPUnit_Framework_TestCase
         $this->obj->getBarcodeObj('PDF417', '');
     }
 
-    public function testTooLong()
+    public function testCapacityException()
     {
         $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
         $code = str_pad('', 1000, 'X1');
@@ -206,6 +206,6 @@ class PdfFourOneSevenTest extends \PHPUnit_Framework_TestCase
 
     public function getStringDataProvider()
     {
-        return \Test\TestStrings::getDataProvider();
+        return \Test\TestStrings::$data;
     }
 }

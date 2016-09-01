@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -28,7 +28,7 @@ use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
@@ -130,7 +130,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
             $cdw[] = $tcw;
             $cdw_num++;
         }
-        $tcw= (($temp_cw[1] & 0x0F) << 4) + (($temp_cw[2] & 0x3C) >> 2);
+        $tcw = (($temp_cw[1] & 0x0F) << 4) + (($temp_cw[2] & 0x3C) >> 2);
         if ($tcw > 0) {
             $cdw[] = $tcw;
             $cdw_num++;

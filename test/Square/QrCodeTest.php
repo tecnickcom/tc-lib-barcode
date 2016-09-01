@@ -36,6 +36,19 @@ class QrCodeTest extends \PHPUnit_Framework_TestCase
         $this->obj = new \Com\Tecnick\Barcode\Barcode;
     }
 
+    public function testInvalidInput()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $this->obj->getBarcodeObj('QRCODE', '');
+    }
+
+    public function testCapacityException()
+    {
+        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
+        $code = str_pad('', 4000, 'iVoo{[O17n~>(FXC9{*t1P532}l7E{7/R\' ObO`y?`9G(qjBmu7 GM3ZK!qp|)!P1" sRanqC(:Ky');
+        $this->obj->getBarcodeObj('QRCODE', $code);
+    }
+
     /**
      * @dataProvider getGridDataProvider
      */
@@ -253,19 +266,6 @@ class QrCodeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testInvalidInput()
-    {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
-        $this->obj->getBarcodeObj('QRCODE', '');
-    }
-
-    public function testLong()
-    {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
-        $code = str_pad('', 4000, 'iVoo{[O17n~>(FXC9{*t1P532}l7E{7/R\' ObO`y?`9G(qjBmu7 GM3ZK!qp|)!P1" sRanqC(:Ky');
-        $this->obj->getBarcodeObj('QRCODE', $code);
-    }
-
     /**
      * @dataProvider getStringDataProvider
      */
@@ -277,6 +277,6 @@ class QrCodeTest extends \PHPUnit_Framework_TestCase
 
     public function getStringDataProvider()
     {
-        return \Test\TestStrings::getDataProvider();
+        return \Test\TestStrings::$data;
     }
 }
