@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -40,7 +40,7 @@ use \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data;
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
@@ -101,6 +101,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      */
     protected function setParameters()
     {
+        parent::setParameters();
         // aspect ratio
         if (!empty($this->params[0]) && (($aspectratio = floatval($this->params[0])) >= 1)) {
             $this->aspectratio = $aspectratio;
