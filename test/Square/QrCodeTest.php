@@ -64,12 +64,16 @@ class QrCodeTest extends \PHPUnit_Framework_TestCase
         return array(
             array('', '0123456789', '89e599523008751db7eef3b5befc37ed'),
             array(',L', '0123456789', '89e599523008751db7eef3b5befc37ed'),
-            array(',H', '0123456789', '3c4ecb6cc99b7843de8d2d3274a43d9e'),
+            array(',H,NM', '0123456789', '3c4ecb6cc99b7843de8d2d3274a43d9e'),
             array(',L,8B,0,0', '123aeiouàèìòù', '1622068066c77d3e6ea0a3ad420d105c'),
             array(',H,KJ,0,0', 'ぎポ亊', '1d429dd6a1627f6dc1620b3f56862d52'),
             array(',H,ST,0,0', 'ABCdef0123', '3a8260f504bca8de8f55a7b3776080bb'),
             array('', str_pad('', 350, '0123456789'), '3cca7eb0f61bc39c5a79d7eb3e23a409'),
             array('', 'abcdefghijklmnopqrstuvwxyz01234567890123456789', '9c489cd7ded55a82b2d7e3589afbd7d0'),
+            array(',H,AN,40,1,0,1,2',
+                'abcdefghijklmnopqrstuvwxyz01234567890123456789',
+                '5ba221be81b269ab1f105b07bf49b372'
+            ),
             array(
                 '',
                 chr(158).chr(19).chr(192).chr(8).chr(71).chr(113).chr(107).chr(252).chr(171).chr(169).chr(114)
@@ -271,7 +275,7 @@ class QrCodeTest extends \PHPUnit_Framework_TestCase
      */
     public function testStrings($code)
     {
-        $bobj = $this->obj->getBarcodeObj('QRCODE', $code);
+        $bobj = $this->obj->getBarcodeObj('QRCODE,H,NL,0,1,3,1', $code);
         $this->assertNotNull($bobj);
     }
 

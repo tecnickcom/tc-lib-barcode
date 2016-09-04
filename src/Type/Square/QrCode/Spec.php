@@ -104,26 +104,6 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
     }
 
     /**
-     * Return a version number that satisfies the input code length.
-     *
-     * @param int $size  Input code length (bytes)
-     * @param int $level Error correction level
-     *
-     * @return int version number
-     */
-    public function getMinimumVersion($size, $level)
-    {
-        for ($i = 1; $i <= Data::QRSPEC_VERSION_MAX; ++$i) {
-            $words = (Data::$capacity[$i][Data::QRCAP_WORDS] - Data::$capacity[$i][Data::QRCAP_EC][$level]);
-            if ($words >= $size) {
-                return $i;
-            }
-        }
-        // the size of input data is greater than Data::QR capacity, try to lover the error correction mode
-        return -1;
-    }
-
-    /**
      * Return the maximum length for the mode and version.
      *
      * @param int $mode    Encoding mode
@@ -267,7 +247,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function getVersionPattern($version)
     {
-        if (($version < 7) or ($version > Data::QRSPEC_VERSION_MAX)) {
+        if (($version < 7) || ($version > Data::QRSPEC_VERSION_MAX)) {
             return 0;
         }
         return Data::$versionPattern[($version - 7)];
@@ -283,10 +263,11 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function getFormatInfo($maskNo, $level)
     {
-        if (($maskNo < 0) or ($maskNo > 7)) {
-            return 0;
-        }
-        if (($level < 0) or ($level > 3)) {
+        if (($maskNo < 0)
+            || ($maskNo > 7)
+            || ($level < 0)
+            || ($level > 3)
+        ) {
             return 0;
         }
         return Data::$formatInfo[$level][$maskNo];

@@ -218,7 +218,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     protected function initRsChar($symsize, $gfpoly, $fcr, $prim, $nroots, $pad)
     {
         $this->checkRsCharParamsA($symsize, $fcr, $prim);
-        $this->checkRsCharParamsA($symsize, $nroots, $pad);
+        $this->checkRsCharParamsB($symsize, $nroots, $pad);
         $rsv = array();
         $rsv['mm'] = $symsize;
         $rsv['nn'] = ((1 << $symsize) - 1);

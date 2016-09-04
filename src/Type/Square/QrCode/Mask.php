@@ -33,20 +33,20 @@ use \Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
 abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
 {
     /**
-     * If true, estimates best mask (spec. default, but extremally slow;
-     * set to false to significant performance boost but (propably) worst quality code
-     *
-     * @var bool
-     */
-    protected $qr_find_best_mask = true;
-
-    /**
      * If false, checks all masks available,
      * otherwise the value indicates the number of masks to be checked, mask id are random
      *
      * @var int
      */
     protected $qr_find_from_random = false;
+
+    /**
+     * If true, estimates best mask (spec. default, but extremally slow;
+     * set to false to significant performance boost but (propably) worst quality code
+     *
+     * @var bool
+     */
+    protected $qr_find_best_mask = true;
 
     /**
      * Default mask used when $this->qr_find_best_mask === false
@@ -89,13 +89,20 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
     /**
      * Initialize
      *
-     * @param int $version Code version
-     * @param int $level   Error Correction Level
+     * @param int  $version       Code version
+     * @param int  $level         Error Correction Level
+     * @param bool $random_mask   If false, checks all masks available,
+     *                            otherwise the value indicates the number of masks to be checked, mask id are random
+     * @param bool $best_mask     If true, estimates best mask (slow)
+     * @param int  $default_mask  Default mask used when $fbm is false
      */
-    public function __construct($version, $level)
+    public function __construct($version, $level, $random_mask = false, $best_mask = true, $default_mask = 2)
     {
         $this->version = $version;
         $this->level = $level;
+        $this->qr_find_from_random = (bool)$random_mask;
+        $this->qr_find_best_mask = (bool)$best_mask;
+        $this->qr_default_mask = intval($default_mask);
         $this->spc = new Spec;
     }
 
@@ -229,7 +236,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
             $head = 0;
             $this->runLength[0] = 1;
             for ($ypos = 0; $ypos < $width; ++$ypos) {
-                if (($ypos == 0) and (ord($frame[$ypos][$xpos]) & 1)) {
+                if (($ypos == 0) && (ord($frame[$ypos][$xpos]) & 1)) {
                     $this->runLength[0] = -1;
                     $head = 1;
                     $this->runLength[$head] = 1;

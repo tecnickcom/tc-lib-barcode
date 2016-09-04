@@ -111,7 +111,7 @@ class Data
      * AN : Encoding mode alphanumeric (0-9A-Z $%*+-./:) 45characters. 2 characters are encoded to 11bit length.
      * 8B : Encoding mode 8bit byte data. In theory, 2953 characters or less can be stored in a QRcode.
      * KJ : Encoding mode KANJI. A KANJI character (multibyte character) is encoded to 13bit length.
-     * ST : (unsupported) Encoding mode STRUCTURED
+     * ST : Encoding mode STRUCTURED
      *
      * @var array
      */

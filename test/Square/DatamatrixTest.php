@@ -125,6 +125,10 @@ class DatamatrixTest extends \PHPUnit_Framework_TestCase
                 .chr(127).'=gcGIa.st286. #*"!eG[.Ryr?Kn,1mIyQqC3 6\'3N>',
                 'c99bc399273c299fe56bfa8da8017f99'
             ),
+            array('eA211101A2raJTGL/r9o93CVk4gtpEvWd2A2Qz8jvPc7l8ybD3m'
+                .'Wel91ih727kldinPeHJCjhr7fIBX1KQQfsN7BFMX00nlS8FlZG+',
+                '8aed7cb88565682df74a8aa66ba18601'
+            ),
             array(
                 chr(255).chr(254).chr(253).chr(252).chr(251).chr(250).chr(249).chr(248).chr(247).chr(246).chr(245)
                 .chr(244).chr(243).chr(242).chr(241).chr(240).chr(239).chr(238).chr(237).chr(236).chr(235).chr(234)

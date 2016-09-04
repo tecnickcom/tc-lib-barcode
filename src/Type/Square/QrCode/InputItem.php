@@ -118,7 +118,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
     protected function checkModeNum($size, $data)
     {
         for ($idx = 0; $idx < $size; ++$idx) {
-            if ((ord($data[$idx]) < ord('0')) or (ord($data[$idx]) > ord('9'))) {
+            if ((ord($data[$idx]) < ord('0')) || (ord($data[$idx]) > ord('9'))) {
                 return false;
             }
         }
@@ -158,7 +158,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
         }
         for ($idx = 0; $idx < $size; $idx += 2) {
             $val = (ord($data[$idx]) << 8) | ord($data[($idx + 1)]);
-            if (($val < 0x8140) or (($val > 0x9ffc) and ($val < 0xe040)) or ($val > 0xebbf)) {
+            if (($val < 0x8140) || (($val > 0x9ffc) && ($val < 0xe040)) || ($val > 0xebbf)) {
                 return false;
             }
         }

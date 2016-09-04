@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -30,7 +30,7 @@ use \Com\Tecnick\Barcode\Type\Square\QrCode\Encoder;
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
@@ -75,6 +75,29 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
     protected $case_sensitive = true;
 
     /**
+     * If false, checks all masks available,
+     * otherwise the value indicates the number of masks to be checked, mask id are random
+     *
+     * @var int
+     */
+    protected $random_mask = false;
+
+    /**
+     * If true, estimates best mask (spec. default, but extremally slow;
+     * set to false to significant performance boost but (propably) worst quality code
+     *
+     * @var bool
+     */
+    protected $best_mask = true;
+
+    /**
+     * Default mask used when $this->best_mask === false
+     *
+     * @var int
+     */
+    protected $default_mask = 2;
+
+    /**
      * ByteStream class object
      *
      * @var \Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream
@@ -82,10 +105,21 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
     protected $bsObj;
 
     /**
-     * Set extra (optional) parameters
+     * Set extra (optional) parameters:
+     *     1: LEVEL - error correction level: L, M, Q, H
+     *     2: HINT - encoding mode: NL=variable, NM=numeric, AN=alphanumeric, 8B=8bit, KJ=KANJI, ST=STRUCTURED
+     *     3: VERSION - integer value from 1 to 40
+     *     4: CASE SENSITIVE - if 0 the input string will be converted to uppercase
+     *     5: RANDOM MASK - false or number of masks to be checked
+     *     6: BEST MASK - true to find the best mask (slow)
+     *     7: DEFAULT MASK - mask to use when the best mask option is false
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function setParameters()
     {
+        parent::setParameters();
         // level
         if (!isset($this->params[0]) || !isset(Data::$errCorrLevels[$this->params[0]])) {
             $this->params[0] = 'L';
@@ -109,6 +143,23 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
             $this->params[3] = 1;
         }
         $this->case_sensitive = (bool)$this->params[3];
+
+        // random mask mode - number of masks to be checked
+        if (!empty($this->params[4])) {
+            $this->random_mask = intval($this->params[4]);
+        }
+
+        // find best mask
+        if (!isset($this->params[5])) {
+            $this->params[5] = 1;
+        }
+        $this->best_mask = (bool)$this->params[5];
+
+        // default mask
+        if (!isset($this->params[6])) {
+            $this->params[6] = 2;
+        }
+        $this->default_mask = intval($this->params[6]);
     }
 
     /**
@@ -162,7 +213,13 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
         $split = new Split($this->bsObj, $this->hint, $this->version);
         $datacode = $this->bsObj->getByteStream($split->getSplittedString($data));
         $this->version = $this->bsObj->version;
-        $enc = new Encoder($this->version, $this->level);
+        $enc = new Encoder(
+            $this->version,
+            $this->level,
+            $this->random_mask,
+            $this->best_mask,
+            $this->default_mask
+        );
         return $enc->encodeMask(-1, $datacode);
     }
 
@@ -183,7 +240,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
             if ($mode == Data::$encodingModes['KJ']) {
                 $pos += 2;
             } else {
-                if ((ord($data[$pos]) >= ord('a')) and (ord($data[$pos]) <= ord('z'))) {
+                if ((ord($data[$pos]) >= ord('a')) && (ord($data[$pos]) <= ord('z'))) {
                     $data[$pos] = chr(ord($data[$pos]) - 32);
                 }
                 $pos++;
