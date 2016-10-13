@@ -39,7 +39,7 @@ class C extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
      * @var string
      */
     protected $format = 'C128C';
-    
+
     /**
      * Get the code point array
      *
@@ -50,16 +50,13 @@ class C extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
         $code = $this->code;
         // array of symbols
         $code_data = array();
-        // length of the code
-        $len = strlen($code);
-        
+
         $startid = 105;
         if (ord($code[0]) == 241) {
             $code_data[] = 102;
             $code = substr($code, 1);
-            --$len;
         }
-        $this->getCodeDataC($code_data, $code, $len);
+        $this->getCodeDataC($code_data, $code);
         return $this->finalizeCodeData($code_data, $startid);
     }
 }
