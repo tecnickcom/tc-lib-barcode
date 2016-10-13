@@ -176,7 +176,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @var array
      */
     protected $fnc_a = array(241 => 102, 242 => 97, 243 => 96, 244 => 101);
-    
+
     /**
      * Map special FNC codes for Code Set B (FNC 1-4)
      *
@@ -361,7 +361,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         } elseif ($sequence[($key - 1)][0] != 'C') {
             $code_data[] = 99;
         }
-        $this->getCodeDataC($code_data, $seq[1], $seq[2]);
+        $this->getCodeDataC($code_data, $seq[1]);
     }
 
     /**
