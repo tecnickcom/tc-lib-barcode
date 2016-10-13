@@ -361,7 +361,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         } elseif ($sequence[($key - 1)][0] != 'C') {
             $code_data[] = 99;
         }
-        $this->getCodeDataC($code_data, $seq[1], $seq[2]);
+        $this->getCodeDataC($code_data, $seq[1]);
     }
 
     /**
