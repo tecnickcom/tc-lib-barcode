@@ -172,7 +172,7 @@ class BarcodeTest extends \PHPUnit_Framework_TestCase
         .' viewBox="0 0 44.000000 8.000000" version="1.1" xmlns="http://www.w3.org/2000/svg">
 	<desc>01001100011100001111,10110011100011110000</desc>
 	<rect x="0" y="0" width="44.000000" height="8.000000" fill="#ffff00"'
-        .' stroke="none" stroke-width="0" stroke-linecap="square""/>
+        .' stroke="none" stroke-width="0" stroke-linecap="square" />
 	<g id="bars" fill="#800080" stroke="none" stroke-width="0" stroke-linecap="square">
 		<rect x="3.000000" y="4.000000" width="2.000000" height="2.000000" />
 		<rect x="9.000000" y="4.000000" width="4.000000" height="2.000000" />

@@ -388,7 +388,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
                 .' stroke="none"'
                 .' stroke-width="0"'
                 .' stroke-linecap="square"'
-                .'"/>'."\n";
+                .' />'."\n";
         }
         $svg .= "\t".'<g'
             .' id="bars"'
