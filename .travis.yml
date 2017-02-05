@@ -35,7 +35,6 @@ addons:
     - imagemagick
 
 before_install:
-  - printf "\n" | pecl install imagick
   - composer self-update
   - if [ -n "$GH_TOKEN" ]; then git config --global github.token ${GH_TOKEN} && composer config github-oauth.github.com ${GH_TOKEN}; fi;
   - if [ -n "$GH_USER" ]; then git config --global github.user ${GH_USER}; fi;

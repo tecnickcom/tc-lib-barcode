@@ -17,7 +17,6 @@
         "ext-bcmath": "*",
         "ext-date": "*",
         "ext-gd": "*",
-        "ext-imagick": "*",
         "ext-pcre": "*",
         "tecnickcom/tc-lib-color": "^1.12.4"
     },
