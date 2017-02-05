@@ -22,6 +22,7 @@ Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.12.4
 Requires:  php-bcmath
 Requires:  php-date
 Requires:  php-gd
+Requires:  php-imagick
 Requires:  php-pcre
 
 Provides:  php-composer(%{c_vendor}/%{gh_project}) = %{version}

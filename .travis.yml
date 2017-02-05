@@ -33,6 +33,10 @@ addons:
     - rpm
     - dh-make
     - imagemagick
+    - php-bcmath
+    - php-date
+    - php-gd
+    - php-imagick
 
 before_install:
   - composer self-update
