@@ -15,6 +15,8 @@
 
 namespace Test\Linear;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Barcode class test
  *
@@ -26,7 +28,7 @@ namespace Test\Linear;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class ImbTest extends \PHPUnit_Framework_TestCase
+class ImbTest extends TestCase
 {
     protected $obj = null;
 
@@ -99,9 +101,11 @@ class ImbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $grid);
     }
 
+    /**
+     * @expectedException \Com\Tecnick\Barcode\Exception
+     */
     public function testInvalidRoutingCode()
     {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
         $this->obj->getBarcodeObj('IMB', '01234567094987654321-1');
     }
 }

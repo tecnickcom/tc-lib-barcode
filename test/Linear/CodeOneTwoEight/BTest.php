@@ -15,6 +15,8 @@
 
 namespace Test\Linear\CodeOneTwoEight;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Barcode class test
  *
@@ -26,7 +28,7 @@ namespace Test\Linear\CodeOneTwoEight;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class BTest extends \PHPUnit_Framework_TestCase
+class BTest extends TestCase
 {
     protected $obj = null;
 
@@ -51,9 +53,11 @@ class BTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $grid);
     }
 
+    /**
+     * @expectedException \Com\Tecnick\Barcode\Exception
+     */
     public function testInvalidInput()
     {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
         $this->obj->getBarcodeObj('C128B', chr(246).'01234567891');
     }
 }

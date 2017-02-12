@@ -15,6 +15,8 @@
 
 namespace Test\Square;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Barcode class test
  *
@@ -26,7 +28,7 @@ namespace Test\Square;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class PdfFourOneSevenTest extends \PHPUnit_Framework_TestCase
+class PdfFourOneSevenTest extends TestCase
 {
     protected $obj = null;
 
@@ -36,15 +38,19 @@ class PdfFourOneSevenTest extends \PHPUnit_Framework_TestCase
         $this->obj = new \Com\Tecnick\Barcode\Barcode;
     }
 
+    /**
+     * @expectedException \Com\Tecnick\Barcode\Exception
+     */
     public function testInvalidInput()
     {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
         $this->obj->getBarcodeObj('PDF417', '');
     }
 
+    /**
+     * @expectedException \Com\Tecnick\Barcode\Exception
+     */
     public function testCapacityException()
     {
-        $this->setExpectedException('\Com\Tecnick\Barcode\Exception');
         $code = str_pad('', 1000, 'X1');
         $this->obj->getBarcodeObj('PDF417', $code);
     }
