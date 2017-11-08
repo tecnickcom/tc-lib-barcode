@@ -174,7 +174,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     protected function setBars()
     {
         if (!is_numeric($this->code)) {
-            throw new BarcodeException('Inpout code must be a number');
+            throw new BarcodeException('Input code must be a number');
         }
         $this->formatCode();
         $seq = '101'; // left guard bar
