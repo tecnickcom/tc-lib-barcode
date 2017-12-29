@@ -40,10 +40,4 @@
             "Test\\": "test"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:tecnickcom/tc-lib-color.git"
-        }
-    ]
 }
