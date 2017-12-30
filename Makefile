@@ -192,11 +192,11 @@ clean:
 
 # clean and download the composer dependencies
 build:
-	rm -rf ./vendor/ && ($(COMPOSER) install --no-dev --no-interaction)
+	rm -rf ./vendor/ && ($(COMPOSER) install -vvv --no-dev --no-interaction)
 
 # clean and download the composer dependencies including dev ones
 build_dev:
-	rm -rf ./vendor/ && ($(COMPOSER) install --no-interaction)
+	rm -rf ./vendor/ && ($(COMPOSER) install -vvv --no-interaction)
 
 # update composer dependencies
 update:

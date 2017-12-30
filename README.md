@@ -165,17 +165,16 @@ Create a composer.json in your projects root-directory:
 ```json
 {
     "require": {
-        "tecnickcom/tc-lib-barcode": "dev-master"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:tecnickcom/tc-lib-barcode.git"
-        }
-    ]
+        "tecnickcom/tc-lib-barcode": "^1.15"
+    }
 }
 ```
 
+Or add to an existing project with: 
+
+```bash
+composer require tecnickcom/tc-lib-barcode ^1.15
+```
 
 ## Packaging
 
