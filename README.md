@@ -17,7 +17,7 @@
 * **category**    Library
 * **package**     \Com\Tecnick\Barcode
 * **author**      Nicola Asuni <info@tecnick.com>
-* **copyright**   2001-2017 Nicola Asuni - Tecnick.com LTD
+* **copyright**   2001-2018 Nicola Asuni - Tecnick.com LTD
 * **license**     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
 * **link**        https://github.com/tecnickcom/tc-lib-barcode
 * **SRC DOC**     https://tcpdf.org/docs/srcdoc/tc-lib-barcode
@@ -147,8 +147,8 @@ $barcode = new \Com\Tecnick\Barcode\Barcode();
 $bobj = $barcode->getBarcodeObj(
     'QRCODE,H',                     // barcode type and additional comma-separated parameters
     'https://tecnick.com',          // data string to encode
-    -4,                             // bar height (use absolute or negative value as multiplication factor)
     -4,                             // bar width (use absolute or negative value as multiplication factor)
+    -4,                             // bar height (use absolute or negative value as multiplication factor)
     'black',                        // foreground color
     array(-2, -2, -2, -2)           // padding (use absolute or negative values as multiplication factors)
     )->setBackgroundColor('white'); // background color
