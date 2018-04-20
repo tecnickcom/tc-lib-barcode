@@ -36,7 +36,7 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
     /**
      * Process Sub Text Compaction
      *
-     * @param array  $txtarr
+     * @param array   $txtarr
      * @param int     $submode
      * @param int     $sub
      * @param string  $code
@@ -93,6 +93,7 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
                     // search new sub-mode
                     if (($sub != $submode) && (($key = array_search($chval, Data::$textsubmodes[$sub])) !== false)) {
                         $this->processTextCompactionSub($txtarr, $submode, $sub, $code, $key, $idx, $codelen);
+                        break;
                     }
                 }
             }
