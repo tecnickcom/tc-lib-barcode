@@ -49,7 +49,7 @@
     }
   ],
   "require": {
-    "php": ">=5.4",
+    "php": ">=5.3",
     "ext-bcmath": "*",
     "ext-date": "*",
     "ext-gd": "*",
