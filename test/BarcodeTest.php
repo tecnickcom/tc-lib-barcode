@@ -99,8 +99,9 @@ class BarcodeTest extends TestCase
             'all',
             array(-2, 3, 0, 1)
         );
-        $this->assertEquals('#000000ff', $bobj->getArray()['color_obj']->getRgbaHexColor());
-        $this->assertNUll($bobj->getArray()['bg_color_obj']);
+        $array = $bobj->getArray();
+        $this->assertEquals('#000000ff', $array['color_obj']->getRgbaHexColor());
+        $this->assertNUll($array['bg_color_obj']);
     }
 
     public function testBackgroundColor()
@@ -113,7 +114,8 @@ class BarcodeTest extends TestCase
             'all',
             array(-2, 3, 0, 1)
         )->setBackgroundColor('mediumaquamarine');
-        $this->assertEquals('#66cdaaff', $bobj->getArray()['bg_color_obj']->getRgbaHexColor());
+        $array = $bobj->getArray();
+        $this->assertEquals('#66cdaaff', $array['bg_color_obj']->getRgbaHexColor());
     }
 
     /**
