@@ -47,7 +47,7 @@ before_install:
   - composer self-update
   - if [ -n "$GH_TOKEN" ]; then git config --global github.token ${GH_TOKEN} && composer config github-oauth.github.com ${GH_TOKEN}; fi;
   - if [ -n "$GH_USER" ]; then git config --global github.user ${GH_USER}; fi;
-  - if [[ "$TRAVIS_PHP_VERSION" != "nightly" ]] && [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] && [[ "$TRAVIS_PHP_VERSION" != "hhvm-3.18" ]] && [[ "$TRAVIS_PHP_VERSION" != "hhvm-nightly" ]] && [[ "$TRAVIS_PHP_VERSION" != "7.2" ]]; then printf "\n" | pecl install imagick-beta -v; fi;
+  - if [[ "$TRAVIS_PHP_VERSION" != "nightly" ]] && [[ "$TRAVIS_PHP_VERSION" != "5.3" ]] && [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] && [[ "$TRAVIS_PHP_VERSION" != "hhvm-3.18" ]] && [[ "$TRAVIS_PHP_VERSION" != "hhvm-nightly" ]] && [[ "$TRAVIS_PHP_VERSION" != "7.2" ]]; then printf "\n" | pecl install imagick-beta -v; fi;
 
 before_script:
   - composer install --no-interaction
