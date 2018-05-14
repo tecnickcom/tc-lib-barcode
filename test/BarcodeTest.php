@@ -101,7 +101,7 @@ class BarcodeTest extends TestCase
         );
         $bobjarr = $bobj->getArray();
         $this->assertEquals('#000000ff', $bobjarr['color_obj']->getRgbaHexColor());
-        $this->assertNUll($bobj->getArray()['bg_color_obj']);
+        $this->assertNUll($bobjarr['bg_color_obj']);
     }
 
     public function testBackgroundColor()
