@@ -54,7 +54,7 @@
     "ext-date": "*",
     "ext-gd": "*",
     "ext-pcre": "*",
-    "tecnickcom/tc-lib-color": "^1.12.11"
+    "tecnickcom/tc-lib-color": "^1.12.12"
   },
   "require-dev": {
     "apigen/apigen": "^2.8.1 || ^4.1.2",
