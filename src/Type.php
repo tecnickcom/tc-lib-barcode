@@ -591,4 +591,24 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         }
         return $rect;
     }
+
+    /**
+     * Gets the width in user units of the generated barcode
+     *
+     * @return integer
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * Gets the height in user units of the generated barcode
+     *
+     * @return integer
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
 }
