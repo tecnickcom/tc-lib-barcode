@@ -74,7 +74,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
                 ++$cdw_num;
             } else {
                 // get new byte
-                $chr = ord($data[$pos]);
+                $chr = mb_ord(mb_substr($data, $pos, 1));
                 ++$pos;
                 if ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
                     // 3. If the next data character is extended ASCII (greater than 127)
@@ -210,7 +210,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
                 break; // exit from B256 mode
             } else {
                 // 2. Otherwise, process the next character in Base 256 encodation.
-                $chr = ord($data[$pos]);
+                $chr = mb_ord(mb_substr($data, $pos, 1));
                 ++$pos;
                 $temp_cw[] = $chr;
                 ++$field_length;

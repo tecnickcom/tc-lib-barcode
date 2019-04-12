@@ -189,7 +189,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $pos = 0; // current position
         $cdw = array(); // array of codewords to be returned
         $cdw_num = 0; // number of data codewords
-        $data_length = strlen($data); // number of chars
+        $data_length = mb_strlen($data); // number of chars
         while ($pos < $data_length) {
             // set last used encoding
             $this->dmx->last_enc = $enc;
