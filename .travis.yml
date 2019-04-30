@@ -30,7 +30,7 @@ matrix:
     - os: linux
       language: php
       php: 5.3
-      dist: precise
+      dist: xenial
 
 addons:
   apt:
