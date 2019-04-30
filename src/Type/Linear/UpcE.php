@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2016 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2010-2019 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -31,7 +31,7 @@ use \Com\Tecnick\Barcode\Exception as BarcodeException;
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2016 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2010-2019 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
@@ -84,15 +84,35 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
     );
 
     /**
-     * Get the pre-formatted code
+     * Convert UPC-E code to UPC-A
      *
      * @param string $code Code to convert.
      *
      * @return string
      */
-    protected function convertUpceCode($code)
+    protected function convertUpceToUpca($code)
     {
-        // convert UPC-A to UPC-E
+        if ($code[5] < 3) {
+            return '0'.$code[0].$code[1].$code[5].'0000'.$code[2].$code[3].$code[4];
+        }
+        if ($code[5] == 3) {
+            return '0'.$code[0].$code[1].$code[2].'00000'.$code[3].$code[4];
+        }
+        if ($code[5] == 4) {
+            return '0'.$code[0].$code[1].$code[2].$code[3].'00000'.$code[4];
+        }
+        return '0'.$code[0].$code[1].$code[2].$code[3].$code[4].'0000'.$code[5];
+    }
+
+    /**
+     * Convert UPC-A code to UPC-E
+     *
+     * @param string $code Code to convert.
+     *
+     * @return string
+     */
+    protected function convertUpcaToUpce($code)
+    {
         $tmp = substr($code, 4, 3);
         if (($tmp == '000') || ($tmp == '100') || ($tmp == '200')) {
             // manufacturer code ends in 000, 100, or 200
@@ -111,7 +131,22 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
         // manufacturer code does not end in zero
         return substr($code, 2, 5).substr($code, 11, 1);
     }
-    
+
+    /**
+     * Format the code
+     */
+    protected function formatCode()
+    {
+        $code = $this->code;
+        if (strlen($code) == 6) {
+            $code = $this->convertUpceToUpca($code);
+        }
+        $code = str_pad($code, ($this->code_length - 1), '0', STR_PAD_LEFT);
+        $code .= $this->getChecksum($code);
+        ++$this->code_length;
+        $this->extcode = '0'.$code;
+    }
+
     /**
      * Get the bars array
      *
@@ -120,7 +155,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
     protected function setBars()
     {
         $this->formatCode();
-        $upce_code = $this->convertUpceCode($this->extcode);
+        $upce_code = $this->convertUpcaToUpce($this->extcode);
         $seq = '101'; // left guard bar
         $parity = $this->parities[$this->extcode[1]][$this->check];
         for ($pos = 0; $pos < 6; ++$pos) {

@@ -50,8 +50,8 @@ $linear = array(
     'RMS4CC'     => array('0123456789', 'RMS4CC (Royal Mail 4-state Customer Bar Code)'),
     'S25+'       => array('0123456789', 'Standard 2 of 5 + CHECKSUM'),
     'S25'        => array('0123456789', 'Standard 2 of 5'),
-    'UPCA'       => array('0123456789', 'UPC-A'),
-    'UPCE'       => array('0123456789', 'UPC-E'),
+    'UPCA'       => array('72527273070', 'UPC-A'),
+    'UPCE'       => array('725277', 'UPC-E'),
 );
 $square = array(
     'DATAMATRIX' => array('0123456789', 'DATAMATRIX (ISO/IEC 16022)'),
