@@ -36,7 +36,7 @@ use \Com\Tecnick\Barcode\Exception as BarcodeException;
  *    values.
  *  * The Mailer or Customer Identifier shall be assigned by USPS as a unique, 6 or 9 digit number that identifies
  *    a business entity. The allowable encoding range for the 6 digit Mailer ID shall be 000000- 899999, while the
- *    allowable encoding range for the 9 digit Mailer ID shall be 900000000-999999999.</li><li>The Serial or
+ *    allowable encoding range for the 9 digit Mailer ID shall be 900000000-999999999. The Serial or
  *    Sequence Number shall be assigned by the mailer for uniquely identifying and tracking mailpieces.
  *    The allowable encoding range shall be 000000000–999999999 when used with a 6 digit Mailer ID and 000000-999999
  *    when used with a 9 digit Mailer ID. e. The Delivery Point ZIP Code shall be assigned by the mailer for routing
