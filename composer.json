@@ -50,7 +50,7 @@
   ],
   "require": {
     "php": ">=5.3",
-    "ext-bcmath": "*",
+    "phpseclib/bcmath_compat": ">=1.0.1",
     "ext-date": "*",
     "ext-gd": "*",
     "ext-pcre": "*",
