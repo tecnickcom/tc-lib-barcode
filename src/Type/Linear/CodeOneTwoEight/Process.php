@@ -52,19 +52,24 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
         if (!empty($numseq[1])) {
             $end_offset = 0;
             foreach ($numseq[1] as $val) {
+                // offset to the start of numeric substr
                 $offset = $val[1];
+                
+                // numeric sequence
+                $slen = strlen($val[0]);
+                if (($slen % 2) != 0) {
+                    // the length must be even
+                    --$slen;
+                    // add 1 to start of offset so numbers are c type encoded "from the end"
+                    ++$offset;
+                }
+                
                 if ($offset > $end_offset) {
                     // non numeric sequence
                     $sequence = array_merge(
                         $sequence,
                         $this->get128ABsequence(substr($code, $end_offset, ($offset - $end_offset)))
                     );
-                }
-                // numeric sequence
-                $slen = strlen($val[0]);
-                if (($slen % 2) != 0) {
-                    // the length must be even
-                    --$slen;
                 }
                 $sequence[] = array('C', substr($code, $offset, $slen), $slen);
                 $end_offset = $offset + $slen;
