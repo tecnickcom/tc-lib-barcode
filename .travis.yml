@@ -17,6 +17,7 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
   - hhvm-3.18
   - hhvm-nightly
   - nightly
@@ -25,11 +26,19 @@ matrix:
   allow_failures:
     - php: hhvm-nightly
     - php: nightly
-#  include:
-#    - os: linux
-#      language: php
-#      php: 5.3
-#      dist: precise
+  include:
+    - os: linux
+      dist: precise
+      language: php
+      php:
+        - 5.3
+  include:
+    - os: linux
+      dist: trusty
+      language: php
+      php:
+        - 5.4
+        - 5.5
 
 addons:
   apt:
