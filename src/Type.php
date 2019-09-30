@@ -364,7 +364,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         // flags for htmlspecialchars
         $hflag = ENT_NOQUOTES;
         if (defined('ENT_XML1')) {
-            $hflag = ENT_XML1;
+            $hflag = ENT_XML1 | ENT_DISALLOWED;
         }
         $width = sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R']));
         $height = sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B']));
