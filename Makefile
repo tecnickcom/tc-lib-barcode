@@ -4,15 +4,12 @@
 # @category    Library
 # @package     Barcode
 # @author      Nicola Asuni <info@tecnick.com>
-# @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+# @copyright   2015-2019 Nicola Asuni - Tecnick.com LTD
 # @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE)
 # @link        https://github.com/tecnickcom/tc-lib-barcode
 #
 # This file is part of tc-lib-barcode software library.
 # ----------------------------------------------------------------------------------------------------------------------
-
-# List special make targets that are not associated with files
-.PHONY: help all test docs phpcs phpcs_test phpcbf phpcbf_test phpmd phpmd_test phpcpd phploc phpdep phpcmpinfo report qa qa_test qa_all clean build build_dev update server install uninstall rpm deb bz2 bintray
 
 # Project owner
 OWNER=tecnickcom
@@ -121,92 +118,115 @@ help:
 	@echo ""
 
 # alias for help target
+.PHONY: all
 all: help
 
 # run the PHPUnit tests
+.PHONY: test
 test:
 	./vendor/bin/phpunit test
 
 # generate docs
+.PHONY: docs
 docs:
 	@rm -rf target/phpdocs && ./vendor/apigen/apigen/bin/apigen generate --source="src/" --destination="target/phpdocs/" --exclude="vendor" --access-levels="public,protected,private" --charset="UTF-8" --title="${PROJECT}"
 
 # run PHPCS on the source code and show any style violations
+.PHONY: phpcs
 phpcs:
 	@./vendor/bin/phpcs --ignore="./vendor/" --standard=psr2 src
 
 # run PHPCS on the test code and show any style violations
+.PHONY: phpcs_test
 phpcs_test:
 	@./vendor/bin/phpcs --standard=psr2 test
 
 # run PHPCBF on the source code and show any style violations
+.PHONY: phpcbf
 phpcbf:
 	@./vendor/bin/phpcbf --ignore="./vendor/" --standard=psr2 src
 
 # run PHPCBF on the test code and show any style violations
+.PHONY: phpcbf_test
 phpcbf_test:
 	@./vendor/bin/phpcbf --standard=psr2 test
 
 # Run PHP Mess Detector on the source code
+.PHONY: phpmd
 phpmd:
 	@./vendor/bin/phpmd src text codesize,unusedcode,naming,design --exclude vendor
 
 # run PHP Mess Detector on the test code
+.PHONY: phpmd_test
 phpmd_test:
 	@./vendor/bin/phpmd test text unusedcode,naming,design
 
 # run PHP Copy/Paste Detector
+.PHONY: phpcpd
 phpcpd:
 	@mkdir -p ./target/report/
 	@./vendor/bin/phpcpd src --exclude vendor > ./target/report/phpcpd.txt
 
 # run PHPLOC to analyze the structure of the project
+.PHONY: phploc
 phploc:
 	@mkdir -p ./target/report/
 	@./vendor/bin/phploc src --exclude vendor > ./target/report/phploc.txt
 
 # PHP static analysis
+.PHONY: phpdep
 phpdep:
 	@mkdir -p ./target/report/
 	@./vendor/bin/pdepend --jdepend-xml=./target/report/dependencies.xml --summary-xml=./target/report/metrics.xml --jdepend-chart=./target/report/dependecies.svg --overview-pyramid=./target/report/overview-pyramid.svg --ignore=vendor ./src
 
 # parse any data source to find out the minimum version and extensions required for it to run
+.PHONY: phpcmpinfo
 phpcmpinfo:
 	@./vendor/bartlett/php-compatinfo/bin/phpcompatinfo --no-ansi analyser:run src/ > ./target/report/phpcompatinfo.txt
 
 # generate various reports
+.PHONY: report
 report: phploc phpdep phpcmpinfo
 
 # alias to run targets: test, phpcs and phpmd
+.PHONY: qa
 qa: test phpcs phpmd phpcpd
 
 # alias to run targets: phpcs_test and phpmd_test
+.PHONY: qa_test
 qa_test: phpcs_test phpmd_test
 
 # alias to run targets: qa and qa_test
+.PHONY: qa_all
 qa_all: qa qa_test
 
 # delete the vendor and target directory
+.PHONY: clean
 clean:
 	rm -rf ./vendor/
 
 # clean and download the composer dependencies
+.PHONY: build
 build:
 	rm -rf ./vendor/ && ($(COMPOSER) install -vvv --no-dev --no-interaction)
 
 # clean and download the composer dependencies including dev ones
+.PHONY: build_dev
 build_dev:
 	rm -rf ./vendor/ && ($(COMPOSER) install -vvv --no-interaction)
 
 # update composer dependencies
+.PHONY: update
 update:
 	($(COMPOSER) update --no-interaction)
 
 # Run the development server
+.PHONY: server
 server:
 	php -t example -S localhost:$(PORT)
 
 # Install this application
+.PHONY: install
 install: uninstall
 	mkdir -p $(PATHINSTBIN)
 	cp -rf ./src/* $(PATHINSTBIN)
@@ -228,6 +248,7 @@ ifneq ($(strip $(CONFIGPATH)),)
 endif
 
 # Remove all installed files
+.PHONY: uninstall
 uninstall:
 	rm -rf $(PATHINSTBIN)
 	rm -rf $(PATHINSTDOC)
@@ -235,11 +256,13 @@ uninstall:
 # --- PACKAGING ---
 
 # Build the RPM package for RedHat-like Linux distributions
+.PHONY: rpm
 rpm:
 	rm -rf $(PATHRPMPKG)
 	rpmbuild --define "_topdir $(PATHRPMPKG)" --define "_vendor $(VENDOR)" --define "_owner $(OWNER)" --define "_project $(PROJECT)" --define "_package $(PKGNAME)" --define "_version $(VERSION)" --define "_release $(RELEASE)" --define "_current_directory $(CURRENTDIR)" --define "_libpath /$(LIBPATH)" --define "_docpath /$(DOCPATH)" --define "_configpath /$(CONFIGPATH)" -bb resources/rpm/rpm.spec
 
 # Build the DEB package for Debian-like Linux distributions
+.PHONY: deb
 deb: build
 	rm -rf $(PATHDEBPKG)
 	make install DESTDIR=$(PATHDEBPKG)/$(PKGNAME)-$(VERSION)
@@ -264,12 +287,14 @@ endif
 	cd $(PATHDEBPKG)/$(PKGNAME)-$(VERSION) && debuild -us -uc
 
 # build a compressed bz2 archive
+.PHONY: bz2
 bz2: build
 	rm -rf $(PATHBZ2PKG)
 	make install DESTDIR=$(PATHBZ2PKG)
 	tar -jcvf $(PATHBZ2PKG)/$(PKGNAME)-$(VERSION)-$(RELEASE).tbz2 -C $(PATHBZ2PKG) $(DATADIR)
 
 # upload linux packages to bintray
+.PHONY: bintray
 bintray: rpm deb
 	@curl -T target/RPM/RPMS/noarch/php-tecnickcom-${PROJECT}-${VERSION}-${RELEASE}.noarch.rpm -u${APIUSER}:${APIKEY} -H "X-Bintray-Package:${PROJECT}" -H "X-Bintray-Version:${VERSION}" -H "X-Bintray-Publish:1" -H "X-Bintray-Override:1" https://api.bintray.com/content/tecnickcom/rpm/php-tecnickcom-${PROJECT}-${VERSION}-${RELEASE}.noarch.rpm
 	@curl -T target/DEB/php-tecnickcom-${PROJECT}_${VERSION}-${RELEASE}_all.deb -u${APIUSER}:${APIKEY} -H "X-Bintray-Package:${PROJECT}" -H "X-Bintray-Version:${VERSION}" -H "X-Bintray-Debian-Distribution:all" -H "X-Bintray-Debian-Component:main" -H "X-Bintray-Debian-Architecture:all" -H "X-Bintray-Publish:1" -H "X-Bintray-Override:1" https://api.bintray.com/content/tecnickcom/deb/php-tecnickcom-${PROJECT}_${VERSION}-${RELEASE}_all.deb
