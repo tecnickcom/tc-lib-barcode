@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2016 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2010-2020 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -101,8 +101,10 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
 
     /**
      * Encode TXTC40 last
+     * The following rules apply when only one or two symbol characters remain in the symbol
+     * before the start of the error correction codewords.
      *
-     * @param int $chr
+     * @param int    $chr
      * @param int    $cdw
      * @param int    $cdw_num
      * @param int    $enc
@@ -113,26 +115,20 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
     public function encodeTXTC40last($chr, &$cdw, &$cdw_num, &$enc, &$temp_cw, &$ptr, &$epos)
     {
         // get remaining number of data symbols
-        $cdwr = ($this->getMaxDataCodewords($cdw_num) - $cdw_num);
+        $cdwr = ($this->getMaxDataCodewords($cdw_num + $ptr) - $cdw_num);
         if (($cdwr == 1) && ($ptr == 1)) {
             // d. If one symbol character remains and one
             // C40 value (data character) remains to be encoded
-            $ch1 = array_shift($temp_cw);
-            --$ptr;
             $cdw[] = ($chr + 1);
             ++$cdw_num;
-            $pos = $epos;
             $enc = Data::ENC_ASCII;
             $this->last_enc = $enc;
         } elseif (($cdwr == 2) && ($ptr == 1)) {
             // c. If two symbol characters remain and only one
             // C40 value (data character) remains to be encoded
-            $ch1 = array_shift($temp_cw);
-            --$ptr;
             $cdw[] = 254;
             $cdw[] = ($chr + 1);
             $cdw_num += 2;
-            $pos = $epos;
             $enc = Data::ENC_ASCII;
             $this->last_enc = $enc;
         } elseif (($cdwr == 2) && ($ptr == 2)) {
@@ -144,7 +140,6 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
             $cdw[] = ($tmp >> 8);
             $cdw[] = ($tmp % 256);
             $cdw_num += 2;
-            $pos = $epos;
             $enc = Data::ENC_ASCII;
             $this->last_enc = $enc;
         } else {
@@ -154,7 +149,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
                 $this->last_enc = $enc;
                 $cdw[] = $this->getSwitchEncodingCodeword($enc);
                 ++$cdw_num;
-                $pos = ($epos - $ptr);
+                $epos -= $ptr;
             }
         }
     }
@@ -212,6 +207,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         // process last data (if any)
         if ($ptr > 0) {
             $this->encodeTXTC40last($chr, $cdw, $cdw_num, $enc, $temp_cw, $ptr, $epos);
+            $pos = $epos;
         }
     }
 }

@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2015 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2020 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -96,48 +96,62 @@ class DatamatrixTest extends TestCase
     public function getGridDataProvider()
     {
         return array(
+            array('(400)BS2WZ64PA(00)0', '183514ca2f0465170de1d404a5d7dabd'),
+            array('(400)BS2WZ64QA(00)0', '4293cb60df5ca208922b6f4ce65dbb7c'),
+            array('LD2B 1 CLNGP', 'f806889d1dbe0908dcfb530f86098041'),
+            array('XXXXXXXXXNGP', 'c6f2b7b293a2943bae74f2a191ec4aea'),
+            array('XXXXXXXXXXXXNGP', 'f7679d5a7ab4a8edf12571a6866d92bc'),
+            array('ABCDABCDAB'.chr(128).'DABCD', '39aca5ed58b922bee369e5ab8e3add8c'),
+            array('123aabcdefghijklmnopqrstuvwxyzc', 'b2d1e957af10655d7a8c3bae86696314'),
+            array('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq', 'c45bd372694ad7a20fca7d45f3d459ab'),
+            array('abcdefghijklmnop', '4fc7940fe3d19fca12454340c38e3421'),
+            array('abcdefghijklmnopq', 'a452e658e3096d8187969cbdc930909c'),
+            array('abcdefghij', '8ec27153e5d173aa2cb907845334e68c'),
             array('30Q324343430794<OQQ', 'e67808f91114fb021851098c4cc65b88'),
             array('0123456789', 'cc1fd942bc919b2d09b3c7cf508c6ae4'),
-            array('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', '3dee31111519b71fdf624efda75e4b4a'),
-            array('10f27ce-acb7-4e4e-a7ae-a0b98da6ed4a', '67b3bd23c0ab6de2e90a8ebd2143ed2b'),
+            array('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'c61d8ced313e2a2e79ab56eded67f11a'),
+            array('10f27ce-acb7-4e4e-a7ae-a0b98da6ed4a', '1a56c44e3977f1ac68057230181e49a8'),
             array('Hello World', 'e72650689027fe75d1f9377ec759c710'),
-            array('https://github.com/tecnickcom/tc-lib-barcode', 'ff3faf34d07c75fb99051fd2b9d72e21'),
+            array('https://github.com/tecnickcom/tc-lib-barcode', 'efed64acfa2ca29024446fa9816be696'),
             array(
                 'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd'
                 .'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd',
-                '296d2971c50f3302ad993d4b722a055f'
+                '4dc0efb6248b3802c2ab7cf123b884d0'
             ),
+            array('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\',
+                '1d41ee32691ff75637224e4fbe68a626'),
             array(
                 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
                 .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
                 .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\',
                 '0b2921466e097ff9cc1ad63719430540'
             ),
-            array(chr(128).chr(138).chr(148).chr(158), '01aa230c9a4c35ea69f23ecbc58d8e3e'),
-            array('!"£$%^&*()-+_={}[]\'#@~;:/?,.<>|', '03e8a96b0d0e41bded21c22f865da9c7'),
+            array(chr(128).chr(138).chr(148).chr(158), '9300000cee5a5f7b3b48145d44aa7fff'),
+            array('!"£$%^&*()-+_={}[]\'#@~;:/?,.<>|', '4993e149fd20569c8a4f0d758b6dfa76'),
+            array('!"£$', '792181edb48c6722217dc7e2e4cd4095'),
             array(
                 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\1234567890',
-                '561a64e10c4def637cd1eec6c8150f2b'
+                '4744c06c576088b40b3523c7d27cf051'
             ),
             array(
                 chr(254).chr(253)
                 .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
                 .chr(252).chr(251),
-                '15c9151a9db02542938e8682afecdb7b'
+                '0f078e5e5735396312245740484fa6d1'
             ),
-            array('aABCDEFG', '368e35b2aea50a4477f54560d1456599'),
-            array('123 45678', '28a7c011640a3d548b360661343730df'),
-            array('DATA MATRIX', 'df3239390d1b76ba848b5bf7899fbb5d'),
+            array('aABCDEFG', 'f074dee3f0f386d9b2f30b1ce4ad08a8'),
+            array('123 45678', '6c2e6503625e408fe9a4e392743f31a8'),
+            array('DATA MATRIX', '3ba4f4ef8449d795813b353ddcce4d23'),
             array('123ABCD89', '7ce2f8433b82c16e80f4a4c59cad5d10'),
             array('AB/C123-X', '703318e1964c63d5d500d14a821827cd'),
-            array(str_pad('', 300, chr(254).chr(253).chr(252).chr(251)), 'b9f1929925d2ee3c88ddbd7c50bffc87'),
+            array(str_pad('', 300, chr(254).chr(253).chr(252).chr(251)), 'e524bb17821d0461f3db6f313d35018f'),
             array('ec:b47'.chr(127).'4#P d*b}gI2#DB|hl{!~[EYH*=cmR{lf'
                 .chr(127).'=gcGIa.st286. #*"!eG[.Ryr?Kn,1mIyQqC3 6\'3N>',
-                'c99bc399273c299fe56bfa8da8017f99'
+                '6d12a9d2d36f76667d56f270649232b0'
             ),
             array('eA211101A2raJTGL/r9o93CVk4gtpEvWd2A2Qz8jvPc7l8ybD3m'
                 .'Wel91ih727kldinPeHJCjhr7fIBX1KQQfsN7BFMX00nlS8FlZG+',
-                '8aed7cb88565682df74a8aa66ba18601'
+                'b2f0d45920c7da5b298bbab5cff5d402'
             ),
             array(
                 chr(255).chr(254).chr(253).chr(252).chr(251).chr(250).chr(249).chr(248).chr(247).chr(246).chr(245)
@@ -163,7 +177,7 @@ class DatamatrixTest extends TestCase
                 .chr(29).chr(28).chr(27).chr(26).chr(25).chr(24).chr(23).chr(22).chr(21).chr(20).chr(19).chr(18)
                 .chr(17).chr(16).chr(15).chr(14).chr(13).chr(12).chr(11).chr(10).chr(9).chr(8).chr(7).chr(6)
                 .chr(5).chr(4).chr(3).chr(2).chr(1),
-                '7097885c0a5c42f00dabd0e3034319e8'
+                '9dccdf9b0b6d99c7d420af5540a9edfc'
             ),
         );
     }

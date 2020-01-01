@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2016 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2010-2020 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -73,19 +73,19 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function addPadding($size, $ncw)
     {
-        // add padding
-        if ((($size - $ncw) > 1) && ($this->cdw[($ncw - 1)] != 254)) {
+        if (($this->dmx->last_enc != Data::ENC_ASCII) && ($this->dmx->last_enc != Data::ENC_BASE256)) {
+            // return to ASCII encodation before padding
             if ($this->dmx->last_enc == Data::ENC_EDF) {
-                // switch to ASCII encoding
                 $this->cdw[] = 124;
-            } elseif (($this->dmx->last_enc != Data::ENC_ASCII) && ($this->dmx->last_enc != Data::ENC_BASE256)) {
-                // switch to ASCII encoding
+            } else {
                 $this->cdw[] = 254;
             }
+            ++$ncw;
         }
         if ($size > $ncw) {
             // add first pad
             $this->cdw[] = 129;
+            ++$ncw;
             // add remaining pads
             for ($i = $ncw; $i < $size; ++$i) {
                 $this->cdw[] = $this->dmx->get253StateCodeword(129, $i);
@@ -108,7 +108,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
 
         // get data codewords
         $this->cdw = $this->getHighLevelEncoding($this->code);
-        
+
         // number of data codewords
         $ncw = count($this->cdw);
         
@@ -186,13 +186,12 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     {
         // STEP A. Start in ASCII encodation.
         $enc = Data::ENC_ASCII; // current encoding mode
+        $this->dmx->last_enc = $enc; // last used encoding
         $pos = 0; // current position
         $cdw = array(); // array of codewords to be returned
         $cdw_num = 0; // number of data codewords
         $data_length = strlen($data); // number of chars
         while ($pos < $data_length) {
-            // set last used encoding
-            $this->dmx->last_enc = $enc;
             switch ($enc) {
                 case Data::ENC_ASCII:
                     // STEP B. While in ASCII encodation
@@ -215,6 +214,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                     $this->dmx->encodeBase256($cdw, $cdw_num, $pos, $data_length, $field_length, $data, $enc);
                     break;
             }
+            $this->dmx->last_enc = $enc;
         }
         return $cdw;
     }

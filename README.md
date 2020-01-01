@@ -17,7 +17,7 @@
 * **category**    Library
 * **package**     \Com\Tecnick\Barcode
 * **author**      Nicola Asuni <info@tecnick.com>
-* **copyright**   2001-2019 Nicola Asuni - Tecnick.com LTD
+* **copyright**   2001-2020 Nicola Asuni - Tecnick.com LTD
 * **license**     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
 * **link**        https://github.com/tecnickcom/tc-lib-barcode
 * **SRC DOC**     https://tcpdf.org/docs/srcdoc/tc-lib-barcode
