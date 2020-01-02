@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2016 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2010-2020 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -27,7 +27,7 @@ use \Com\Tecnick\Barcode\Exception as BarcodeException;
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2016 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2010-2020 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
@@ -77,7 +77,11 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         $pix = 2;
         $check = 0;
         for ($pos = ($clen - 1); $pos >= 0; --$pos) {
-            $check += (hexdec($code[$pos]) * $pix);
+            $hex = $code[$pos];
+            if (!ctype_xdigit($hex)) {
+                continue;
+            }
+            $check += (hexdec($hex) * $pix);
             ++$pix;
             if ($pix > 7) {
                 $pix = 2;
