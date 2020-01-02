@@ -77,10 +77,13 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         $pix = 2;
         $check = 0;
         for ($pos = ($clen - 1); $pos >= 0; --$pos) {
-            $check += (hexdec($code[$pos]) * $pix);
-            ++$pix;
-            if ($pix > 7) {
-                $pix = 2;
+            $t = $code[$pos];
+            if ($t >= "0" && $t <= "9" || $t >= "a" && $t <= "f" || $t >= "A" && $t <= "F") {
+                $check += (hexdec($t) * $pix);
+                ++$pix;
+                if ($pix > 7) {
+                   $pix = 2;
+                }
             }
         }
         $check %= 11;
