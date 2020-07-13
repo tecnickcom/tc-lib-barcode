@@ -6,7 +6,7 @@
  * @category    Library
  * @package     Barcode
  * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2016 Nicola Asuni - Tecnick.com LTD
+ * @copyright   2015-2020 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
@@ -53,12 +53,17 @@ $linear = array(
     'UPCA'       => array('72527273070', 'UPC-A'),
     'UPCE'       => array('725277', 'UPC-E'),
 );
+
 $square = array(
-    'DATAMATRIX' => array('0123456789', 'DATAMATRIX (ISO/IEC 16022)'),
-    'PDF417'     => array('0123456789', 'PDF417 (ISO/IEC 15438:2006)'),
-    'QRCODE'     => array('0123456789', 'QR-CODE'),
-    'LRAW'       => array('0101010101', '1D RAW MODE (comma-separated rows of 01 strings)'),
-    'SRAW'       => array('0101,1010',  '2D RAW MODE (comma-separated rows of 01 strings)'),
+    'LRAW'             => array('0101010101', '1D RAW MODE (comma-separated rows of 01 strings)'),
+    'SRAW'             => array('0101,1010',  '2D RAW MODE (comma-separated rows of 01 strings)'),
+    'PDF417'           => array('0123456789', 'PDF417 (ISO/IEC 15438:2006)'),
+    'QRCODE'           => array('0123456789', 'QR-CODE'),
+    'QRCODE,H,ST,0,0'  => array('abcdefghijklmnopqrstuvwxy0123456789', 'QR-CODE WITH PARAMETERS'),
+    'DATAMATRIX'       => array('0123456789', 'DATAMATRIX (ISO/IEC 16022) SQUARE'),
+    'DATAMATRIX,R'     => array('0123456789012345678901234567890123456789', 'DATAMATRIX Rectangular (ISO/IEC 16022) RECTANGULAR'),
+    'DATAMATRIX,S,GS1' => array(chr(232).'01095011010209171719050810ABCD1234'.chr(232).'2110', 'GS1 DATAMATRIX (ISO/IEC 16022) SQUARE GS1'),
+    'DATAMATRIX,R,GS1' => array(chr(232).'01095011010209171719050810ABCD1234'.chr(232).'2110', 'GS1 DATAMATRIX (ISO/IEC 16022) RECTANGULAR GS1'),
 );
 
 $barcode = new \Com\Tecnick\Barcode\Barcode();

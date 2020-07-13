@@ -196,7 +196,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
     protected function getMaxDataCodewords($numcw)
     {
         $mdc = 0;
-        foreach (Data::$symbattr as $matrix) {
+        foreach (Data::$symbattr[$this->shape] as $matrix) {
             if ($matrix[11] >= $numcw) {
                 $mdc = $matrix[11];
                 break;

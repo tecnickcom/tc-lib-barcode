@@ -42,6 +42,23 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
     public $last_enc;
 
     /**
+     * Datamatrix shape key (S=square, R=rectangular)
+     *
+     * @var string
+     */
+    public $shape;
+
+    /**
+     * Initialize a new encode object
+     *
+     * @param string $shape Datamatrix shape key (S=square, R=rectangular)
+     */
+    public function __construct($shape = 'S')
+    {
+        $this->shape = $shape;
+    }
+
+    /**
      * Encode ASCII
      *
      * @param int    $cdw

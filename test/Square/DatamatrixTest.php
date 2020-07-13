@@ -86,9 +86,9 @@ class DatamatrixTest extends TestCase
     /**
      * @dataProvider getGridDataProvider
      */
-    public function testGetGrid($code, $expected)
+    public function testGetGrid($mode, $code, $expected)
     {
-        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $bobj = $this->obj->getBarcodeObj($mode, $code);
         $grid = $bobj->getGrid();
         $this->assertEquals($expected, md5($grid));
     }
@@ -96,64 +96,71 @@ class DatamatrixTest extends TestCase
     public function getGridDataProvider()
     {
         return array(
-            array('(400)BS2WZ64PA(00)0', '183514ca2f0465170de1d404a5d7dabd'),
-            array('(400)BS2WZ64QA(00)0', '4293cb60df5ca208922b6f4ce65dbb7c'),
-            array('LD2B 1 CLNGP', 'f806889d1dbe0908dcfb530f86098041'),
-            array('XXXXXXXXXNGP', 'c6f2b7b293a2943bae74f2a191ec4aea'),
-            array('XXXXXXXXXXXXNGP', 'f7679d5a7ab4a8edf12571a6866d92bc'),
-            array('ABCDABCDAB'.chr(128).'DABCD', '39aca5ed58b922bee369e5ab8e3add8c'),
-            array('123aabcdefghijklmnopqrstuvwxyzc', 'b2d1e957af10655d7a8c3bae86696314'),
-            array('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq', 'c45bd372694ad7a20fca7d45f3d459ab'),
-            array('abcdefghijklmnop', '4fc7940fe3d19fca12454340c38e3421'),
-            array('abcdefghijklmnopq', 'a452e658e3096d8187969cbdc930909c'),
-            array('abcdefghij', '8ec27153e5d173aa2cb907845334e68c'),
-            array('30Q324343430794<OQQ', 'e67808f91114fb021851098c4cc65b88'),
-            array('0123456789', 'cc1fd942bc919b2d09b3c7cf508c6ae4'),
-            array('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'c61d8ced313e2a2e79ab56eded67f11a'),
-            array('10f27ce-acb7-4e4e-a7ae-a0b98da6ed4a', '1a56c44e3977f1ac68057230181e49a8'),
-            array('Hello World', 'e72650689027fe75d1f9377ec759c710'),
-            array('https://github.com/tecnickcom/tc-lib-barcode', 'efed64acfa2ca29024446fa9816be696'),
+            array('DATAMATRIX', '(400)BS2WZ64PA(00)0', '183514ca2f0465170de1d404a5d7dabd'),
+            array('DATAMATRIX', '(400)BS2WZ64QA(00)0', '4293cb60df5ca208922b6f4ce65dbb7c'),
+            array('DATAMATRIX', 'LD2B 1 CLNGP', 'f806889d1dbe0908dcfb530f86098041'),
+            array('DATAMATRIX', 'XXXXXXXXXNGP', 'c6f2b7b293a2943bae74f2a191ec4aea'),
+            array('DATAMATRIX', 'XXXXXXXXXXXXNGP', 'f7679d5a7ab4a8edf12571a6866d92bc'),
+            array('DATAMATRIX', 'ABCDABCDAB'.chr(128).'DABCD', '39aca5ed58b922bee369e5ab8e3add8c'),
+            array('DATAMATRIX', '123aabcdefghijklmnopqrstuvwxyzc', 'b2d1e957af10655d7a8c3bae86696314'),
+            array('DATAMATRIX', 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq', 'c45bd372694ad7a20fca7d45f3d459ab'),
+            array('DATAMATRIX', 'abcdefghijklmnop', '4fc7940fe3d19fca12454340c38e3421'),
+            array('DATAMATRIX', 'abcdefghijklmnopq', 'a452e658e3096d8187969cbdc930909c'),
+            array('DATAMATRIX', 'abcdefghij', '8ec27153e5d173aa2cb907845334e68c'),
+            array('DATAMATRIX', '30Q324343430794<OQQ', 'e67808f91114fb021851098c4cc65b88'),
+            array('DATAMATRIX', '0123456789', 'cc1fd942bc919b2d09b3c7cf508c6ae4'),
+            array('DATAMATRIX', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'c61d8ced313e2a2e79ab56eded67f11a'),
+            array('DATAMATRIX', '10f27ce-acb7-4e4e-a7ae-a0b98da6ed4a', '1a56c44e3977f1ac68057230181e49a8'),
+            array('DATAMATRIX', 'Hello World', 'e72650689027fe75d1f9377ec759c710'),
+            array('DATAMATRIX', 'https://github.com/tecnickcom/tc-lib-barcode', 'efed64acfa2ca29024446fa9816be696'),
             array(
+                'DATAMATRIX',
                 'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd'
                 .'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd',
                 '4dc0efb6248b3802c2ab7cf123b884d0'
             ),
-            array('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\',
+            array(
+                'DATAMATRIX',
+                'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\',
                 '1d41ee32691ff75637224e4fbe68a626'),
             array(
+                'DATAMATRIX',
                 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
                 .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
                 .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\',
                 '0b2921466e097ff9cc1ad63719430540'
             ),
-            array(chr(128).chr(138).chr(148).chr(158), '9300000cee5a5f7b3b48145d44aa7fff'),
-            array('!"£$%^&*()-+_={}[]\'#@~;:/?,.<>|', '4993e149fd20569c8a4f0d758b6dfa76'),
-            array('!"£$', '792181edb48c6722217dc7e2e4cd4095'),
+            array('DATAMATRIX', chr(128).chr(138).chr(148).chr(158), '9300000cee5a5f7b3b48145d44aa7fff'),
+            array('DATAMATRIX', '!"£$%^&*()-+_={}[]\'#@~;:/?,.<>|', '4993e149fd20569c8a4f0d758b6dfa76'),
+            array('DATAMATRIX', '!"£$', '792181edb48c6722217dc7e2e4cd4095'),
             array(
+                'DATAMATRIX',
                 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\1234567890',
                 '4744c06c576088b40b3523c7d27cf051'
             ),
             array(
-                chr(254).chr(253)
+                'DATAMATRIX', chr(254).chr(253)
                 .'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
                 .chr(252).chr(251),
                 '0f078e5e5735396312245740484fa6d1'
             ),
-            array('aABCDEFG', 'f074dee3f0f386d9b2f30b1ce4ad08a8'),
-            array('123 45678', '6c2e6503625e408fe9a4e392743f31a8'),
-            array('DATA MATRIX', '3ba4f4ef8449d795813b353ddcce4d23'),
-            array('123ABCD89', '7ce2f8433b82c16e80f4a4c59cad5d10'),
-            array('AB/C123-X', '703318e1964c63d5d500d14a821827cd'),
-            array(str_pad('', 300, chr(254).chr(253).chr(252).chr(251)), 'e524bb17821d0461f3db6f313d35018f'),
-            array('ec:b47'.chr(127).'4#P d*b}gI2#DB|hl{!~[EYH*=cmR{lf'
+            array('DATAMATRIX', 'aABCDEFG', 'f074dee3f0f386d9b2f30b1ce4ad08a8'),
+            array('DATAMATRIX', '123 45678', '6c2e6503625e408fe9a4e392743f31a8'),
+            array('DATAMATRIX', 'DATA MATRIX', '3ba4f4ef8449d795813b353ddcce4d23'),
+            array('DATAMATRIX', '123ABCD89', '7ce2f8433b82c16e80f4a4c59cad5d10'),
+            array('DATAMATRIX', 'AB/C123-X', '703318e1964c63d5d500d14a821827cd'),
+            array('DATAMATRIX', str_pad('', 300, chr(254).chr(253).chr(252).chr(251)), 'e524bb17821d0461f3db6f313d35018f'),
+            array('DATAMATRIX', 'ec:b47'.chr(127).'4#P d*b}gI2#DB|hl{!~[EYH*=cmR{lf'
                 .chr(127).'=gcGIa.st286. #*"!eG[.Ryr?Kn,1mIyQqC3 6\'3N>',
                 '6d12a9d2d36f76667d56f270649232b0'
             ),
-            array('eA211101A2raJTGL/r9o93CVk4gtpEvWd2A2Qz8jvPc7l8ybD3m'
+            array('DATAMATRIX', 'eA211101A2raJTGL/r9o93CVk4gtpEvWd2A2Qz8jvPc7l8ybD3m'
                 .'Wel91ih727kldinPeHJCjhr7fIBX1KQQfsN7BFMX00nlS8FlZG+',
                 'b2f0d45920c7da5b298bbab5cff5d402'
             ),
+            // Square
             array(
+                'DATAMATRIX,S',
                 chr(255).chr(254).chr(253).chr(252).chr(251).chr(250).chr(249).chr(248).chr(247).chr(246).chr(245)
                 .chr(244).chr(243).chr(242).chr(241).chr(240).chr(239).chr(238).chr(237).chr(236).chr(235).chr(234)
                 .chr(233).chr(232).chr(231).chr(230).chr(229).chr(228).chr(227).chr(226).chr(225).chr(224).chr(223)
@@ -179,6 +186,31 @@ class DatamatrixTest extends TestCase
                 .chr(5).chr(4).chr(3).chr(2).chr(1),
                 '9dccdf9b0b6d99c7d420af5540a9edfc'
             ),
+            // Rectangular shape
+            array('DATAMATRIX,R', '01234567890', 'd3811e018f960beed6d3fa5e675e290e'),
+            array('DATAMATRIX,R', '01234567890123456789', 'fe3ecb042dabc4b40c5017e204df105b'),
+            array('DATAMATRIX,R', '012345678901234567890123456789', '3f8e9aa4413b90f7e1c2e85b4471fd20'),
+            array('DATAMATRIX,R', '0123456789012345678901234567890123456789', 'b748b02c1c4cae621a84c8dbba97c710'),
+            // Rectangular GS1
+            array('DATAMATRIX,R,GS1',
+                chr(232).'01034531200000111719112510ABCD1234',
+                'f55524d239fc95072d99eafe5363cfeb'),
+            array('DATAMATRIX,R,GS1',
+                chr(232).'01095011010209171719050810ABCD1234'.chr(232).'2110',
+                'e17f2a052271a18cdc00b161908eccb9'),
+            array('DATAMATRIX,R,GS1',
+                chr(232).'01034531200000111712050810ABCD1234'.chr(232).'4109501101020917',
+                '31759950f3253805b100fedf3e536575'),
+            // Square GS1
+            array('DATAMATRIX,S,GS1',
+                chr(232).'01034531200000111719112510ABCD1234',
+                'c9efb69a62114fb6a3d2b52f139a372a'),
+            array('DATAMATRIX,S,GS1',
+                chr(232).'01095011010209171719050810ABCD1234'.chr(232).'2110',
+                '9630bdba9fc79b4a4911fc465aa08951'),
+            array('DATAMATRIX,S,GS1',
+                chr(232).'01034531200000111712050810ABCD1234'.chr(232).'4109501101020917',
+                'a29a330a01cce34a346cf7049e2259ee'),
         );
     }
 

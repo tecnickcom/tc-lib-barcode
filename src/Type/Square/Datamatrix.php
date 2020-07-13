@@ -64,6 +64,38 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected $dmx;
 
     /**
+     * Datamatrix shape key (S=square, R=rectangular)
+     *
+     * @var string
+     */
+    protected $shape = 'S';
+
+    /**
+     * Datamatrix variant (N=default, GS1=FNC1 codeword in first place)
+     *
+     * @var string
+     */
+    protected $gsonemode = false;
+
+    /**
+     * Set extra (optional) parameters:
+     *     1: SHAPE - S=square (default), R=rectangular
+     *     2: MODE - N=default, GS1 = the FNC1 codeword is added in the first position of Data Matrix ECC 200 version
+     */
+    protected function setParameters()
+    {
+        parent::setParameters();
+        // shape
+        if (isset($this->params[0]) && ($this->params[0] == 'R')) {
+            $this->shape = 'R';
+        }
+        // mode
+        if (isset($this->params[1]) && ($this->params[1] == 'GS1')) {
+            $this->gsonemode = true;
+        }
+    }
+
+    /**
      * Add padding codewords
      *
      * @param int $size Max barcode size in codewords
@@ -118,7 +150,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
         
         // get minimum required matrix size.
-        foreach (Data::$symbattr as $params) {
+        foreach (Data::$symbattr[$this->shape] as $params) {
             if ($params[11] >= $ncw) {
                 break;
             }
@@ -181,6 +213,8 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      * @param $data (string) data to encode
      *
      * @return array of codewords
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function getHighLevelEncoding($data)
     {
@@ -192,6 +226,13 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $cdw_num = 0; // number of data codewords
         $data_length = strlen($data); // number of chars
         while ($pos < $data_length) {
+            // Determine if current char is FNC1 (don't encode it, just pass it through)
+            if ($this->gsonemode && ($data[$pos] == chr(232))) {
+                $cdw[] = 232;
+                ++$pos;
+                ++$cdw_num;
+                continue;
+            }
             switch ($enc) {
                 case Data::ENC_ASCII:
                     // STEP B. While in ASCII encodation
@@ -226,7 +267,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function setBars()
     {
-        $this->dmx = new Encode;
+        $this->dmx = new Encode($this->shape);
         $params = $this->getCodewords();
         // initialize empty arrays
         $this->grid = array_fill(0, ($params[2] * $params[3]), 0);
@@ -239,18 +280,18 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $rdri = ($params[4] - 1);
         // region data column max index
         $rdci = ($params[5] - 1);
-        // for each vertical region
-        for ($vr = 0; $vr < $params[9]; ++$vr) {
+        // for each horizontal region
+        for ($hr = 0; $hr < $params[8]; ++$hr) {
             // for each row on region
             for ($rdx = 0; $rdx < $params[4]; ++$rdx) {
                 // get row
-                $row = (($vr * $params[4]) + $rdx);
-                // for each horizontal region
-                for ($hr = 0; $hr < $params[8]; ++$hr) {
+                $row = (($hr * $params[4]) + $rdx);
+                // for each vertical region
+                for ($vr = 0; $vr < $params[9]; ++$vr) {
                     // for each column on region
                     for ($cdx = 0; $cdx < $params[5]; ++$cdx) {
                         // get column
-                        $col = (($hr * $params[5]) + $cdx);
+                        $col = (($vr * $params[5]) + $cdx);
                         $this->setGrid($idx, $places, $row, $col, $rdx, $cdx, $rdri, $rdci);
                     }
                 }
