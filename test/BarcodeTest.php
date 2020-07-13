@@ -41,7 +41,7 @@ class BarcodeTest extends TestCase
     public function testGetTypes()
     {
         $types = $this->obj->getTypes();
-        $this->assertEquals(36, count($types));
+        $this->assertEquals(37, count($types));
     }
 
     /**
