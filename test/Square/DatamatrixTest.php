@@ -149,7 +149,9 @@ class DatamatrixTest extends TestCase
             array('DATAMATRIX', 'DATA MATRIX', '3ba4f4ef8449d795813b353ddcce4d23'),
             array('DATAMATRIX', '123ABCD89', '7ce2f8433b82c16e80f4a4c59cad5d10'),
             array('DATAMATRIX', 'AB/C123-X', '703318e1964c63d5d500d14a821827cd'),
-            array('DATAMATRIX', str_pad('', 300, chr(254).chr(253).chr(252).chr(251)), 'e524bb17821d0461f3db6f313d35018f'),
+            array('DATAMATRIX',
+                str_pad('', 300, chr(254).chr(253).chr(252).chr(251)),
+                'e524bb17821d0461f3db6f313d35018f'),
             array('DATAMATRIX', 'ec:b47'.chr(127).'4#P d*b}gI2#DB|hl{!~[EYH*=cmR{lf'
                 .chr(127).'=gcGIa.st286. #*"!eG[.Ryr?Kn,1mIyQqC3 6\'3N>',
                 '6d12a9d2d36f76667d56f270649232b0'
