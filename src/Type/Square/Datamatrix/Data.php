@@ -73,7 +73,7 @@ class Data
     const ENC_ASCII_NUM = 7;
 
     /**
-     * Table of Data Matrix ECC 200 Symbol Attributes:
+     * Table of Data Matrix ECC 200 Symbol Attributes (square):
      * <ul>
      * <li>total matrix rows (including finder pattern)</li>
      * <li>total matrix cols (including finder pattern)</li>
@@ -95,7 +95,7 @@ class Data
      *
      * @var array
      */
-    public static $symbattr = array(
+    public static $symbattr_square = array(
         // square form -------------------------------------------------------------------------------------------------
         array(0x00a,0x00a,0x008,0x008,0x00a,0x00a,0x008,0x008,0x001,0x001,0x001,0x003,0x005,0x001,0x003,0x005),// 10x10
         array(0x00c,0x00c,0x00a,0x00a,0x00c,0x00c,0x00a,0x00a,0x001,0x001,0x001,0x005,0x007,0x001,0x005,0x007),// 12x12
@@ -121,7 +121,32 @@ class Data
         array(0x078,0x078,0x06c,0x06c,0x014,0x014,0x012,0x012,0x006,0x006,0x024,0x41a,0x198,0x006,0x0af,0x044),//120x120
         array(0x084,0x084,0x078,0x078,0x016,0x016,0x014,0x014,0x006,0x006,0x024,0x518,0x1f0,0x008,0x0a3,0x03e),//132x132
         array(0x090,0x090,0x084,0x084,0x018,0x018,0x016,0x016,0x006,0x006,0x024,0x618,0x26c,0x00a,0x09c,0x03e),//144x144
-        // rectangular form (currently unused) -------------------------------------------------------------------------
+    );
+    /**
+     * Table of Data Matrix ECC 200 Symbol Attributes (rectangular):
+     * <ul>
+     * <li>total matrix rows (including finder pattern)</li>
+     * <li>total matrix cols (including finder pattern)</li>
+     * <li>total matrix rows (without finder pattern)</li>
+     * <li>total matrix cols (without finder pattern)</li>
+     * <li>region data rows (with finder pattern)</li>
+     * <li>region data col (with finder pattern)</li>
+     * <li>region data rows (without finder pattern)</li>
+     * <li>region data col (without finder pattern)</li>
+     * <li>horizontal regions</li>
+     * <li>vertical regions</li>
+     * <li>regions</li>
+     * <li>data codewords</li>
+     * <li>error codewords</li>
+     * <li>blocks</li>
+     * <li>data codewords per block</li>
+     * <li>error codewords per block</li>
+     * </ul>
+     *
+     * @var array
+     */
+    public static $symbattr_rectangular = array(
+        // rectangular form --------------------------------------------------------------------------------------------
         array(0x008,0x012,0x006,0x010,0x008,0x012,0x006,0x010,0x001,0x001,0x001,0x005,0x007,0x001,0x005,0x007),//  8x18
         array(0x008,0x020,0x006,0x01c,0x008,0x010,0x006,0x00e,0x001,0x002,0x002,0x00a,0x00b,0x001,0x00a,0x00b),//  8x32
         array(0x00c,0x01a,0x00a,0x018,0x00c,0x01a,0x00a,0x018,0x001,0x001,0x001,0x010,0x00e,0x001,0x010,0x00e),//  12x26
@@ -138,7 +163,7 @@ class Data
     public static $chset_id = array(
         self::ENC_C40 => 'C40',
         self::ENC_TXT => 'TXT',
-        self::ENC_X12 =>'X12'
+        self::ENC_X12 => 'X12'
     );
 
     /**

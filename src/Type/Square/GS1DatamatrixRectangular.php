@@ -20,9 +20,9 @@ use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
 use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode;
 
 /**
- * Com\Tecnick\Barcode\Type\Square\GS1Datamatrix
+ * Com\Tecnick\Barcode\Type\Square\GS1DatamatrixRectangular
  *
- * GS1 Datamatrix Barcode type class
+ * GS1 Datamatrix Rectangular Barcode type class
  * GS1DATAMATRIX (ISO/IEC 16022)
  *
  * @since       2015-02-21
@@ -33,14 +33,14 @@ use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class GS1Datamatrix extends \Com\Tecnick\Barcode\Type\Square\Datamatrix
+class GS1DatamatrixRectangular extends \Com\Tecnick\Barcode\Type\Square\DatamatrixRectangular
 {
     /**
      * Barcode format
      *
      * @var string
      */
-    protected $format = 'GS1DATAMATRIX';
+    protected $format = 'GS1DATAMATRIXR';
 
     /**
      * Get high level encoding using the minimum symbol data characters for ECC 200

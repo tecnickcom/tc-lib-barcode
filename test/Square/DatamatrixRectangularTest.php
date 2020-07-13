@@ -1,6 +1,6 @@
 <?php
 /**
- * GS1DatamatrixTest.php
+ * DatamatrixRectangularTest.php
  *
  * @since       2015-02-21
  * @category    Library
@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class GS1DatamatrixTest extends TestCase
+class DatamatrixRectangularTest extends TestCase
 {
     protected $obj = null;
 
@@ -43,7 +43,7 @@ class GS1DatamatrixTest extends TestCase
      */
     public function testGetGrid($code, $expected)
     {
-        $bobj = $this->obj->getBarcodeObj('GS1DATAMATRIX', $code);
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIXR', $code);
         $grid = $bobj->getGrid();
         $this->assertEquals($expected, md5($grid));
     }
@@ -51,9 +51,10 @@ class GS1DatamatrixTest extends TestCase
     public function getGridDataProvider()
     {
         return array(
-            array(chr(232).'01034531200000111719112510ABCD1234', 'c9efb69a62114fb6a3d2b52f139a372a'),
-            array(chr(232).'01095011010209171719050810ABCD1234'.chr(232).'2110', '9630bdba9fc79b4a4911fc465aa08951'),
-            array(chr(232).'01034531200000111712050810ABCD1234'.chr(232).'4109501101020917', 'a29a330a01cce34a346cf7049e2259ee'),
+            array('01234567890', 'd3811e018f960beed6d3fa5e675e290e'),
+            array('01234567890123456789', 'fe3ecb042dabc4b40c5017e204df105b'),
+            array('012345678901234567890123456789', '3f8e9aa4413b90f7e1c2e85b4471fd20'),
+            array('0123456789012345678901234567890123456789', 'b748b02c1c4cae621a84c8dbba97c710'),
         );
     }
 
@@ -62,7 +63,7 @@ class GS1DatamatrixTest extends TestCase
      */
     public function testStrings($code)
     {
-        $bobj = $this->obj->getBarcodeObj('GS1DATAMATRIX', $code);
+        $bobj = $this->obj->getBarcodeObj('DATAMATRIXR', $code);
         $this->assertNotNull($bobj);
     }
 

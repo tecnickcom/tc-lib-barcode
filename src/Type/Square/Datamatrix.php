@@ -118,7 +118,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
         
         // get minimum required matrix size.
-        foreach (Data::$symbattr as $params) {
+        foreach (Data::$symbattr_square as $params) {
             if ($params[11] >= $ncw) {
                 break;
             }
@@ -239,14 +239,14 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $rdri = ($params[4] - 1);
         // region data column max index
         $rdci = ($params[5] - 1);
-        // for each vertical region
-        for ($vr = 0; $vr < $params[9]; ++$vr) {
+        // for each horizontal region
+        for ($vr = 0; $vr < $params[8]; ++$vr) {
             // for each row on region
             for ($rdx = 0; $rdx < $params[4]; ++$rdx) {
                 // get row
                 $row = (($vr * $params[4]) + $rdx);
-                // for each horizontal region
-                for ($hr = 0; $hr < $params[8]; ++$hr) {
+                // for each vertical region
+                for ($hr = 0; $hr < $params[9]; ++$hr) {
                     // for each column on region
                     for ($cdx = 0; $cdx < $params[5]; ++$cdx) {
                         // get column
