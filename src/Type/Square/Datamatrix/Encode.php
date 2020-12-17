@@ -124,10 +124,19 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      */
     public function encodeEDFfour($epos, &$cdw, &$cdw_num, &$pos, &$data_length, &$field_length, &$enc, &$temp_cw)
     {
-        if (($epos == $data_length) && ($field_length < 3)) {
+        if ($epos == $data_length) {
             $enc = Data::ENC_ASCII;
-            $cdw[] = $this->getSwitchEncodingCodeword($enc);
-            ++$cdw_num;
+            $exp_cdw_num = $cdw_num + $field_length;
+            foreach (Data::$symbattr[$this->shape] as $params) {
+                if ($params[11] >= $exp_cdw_num) {
+                    $exp_paddings_num = $params[11] - $exp_cdw_num;
+                    break;
+                }
+            }
+            if ($field_length + $exp_paddings_num > 2) {
+                $cdw[] = $this->getSwitchEncodingCodeword($enc);
+                ++$cdw_num;
+           }
             return true;
         }
         if ($field_length < 4) {
@@ -142,10 +151,18 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
             $this->last_enc = $enc;
         }
         // encodes four data characters in three codewords
-        $cdw[] = (($temp_cw[0] & 0x3F) << 2) + (($temp_cw[1] & 0x30) >> 4);
-        $cdw[] = (($temp_cw[1] & 0x0F) << 4) + (($temp_cw[2] & 0x3C) >> 2);
-        $cdw[] = (($temp_cw[2] & 0x03) << 6) + ($temp_cw[3] & 0x3F);
-        $cdw_num += 3;
+        if ($field_length > 0) {
+            $cdw[] = (($temp_cw[0] & 0x3F) << 2) + (($temp_cw[1] & 0x30) >> 4);
+            $cdw_num++;
+        }
+        if ($field_length > 1) {
+            $cdw[] = (($temp_cw[1] & 0x0F) << 4) + (($temp_cw[2] & 0x3C) >> 2);
+            $cdw_num++;
+        }
+        if ($field_length > 2) {
+            $cdw[] = (($temp_cw[2] & 0x03) << 6) + ($temp_cw[3] & 0x3F);
+            $cdw_num++;
+        }
         $temp_cw = array();
         $pos = $epos;
         $field_length = 0;
