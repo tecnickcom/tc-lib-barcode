@@ -16,6 +16,7 @@
 namespace Test\Square;
 
 use PHPUnit\Framework\TestCase;
+use \Test\TestUtil;
 
 /**
  * Barcode class test
@@ -28,31 +29,26 @@ use PHPUnit\Framework\TestCase;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class PdfFourOneSevenTest extends TestCase
+class PdfFourOneSevenTest extends TestUtil
 {
-    protected $obj = null;
-
-    public function setUp()
+    protected function getTestObject()
     {
-        //$this->markTestSkipped(); // skip this test
-        $this->obj = new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode;
     }
 
-    /**
-     * @expectedException \Com\Tecnick\Barcode\Exception
-     */
     public function testInvalidInput()
     {
-        $this->obj->getBarcodeObj('PDF417', '');
+        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
+        $testObj = $this->getTestObject();
+        $testObj->getBarcodeObj('PDF417', '');
     }
 
-    /**
-     * @expectedException \Com\Tecnick\Barcode\Exception
-     */
     public function testCapacityException()
     {
+        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
+        $testObj = $this->getTestObject();
         $code = str_pad('', 1000, 'X1');
-        $this->obj->getBarcodeObj('PDF417', $code);
+        $testObj->getBarcodeObj('PDF417', $code);
     }
 
     /**
@@ -60,7 +56,8 @@ class PdfFourOneSevenTest extends TestCase
      */
     public function testGetGrid($options, $code, $expected)
     {
-        $bobj = $this->obj->getBarcodeObj('PDF417'.$options, $code);
+        $testObj = $this->getTestObject();
+        $bobj = $testObj->getBarcodeObj('PDF417'.$options, $code);
         $grid = $bobj->getGrid();
         $this->assertEquals($expected, md5($grid));
     }
@@ -207,7 +204,8 @@ class PdfFourOneSevenTest extends TestCase
      */
     public function testStrings($code)
     {
-        $bobj = $this->obj->getBarcodeObj('PDF417', $code);
+        $testObj = $this->getTestObject();
+        $bobj = $testObj->getBarcodeObj('PDF417', $code);
         $this->assertNotNull($bobj);
     }
 

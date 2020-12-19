@@ -118,7 +118,6 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
     protected function mask($width, $frame, $level)
     {
         $minDemerit = PHP_INT_MAX;
-        $bestMaskNum = 0;
         $bestMask = array();
         $checked_masks = array(0, 1, 2, 3, 4, 5, 6, 7);
         if ($this->qr_find_from_random !== false) {
@@ -142,7 +141,6 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
             if ($demerit < $minDemerit) {
                 $minDemerit = $demerit;
                 $bestMask = $mask;
-                $bestMaskNum = $idx;
             }
         }
         return $bestMask;

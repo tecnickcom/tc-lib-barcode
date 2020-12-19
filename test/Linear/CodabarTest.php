@@ -16,6 +16,7 @@
 namespace Test\Linear;
 
 use PHPUnit\Framework\TestCase;
+use \Test\TestUtil;
 
 /**
  * Barcode class test
@@ -28,30 +29,27 @@ use PHPUnit\Framework\TestCase;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class CodabarTest extends TestCase
+class CodabarTest extends TestUtil
 {
-    protected $obj = null;
-
-    public function setUp()
+    protected function getTestObject()
     {
-        //$this->markTestSkipped(); // skip this test
-        $this->obj = new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode;
     }
 
     public function testGetGrid()
     {
-        $bobj = $this->obj->getBarcodeObj('CODABAR', '0123456789');
+        $testObj = $this->getTestObject();
+        $bobj = $testObj->getBarcodeObj('CODABAR', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "10110010010101010011010101100101010010110110010101010110"
             ."10010110101001010010101101001011010100110101011010010101011001001\n";
         $this->assertEquals($expected, $grid);
     }
 
-    /**
-     * @expectedException \Com\Tecnick\Barcode\Exception
-     */
     public function testInvalidInput()
     {
-        $this->obj->getBarcodeObj('CODABAR', chr(218));
+        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
+        $testObj = $this->getTestObject();
+        $testObj->getBarcodeObj('CODABAR', chr(218));
     }
 }

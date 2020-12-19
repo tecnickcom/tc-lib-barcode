@@ -30,17 +30,15 @@ use PHPUnit\Framework\TestCase;
  */
 class RawTest extends TestCase
 {
-    protected $obj = null;
-
-    public function setUp()
+    protected function getTestObject()
     {
-        //$this->markTestSkipped(); // skip this test
-        $this->obj = new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode;
     }
 
     public function testGetGrid()
     {
-        $bobj = $this->obj->getBarcodeObj('SRAW', '0101,1010,1100,0011');
+        $testObj = $this->getTestObject();
+        $bobj = $testObj->getBarcodeObj('SRAW', '0101,1010,1100,0011');
         $grid = $bobj->getGrid();
         $expected = "0101\n1010\n1100\n0011\n";
         $this->assertEquals($expected, $grid);

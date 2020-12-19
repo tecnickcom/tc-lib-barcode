@@ -31,7 +31,7 @@ use \Com\Tecnick\Barcode\Exception as BarcodeException;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class A extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
+class CodeOneTwoEightA extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
 {
     /**
      * Barcode format

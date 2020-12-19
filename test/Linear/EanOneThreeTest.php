@@ -16,6 +16,7 @@
 namespace Test\Linear;
 
 use PHPUnit\Framework\TestCase;
+use \Test\TestUtil;
 
 /**
  * Barcode class test
@@ -28,19 +29,17 @@ use PHPUnit\Framework\TestCase;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class EanOneThreeTest extends TestCase
+class EanOneThreeTest extends TestUtil
 {
-    protected $obj = null;
-
-    public function setUp()
+    protected function getTestObject()
     {
-        //$this->markTestSkipped(); // skip this test
-        $this->obj = new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode;
     }
 
     public function testGetGrid()
     {
-        $bobj = $this->obj->getBarcodeObj('EAN13', '0123456789');
+        $testObj = $this->getTestObject();
+        $bobj = $testObj->getBarcodeObj('EAN13', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "10100011010001101001100100100110111101010001101010100111010100001000100100100011101001001110101\n";
         $this->assertEquals($expected, $grid);
@@ -48,19 +47,17 @@ class EanOneThreeTest extends TestCase
         $this->assertEquals('0001234567895', $bobj->getExtendedCode());
     }
 
-    /**
-     * @expectedException \Com\Tecnick\Barcode\Exception
-     */
     public function testInvalidInput()
     {
-        $this->obj->getBarcodeObj('EAN13', '}{');
+        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
+        $testObj = $this->getTestObject();
+        $testObj->getBarcodeObj('EAN13', '}{');
     }
 
-    /**
-     * @expectedException \Com\Tecnick\Barcode\Exception
-     */
     public function testInvalidLength()
     {
-        $this->obj->getBarcodeObj('EAN13', '1111111111111');
+        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
+        $testObj = $this->getTestObject();
+        $testObj->getBarcodeObj('EAN13', '1111111111111');
     }
 }

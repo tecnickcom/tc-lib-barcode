@@ -54,176 +54,134 @@ PATHINSTCFG=$(DESTDIR)/$(CONFIGPATH)
 PATHINSTDOC=$(DESTDIR)/$(DOCPATH)
 
 # Current directory
-CURRENTDIR=$(shell pwd)
+CURRENTDIR=$(dir $(realpath $(firstword $(MAKEFILE_LIST))))
+
+# Target directory
+TARGETDIR=$(CURRENTDIR)target
 
 # RPM Packaging path (where RPMs will be stored)
-PATHRPMPKG=$(CURRENTDIR)/target/RPM
+PATHRPMPKG=$(TARGETDIR)/RPM
 
 # DEB Packaging path (where DEBs will be stored)
-PATHDEBPKG=$(CURRENTDIR)/target/DEB
+PATHDEBPKG=$(TARGETDIR)/DEB
 
 # BZ2 Packaging path (where BZ2s will be stored)
-PATHBZ2PKG=$(CURRENTDIR)/target/BZ2
+PATHBZ2PKG=$(TARGETDIR)/BZ2
 
 # Default port number for the example server
 PORT?=8000
 
+# PHP binary
+PHP=$(shell which php)
+
 # Composer executable (disable APC to as a work-around of a bug)
-COMPOSER=$(shell which php) -d "apc.enable_cli=0" $(shell which composer)
+COMPOSER=$(PHP) -d "apc.enable_cli=0" $(shell which composer)
+
+# phpDocumentor executable file
+PHPDOC=$(shell which phpDocumentor)
 
 # --- MAKE TARGETS ---
 
 # Display general help about this command
+.PHONY: help
 help:
 	@echo ""
-	@echo "${PROJECT} Makefile."
+	@echo "$(PROJECT) Makefile."
 	@echo "The following commands are available:"
 	@echo ""
-	@echo "    make qa          : Run the targets: test, phpcs, phpmd and phpcpd"
-	@echo "    make qa_test     : Run the targets: phpcs_test and phpmd_test"
-	@echo "    make qa_all      : Run the targets: qa and qa_all"
+	@echo "  make bintray  : Upload RPM and DEB packages to bintray (requires APIUSER and APIKEY)"
+	@echo "  make buildall : Build and test everything from scratch"
+	@echo "  make bz2      : Package the library in a compressed bz2 archive"
+	@echo "  make clean    : Delete the vendor and target directories"
+	@echo "  make codefix  : Fix code style violations"
+	@echo "  make deb      : Build a DEB package for Debian-like Linux distributions"
+	@echo "  make deps     : Download all dependencies"
+	@echo "  make doc      : Generate source code documentation"
+	@echo "  make lint     : Test source code for coding standard violations"
+	@echo "  make qa       : Run all tests and reports"
+	@echo "  make report   : Generate various reports"
+	@echo "  make rpm      : Build an RPM package for RedHat-like Linux distributions"
+	@echo "  make server   : Start the development server"
+	@echo "  make test     : Run unit tests"
 	@echo ""
-	@echo "    make test        : Run the PHPUnit tests"
-	@echo ""
-	@echo "    make phpcs       : Run PHPCS on the source code and show any style violations"
-	@echo "    make phpcs_test  : Run PHPCS on the test code and show any style violations"
-	@echo ""
-	@echo "    make phpcbf      : Run PHPCBF on the source code to fix style violations"
-	@echo "    make phpcbf_test : Run PHPCBF on the test code to fix style violations"
-	@echo ""
-	@echo "    make phpmd       : Run PHP Mess Detector on the source code"
-	@echo "    make phpmd_test  : Run PHP Mess Detector on the test code"
-	@echo ""
-	@echo "    make phpcpd      : Run PHP Copy/Paste Detector"
-	@echo "    make phploc      : Run PHPLOC to analyze the structure of the project"
-	@echo "    make phpdep      : Run JDepend static analysis and generate graphs"
-	@echo "    make phpcmpinfo  : Find out the minimum version and extensions required"
-	@echo "    make report      : Generates various static-analisys reports"
-	@echo ""
-	@echo "    make docs        : Generate source code documentation"
-	@echo ""
-	@echo "    make clean       : Delete the vendor and target directory"
-	@echo "    make build       : Clean and download the composer dependencies"
-	@echo "    make build_dev   : Clean and download the composer dependencies including dev ones"
-	@echo "    make update      : Update composer dependencies"
-	@echo ""
-	@echo "    make server      : Run the example server at http://localhost:"$(PORT)
-	@echo ""
-	@echo "    make install     : Install this library"
-	@echo "    make uninstall   : Remove all installed files"
-	@echo ""
-	@echo "    make rpm         : Build an RPM package"
-	@echo "    make deb         : Build a DEB package"
-	@echo "    make bz2         : Build a tar bz2 (tbz2) compressed archive"
+	@echo "To test and build everything from scratch:"
+	@echo "make buildall"
 	@echo ""
 
 # alias for help target
 .PHONY: all
 all: help
 
-# run the PHPUnit tests
-.PHONY: test
-test:
-	./vendor/bin/phpunit test
+# upload rpm and deb packages to bintray
+.PHONY: bintray
+bintray:
+	@curl -T $(TARGETDIR)/RPM/RPMS/noarch/php-tecnickcom-${PROJECT}-${VERSION}-${RELEASE}.noarch.rpm -u${APIUSER}:${APIKEY} -H "X-Bintray-Package:${PROJECT}" -H "X-Bintray-Version:${VERSION}" -H "X-Bintray-Publish:1" -H "X-Bintray-Override:1" https://api.bintray.com/content/tecnickcom/rpm/php-tecnickcom-${PROJECT}-${VERSION}-${RELEASE}.noarch.rpm
+	@curl -T $(TARGETDIR)/DEB/php-tecnickcom-${PROJECT}_${VERSION}-${RELEASE}_all.deb -u${APIUSER}:${APIKEY} -H "X-Bintray-Package:${PROJECT}" -H "X-Bintray-Version:${VERSION}" -H "X-Bintray-Debian-Distribution:all" -H "X-Bintray-Debian-Component:main" -H "X-Bintray-Debian-Architecture:all" -H "X-Bintray-Publish:1" -H "X-Bintray-Override:1" https://api.bintray.com/content/tecnickcom/deb/php-tecnickcom-${PROJECT}_${VERSION}-${RELEASE}_all.deb
 
-# generate docs
-.PHONY: docs
-docs:
-	@rm -rf target/phpdocs && ./vendor/apigen/apigen/bin/apigen generate --source="src/" --destination="target/phpdocs/" --exclude="vendor" --access-levels="public,protected,private" --charset="UTF-8" --title="${PROJECT}"
+# Full build and test sequence
+.PHONY: buildall
+buildall: deps codefix qa bz2 rpm deb
 
-# run PHPCS on the source code and show any style violations
-.PHONY: phpcs
-phpcs:
-	@./vendor/bin/phpcs --ignore="./vendor/" --standard=psr2 src
+# Package the library in a compressed bz2 archive
+.PHONY: bz2
+bz2:
+	rm -rf $(PATHBZ2PKG)
+	make install DESTDIR=$(PATHBZ2PKG)
+	tar -jcvf $(PATHBZ2PKG)/$(PKGNAME)-$(VERSION)-$(RELEASE).tbz2 -C $(PATHBZ2PKG) $(DATADIR)
 
-# run PHPCS on the test code and show any style violations
-.PHONY: phpcs_test
-phpcs_test:
-	@./vendor/bin/phpcs --standard=psr2 test
-
-# run PHPCBF on the source code and show any style violations
-.PHONY: phpcbf
-phpcbf:
-	@./vendor/bin/phpcbf --ignore="./vendor/" --standard=psr2 src
-
-# run PHPCBF on the test code and show any style violations
-.PHONY: phpcbf_test
-phpcbf_test:
-	@./vendor/bin/phpcbf --standard=psr2 test
-
-# Run PHP Mess Detector on the source code
-.PHONY: phpmd
-phpmd:
-	@./vendor/bin/phpmd src text codesize,unusedcode,naming,design --exclude vendor
-
-# run PHP Mess Detector on the test code
-.PHONY: phpmd_test
-phpmd_test:
-	@./vendor/bin/phpmd test text unusedcode,naming,design
-
-# run PHP Copy/Paste Detector
-.PHONY: phpcpd
-phpcpd:
-	@mkdir -p ./target/report/
-	@./vendor/bin/phpcpd src --exclude vendor > ./target/report/phpcpd.txt
-
-# run PHPLOC to analyze the structure of the project
-.PHONY: phploc
-phploc:
-	@mkdir -p ./target/report/
-	@./vendor/bin/phploc src --exclude vendor > ./target/report/phploc.txt
-
-# PHP static analysis
-.PHONY: phpdep
-phpdep:
-	@mkdir -p ./target/report/
-	@./vendor/bin/pdepend --jdepend-xml=./target/report/dependencies.xml --summary-xml=./target/report/metrics.xml --jdepend-chart=./target/report/dependecies.svg --overview-pyramid=./target/report/overview-pyramid.svg --ignore=vendor ./src
-
-# parse any data source to find out the minimum version and extensions required for it to run
-.PHONY: phpcmpinfo
-phpcmpinfo:
-	@./vendor/bartlett/php-compatinfo/bin/phpcompatinfo --no-ansi analyser:run src/ > ./target/report/phpcompatinfo.txt
-
-# generate various reports
-.PHONY: report
-report: phploc phpdep phpcmpinfo
-
-# alias to run targets: test, phpcs and phpmd
-.PHONY: qa
-qa: test phpcs phpmd phpcpd
-
-# alias to run targets: phpcs_test and phpmd_test
-.PHONY: qa_test
-qa_test: phpcs_test phpmd_test
-
-# alias to run targets: qa and qa_test
-.PHONY: qa_all
-qa_all: qa qa_test
-
-# delete the vendor and target directory
+# Delete the vendor and target directories
 .PHONY: clean
 clean:
-	rm -rf ./vendor/
+	rm -rf ./vendor $(TARGETDIR)
 
-# clean and download the composer dependencies
-.PHONY: build
-build:
-	rm -rf ./vendor/ && ($(COMPOSER) install -vvv --no-dev --no-interaction)
+# Fix code style violations
+.PHONY: codefix
+codefix:
+	./vendor/bin/phpcbf --ignore="./vendor/" --standard=psr2 src test
 
-# clean and download the composer dependencies including dev ones
-.PHONY: build_dev
-build_dev:
-	rm -rf ./vendor/ && ($(COMPOSER) install -vvv --no-interaction)
+# Build a DEB package for Debian-like Linux distributions
+.PHONY: deb
+deb:
+	rm -rf $(PATHDEBPKG)
+	make install DESTDIR=$(PATHDEBPKG)/$(PKGNAME)-$(VERSION)
+	rm -f $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/$(DOCPATH)LICENSE
+	tar -zcvf $(PATHDEBPKG)/$(PKGNAME)_$(VERSION).orig.tar.gz -C $(PATHDEBPKG)/ $(PKGNAME)-$(VERSION)
+	cp -rf ./resources/debian $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#DATE#~/`date -R`/" {} \;
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#VENDOR#~/$(VENDOR)/" {} \;
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#PROJECT#~/$(PROJECT)/" {} \;
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#PKGNAME#~/$(PKGNAME)/" {} \;
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#VERSION#~/$(VERSION)/" {} \;
+	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#RELEASE#~/$(RELEASE)/" {} \;
+	echo $(LIBPATH) > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).dirs
+	echo "$(LIBPATH)* $(LIBPATH)" > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
+	echo $(DOCPATH) >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).dirs
+	echo "$(DOCPATH)* $(DOCPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
+ifneq ($(strip $(CONFIGPATH)),)
+	echo $(CONFIGPATH) >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).dirs
+	echo "$(CONFIGPATH)* $(CONFIGPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
+endif
+	echo "new-package-should-close-itp-bug" > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).lintian-overrides
+	cd $(PATHDEBPKG)/$(PKGNAME)-$(VERSION) && debuild -us -uc
 
-# update composer dependencies
-.PHONY: update
-update:
-	($(COMPOSER) update --no-interaction)
+# Clean all artifacts and download all dependencies
+.PHONY: deps
+deps: ensuretarget
+	rm -rf ./vendor/*
+	($(COMPOSER) install -vvv --no-interaction)
 
-# Run the development server
-.PHONY: server
-server:
-	php -t example -S localhost:$(PORT)
+# Generate source code documentation
+.PHONY: doc
+doc: ensuretarget
+	rm -rf $(TARGETDIR)/doc
+	$(PHPDOC) -d ./src -t $(TARGETDIR)/doc/
+
+# Create missing target directories for test and build artifacts
+.PHONY: ensuretarget
+ensuretarget:
+	mkdir -p $(TARGETDIR)/test
+	mkdir -p $(TARGETDIR)/report
+	mkdir -p $(TARGETDIR)/doc
 
 # Install this application
 .PHONY: install
@@ -247,54 +205,63 @@ ifneq ($(strip $(CONFIGPATH)),)
 	find $(PATHINSTCFG) -type f -exec chmod 644 {} \;
 endif
 
-# Remove all installed files
-.PHONY: uninstall
-uninstall:
-	rm -rf $(PATHINSTBIN)
-	rm -rf $(PATHINSTDOC)
+# Test source code for coding standard violations
+.PHONY: lint
+lint:
+	./vendor/bin/phpcs --ignore="./vendor/" --standard=psr2 src test
+	./vendor/bin/phpmd src text codesize,unusedcode,naming,design --exclude vendor
+	./vendor/bin/phpmd test text unusedcode,naming
 
-# --- PACKAGING ---
+# Run all tests and reports
+.PHONY: qa
+qa: ensuretarget lint test report
+
+# Generate various reports
+.PHONY: report
+report: ensuretarget
+	./vendor/bin/phpcpd src --exclude vendor > $(TARGETDIR)/report/phpcpd.txt
+	./vendor/bin/phploc src --exclude vendor > $(TARGETDIR)/report/phploc.txt
+	./vendor/bin/pdepend --jdepend-xml=$(TARGETDIR)/report/dependencies.xml --summary-xml=$(TARGETDIR)/report/metrics.xml --jdepend-chart=$(TARGETDIR)/report/dependecies.svg --overview-pyramid=$(TARGETDIR)/report/overview-pyramid.svg --ignore=vendor ./src
+	#./vendor/bartlett/php-compatinfo/bin/phpcompatinfo --no-ansi analyser:run src/ > $(TARGETDIR)/report/phpcompatinfo.txt
 
 # Build the RPM package for RedHat-like Linux distributions
 .PHONY: rpm
 rpm:
 	rm -rf $(PATHRPMPKG)
-	rpmbuild --define "_topdir $(PATHRPMPKG)" --define "_vendor $(VENDOR)" --define "_owner $(OWNER)" --define "_project $(PROJECT)" --define "_package $(PKGNAME)" --define "_version $(VERSION)" --define "_release $(RELEASE)" --define "_current_directory $(CURRENTDIR)" --define "_libpath /$(LIBPATH)" --define "_docpath /$(DOCPATH)" --define "_configpath /$(CONFIGPATH)" -bb resources/rpm/rpm.spec
+	rpmbuild \
+	--define "_topdir $(PATHRPMPKG)" \
+	--define "_vendor $(VENDOR)" \
+	--define "_owner $(OWNER)" \
+	--define "_project $(PROJECT)" \
+	--define "_package $(PKGNAME)" \
+	--define "_version $(VERSION)" \
+	--define "_release $(RELEASE)" \
+	--define "_current_directory $(CURRENTDIR)" \
+	--define "_libpath /$(LIBPATH)" \
+	--define "_docpath /$(DOCPATH)" \
+	--define "_configpath /$(CONFIGPATH)" \
+	-bb resources/rpm/rpm.spec
 
-# Build the DEB package for Debian-like Linux distributions
-.PHONY: deb
-deb: build
-	rm -rf $(PATHDEBPKG)
-	make install DESTDIR=$(PATHDEBPKG)/$(PKGNAME)-$(VERSION)
-	rm -f $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/$(DOCPATH)LICENSE
-	tar -zcvf $(PATHDEBPKG)/$(PKGNAME)_$(VERSION).orig.tar.gz -C $(PATHDEBPKG)/ $(PKGNAME)-$(VERSION)
-	cp -rf ./resources/debian $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian
-	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#DATE#~/`date -R`/" {} \;
-	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#VENDOR#~/$(VENDOR)/" {} \;
-	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#PROJECT#~/$(PROJECT)/" {} \;
-	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#PKGNAME#~/$(PKGNAME)/" {} \;
-	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#VERSION#~/$(VERSION)/" {} \;
-	find $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/ -type f -exec sed -i "s/~#RELEASE#~/$(RELEASE)/" {} \;
-	echo $(LIBPATH) > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).dirs
-	echo "$(LIBPATH)* $(LIBPATH)" > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
-	echo $(DOCPATH) >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).dirs
-	echo "$(DOCPATH)* $(DOCPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
-ifneq ($(strip $(CONFIGPATH)),)
-	echo $(CONFIGPATH) >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).dirs
-	echo "$(CONFIGPATH)* $(CONFIGPATH)" >> $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/install
-endif
-	echo "new-package-should-close-itp-bug" > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).lintian-overrides
-	cd $(PATHDEBPKG)/$(PKGNAME)-$(VERSION) && debuild -us -uc
+# Start the development server
+.PHONY: server
+server:
+	$(PHP) -t example -S localhost:$(PORT)
 
-# build a compressed bz2 archive
-.PHONY: bz2
-bz2: build
-	rm -rf $(PATHBZ2PKG)
-	make install DESTDIR=$(PATHBZ2PKG)
-	tar -jcvf $(PATHBZ2PKG)/$(PKGNAME)-$(VERSION)-$(RELEASE).tbz2 -C $(PATHBZ2PKG) $(DATADIR)
+# Tag this GIT version
+.PHONY: tag
+tag:
+	git checkout main && \
+	git tag -a ${VERSION} -m "Release ${VERSION}" && \
+	git push origin --tags && \
+	git pull
 
-# upload linux packages to bintray
-.PHONY: bintray
-bintray: rpm deb
-	@curl -T target/RPM/RPMS/noarch/php-tecnickcom-${PROJECT}-${VERSION}-${RELEASE}.noarch.rpm -u${APIUSER}:${APIKEY} -H "X-Bintray-Package:${PROJECT}" -H "X-Bintray-Version:${VERSION}" -H "X-Bintray-Publish:1" -H "X-Bintray-Override:1" https://api.bintray.com/content/tecnickcom/rpm/php-tecnickcom-${PROJECT}-${VERSION}-${RELEASE}.noarch.rpm
-	@curl -T target/DEB/php-tecnickcom-${PROJECT}_${VERSION}-${RELEASE}_all.deb -u${APIUSER}:${APIKEY} -H "X-Bintray-Package:${PROJECT}" -H "X-Bintray-Version:${VERSION}" -H "X-Bintray-Debian-Distribution:all" -H "X-Bintray-Debian-Component:main" -H "X-Bintray-Debian-Architecture:all" -H "X-Bintray-Publish:1" -H "X-Bintray-Override:1" https://api.bintray.com/content/tecnickcom/deb/php-tecnickcom-${PROJECT}_${VERSION}-${RELEASE}_all.deb
+# Run unit tests
+.PHONY: test
+test:
+	./vendor/bin/phpunit test
+
+# Remove all installed files
+.PHONY: uninstall
+uninstall:
+	rm -rf $(PATHINSTBIN)
+	rm -rf $(PATHINSTDOC)

@@ -16,6 +16,7 @@
 namespace Test\Square;
 
 use PHPUnit\Framework\TestCase;
+use \Test\TestUtil;
 
 /**
  * Barcode class test
@@ -28,38 +29,31 @@ use PHPUnit\Framework\TestCase;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-class DatamatrixTest extends TestCase
+class DatamatrixTest extends TestUtil
 {
-    protected $obj = null;
-
-    public function setUp()
+    protected function getTestObject()
     {
-        //$this->markTestSkipped(); // skip this test
-        $this->obj = new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode;
     }
 
-    /**
-     * @expectedException \Com\Tecnick\Barcode\Exception
-     */
     public function testInvalidInput()
     {
-        $this->obj->getBarcodeObj('DATAMATRIX', '');
+        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
+        $testObj = $this->getTestObject();
+        $testObj->getBarcodeObj('DATAMATRIX', '');
     }
 
-    /**
-     * @expectedException \Com\Tecnick\Barcode\Exception
-     */
     public function testCapacityException()
     {
+        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
+        $testObj = $this->getTestObject();
         $code = str_pad('', 3000, 'X');
-        $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $testObj->getBarcodeObj('DATAMATRIX', $code);
     }
- 
-    /**
-     * @expectedException \Com\Tecnick\Barcode\Exception
-     */
+
     public function testEncodeTXTC40shiftException()
     {
+        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
         $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
         $chr = null;
         $enc = null;
@@ -67,12 +61,10 @@ class DatamatrixTest extends TestCase
         $ptr = null;
         $obj->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
     }
- 
-    /**
-     * @expectedException \Com\Tecnick\Barcode\Exception
-     */
+
     public function testEncodeTXTC40Exception()
     {
+        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
         $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
         $data = array(chr(0x80));
         $enc = \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data::ENC_X12;
@@ -88,7 +80,8 @@ class DatamatrixTest extends TestCase
      */
     public function testGetGrid($mode, $code, $expected)
     {
-        $bobj = $this->obj->getBarcodeObj($mode, $code);
+        $testObj = $this->getTestObject();
+        $bobj = $testObj->getBarcodeObj($mode, $code);
         $grid = $bobj->getGrid();
         $this->assertEquals($expected, md5($grid));
     }
@@ -221,7 +214,8 @@ class DatamatrixTest extends TestCase
      */
     public function testStrings($code)
     {
-        $bobj = $this->obj->getBarcodeObj('DATAMATRIX', $code);
+        $testObj = $this->getTestObject();
+        $bobj = $testObj->getBarcodeObj('DATAMATRIX', $code);
         $this->assertNotNull($bobj);
     }
 
