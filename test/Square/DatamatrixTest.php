@@ -89,8 +89,10 @@ class DatamatrixTest extends TestUtil
     public function getGridDataProvider()
     {
         return array(
-            array('DATAMATRIX', '(400)BS2WZ64PA(00)0', '183514ca2f0465170de1d404a5d7dabd'),
-            array('DATAMATRIX', '(400)BS2WZ64QA(00)0', '4293cb60df5ca208922b6f4ce65dbb7c'),
+            array('DATAMATRIX', '0&0&0&0&0&0&_', 'fffdfdaec33af0788d24cdfa8cba5ac6'),
+            array('DATAMATRIX', '0&0&0&0&0&0&0', '10d0faf5a6e7b71829f268218df7e6af'),
+            array('DATAMATRIX', '(400)BS2WZ64PA(00)0', '9cb7f1c2aa5989909229ef8e4252d61d'),
+            array('DATAMATRIX', '(400)BS2WZ64QA(00)0', '0494f709138a1feef5a1c9f14852dbe5'),
             array('DATAMATRIX', 'LD2B 1 CLNGP', 'f806889d1dbe0908dcfb530f86098041'),
             array('DATAMATRIX', 'XXXXXXXXXNGP', 'c6f2b7b293a2943bae74f2a191ec4aea'),
             array('DATAMATRIX', 'XXXXXXXXXXXXNGP', 'f7679d5a7ab4a8edf12571a6866d92bc'),
@@ -129,7 +131,7 @@ class DatamatrixTest extends TestUtil
             array(
                 'DATAMATRIX',
                 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\1234567890',
-                '4744c06c576088b40b3523c7d27cf051'
+                '7360a5a6c25476711139ae1244f56c29'
             ),
             array(
                 'DATAMATRIX', chr(254).chr(253)
@@ -147,7 +149,7 @@ class DatamatrixTest extends TestUtil
                 'e524bb17821d0461f3db6f313d35018f'),
             array('DATAMATRIX', 'ec:b47'.chr(127).'4#P d*b}gI2#DB|hl{!~[EYH*=cmR{lf'
                 .chr(127).'=gcGIa.st286. #*"!eG[.Ryr?Kn,1mIyQqC3 6\'3N>',
-                '6d12a9d2d36f76667d56f270649232b0'
+                '57fbb9bfb7d542e2e5eadb615e6be549'
             ),
             array('DATAMATRIX', 'eA211101A2raJTGL/r9o93CVk4gtpEvWd2A2Qz8jvPc7l8ybD3m'
                 .'Wel91ih727kldinPeHJCjhr7fIBX1KQQfsN7BFMX00nlS8FlZG+',
@@ -179,7 +181,7 @@ class DatamatrixTest extends TestUtil
                 .chr(29).chr(28).chr(27).chr(26).chr(25).chr(24).chr(23).chr(22).chr(21).chr(20).chr(19).chr(18)
                 .chr(17).chr(16).chr(15).chr(14).chr(13).chr(12).chr(11).chr(10).chr(9).chr(8).chr(7).chr(6)
                 .chr(5).chr(4).chr(3).chr(2).chr(1),
-                '9dccdf9b0b6d99c7d420af5540a9edfc'
+                '4d755e3863cfdc79dc7ed5b8a781e479'
             ),
             // Rectangular shape
             array('DATAMATRIX,R', '01234567890', 'd3811e018f960beed6d3fa5e675e290e'),
