@@ -105,6 +105,9 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function addPadding($size, $ncw)
     {
+        if ($size <= $ncw) {
+            return;
+        }
         if (($this->dmx->last_enc != Data::ENC_ASCII) && ($this->dmx->last_enc != Data::ENC_BASE256)) {
             // return to ASCII encodation before padding
             if ($this->dmx->last_enc == Data::ENC_EDF) {
@@ -150,14 +153,8 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
         
         // get minimum required matrix size.
-        foreach (Data::$symbattr[$this->shape] as $params) {
-            if ($params[11] >= $ncw) {
-                break;
-            }
-        }
-        if ($params[11] > $ncw) {
-            $this->addPadding($params[11], $ncw);
-        }
+        $params = Data::getPaddingSize($this->shape, $ncw);
+        $this->addPadding($params[11], $ncw);
 
         $errorCorrection = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\ErrorCorrection;
         $this->cdw = $errorCorrection->getErrorCorrection($this->cdw, $params[13], $params[14], $params[15]);
