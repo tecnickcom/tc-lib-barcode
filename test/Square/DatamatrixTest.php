@@ -89,6 +89,8 @@ class DatamatrixTest extends TestUtil
     public function getGridDataProvider()
     {
         return array(
+            array('DATAMATRIX', '0&0&0&0&0&0&_', 'fffdfdaec33af0788d24cdfa8cba5ac6'),
+            array('DATAMATRIX', '0&0&0&0&0&0&0', '10d0faf5a6e7b71829f268218df7e6af'),
             array('DATAMATRIX', '-=-1-=-2-=-3', '75c6038d90476cec641ad07690989b36'),
             array('DATAMATRIX', '-=-1-=-2-=-3x', 'f020e44d0926d17af7eb21febdb38d53'),
             array('DATAMATRIX', '-=-1-=-2-=-3xyz', '17420fbffefddb5f1b8abd0d05de724d'),
