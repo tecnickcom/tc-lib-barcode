@@ -134,22 +134,31 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
             return true;
         }
         if ($field_length < 4) {
-            // set unlatch character
-            $temp_cw[] = 0x1f;
-            ++$field_length;
-            // fill empty characters
-            for ($i = $field_length; $i < 4; ++$i) {
-                $temp_cw[] = 0;
-            }
             $enc = Data::ENC_ASCII;
             $this->last_enc = $enc;
+            $params = Data::getPaddingSize($this->shape, ($cdw_num + $field_length + ($data_length - $epos)));
+            if (($params[11] - $cdw_num) > 2) {
+                // set unlatch character
+                $temp_cw[] = 0x1f;
+                ++$field_length;
+                // fill empty characters
+                for ($i = $field_length; $i < 4; ++$i) {
+                    $temp_cw[] = 0;
+                }
+            } else {
+                return true;
+            }
         }
         // encodes four data characters in three codewords
-        if ($field_length > 2) {
-            $cdw[] = (($temp_cw[0] & 0x3F) << 2) + (($temp_cw[1] & 0x30) >> 4);
+        $cdw[] = (($temp_cw[0] & 0x3F) << 2) + (($temp_cw[1] & 0x30) >> 4);
+        $cdw_num++;
+        if ($field_length > 1) {
             $cdw[] = (($temp_cw[1] & 0x0F) << 4) + (($temp_cw[2] & 0x3C) >> 2);
+            $cdw_num++;
+        }
+        if ($field_length > 2) {
             $cdw[] = (($temp_cw[2] & 0x03) << 6) + ($temp_cw[3] & 0x3F);
-            $cdw_num += 3;
+            $cdw_num++;
         }
         $temp_cw = array();
         $pos = $epos;

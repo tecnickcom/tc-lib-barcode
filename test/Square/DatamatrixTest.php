@@ -89,8 +89,12 @@ class DatamatrixTest extends TestUtil
     public function getGridDataProvider()
     {
         return array(
-            array('DATAMATRIX', '0&0&0&0&0&0&_', 'fffdfdaec33af0788d24cdfa8cba5ac6'),
-            array('DATAMATRIX', '0&0&0&0&0&0&0', '10d0faf5a6e7b71829f268218df7e6af'),
+            array('DATAMATRIX', '-=-1-=-2-=-3', '75c6038d90476cec641ad07690989b36'),
+            array('DATAMATRIX', '-=-1-=-2-=-3x', 'f020e44d0926d17af7eb21febdb38d53'),
+            array('DATAMATRIX', '-=-1-=-2-=-3xyz', '17420fbffefddb5f1b8abd0d05de724d'),
+            array('DATAMATRIX', '-=-1-=-2-=-3-', 'a63372ce839b51294964f0da0ae0f9f9'),
+            array('DATAMATRIX', '-=-1-=-2-=-3-xy', 'f65ab07c374c53e2a93016776041de42'),
+            array('DATAMATRIX', '-=-1-=-2-=-3-=x', '7a30efdf7616397a1ea2fd5fd95fed2c'),
             array('DATAMATRIX', '(400)BS2WZ64PA(00)0', '9cb7f1c2aa5989909229ef8e4252d61d'),
             array('DATAMATRIX', '(400)BS2WZ64QA(00)0', '0494f709138a1feef5a1c9f14852dbe5'),
             array('DATAMATRIX', 'LD2B 1 CLNGP', 'f806889d1dbe0908dcfb530f86098041'),
@@ -181,7 +185,7 @@ class DatamatrixTest extends TestUtil
                 .chr(29).chr(28).chr(27).chr(26).chr(25).chr(24).chr(23).chr(22).chr(21).chr(20).chr(19).chr(18)
                 .chr(17).chr(16).chr(15).chr(14).chr(13).chr(12).chr(11).chr(10).chr(9).chr(8).chr(7).chr(6)
                 .chr(5).chr(4).chr(3).chr(2).chr(1),
-                '4d755e3863cfdc79dc7ed5b8a781e479'
+                '514963c4fde0cee7ff91f76dd56015cc'
             ),
             // Rectangular shape
             array('DATAMATRIX,R', '01234567890', 'd3811e018f960beed6d3fa5e675e290e'),
