@@ -208,14 +208,14 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
     {
         if ($this->count < $this->dataLength) {
             $row = ($this->count % $this->blocks);
-            $col = ($this->count / $this->blocks);
+            $col = floor($this->count / $this->blocks);
             if ($col >= $this->rsblocks[0]['dataLength']) {
                 $row += $this->bv1;
             }
             $ret = $this->rsblocks[$row]['data'][$col];
         } elseif ($this->count < ($this->dataLength + $this->eccLength)) {
             $row = (($this->count - $this->dataLength) % $this->blocks);
-            $col = (($this->count - $this->dataLength) / $this->blocks);
+            $col = floor(($this->count - $this->dataLength) / $this->blocks);
             $ret = $this->rsblocks[$row]['ecc'][$col];
         } else {
             return 0;
