@@ -252,7 +252,7 @@ tag:
 # Run unit tests
 .PHONY: test
 test:
-	./vendor/bin/phpunit test
+	./vendor/bin/phpunit --stderr test
 
 # Remove all installed files
 .PHONY: uninstall

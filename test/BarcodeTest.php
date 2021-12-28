@@ -291,10 +291,7 @@ class BarcodeTest extends TestUtil
         $pnggd = $bobj->setBackgroundColor('')->getPngData(false);
         $this->assertEquals('PNG', substr($pnggd, 1, 3));
     }
-    
-    /**
-     * @runInSeparateProcess
-     */
+
     public function testGetSvg()
     {
         $testObj = $this->getTestObject();
@@ -310,10 +307,7 @@ class BarcodeTest extends TestUtil
         $svg = ob_get_clean();
         $this->assertEquals('86e0362768e8b1b26032381232c0367f', md5($svg));
     }
-    
-    /**
-     * @runInSeparateProcess
-     */
+
     public function testGetPng()
     {
         $testObj = $this->getTestObject();
