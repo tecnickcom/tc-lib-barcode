@@ -40,14 +40,12 @@ jobs:
               with:
                   php-version: ${{ matrix.php-version }}
                   coverage: ${{ matrix.coverage-extension }}
-                  extensions: bcmath, imagick, gd
+                  extensions: bcmath, curl, date, gd, hash, imagick, json, mbstring, openssl, pcre, zlib
                   ini-values: display_errors=on, error_reporting=-1
             - name: List php modules
               run: php -m
             - name: List php modules using "no php ini" mode
               run: php -m -n
-            - name: Update composer
-              run: composer self-update
             - name: Cache module
               uses: actions/cache@v2
               with:
