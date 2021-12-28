@@ -46,6 +46,8 @@ jobs:
               run: php -m
             - name: List php modules using "no php ini" mode
               run: php -m -n
+            - name: Update composer
+              run: composer self-update
             - name: Cache module
               uses: actions/cache@v2
               with:
