@@ -33,15 +33,13 @@ jobs:
                     - { php-version: 'nightly', experimental: true, os: ubuntu-latest, coverage-extension: 'pcov' }
         steps:
             - uses: actions/checkout@v2
-            - name: Install pdfinfo
-              run: sudo apt-get install -y poppler-utils
             - name: Use php ${{ matrix.php-version }}
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php-version }}
                   coverage: ${{ matrix.coverage-extension }}
                   extensions: bcmath, curl, date, gd, hash, imagick, json, mbstring, openssl, pcre, zlib
-                  ini-values: display_errors=on, error_reporting=-1
+                  ini-values: display_errors=on, error_reporting=-1, zend.assertions=1
             - name: List php modules
               run: php -m
             - name: List php modules using "no php ini" mode
