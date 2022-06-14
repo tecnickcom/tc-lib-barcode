@@ -13,7 +13,7 @@
 * **category**    Library
 * **package**     \Com\Tecnick\Barcode
 * **author**      Nicola Asuni <info@tecnick.com>
-* **copyright**   2001-2021 Nicola Asuni - Tecnick.com LTD
+* **copyright**   2001-2022 Nicola Asuni - Tecnick.com LTD
 * **license**     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
 * **link**        https://github.com/tecnickcom/tc-lib-barcode
 * **SRC DOC**     https://tcpdf.org/docs/srcdoc/tc-lib-barcode
@@ -118,6 +118,8 @@ and point your browser to <http://localhost:8000/index.php>
 
 ### Simple Code Example
 
+Please check example/index.php for a full example.
+
 ```
 // instantiate the barcode class
 $barcode = new \Com\Tecnick\Barcode\Barcode();
@@ -133,7 +135,7 @@ $bobj = $barcode->getBarcodeObj(
     )->setBackgroundColor('white'); // background color
 
 // output the barcode as HTML div (see other output formats in the documentation and examples)
-$bobj->getHtmlDiv();
+echo $bobj->getHtmlDiv();
 ```
 
 
@@ -144,7 +146,7 @@ Create a composer.json in your projects root-directory:
 ```json
 {
     "require": {
-        "tecnickcom/tc-lib-barcode": "^1.15"
+        "tecnickcom/tc-lib-barcode": "^1.17"
     }
 }
 ```
@@ -152,7 +154,7 @@ Create a composer.json in your projects root-directory:
 Or add to an existing project with: 
 
 ```bash
-composer require tecnickcom/tc-lib-barcode ^1.15
+composer require tecnickcom/tc-lib-barcode ^1.17
 ```
 
 ## Packaging
