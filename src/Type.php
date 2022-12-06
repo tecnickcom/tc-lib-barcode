@@ -541,7 +541,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         $bar_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
         $bars = $this->getBarsArray('XYXY');
         foreach ($bars as $rect) {
-            imagefilledrectangle($img, $rect[0], $rect[1], $rect[2], $rect[3], $bar_color);
+            imagefilledrectangle($img, floor($rect[0]), floor($rect[1]), floor($rect[2]), floor($rect[3]), $bar_color);
         }
         return $img;
     }
