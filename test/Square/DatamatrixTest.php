@@ -86,7 +86,7 @@ class DatamatrixTest extends TestUtil
         $this->assertEquals($expected, md5($grid));
     }
     
-    public function getGridDataProvider()
+    public static function getGridDataProvider()
     {
         return array(
             array('DATAMATRIX', '0&0&0&0&0&0&_', 'fffdfdaec33af0788d24cdfa8cba5ac6'),
@@ -227,7 +227,7 @@ class DatamatrixTest extends TestUtil
         $this->assertNotNull($bobj);
     }
 
-    public function getStringDataProvider()
+    public static function getStringDataProvider()
     {
         return \Test\TestStrings::$data;
     }
