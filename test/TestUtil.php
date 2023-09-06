@@ -32,7 +32,7 @@ class TestUtil extends TestCase
 {
     public function bcAssertEqualsWithDelta($expected, $actual, $delta = 0.01, $message = '')
     {
-        if (\is_callable(['parent', 'assertEqualsWithDelta'])) {
+        if (\is_callable([self::class, 'assertEqualsWithDelta'])) {
             return parent::assertEqualsWithDelta($expected, $actual, $delta, $message);
         }
         return $this->assertEquals($expected, $actual, $message, $delta);
@@ -40,7 +40,7 @@ class TestUtil extends TestCase
 
     public function bcExpectException($exception)
     {
-        if (\is_callable(['parent', 'expectException'])) {
+        if (\is_callable([self::class, 'expectException'])) {
             return parent::expectException($exception);
         }
         return parent::setExpectedException($exception);
