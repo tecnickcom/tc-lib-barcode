@@ -71,6 +71,7 @@ class Barcode
         'UPCE'       => 'Linear\\UpcE',                       // UPC-E
         'DATAMATRIX' => 'Square\\Datamatrix',                 // DATAMATRIX (ISO/IEC 16022)
         'PDF417'     => 'Square\\PdfFourOneSeven',            // PDF417 (ISO/IEC 15438:2006)
+        'AZTEC'      => 'Square\\Aztec',                      // AZTEC
         'QRCODE'     => 'Square\\QrCode',                     // QR-CODE
         'LRAW'       => 'Linear\\Raw',                        // 1D RAW MODE (comma-separated rows of 01 strings)
         'SRAW'       => 'Square\\Raw',                        // 2D RAW MODE (comma-separated rows of 01 strings)
