@@ -39,7 +39,7 @@ class BarcodeTest extends TestUtil
     {
         $testObj = $this->getTestObject();
         $types = $testObj->getTypes();
-        $this->assertEquals(36, count($types));
+        $this->assertEquals(37, count($types));
     }
 
     public function testGetBarcodeObjException()
