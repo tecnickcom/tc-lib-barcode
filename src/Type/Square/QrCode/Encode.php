@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Encode.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Encode
@@ -50,18 +51,18 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $this->getLengthIndicator(Data::$encodingModes['NM'], $version),
             $inputitem['size']
         );
-        for ($i=0; $i < $words; ++$i) {
-            $val  = (ord($inputitem['data'][$i*3  ]) - ord('0')) * 100;
-            $val += (ord($inputitem['data'][$i*3+1]) - ord('0')) * 10;
-            $val += (ord($inputitem['data'][$i*3+2]) - ord('0'));
+        for ($i = 0; $i < $words; ++$i) {
+            $val  = (ord($inputitem['data'][$i * 3  ]) - ord('0')) * 100;
+            $val += (ord($inputitem['data'][$i * 3 + 1]) - ord('0')) * 10;
+            $val += (ord($inputitem['data'][$i * 3 + 2]) - ord('0'));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 10, $val);
         }
         if ($inputitem['size'] - $words * 3 == 1) {
-            $val = ord($inputitem['data'][$words*3]) - ord('0');
+            $val = ord($inputitem['data'][$words * 3]) - ord('0');
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $val);
         } elseif (($inputitem['size'] - ($words * 3)) == 2) {
-            $val  = (ord($inputitem['data'][$words*3  ]) - ord('0')) * 10;
-            $val += (ord($inputitem['data'][$words*3+1]) - ord('0'));
+            $val  = (ord($inputitem['data'][$words * 3  ]) - ord('0')) * 10;
+            $val += (ord($inputitem['data'][$words * 3 + 1]) - ord('0'));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 7, $val);
         }
         return $inputitem;
@@ -87,7 +88,7 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
         );
         for ($idx = 0; $idx < $words; ++$idx) {
             $val  = (int)($this->lookAnTable(ord($inputitem['data'][($idx * 2)])) * 45);
-            $val += (int)($this->lookAnTable(ord($inputitem['data'][($idx * 2)+1])));
+            $val += (int)($this->lookAnTable(ord($inputitem['data'][($idx * 2) + 1])));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 11, $val);
         }
         if ($inputitem['size'] & 1) {

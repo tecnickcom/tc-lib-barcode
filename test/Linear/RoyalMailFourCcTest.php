@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RoyalMailFourCcTest.php
  *
@@ -16,7 +17,7 @@
 namespace Test\Linear;
 
 use PHPUnit\Framework\TestCase;
-use \Test\TestUtil;
+use Test\TestUtil;
 
 /**
  * Barcode class test
@@ -33,7 +34,7 @@ class RoyalMailFourCcTest extends TestUtil
 {
     protected function getTestObject()
     {
-        return new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode();
     }
 
     public function testGetGrid()
@@ -42,8 +43,8 @@ class RoyalMailFourCcTest extends TestUtil
         $bobj = $testObj->getBarcodeObj('RMS4CC', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "1000001010000010100000101000001010000010100000101000100010001000100010001000100010001000101\n"
-            ."1010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101\n"
-            ."0000001010001000100010100010000010100010001010000000001010001000100010100010000010000010101\n";
+            . "1010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101\n"
+            . "0000001010001000100010100010000010100010001010000000001010001000100010100010000010000010101\n";
         $this->assertEquals($expected, $grid);
     }
 

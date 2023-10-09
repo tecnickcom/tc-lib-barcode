@@ -1,4 +1,5 @@
 <?php
+
 /**
  * C.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\C;

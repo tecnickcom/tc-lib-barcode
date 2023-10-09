@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Imb.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\Imb;
@@ -75,7 +76,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         4,0,9,1,7,0,2,4,6,3,
         7,1,9,5,8
     );
-    
+
     /**
      * DSC characters
      *
@@ -89,7 +90,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         1,6,8,2,0,4,5,9,6,7,
         5,2,6,3,8,5,1,9,8,7,
         4,0,2,6,3);
-    
+
     /**
      * ASC positions
      *
@@ -98,7 +99,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     protected static $asc_pos = array(
         3,0,8,11,1,12,8,11,10,6,4,12,2,7,9,6,7,9,2,8,4,0,12,7,10,9,0,7,10,5,7,9,
         6,8,2,12,1,4,2,0,1,5,4,6,12,1,0,9,4,7,5,10,2,6,9,11,2,12,6,7,5,11,0,3,2);
-    
+
     /**
      * DSC positions
      *
@@ -229,7 +230,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         }
         throw new BarcodeException('Invalid routing code');
     }
-    
+
     /**
      * Get the processed array of characters
      *
@@ -265,7 +266,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $fcs = $this->getFrameCheckSequence($binary_code_arr);
         // exclude first 2 bits from first byte
         $first_byte = sprintf('%2s', dechex((hexdec($binary_code_arr[0]) << 2) >> 2));
-        $binary_code_102bit = $first_byte.substr($binary_code, 2);
+        $binary_code_102bit = $first_byte . substr($binary_code, 2);
         // convert binary data to codewords
         $codewords = array();
         $data = $this->convertHexToDec($binary_code_102bit);
@@ -298,7 +299,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
             $characters[] = $chrcode;
             $bitmask /= 2;
         }
-        
+
         return array_reverse($characters);
     }
 

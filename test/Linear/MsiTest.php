@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MsiTest.php
  *
@@ -16,7 +17,7 @@
 namespace Test\Linear;
 
 use PHPUnit\Framework\TestCase;
-use \Test\TestUtil;
+use Test\TestUtil;
 
 /**
  * Barcode class test
@@ -33,7 +34,7 @@ class MsiTest extends TestUtil
 {
     protected function getTestObject()
     {
-        return new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode();
     }
 
     public function testGetGrid()
@@ -42,7 +43,7 @@ class MsiTest extends TestUtil
         $bobj = $testObj->getBarcodeObj('MSI', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "110100100100100100100100110100100110100100100110110100110100"
-            ."1001001101001101001101101001001101101101101001001001101001001101001\n";
+            . "1001001101001101001101101001001101101101101001001001101001001101001\n";
         $this->assertEquals($expected, $grid);
     }
 }

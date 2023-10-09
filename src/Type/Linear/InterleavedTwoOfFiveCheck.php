@@ -1,4 +1,5 @@
 <?php
+
 /**
  * InterleavedTwoOfFiveCheck.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\InterleavedTwoOfFiveCheck;
@@ -65,9 +66,9 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
      */
     protected function formatCode()
     {
-        $this->extcode = $this->code.$this->getChecksum($this->code);
+        $this->extcode = $this->code . $this->getChecksum($this->code);
     }
-    
+
     /**
      * Get the bars array
      *
@@ -80,10 +81,10 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
         $this->formatCode();
         if ((strlen($this->extcode) % 2) != 0) {
             // add leading zero if code-length is odd
-            $this->extcode = '0'.$this->extcode;
+            $this->extcode = '0' . $this->extcode;
         }
         // add start and stop codes
-        $this->extcode = 'AA'.strtolower($this->extcode).'ZA';
+        $this->extcode = 'AA' . strtolower($this->extcode) . 'ZA';
         $this->ncols = 0;
         $this->nrows = 1;
         $this->bars = array();
@@ -92,13 +93,13 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
             $char_bar = $this->extcode[$idx];
             $char_space = $this->extcode[($idx + 1)];
             if ((!isset($this->chbar[$char_bar])) || (!isset($this->chbar[$char_space]))) {
-                throw new BarcodeException('Invalid character sequence: '.$char_bar.$char_space);
+                throw new BarcodeException('Invalid character sequence: ' . $char_bar . $char_space);
             }
             // create a bar-space sequence
             $seq = '';
             $chrlen = strlen($this->chbar[$char_bar]);
             for ($pos = 0; $pos < $chrlen; ++$pos) {
-                $seq .= $this->chbar[$char_bar][$pos].$this->chbar[$char_space][$pos];
+                $seq .= $this->chbar[$char_bar][$pos] . $this->chbar[$char_space][$pos];
             }
             $seqlen = strlen($seq);
             for ($pos = 0; $pos < $seqlen; ++$pos) {

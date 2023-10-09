@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ByteStream.php
  *
@@ -15,10 +16,10 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Estimate;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Estimate;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream
@@ -200,7 +201,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     public function encodeBitStream($inputitem, $version)
     {
         $inputitem['bstream'] = array();
-        $specObj = new Spec;
+        $specObj = new Spec();
         $words = $specObj->maximumWords($inputitem['mode'], $version);
         if ($inputitem['size'] > $words) {
             $st1 = $this->newInputItem($inputitem['mode'], $words, $inputitem['data']);
@@ -249,7 +250,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
             return null;
         }
         $bits = count($bstream);
-        $specObj = new Spec;
+        $specObj = new Spec();
         $maxwords = $specObj->getDataLength($this->version, $this->level);
         $maxbits = $maxwords * 8;
         if ($maxbits == $bits) {

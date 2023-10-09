@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Type.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Color\Exception as ColorException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Color\Exception as ColorException;
 
 /**
  * Com\Tecnick\Barcode\Type
@@ -46,7 +47,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @var string
      */
     protected $format = '';
-    
+
     /**
      * Array containing extra parameters for the specified barcode type
      *
@@ -96,7 +97,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @var float
      */
     protected $width;
-    
+
     /**
      * Barcode height
      *
@@ -345,11 +346,11 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
         header('Pragma: public');
         header('Expires: Thu, 04 jan 1973 00:00:00 GMT'); // Date in the past
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-        header('Content-Disposition: inline; filename="'.md5($data).'.svg";');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Content-Disposition: inline; filename="' . md5($data) . '.svg";');
         if (empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
             // the content length may vary if the server is using compression
-            header('Content-Length: '.strlen($data));
+            header('Content-Length: ' . strlen($data));
         }
         echo $data;
     }
@@ -368,46 +369,47 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         }
         $width = sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R']));
         $height = sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B']));
-        $svg = '<?xml version="1.0" standalone="no" ?>'."\n"
-            .'<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'."\n"
-            .'<svg'
-            .' width="'.$width.'"'
-            .' height="'.$height.'"'
-            .' viewBox="0 0 '.$width.' '.$height.'"'
-            .' version="1.1"'
-            .' xmlns="http://www.w3.org/2000/svg"'
-            .'>'."\n"
-            ."\t".'<desc>'.htmlspecialchars($this->code, $hflag, 'UTF-8').'</desc>'."\n";
+        $svg = '<?xml version="1.0" standalone="no" ?>' . "\n"
+            . '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
+            . "\n"
+            . '<svg'
+            . ' width="' . $width . '"'
+            . ' height="' . $height . '"'
+            . ' viewBox="0 0 ' . $width . ' ' . $height . '"'
+            . ' version="1.1"'
+            . ' xmlns="http://www.w3.org/2000/svg"'
+            . '>' . "\n"
+            . "\t" . '<desc>' . htmlspecialchars($this->code, $hflag, 'UTF-8') . '</desc>' . "\n";
         if ($this->bg_color_obj !== null) {
-            $svg .= "\t".'<rect'
-                .' x="0"'
-                .' y="0"'
-                .' width="'.$width.'"'
-                .' height="'.$height.'"'
-                .' fill="'.$this->bg_color_obj->getRgbHexColor().'"'
-                .' stroke="none"'
-                .' stroke-width="0"'
-                .' stroke-linecap="square"'
-                .' />'."\n";
+            $svg .= "\t" . '<rect'
+                . ' x="0"'
+                . ' y="0"'
+                . ' width="' . $width . '"'
+                . ' height="' . $height . '"'
+                . ' fill="' . $this->bg_color_obj->getRgbHexColor() . '"'
+                . ' stroke="none"'
+                . ' stroke-width="0"'
+                . ' stroke-linecap="square"'
+                . ' />' . "\n";
         }
-        $svg .= "\t".'<g'
-            .' id="bars"'
-            .' fill="'.$this->color_obj->getRgbHexColor().'"'
-            .' stroke="none"'
-            .' stroke-width="0"'
-            .' stroke-linecap="square"'
-            .'>'."\n";
+        $svg .= "\t" . '<g'
+            . ' id="bars"'
+            . ' fill="' . $this->color_obj->getRgbHexColor() . '"'
+            . ' stroke="none"'
+            . ' stroke-width="0"'
+            . ' stroke-linecap="square"'
+            . '>' . "\n";
         $bars = $this->getBarsArray('XYWH');
         foreach ($bars as $rect) {
-            $svg .= "\t\t".'<rect'
-                .' x="'.sprintf('%F', $rect[0]).'"'
-                .' y="'.sprintf('%F', $rect[1]).'"'
-                .' width="'.sprintf('%F', $rect[2]).'"'
-                .' height="'.sprintf('%F', $rect[3]).'"'
-                .' />'."\n";
+            $svg .= "\t\t" . '<rect'
+                . ' x="' . sprintf('%F', $rect[0]) . '"'
+                . ' y="' . sprintf('%F', $rect[1]) . '"'
+                . ' width="' . sprintf('%F', $rect[2]) . '"'
+                . ' height="' . sprintf('%F', $rect[3]) . '"'
+                . ' />' . "\n";
         }
-        $svg .= "\t".'</g>'."\n"
-            .'</svg>'."\n";
+        $svg .= "\t" . '</g>' . "\n"
+            . '</svg>' . "\n";
         return $svg;
     }
 
@@ -419,31 +421,31 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     public function getHtmlDiv()
     {
         $html = '<div style="'
-            .'width:'.sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R'])).'px;'
-            .'height:'.sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B'])).'px;'
-            .'position:relative;'
-            .'font-size:0;'
-            .'border:none;'
-            .'padding:0;'
-            .'margin:0;';
+            . 'width:' . sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R'])) . 'px;'
+            . 'height:' . sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B'])) . 'px;'
+            . 'position:relative;'
+            . 'font-size:0;'
+            . 'border:none;'
+            . 'padding:0;'
+            . 'margin:0;';
         if ($this->bg_color_obj !== null) {
-            $html .= 'background-color:'.$this->bg_color_obj->getCssColor().';';
+            $html .= 'background-color:' . $this->bg_color_obj->getCssColor() . ';';
         }
-        $html .= '">'."\n";
+        $html .= '">' . "\n";
         $bars = $this->getBarsArray('XYWH');
         foreach ($bars as $rect) {
-            $html .= "\t".'<div style="background-color:'.$this->color_obj->getCssColor().';'
-                .'left:'.sprintf('%F', $rect[0]).'px;'
-                .'top:'.sprintf('%F', $rect[1]).'px;'
-                .'width:'.sprintf('%F', $rect[2]).'px;'
-                .'height:'.sprintf('%F', $rect[3]).'px;'
-                .'position:absolute;'
-                .'border:none;'
-                .'padding:0;'
-                .'margin:0;'
-                .'">&nbsp;</div>'."\n";
+            $html .= "\t" . '<div style="background-color:' . $this->color_obj->getCssColor() . ';'
+                . 'left:' . sprintf('%F', $rect[0]) . 'px;'
+                . 'top:' . sprintf('%F', $rect[1]) . 'px;'
+                . 'width:' . sprintf('%F', $rect[2]) . 'px;'
+                . 'height:' . sprintf('%F', $rect[3]) . 'px;'
+                . 'position:absolute;'
+                . 'border:none;'
+                . 'padding:0;'
+                . 'margin:0;'
+                . '">&nbsp;</div>' . "\n";
         }
-        $html .= '</div>'."\n";
+        $html .= '</div>' . "\n";
         return $html;
     }
 
@@ -457,11 +459,11 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
         header('Pragma: public');
         header('Expires: Thu, 04 jan 1973 00:00:00 GMT'); // Date in the past
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-        header('Content-Disposition: inline; filename="'.md5($data).'.png";');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Content-Disposition: inline; filename="' . md5($data) . '.png";');
         if (empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
             // the content length may vary if the server is using compression
-            header('Content-Length: '.strlen($data));
+            header('Content-Length: ' . strlen($data));
         }
         echo $data;
     }
@@ -500,12 +502,12 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         $barcode = new \imagickdraw();
         if ($this->bg_color_obj !== null) {
             $rgbcolor = $this->bg_color_obj->getNormalizedArray(255);
-            $bg_color = new \imagickpixel('rgb('.$rgbcolor['R'].','.$rgbcolor['G'].','.$rgbcolor['B'].')');
+            $bg_color = new \imagickpixel('rgb(' . $rgbcolor['R'] . ',' . $rgbcolor['G'] . ',' . $rgbcolor['B'] . ')');
             $barcode->setfillcolor($bg_color);
             $barcode->rectangle(0, 0, $width, $height);
         }
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
-        $bar_color = new \imagickpixel('rgb('.$rgbcolor['R'].','.$rgbcolor['G'].','.$rgbcolor['B'].')');
+        $bar_color = new \imagickpixel('rgb(' . $rgbcolor['R'] . ',' . $rgbcolor['G'] . ',' . $rgbcolor['B'] . ')');
         $barcode->setfillcolor($bar_color);
         $bars = $this->getBarsArray('XYXY');
         foreach ($bars as $rect) {
@@ -559,7 +561,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         $raw = $this->getGridArray($space_char, $bar_char);
         $grid = '';
         foreach ($raw as $row) {
-            $grid .= implode($row)."\n";
+            $grid .= implode($row) . "\n";
         }
         return $grid;
     }
@@ -573,7 +575,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      */
     public function getBarsArray($type = 'XYXY')
     {
-        $mtd = 'getBarRect'.$type;
+        $mtd = 'getBarRect' . $type;
         $rect = array();
         foreach ($this->bars as $bar) {
             if (($bar[2] > 0) && ($bar[3] > 0)) {

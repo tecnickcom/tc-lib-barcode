@@ -1,4 +1,5 @@
 <?php
+
 /**
  * QrCode.php
  *
@@ -15,11 +16,11 @@
 
 namespace Com\Tecnick\Barcode\Type\Square;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Split;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Encoder;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Split;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Encoder;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode
@@ -234,7 +235,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
     {
         $len = strlen($data);
         $pos = 0;
-        
+
         while ($pos < $len) {
             $mode = $this->bsObj->getEncodingMode($data, $pos);
             if ($mode == Data::$encodingModes['KJ']) {

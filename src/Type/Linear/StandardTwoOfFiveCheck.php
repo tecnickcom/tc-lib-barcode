@@ -1,4 +1,5 @@
 <?php
+
 /**
  * StandardTwoOfFiveCheck.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\StandardTwoOfFiveCheck;
@@ -69,11 +70,11 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
     {
         $clen = strlen($code);
         $sum = 0;
-        for ($idx = 0; $idx < $clen; $idx+=2) {
+        for ($idx = 0; $idx < $clen; $idx += 2) {
             $sum += intval($code[$idx]);
         }
         $sum *= 3;
-        for ($idx = 1; $idx < $clen; $idx+=2) {
+        for ($idx = 1; $idx < $clen; $idx += 2) {
             $sum += intval($code[$idx]);
         }
         $check = $sum % 10;
@@ -88,9 +89,9 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode()
     {
-        $this->extcode = $this->code.$this->getChecksum($this->code);
+        $this->extcode = $this->code . $this->getChecksum($this->code);
     }
-    
+
     /**
      * Get the bars array
      *
@@ -103,14 +104,14 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
         $this->formatCode();
         if ((strlen($this->extcode) % 2) != 0) {
             // add leading zero if code-length is odd
-            $this->extcode = '0'.$this->extcode;
+            $this->extcode = '0' . $this->extcode;
         }
         $seq = '1110111010';
         $clen = strlen($this->extcode);
         for ($idx = 0; $idx < $clen; ++$idx) {
             $digit = $this->extcode[$idx];
             if (!isset($this->chbar[$digit])) {
-                throw new BarcodeException('Invalid character: chr('.ord($digit).')');
+                throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
             $seq .= $this->chbar[$digit];
         }

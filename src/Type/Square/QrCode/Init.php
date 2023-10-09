@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Init.php
  *
@@ -15,9 +16,9 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Init
@@ -116,12 +117,14 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     protected function initRs($symsize, $gfpoly, $fcr, $prim, $nroots, $pad)
     {
         foreach ($this->rsitems as $rsv) {
-            if (($rsv['pad'] != $pad)
+            if (
+                ($rsv['pad'] != $pad)
                 || ($rsv['nroots'] != $nroots)
                 || ($rsv['mm'] != $symsize)
                 || ($rsv['gfpoly'] != $gfpoly)
                 || ($rsv['fcr'] != $fcr)
-                || ($rsv['prim'] != $prim)) {
+                || ($rsv['prim'] != $prim)
+            ) {
                 continue;
             }
             return $rsv;
@@ -160,7 +163,8 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     protected function checkRsCharParamsA($symsize, $fcr, $prim)
     {
         $shfsymsize = (1 << $symsize);
-        if (($symsize < 0)
+        if (
+            ($symsize < 0)
             || ($symsize > 8)
             || ($fcr < 0)
             || ($fcr >= $shfsymsize)
@@ -183,7 +187,8 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     protected function checkRsCharParamsB($symsize, $nroots, $pad)
     {
         $shfsymsize = (1 << $symsize);
-        if (($nroots < 0)
+        if (
+            ($nroots < 0)
             || ($nroots >= $shfsymsize)
             || ($pad < 0)
             || ($pad >= ($shfsymsize - 1 - $nroots))
@@ -232,7 +237,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         $rsv['index_of'][0] = $azv; // log(zero) = -inf
         $rsv['alpha_to'][$azv] = 0; // alpha**-inf = 0
         $srv = 1;
-        for ($idx = 0; $idx <$rsv['nn']; ++$idx) {
+        for ($idx = 0; $idx < $rsv['nn']; ++$idx) {
             $rsv['index_of'][$srv] = $idx;
             $rsv['alpha_to'][$idx] = $srv;
             $srv <<= 1;

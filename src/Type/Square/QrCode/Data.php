@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Data.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Data
@@ -116,7 +117,7 @@ class Data
      * @var array
      */
     public static $encodingModes = array('NL' => -1, 'NM' => 0, 'AN' => 1, '8B' => 2, 'KJ' => 3, 'ST' => 4);
-    
+
     /**
      * Array of valid error correction levels
      * QRcode has a function of an error correcting for miss reading that white is black.
@@ -129,7 +130,7 @@ class Data
      * @var array
      */
     public static $errCorrLevels = array('L' => 0, 'M' => 1, 'Q' => 2, 'H' => 3);
-    
+
     /**
      * Alphabet-numeric conversion table.
      *

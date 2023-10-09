@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MsiCheck.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\MsiCheck;
@@ -99,9 +100,9 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode()
     {
-        $this->extcode = $this->code.$this->getChecksum($this->code);
+        $this->extcode = $this->code . $this->getChecksum($this->code);
     }
-    
+
     /**
      * Get the bars array
      *
@@ -117,7 +118,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         for ($pos = 0; $pos < $clen; ++$pos) {
             $digit = $this->extcode[$pos];
             if (!isset($this->chbar[$digit])) {
-                throw new BarcodeException('Invalid character: chr('.ord($digit).')');
+                throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
             $seq .= $this->chbar[$digit];
         }

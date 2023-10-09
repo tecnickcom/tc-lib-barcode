@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Encoder.php
  *
@@ -15,9 +16,9 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Encoder
@@ -163,7 +164,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
         $this->ypos = ($this->width - 1);
         $this->dir = -1;
         $this->bit = -1;
-        
+
         // interleaved data and ecc codes
         for ($idx = 0; $idx < ($this->dataLength + $this->eccLength); $idx++) {
             $code = $this->getCode();

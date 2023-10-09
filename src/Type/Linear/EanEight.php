@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EanEight.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\EanEight;
@@ -46,7 +47,7 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      * @var int
      */
     protected $code_length = 8;
-    
+
     /**
      * Get the bars array
      *

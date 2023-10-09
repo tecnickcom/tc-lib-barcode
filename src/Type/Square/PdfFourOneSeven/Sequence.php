@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Process.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Sequence
@@ -126,7 +127,8 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
                 $prevtxtseq = substr($prevseq, $txtoffset, ($txtseq[1] - $txtoffset));
                 if (strlen($prevtxtseq) > 0) {
                     // add BYTE sequence
-                    if ((strlen($prevtxtseq) == 1)
+                    if (
+                        (strlen($prevtxtseq) == 1)
                         && ((count($sequence_array) > 0)
                         && ($sequence_array[(count($sequence_array) - 1)][0] == 900))
                     ) {

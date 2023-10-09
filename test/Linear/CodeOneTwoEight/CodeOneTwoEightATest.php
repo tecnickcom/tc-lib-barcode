@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ATest.php
  *
@@ -16,7 +17,7 @@
 namespace Test\Linear\CodeOneTwoEight;
 
 use PHPUnit\Framework\TestCase;
-use \Test\TestUtil;
+use Test\TestUtil;
 
 /**
  * Barcode class test
@@ -33,7 +34,7 @@ class CodeOneTwoEightATest extends TestUtil
 {
     protected function getTestObject()
     {
-        return new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode();
     }
 
     public function testGetGrid()
@@ -42,19 +43,19 @@ class CodeOneTwoEightATest extends TestUtil
         $bobj = $testObj->getBarcodeObj('C128A', 'ABCDEFG');
         $grid = $bobj->getGrid();
         $expected = "110100001001010001100010001011000100010001101011000100010001101000100011000101101"
-            ."0001000100110010001100011101011\n";
+            . "0001000100110010001100011101011\n";
         $this->assertEquals($expected, $grid);
 
         $bobj = $testObj->getBarcodeObj('C128A', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "110100001001001110110010011100110110011100101100101110011001001110110111001001100"
-            ."1110100111011011101110100110011100101100111101110101100011101011\n";
+            . "1110100111011011101110100110011100101100111101110101100011101011\n";
         $this->assertEquals($expected, $grid);
-        
-        $bobj = $testObj->getBarcodeObj('C128A', chr(241).'01234567891');
+
+        $bobj = $testObj->getBarcodeObj('C128A', chr(241) . '01234567891');
         $grid = $bobj->getGrid();
         $expected = "110100001001111010111010011101100100111001101100111001011001011100110010011101101"
-            ."11001001100111010011101101110111010011001110010110010011100110100001101001100011101011\n";
+            . "11001001100111010011101101110111010011001110010110010011100110100001101001100011101011\n";
         $this->assertEquals($expected, $grid);
     }
 
@@ -62,6 +63,6 @@ class CodeOneTwoEightATest extends TestUtil
     {
         $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
         $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj('C128A', chr(246).'01234567891');
+        $testObj->getBarcodeObj('C128A', chr(246) . '01234567891');
     }
 }

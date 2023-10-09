@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RawTest.php
  *
@@ -32,7 +33,7 @@ class RawTest extends TestCase
 {
     protected function getTestObject()
     {
-        return new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode();
     }
 
     public function testGetGrid()

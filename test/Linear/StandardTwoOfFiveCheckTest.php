@@ -1,4 +1,5 @@
 <?php
+
 /**
  * StandardTwoOfFiveCheckTest.php
  *
@@ -16,7 +17,7 @@
 namespace Test\Linear;
 
 use PHPUnit\Framework\TestCase;
-use \Test\TestUtil;
+use Test\TestUtil;
 
 /**
  * Barcode class test
@@ -33,7 +34,7 @@ class StandardTwoOfFiveCheckTest extends TestUtil
 {
     protected function getTestObject()
     {
-        return new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode();
     }
 
     public function testGetGrid()
@@ -42,7 +43,7 @@ class StandardTwoOfFiveCheckTest extends TestUtil
         $bobj = $testObj->getBarcodeObj('S25+', '0123456789');
         $grid = $bobj->getGrid();
         $expected = '111011101010101110111010101011101110101110101010111010111010101110111011101010101010111010'
-        .'1110111010111010101011101110101010101011101110111010101110101011101011101011101011101010111010111'."\n";
+        . '1110111010111010101011101110101010101011101110111010101110101011101011101011101011101010111010111' . "\n";
         $this->assertEquals($expected, $grid);
     }
 

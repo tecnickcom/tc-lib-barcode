@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RoyalMailFourCC.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc;
@@ -145,14 +146,14 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
             if (!isset($this->chksum[$char])) {
-                throw new BarcodeException('Invalid character: chr('.ord($char).')');
+                throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             $row += intval($this->chksum[$char][0]);
             $col += intval($this->chksum[$char][1]);
         }
         $row %= 6;
         $col %= 6;
-        $check = array_keys($this->chksum, $row.$col);
+        $check = array_keys($this->chksum, $row . $col);
         return $check[0];
     }
 
@@ -162,9 +163,9 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     protected function formatCode()
     {
         $code = strtoupper($this->code);
-        $this->extcode = $code.$this->getChecksum($code);
+        $this->extcode = $code . $this->getChecksum($code);
     }
-    
+
     /**
      * Get the central bars
      *
@@ -191,11 +192,11 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
                         $this->bars[] = array($this->ncols, 1, 1, 2);
                         break;
                 }
-                $this->ncols +=2;
+                $this->ncols += 2;
             }
         }
     }
-    
+
     /**
      * Get the bars array
      *
@@ -206,13 +207,13 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols = 0;
         $this->nrows = 3;
         $this->bars = array();
-        
+
         // start bar
         $this->bars[] = array($this->ncols, 0, 1, 2);
         $this->ncols += 2;
 
         $this->getCoreBars();
-  
+
         // stop bar
         $this->bars[] = array($this->ncols, 0, 1, 3);
         ++$this->ncols;

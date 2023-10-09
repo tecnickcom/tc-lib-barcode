@@ -2,10 +2,10 @@
 *PHP barcode library*
 
 [![Latest Stable Version](https://poser.pugx.org/tecnickcom/tc-lib-barcode/version)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
-[![Master Build Status](https://secure.travis-ci.org/tecnickcom/tc-lib-barcode.png?branch=main)](https://travis-ci.org/tecnickcom/tc-lib-barcode?branch=main)
-[![Master Coverage Status](https://coveralls.io/repos/tecnickcom/tc-lib-barcode/badge.svg?branch=main&service=github)](https://coveralls.io/github/tecnickcom/tc-lib-barcode?branch=main)
+![Build](https://github.com/tecnickcom/tc-lib-barcode/actions/workflows/check.yml/badge.svg)
+[![Coverage](https://coveralls.io/repos/tecnickcom/tc-lib-barcode/badge.svg?branch=main&service=github)](https://coveralls.io/github/tecnickcom/tc-lib-barcode?branch=main)
 [![License](https://poser.pugx.org/tecnickcom/tc-lib-barcode/license)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
-[![Total Downloads](https://poser.pugx.org/tecnickcom/tc-lib-barcode/downloads)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
+[![Downloads](https://poser.pugx.org/tecnickcom/tc-lib-barcode/downloads)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
 
 [![Donate via PayPal](https://img.shields.io/badge/donate-paypal-87ceeb.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tc-lib-barcode%20project)
 *Please consider supporting this project by making a donation via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tc-lib-barcode%20project)*
@@ -13,7 +13,7 @@
 * **category**    Library
 * **package**     \Com\Tecnick\Barcode
 * **author**      Nicola Asuni <info@tecnick.com>
-* **copyright**   2001-2022 Nicola Asuni - Tecnick.com LTD
+* **copyright**   2001-2023 Nicola Asuni - Tecnick.com LTD
 * **license**     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
 * **link**        https://github.com/tecnickcom/tc-lib-barcode
 * **SRC DOC**     https://tcpdf.org/docs/srcdoc/tc-lib-barcode

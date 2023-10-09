@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Postnet.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\Postnet;
@@ -85,7 +86,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
     protected function formatCode()
     {
         $code = preg_replace('/[-\s]+/', '', $this->code);
-        $this->extcode = $code.$this->getChecksum($code);
+        $this->extcode = $code . $this->getChecksum($code);
     }
 
     /**
@@ -108,7 +109,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (!isset($this->chbar[$char])) {
-                throw new BarcodeException('Invalid character: chr('.ord($char).')');
+                throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             for ($pos = 0; $pos < 5; ++$pos) {
                 $bar_height = intval($this->chbar[$char][$pos]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spec.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Spec
@@ -226,7 +227,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
             $cpx += $dval;
         }
         $cpy = Data::$alignmentPattern[$version][0];
-        for ($y=0; $y < $wdo; ++$y) {
+        for ($y = 0; $y < $wdo; ++$y) {
             $cpx = Data::$alignmentPattern[$version][0];
             for ($xpos = 0; $xpos < $wdo; ++$xpos) {
                 $frame = $this->putAlignmentMarker($frame, $cpx, $cpy);
@@ -263,7 +264,8 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function getFormatInfo($maskNo, $level)
     {
-        if (($maskNo < 0)
+        if (
+            ($maskNo < 0)
             || ($maskNo > 7)
             || ($level < 0)
             || ($level > 3)

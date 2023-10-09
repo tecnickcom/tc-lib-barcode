@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mask.php
  *
@@ -15,9 +16,9 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Mask
@@ -103,7 +104,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
         $this->qr_find_from_random = (bool)$random_mask;
         $this->qr_find_best_mask = (bool)$best_mask;
         $this->qr_default_mask = intval($default_mask);
-        $this->spc = new Spec;
+        $this->spc = new Spec();
     }
 
     /**
@@ -176,7 +177,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
     protected function writeFormatInformation($width, &$frame, $maskNo, $level)
     {
         $blacks = 0;
-        $spec = new Spec;
+        $spec = new Spec();
         $format =  $spec->getFormatInfo($maskNo, $level);
         for ($idx = 0; $idx < 8; ++$idx) {
             if ($format & 1) {
@@ -329,10 +330,12 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
     protected function calcN1N3delta($length, $idx)
     {
         $fact = (int)($this->runLength[$idx] / 3);
-        if (($this->runLength[($idx - 2)] == $fact)
+        if (
+            ($this->runLength[($idx - 2)] == $fact)
             && ($this->runLength[($idx - 1)] == $fact)
             && ($this->runLength[($idx + 1)] == $fact)
-            && ($this->runLength[($idx + 2)] == $fact)) {
+            && ($this->runLength[($idx + 2)] == $fact)
+        ) {
             if (($this->runLength[($idx - 3)] < 0) || ($this->runLength[($idx - 3)] >= (4 * $fact))) {
                 return Data::N3;
             } elseif ((($idx + 3) >= $length) || ($this->runLength[($idx + 3)] >= (4 * $fact))) {

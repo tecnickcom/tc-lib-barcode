@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Split.php
  *
@@ -15,9 +16,9 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Split
@@ -168,7 +169,7 @@ class Split
     {
         $lag = $this->bsObj->getLengthIndicator(Data::$encodingModes['AN']);
         $lng = $this->bsObj->getLengthIndicator(Data::$encodingModes['NM']);
-        $pos =1 ;
+        $pos = 1 ;
         while ($this->bsObj->isAlphanumericAt($data, $pos)) {
             if ($this->bsObj->isDigitAt($data, $pos)) {
                 $qix = $pos;

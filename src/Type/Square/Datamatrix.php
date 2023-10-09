@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Datamatrix.php
  *
@@ -15,9 +16,9 @@
 
 namespace Com\Tecnick\Barcode\Type\Square;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
-use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
+use Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix
@@ -146,17 +147,17 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
 
         // number of data codewords
         $ncw = count($this->cdw);
-        
+
         // check size
         if ($ncw > 1560) {
             throw new BarcodeException('the input is too large to fit the barcode');
         }
-        
+
         // get minimum required matrix size.
         $params = Data::getPaddingSize($this->shape, $ncw);
         $this->addPadding($params[11], $ncw);
 
-        $errorCorrection = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\ErrorCorrection;
+        $errorCorrection = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\ErrorCorrection();
         $this->cdw = $errorCorrection->getErrorCorrection($this->cdw, $params[13], $params[14], $params[15]);
 
         return $params;

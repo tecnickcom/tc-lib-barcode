@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Convert.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Color\Exception as ColorException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Color\Exception as ColorException;
 
 /**
  * Com\Tecnick\Barcode\Type\Convert

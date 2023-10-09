@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MaskNum.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
@@ -74,7 +75,7 @@ abstract class MaskNum
                 if (ord($frame[$ypos][$xpos]) & 0x80) {
                     $bitMask[$ypos][$xpos] = 0;
                 } else {
-                    $maskFunc = call_user_func(array($this, 'mask'.$maskNo), $xpos, $ypos);
+                    $maskFunc = call_user_func(array($this, 'mask' . $maskNo), $xpos, $ypos);
                     $bitMask[$ypos][$xpos] = (($maskFunc == 0) ? 1 : 0);
                 }
             }

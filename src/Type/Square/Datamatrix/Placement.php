@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Placement.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Placement
@@ -75,13 +76,13 @@ abstract class Placement
      */
     protected function placeUtah($marr, $nrow, $ncol, $row, $col, $chr)
     {
-        $marr = $this->placeModule($marr, $nrow, $ncol, $row-2, $col-2, $chr, 1);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $row-2, $col-1, $chr, 2);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $row-1, $col-2, $chr, 3);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $row-1, $col-1, $chr, 4);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $row-1, $col, $chr, 5);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $row, $col-2, $chr, 6);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $row, $col-1, $chr, 7);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $row - 2, $col - 2, $chr, 1);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $row - 2, $col - 1, $chr, 2);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $row - 1, $col - 2, $chr, 3);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $row - 1, $col - 1, $chr, 4);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $row - 1, $col, $chr, 5);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $row, $col - 2, $chr, 6);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $row, $col - 1, $chr, 7);
         $marr = $this->placeModule($marr, $nrow, $ncol, $row, $col, $chr, 8);
         return $marr;
     }
@@ -104,14 +105,14 @@ abstract class Placement
         if (($row != $nrow) || ($col != 0)) {
             return $marr;
         }
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-1, 0, $chr, 1);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-1, 1, $chr, 2);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-1, 2, $chr, 3);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-2, $chr, 4);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-1, $chr, 5);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol-1, $chr, 6);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 2, $ncol-1, $chr, 7);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 3, $ncol-1, $chr, 8);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 0, $chr, 1);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 1, $chr, 2);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 2, $chr, 3);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 2, $chr, 4);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 1, $chr, 5);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol - 1, $chr, 6);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 2, $ncol - 1, $chr, 7);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 3, $ncol - 1, $chr, 8);
         ++$chr;
         return $marr;
     }
@@ -134,14 +135,14 @@ abstract class Placement
         if (($row != ($nrow - 2)) || ($col != 0) || (($ncol % 4) == 0)) {
             return $marr;
         }
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-3, 0, $chr, 1);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-2, 0, $chr, 2);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-1, 0, $chr, 3);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-4, $chr, 4);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-3, $chr, 5);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-2, $chr, 6);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-1, $chr, 7);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol-1, $chr, 8);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 3, 0, $chr, 1);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 2, 0, $chr, 2);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 0, $chr, 3);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 4, $chr, 4);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 3, $chr, 5);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 2, $chr, 6);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 1, $chr, 7);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol - 1, $chr, 8);
         ++$chr;
         return $marr;
     }
@@ -164,14 +165,14 @@ abstract class Placement
         if (($row != ($nrow - 2)) || ($col != 0) || (($ncol % 8) != 4)) {
             return $marr;
         }
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-3, 0, $chr, 1);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-2, 0, $chr, 2);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-1, 0, $chr, 3);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-2, $chr, 4);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-1, $chr, 5);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol-1, $chr, 6);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 2, $ncol-1, $chr, 7);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 3, $ncol-1, $chr, 8);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 3, 0, $chr, 1);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 2, 0, $chr, 2);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 0, $chr, 3);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 2, $chr, 4);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 1, $chr, 5);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol - 1, $chr, 6);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 2, $ncol - 1, $chr, 7);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 3, $ncol - 1, $chr, 8);
         ++$chr;
         return $marr;
     }
@@ -194,19 +195,19 @@ abstract class Placement
         if (($row != ($nrow + 4)) || ($col != 2) || ($ncol % 8)) {
             return $marr;
         }
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-1, 0, $chr, 1);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow-1, $ncol-1, $chr, 2);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-3, $chr, 3);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-2, $chr, 4);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol-1, $chr, 5);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol-3, $chr, 6);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol-2, $chr, 7);
-        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol-1, $chr, 8);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 0, $chr, 1);
+        $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, $ncol - 1, $chr, 2);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 3, $chr, 3);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 2, $chr, 4);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 1, $chr, 5);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol - 3, $chr, 6);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol - 2, $chr, 7);
+        $marr = $this->placeModule($marr, $nrow, $ncol, 1, $ncol - 1, $chr, 8);
         ++$chr;
         return $marr;
     }
 
-    
+
 
     /**
      * Sweep upward diagonally, inserting successive characters,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeThreeNineExt.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\CodeThreeNineExt
@@ -45,6 +46,6 @@ class CodeThreeNineExt extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExt
      */
     protected function formatCode()
     {
-        $this->extcode = '*'.$this->getExtendCode(strtoupper($this->code)).'*';
+        $this->extcode = '*' . $this->getExtendCode(strtoupper($this->code)) . '*';
     }
 }

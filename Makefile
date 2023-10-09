@@ -131,7 +131,7 @@ clean:
 # Fix code style violations
 .PHONY: codefix
 codefix:
-	./vendor/bin/phpcbf --ignore="./vendor/" --standard=psr2 src test
+	./vendor/bin/phpcbf --ignore="./vendor/" --standard=psr12 src test
 
 # Build a DEB package for Debian-like Linux distributions
 .PHONY: deb
@@ -202,7 +202,7 @@ endif
 # Test source code for coding standard violations
 .PHONY: lint
 lint:
-	./vendor/bin/phpcs --ignore="./vendor/" --standard=psr2 src test
+	./vendor/bin/phpcs --ignore="./vendor/" --standard=phpcs.xml src test
 	./vendor/bin/phpmd src text codesize,unusedcode,naming,design --exclude vendor
 	./vendor/bin/phpmd test text unusedcode,naming
 
@@ -213,8 +213,6 @@ qa: ensuretarget lint test report
 # Generate various reports
 .PHONY: report
 report: ensuretarget
-	./vendor/bin/phpcpd src --exclude vendor > $(TARGETDIR)/report/phpcpd.txt
-	./vendor/bin/phploc src --exclude vendor > $(TARGETDIR)/report/phploc.txt
 	./vendor/bin/pdepend --jdepend-xml=$(TARGETDIR)/report/dependencies.xml --summary-xml=$(TARGETDIR)/report/metrics.xml --jdepend-chart=$(TARGETDIR)/report/dependecies.svg --overview-pyramid=$(TARGETDIR)/report/overview-pyramid.svg --ignore=vendor ./src
 	#./vendor/bartlett/php-compatinfo/bin/phpcompatinfo --no-ansi analyser:run src/ > $(TARGETDIR)/report/phpcompatinfo.txt
 

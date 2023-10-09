@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\A;
@@ -39,7 +40,7 @@ class CodeOneTwoEightA extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
      * @var string
      */
     protected $format = 'C128A';
-    
+
     /**
      * Get the code point array
      *

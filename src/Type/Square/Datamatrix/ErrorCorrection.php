@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ErrorCorrection.php
  *
@@ -67,19 +68,19 @@ class ErrorCorrection
         $log = array(0);
         $alog = array(1);
         $this->genLogs($log, $alog, $ngf, $vpp);
-        
+
         // generate the polynomial coefficients (c)
         $plc = array_fill(0, ($ncc + 1), 0);
         $plc[0] = 1;
         for ($i = 1; $i <= $ncc; ++$i) {
-            $plc[$i] = $plc[($i-1)];
+            $plc[$i] = $plc[($i - 1)];
             for ($j = ($i - 1); $j >= 1; --$j) {
                 $plc[$j] = $plc[($j - 1)] ^ $this->getGFProduct($plc[$j], $alog[$i], $log, $alog, $ngf);
             }
             $plc[0] = $this->getGFProduct($plc[0], $alog[$i], $log, $alog, $ngf);
         }
         ksort($plc);
-        
+
         // total number of data codewords
         $num_wd = ($nbk * $ncw);
         // total number of error codewords

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeOneOne.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\CodeOneOne;
@@ -111,7 +112,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
             }
         }
         $kcheck %= 11;
-        return $ccheck.$kcheck;
+        return $ccheck . $kcheck;
     }
 
     /**
@@ -119,7 +120,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode()
     {
-        $this->extcode = 'S'.$this->code.$this->getChecksum($this->code).'S';
+        $this->extcode = 'S' . $this->code . $this->getChecksum($this->code) . 'S';
     }
 
     /**
@@ -139,7 +140,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (!isset($this->chbar[$char])) {
-                throw new BarcodeException('Invalid character: chr('.ord($char).')');
+                throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             for ($pos = 0; $pos < 6; ++$pos) {
                 $bar_width = intval($this->chbar[$char][$pos]);

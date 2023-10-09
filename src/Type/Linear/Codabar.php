@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Codabar.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\Codabar;
@@ -72,7 +73,7 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode()
     {
-        $this->extcode = 'A'.strtoupper($this->code).'A';
+        $this->extcode = 'A' . strtoupper($this->code) . 'A';
     }
 
     /**
@@ -92,7 +93,7 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (!isset($this->chbar[$char])) {
-                throw new BarcodeException('Invalid character: chr('.ord($char).')');
+                throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             for ($pos = 0; $pos < 8; ++$pos) {
                 $bar_width = intval($this->chbar[$char][$pos]);

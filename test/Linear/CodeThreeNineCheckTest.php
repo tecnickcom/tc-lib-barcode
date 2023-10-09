@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeThreeNineCheckTest.php
  *
@@ -16,7 +17,7 @@
 namespace Test\Linear;
 
 use PHPUnit\Framework\TestCase;
-use \Test\TestUtil;
+use Test\TestUtil;
 
 /**
  * Barcode class test
@@ -33,7 +34,7 @@ class CodeThreeNineCheckTest extends TestUtil
 {
     protected function getTestObject()
     {
-        return new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode();
     }
 
     public function testGetGrid()
@@ -42,8 +43,8 @@ class CodeThreeNineCheckTest extends TestUtil
         $bobj = $testObj->getBarcodeObj('C39+', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "10001011101110101010001110111010111010001010111010111000101011101110111000101010101000"
-            ."111010111011101000111010101011100011101010101000101110111011101000101110101011100010111010101"
-            ."1100010101110100010111011101\n";
+            . "111010111011101000111010101011100011101010101000101110111011101000101110101011100010111010101"
+            . "1100010101110100010111011101\n";
         $this->assertEquals($expected, $grid);
     }
 }

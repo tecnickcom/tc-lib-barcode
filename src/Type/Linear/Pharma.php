@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pharma.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\Pharma;
@@ -39,7 +40,7 @@ class Pharma extends \Com\Tecnick\Barcode\Type\Linear
      * @var string
      */
     protected $format = 'PHARMA';
-    
+
     /**
      * Get the bars array
      *

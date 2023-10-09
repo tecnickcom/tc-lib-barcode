@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Barcode.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Barcode
@@ -114,11 +115,11 @@ class Barcode
         // extract extra parameters (if any)
         $params = explode(',', $type);
         $type = array_shift($params);
-        
+
         if (empty(self::$typeclass[$type])) {
-            throw new BarcodeException('Unsupported barcode type: '.$type);
+            throw new BarcodeException('Unsupported barcode type: ' . $type);
         }
-        $bclass = '\\Com\\Tecnick\\Barcode\\Type\\'.self::$typeclass[$type];
+        $bclass = '\\Com\\Tecnick\\Barcode\\Type\\' . self::$typeclass[$type];
         return new $bclass($code, $width, $height, $color, $params, $padding);
     }
 }

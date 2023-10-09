@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ImbPre.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\ImbPre;
@@ -39,7 +40,7 @@ class ImbPre extends \Com\Tecnick\Barcode\Type\Linear
      * @var string
      */
     protected $format = 'IMBPRE';
-    
+
     /**
      * Get the bars array
      *

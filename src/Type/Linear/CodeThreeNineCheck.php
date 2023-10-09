@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeThreeNineCheck.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\CodeThreeNineCheck
@@ -46,6 +47,6 @@ class CodeThreeNineCheck extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineE
     protected function formatCode()
     {
         $code = strtoupper($this->code);
-        $this->extcode = '*'.$code.$this->getChecksum($code).'*';
+        $this->extcode = '*' . $code . $this->getChecksum($code) . '*';
     }
 }

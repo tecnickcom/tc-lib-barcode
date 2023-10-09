@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeOneTwoEight.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight;
@@ -191,14 +192,14 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     {
         // 128A (Code Set A) - ASCII characters 00 to 95 (0-9, A-Z and control codes), special characters
         $this->keys_a = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'
-            .chr(0).chr(1).chr(2).chr(3).chr(4).chr(5).chr(6).chr(7).chr(8).chr(9)
-            .chr(10).chr(11).chr(12).chr(13).chr(14).chr(15).chr(16).chr(17).chr(18).chr(19)
-            .chr(20).chr(21).chr(22).chr(23).chr(24).chr(25).chr(26).chr(27).chr(28).chr(29)
-            .chr(30).chr(31);
+            . chr(0) . chr(1) . chr(2) . chr(3) . chr(4) . chr(5) . chr(6) . chr(7) . chr(8) . chr(9)
+            . chr(10) . chr(11) . chr(12) . chr(13) . chr(14) . chr(15) . chr(16) . chr(17) . chr(18) . chr(19)
+            . chr(20) . chr(21) . chr(22) . chr(23) . chr(24) . chr(25) . chr(26) . chr(27) . chr(28) . chr(29)
+            . chr(30) . chr(31);
 
         // 128B (Code Set B) - ASCII characters 32 to 127 (0-9, A-Z, a-z), special characters
         $this->keys_b = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]'
-            .'^_`abcdefghijklmnopqrstuvwxyz{|}~'.chr(127);
+            . '^_`abcdefghijklmnopqrstuvwxyz{|}~' . chr(127);
     }
 
     /**
@@ -216,7 +217,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         // process the sequence
         $startid = 0;
         foreach ($sequence as $key => $seq) {
-            $processMethod = 'processSequence'.$seq[0];
+            $processMethod = 'processSequence' . $seq[0];
             $this->$processMethod($sequence, $code_data, $startid, $key, $seq);
         }
         return $this->finalizeCodeData($code_data, $startid);
@@ -239,7 +240,8 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         if ($key == 0) {
             $startid = 103;
         } elseif ($sequence[($key - 1)][0] != 'A') {
-            if (($seq[2] == 1)
+            if (
+                ($seq[2] == 1)
                 && ($key > 0)
                 && ($sequence[($key - 1)][0] == 'B')
                 && (!isset($sequence[($key - 1)][3]))
@@ -292,7 +294,8 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     protected function processSequenceBA(&$sequence, &$code_data, &$startid, $key, $seq)
     {
         $tmpchr = ord($seq[1][0]);
-        if (($seq[2] == 1)
+        if (
+            ($seq[2] == 1)
             && ($tmpchr >= 241)
             && ($tmpchr <= 244)
             && isset($sequence[($key + 1)])
@@ -328,7 +331,8 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      */
     protected function processSequenceBB(&$sequence, &$code_data, $key, $seq)
     {
-        if (($seq[2] == 1)
+        if (
+            ($seq[2] == 1)
             && ($key > 0)
             && ($sequence[($key - 1)][0] == 'A')
             && (!isset($sequence[($key - 1)][3]))

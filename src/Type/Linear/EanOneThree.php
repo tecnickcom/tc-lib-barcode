@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EanOneThree.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\EanOneThree;
@@ -53,7 +54,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      * @var int
      */
     protected $check = '';
-    
+
     /**
      * Map characters to barcodes
      *
@@ -152,7 +153,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
             return $this->check;
         } elseif ($this->check !== intval($code[$data_len])) {
             // wrong check digit
-            throw new BarcodeException('Invalid check digit: '.$this->check);
+            throw new BarcodeException('Invalid check digit: ' . $this->check);
         }
         return '';
     }
@@ -163,9 +164,9 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     protected function formatCode()
     {
         $code = str_pad($this->code, ($this->code_length - 1), '0', STR_PAD_LEFT);
-        $this->extcode = $code.$this->getChecksum($code);
+        $this->extcode = $code . $this->getChecksum($code);
     }
-    
+
     /**
      * Get the bars array
      *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PharmaTest.php
  *
@@ -16,7 +17,7 @@
 namespace Test\Linear;
 
 use PHPUnit\Framework\TestCase;
-use \Test\TestUtil;
+use Test\TestUtil;
 
 /**
  * Barcode class test
@@ -33,7 +34,7 @@ class PharmaTest extends TestUtil
 {
     protected function getTestObject()
     {
-        return new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode();
     }
 
     public function testGetGrid()
@@ -42,7 +43,7 @@ class PharmaTest extends TestUtil
         $bobj = $testObj->getBarcodeObj('PHARMA', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "111001110010011100100111001110010011100111001110011100100"
-            ."1001110011100100111001001001001110010011100111001\n";
+            . "1001110011100100111001001001001110010011100111001\n";
         $this->assertEquals($expected, $grid);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Encode.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode
@@ -70,7 +71,8 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      */
     public function encodeASCII(&$cdw, &$cdw_num, &$pos, &$data_length, &$data, &$enc)
     {
-        if (($data_length > 1)
+        if (
+            ($data_length > 1)
             && ($pos < ($data_length - 1))
             && ($this->isCharMode(ord($data[$pos]), Data::ENC_ASCII_NUM)
                 && $this->isCharMode(ord($data[$pos + 1]), Data::ENC_ASCII_NUM)
@@ -194,7 +196,8 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
                 $temp_cw[] = $chr;
                 ++$field_length;
             }
-            if (($field_length == 4)
+            if (
+                ($field_length == 4)
                 || ($epos == $data_length)
                 || !$this->isCharMode($chr, Data::ENC_EDF)
             ) {

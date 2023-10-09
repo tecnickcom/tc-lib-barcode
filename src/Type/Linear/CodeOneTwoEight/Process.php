@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Process.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\Process;
@@ -54,7 +55,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             foreach ($numseq[1] as $val) {
                 // offset to the start of numeric substr
                 $offset = $val[1];
-                
+
                 // numeric sequence
                 $slen = strlen($val[0]);
                 if (($slen % 2) != 0) {
@@ -63,7 +64,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
                     // add 1 to start of offset so numbers are c type encoded "from the end"
                     ++$offset;
                 }
-                
+
                 if ($offset > $end_offset) {
                     // non numeric sequence
                     $sequence = array_merge(
@@ -175,7 +176,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             } elseif (($char_id >= 32) && ($char_id <= 127)) {
                 $code_data[] = strpos($this->keys_b, $char);
             } else {
-                throw new BarcodeException('Invalid character sequence: '.$char_id);
+                throw new BarcodeException('Invalid character sequence: ' . $char_id);
             }
         }
     }
@@ -197,13 +198,13 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
 
         foreach ($blocks as $blk) {
             $len = strlen($blk);
-  
+
             if (($len % 2) != 0) {
                 throw new BarcodeException('The length of each FNC1-separated code block must be even');
             }
 
             for ($pos = 0; $pos < $len; $pos += 2) {
-                $chrnum = $blk[$pos].$blk[($pos + 1)];
+                $chrnum = $blk[$pos] . $blk[($pos + 1)];
                 if (preg_match('/([0-9]{2})/', $chrnum) > 0) {
                     $code_data[] = intval($chrnum);
                 } else {

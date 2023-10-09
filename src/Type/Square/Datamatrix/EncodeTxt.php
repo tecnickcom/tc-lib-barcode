@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EncodeTxt.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Encodetxt

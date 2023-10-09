@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeNineThree.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\CodeNineThree;
@@ -109,11 +110,53 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      * @var array
      */
     protected $chksum = array(
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-        'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
-        'W', 'X', 'Y', 'Z', '-', '.', ' ', '$', '/', '+', '%',
-        '<', '=', '>', '?'
+        '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+        'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+        'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+        'W',
+    'X',
+    'Y',
+    'Z',
+    '-',
+    '.',
+    ' ',
+    '$',
+    '/',
+    '+',
+    '%',
+        '<',
+    '=',
+    '>',
+    '?'
     );
 
     /**
@@ -126,7 +169,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
     protected function getChecksum($code)
     {
         // translate special characters
-        $code = strtr($code, chr(128).chr(131).chr(129).chr(130), '<=>?');
+        $code = strtr($code, chr(128) . chr(131) . chr(129) . chr(130), '<=>?');
         $clen = strlen($code);
         // calculate check digit C
         $pck = 1;
@@ -155,9 +198,13 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         }
         $check %= 47;
         $key = $this->chksum[$check];
-        $checksum = $chk.$key;
+        $checksum = $chk . $key;
         // restore special characters
-        $checksum = strtr($checksum, '<=>?', chr(128).chr(131).chr(129).chr(130));
+        $checksum = strtr(
+            $checksum,
+            '<=>?',
+            chr(128) . chr(131) . chr(129) . chr(130)
+        );
         return $checksum;
     }
 
@@ -165,26 +212,140 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      * Get the bars array
      *
      * @throws BarcodeException in case of error
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function setBars()
     {
         $this->extcodes = array(
-            chr(131).'U', chr(128).'A', chr(128).'B', chr(128).'C', chr(128).'D', chr(128).'E', chr(128).'F',
-            chr(128).'G', chr(128).'H', chr(128).'I', chr(128).'J', chr(128).'K', chr(128).'L', chr(128).'M',
-            chr(128).'N', chr(128).'O', chr(128).'P', chr(128).'Q', chr(128).'R', chr(128).'S', chr(128).'T',
-            chr(128).'U', chr(128).'V', chr(128).'W', chr(128).'X', chr(128).'Y', chr(128).'Z', chr(131).'A',
-            chr(131).'B', chr(131).'C', chr(131).'D', chr(131).'E', ' ', chr(129).'A', chr(129).'B',
-            chr(129).'C', chr(129).'D', chr(129).'E', chr(129).'F', chr(129).'G', chr(129).'H', chr(129).'I',
-            chr(129).'J', chr(129).'K', chr(129).'L', '-', '.', chr(129).'O', '0', '1', '2', '3', '4', '5',
-            '6', '7', '8', '9', chr(129).'Z', chr(131).'F', chr(131).'G', chr(131).'H', chr(131).'I',
-            chr(131).'J', chr(131).'V', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-            'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', chr(131).'K', chr(131).'L',
-            chr(131).'M', chr(131).'N', chr(131).'O', chr(131).'W', chr(130).'A',
-            chr(130).'B', chr(130).'C', chr(130).'D', chr(130).'E', chr(130).'F', chr(130).'G', chr(130).'H',
-            chr(130).'I', chr(130).'J', chr(130).'K', chr(130).'L', chr(130).'M', chr(130).'N', chr(130).'O',
-            chr(130).'P', chr(130).'Q', chr(130).'R', chr(130).'S', chr(130).'T', chr(130).'U', chr(130).'V',
-            chr(130).'W', chr(130).'X', chr(130).'Y', chr(130).'Z', chr(131).'P', chr(131).'Q', chr(131).'R',
-            chr(131).'S', chr(131).'T'
+            chr(131) . 'U',
+            chr(128) . 'A',
+            chr(128) . 'B',
+            chr(128) . 'C',
+            chr(128) . 'D',
+            chr(128) . 'E',
+            chr(128) . 'F',
+            chr(128) . 'G',
+            chr(128) . 'H',
+            chr(128) . 'I',
+            chr(128) . 'J',
+            chr(128) . 'K',
+            chr(128) . 'L',
+            chr(128) . 'M',
+            chr(128) . 'N',
+            chr(128) . 'O',
+            chr(128) . 'P',
+            chr(128) . 'Q',
+            chr(128) . 'R',
+            chr(128) . 'S',
+            chr(128) . 'T',
+            chr(128) . 'U',
+            chr(128) . 'V',
+            chr(128) . 'W',
+            chr(128) . 'X',
+            chr(128) . 'Y',
+            chr(128) . 'Z',
+            chr(131) . 'A',
+            chr(131) . 'B',
+            chr(131) . 'C',
+            chr(131) . 'D',
+            chr(131) . 'E',
+            ' ',
+            chr(129) . 'A',
+            chr(129) . 'B',
+            chr(129) . 'C',
+            chr(129) . 'D',
+            chr(129) . 'E',
+            chr(129) . 'F',
+            chr(129) . 'G',
+            chr(129) . 'H',
+            chr(129) . 'I',
+            chr(129) . 'J',
+            chr(129) . 'K',
+            chr(129) . 'L',
+            '-',
+            '.',
+            chr(129) . 'O',
+            '0',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            chr(129) . 'Z',
+            chr(131) . 'F',
+            chr(131) . 'G',
+            chr(131) . 'H',
+            chr(131) . 'I',
+            chr(131) . 'J',
+            chr(131) . 'V',
+            'A',
+            'B',
+            'C',
+            'D',
+            'E',
+            'F',
+            'G',
+            'H',
+            'I',
+            'J',
+            'K',
+            'L',
+            'M',
+            'N',
+            'O',
+            'P',
+            'Q',
+            'R',
+            'S',
+            'T',
+            'U',
+            'V',
+            'W',
+            'X',
+            'Y',
+            'Z',
+            chr(131) . 'K',
+            chr(131) . 'L',
+            chr(131) . 'M',
+            chr(131) . 'N',
+            chr(131) . 'O',
+            chr(131) . 'W',
+            chr(130) . 'A',
+            chr(130) . 'B',
+            chr(130) . 'C',
+            chr(130) . 'D',
+            chr(130) . 'E',
+            chr(130) . 'F',
+            chr(130) . 'G',
+            chr(130) . 'H',
+            chr(130) . 'I',
+            chr(130) . 'J',
+            chr(130) . 'K',
+            chr(130) . 'L',
+            chr(130) . 'M',
+            chr(130) . 'N',
+            chr(130) . 'O',
+            chr(130) . 'P',
+            chr(130) . 'Q',
+            chr(130) . 'R',
+            chr(130) . 'S',
+            chr(130) . 'T',
+            chr(130) . 'U',
+            chr(130) . 'V',
+            chr(130) . 'W',
+            chr(130) . 'X',
+            chr(130) . 'Y',
+            chr(130) . 'Z',
+            chr(131) . 'P',
+            chr(131) . 'Q',
+            chr(131) . 'R',
+            chr(131) . 'S',
+            chr(131) . 'T'
         );
         $this->ncols = 0;
         $this->nrows = 1;

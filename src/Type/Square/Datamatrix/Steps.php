@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Steps.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
@@ -87,49 +88,59 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      */
     protected function stepK($numch)
     {
-        if ($numch[Data::ENC_ASCII] <= ceil(min(
-            $numch[Data::ENC_C40],
-            $numch[Data::ENC_TXT],
-            $numch[Data::ENC_X12],
-            $numch[Data::ENC_EDF],
-            $numch[Data::ENC_BASE256]
-        ))) {
+        if (
+            $numch[Data::ENC_ASCII] <= ceil(min(
+                $numch[Data::ENC_C40],
+                $numch[Data::ENC_TXT],
+                $numch[Data::ENC_X12],
+                $numch[Data::ENC_EDF],
+                $numch[Data::ENC_BASE256]
+            ))
+        ) {
             return Data::ENC_ASCII;
         }
-        if ($numch[Data::ENC_BASE256] < ceil(min(
-            $numch[Data::ENC_ASCII],
-            $numch[Data::ENC_C40],
-            $numch[Data::ENC_TXT],
-            $numch[Data::ENC_X12],
-            $numch[Data::ENC_EDF]
-        ))) {
+        if (
+            $numch[Data::ENC_BASE256] < ceil(min(
+                $numch[Data::ENC_ASCII],
+                $numch[Data::ENC_C40],
+                $numch[Data::ENC_TXT],
+                $numch[Data::ENC_X12],
+                $numch[Data::ENC_EDF]
+            ))
+        ) {
             return Data::ENC_BASE256;
         }
-        if ($numch[Data::ENC_EDF] < ceil(min(
-            $numch[Data::ENC_ASCII],
-            $numch[Data::ENC_C40],
-            $numch[Data::ENC_TXT],
-            $numch[Data::ENC_X12],
-            $numch[Data::ENC_BASE256]
-        ))) {
+        if (
+            $numch[Data::ENC_EDF] < ceil(min(
+                $numch[Data::ENC_ASCII],
+                $numch[Data::ENC_C40],
+                $numch[Data::ENC_TXT],
+                $numch[Data::ENC_X12],
+                $numch[Data::ENC_BASE256]
+            ))
+        ) {
             return Data::ENC_EDF;
         }
-        if ($numch[Data::ENC_TXT] < ceil(min(
-            $numch[Data::ENC_ASCII],
-            $numch[Data::ENC_C40],
-            $numch[Data::ENC_X12],
-            $numch[Data::ENC_EDF],
-            $numch[Data::ENC_BASE256]
-        ))) {
+        if (
+            $numch[Data::ENC_TXT] < ceil(min(
+                $numch[Data::ENC_ASCII],
+                $numch[Data::ENC_C40],
+                $numch[Data::ENC_X12],
+                $numch[Data::ENC_EDF],
+                $numch[Data::ENC_BASE256]
+            ))
+        ) {
             return Data::ENC_TXT;
         }
-        if ($numch[Data::ENC_X12] < ceil(min(
-            $numch[Data::ENC_ASCII],
-            $numch[Data::ENC_C40],
-            $numch[Data::ENC_TXT],
-            $numch[Data::ENC_EDF],
-            $numch[Data::ENC_BASE256]
-        ))) {
+        if (
+            $numch[Data::ENC_X12] < ceil(min(
+                $numch[Data::ENC_ASCII],
+                $numch[Data::ENC_C40],
+                $numch[Data::ENC_TXT],
+                $numch[Data::ENC_EDF],
+                $numch[Data::ENC_BASE256]
+            ))
+        ) {
             return Data::ENC_X12;
         }
         return Data::ENC_C40;
@@ -250,12 +261,14 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      */
     protected function stepRf($numch, $pos, $data_length, $charscount, $data)
     {
-        if (($numch[Data::ENC_C40] + 1) < min(
-            $numch[Data::ENC_ASCII],
-            $numch[Data::ENC_TXT],
-            $numch[Data::ENC_EDF],
-            $numch[Data::ENC_BASE256]
-        )) {
+        if (
+            ($numch[Data::ENC_C40] + 1) < min(
+                $numch[Data::ENC_ASCII],
+                $numch[Data::ENC_TXT],
+                $numch[Data::ENC_EDF],
+                $numch[Data::ENC_BASE256]
+            )
+        ) {
             if ($numch[Data::ENC_C40] < $numch[Data::ENC_X12]) {
                 return Data::ENC_C40;
             }
@@ -265,8 +278,10 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
                     $tmpchr = ord($data[$ker]);
                     if ($this->isCharMode($tmpchr, Data::ENC_X12)) {
                         return Data::ENC_X12;
-                    } elseif (!($this->isCharMode($tmpchr, Data::ENC_X12)
-                        || $this->isCharMode($tmpchr, Data::ENC_C40))) {
+                    } elseif (
+                        !($this->isCharMode($tmpchr, Data::ENC_X12)
+                        || $this->isCharMode($tmpchr, Data::ENC_C40))
+                    ) {
                         break;
                     }
                     ++$ker;
@@ -288,49 +303,59 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      */
     protected function stepR($numch, $pos, $data_length, $charscount, $data)
     {
-        if (($numch[Data::ENC_ASCII] + 1) <= min(
-            $numch[Data::ENC_C40],
-            $numch[Data::ENC_TXT],
-            $numch[Data::ENC_X12],
-            $numch[Data::ENC_EDF],
-            $numch[Data::ENC_BASE256]
-        )) {
+        if (
+            ($numch[Data::ENC_ASCII] + 1) <= min(
+                $numch[Data::ENC_C40],
+                $numch[Data::ENC_TXT],
+                $numch[Data::ENC_X12],
+                $numch[Data::ENC_EDF],
+                $numch[Data::ENC_BASE256]
+            )
+        ) {
             return Data::ENC_ASCII;
         }
-        if ((($numch[Data::ENC_BASE256] + 1) <= $numch[Data::ENC_ASCII])
+        if (
+            (($numch[Data::ENC_BASE256] + 1) <= $numch[Data::ENC_ASCII])
             || (($numch[Data::ENC_BASE256] + 1) < min(
                 $numch[Data::ENC_C40],
                 $numch[Data::ENC_TXT],
                 $numch[Data::ENC_X12],
                 $numch[Data::ENC_EDF]
-            ))) {
+            ))
+        ) {
             return Data::ENC_BASE256;
         }
-        if (($numch[Data::ENC_EDF] + 1) < min(
-            $numch[Data::ENC_ASCII],
-            $numch[Data::ENC_C40],
-            $numch[Data::ENC_TXT],
-            $numch[Data::ENC_X12],
-            $numch[Data::ENC_BASE256]
-        )) {
+        if (
+            ($numch[Data::ENC_EDF] + 1) < min(
+                $numch[Data::ENC_ASCII],
+                $numch[Data::ENC_C40],
+                $numch[Data::ENC_TXT],
+                $numch[Data::ENC_X12],
+                $numch[Data::ENC_BASE256]
+            )
+        ) {
             return Data::ENC_EDF;
         }
-        if (($numch[Data::ENC_TXT] + 1) < min(
-            $numch[Data::ENC_ASCII],
-            $numch[Data::ENC_C40],
-            $numch[Data::ENC_X12],
-            $numch[Data::ENC_EDF],
-            $numch[Data::ENC_BASE256]
-        )) {
+        if (
+            ($numch[Data::ENC_TXT] + 1) < min(
+                $numch[Data::ENC_ASCII],
+                $numch[Data::ENC_C40],
+                $numch[Data::ENC_X12],
+                $numch[Data::ENC_EDF],
+                $numch[Data::ENC_BASE256]
+            )
+        ) {
             return Data::ENC_TXT;
         }
-        if (($numch[Data::ENC_X12] + 1) < min(
-            $numch[Data::ENC_ASCII],
-            $numch[Data::ENC_C40],
-            $numch[Data::ENC_TXT],
-            $numch[Data::ENC_EDF],
-            $numch[Data::ENC_BASE256]
-        )) {
+        if (
+            ($numch[Data::ENC_X12] + 1) < min(
+                $numch[Data::ENC_ASCII],
+                $numch[Data::ENC_C40],
+                $numch[Data::ENC_TXT],
+                $numch[Data::ENC_EDF],
+                $numch[Data::ENC_BASE256]
+            )
+        ) {
             return Data::ENC_X12;
         }
         return $this->stepRf($numch, $pos, $data_length, $charscount, $data);

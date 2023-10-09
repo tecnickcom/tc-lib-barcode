@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PdfFourOneSeven.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven
@@ -88,7 +89,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      * @var int
      */
     protected $ecl = -1;
-    
+
     /**
      * Information for macro block
      *
@@ -119,7 +120,8 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      */
     protected function setMacroBlockParam()
     {
-        if (isset($this->params[4])
+        if (
+            isset($this->params[4])
             && ($this->params[2] !== '')
             && ($this->params[3] !== '')
             && ($this->params[4] !== '')
@@ -130,7 +132,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
             for ($idx = 0; $idx < 7; ++$idx) {
                 $opt = $idx + 5;
                 if (isset($this->params[$opt]) && ($this->params[$opt] !== '')) {
-                    $this->macro['option_'.$idx] = strtr($this->params[$opt], "\xff", ',');
+                    $this->macro['option_' . $idx] = strtr($this->params[$opt], "\xff", ',');
                 }
             }
         }
@@ -175,15 +177,15 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         $optmodes = array(900,902,902,900,900,902,902);
         $optsize = array(-1,2,4,-1,-1,-1,2);
         foreach ($optmodes as $key => $omode) {
-            if (isset($this->macro['option_'.$key])) {
+            if (isset($this->macro['option_' . $key])) {
                 $macrocw[] = 923;
                 $macrocw[] = $key;
                 if ($optsize[$key] == 2) {
-                    $this->macro['option_'.$key] = sprintf('%05d', $this->macro['option_'.$key]);
+                    $this->macro['option_' . $key] = sprintf('%05d', $this->macro['option_' . $key]);
                 } elseif ($optsize[$key] == 4) {
-                    $this->macro['option_'.$key] = sprintf('%010d', $this->macro['option_'.$key]);
+                    $this->macro['option_' . $key] = sprintf('%010d', $this->macro['option_' . $key]);
                 }
-                $cdw = $this->getCompaction($omode, $this->macro['option_'.$key], false);
+                $cdw = $this->getCompaction($omode, $this->macro['option_' . $key], false);
                 $macrocw = array_merge($macrocw, $cdw);
             }
         }
@@ -223,7 +225,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         // count number of codewords
         $numcw = count($codewords);
         if ($numcw > 925) {
-            throw new BarcodeException('The maximum codeword capaciy has been reached: '.$numcw.' > 925');
+            throw new BarcodeException('The maximum codeword capaciy has been reached: ' . $numcw . ' > 925');
         }
         $macrocw = $this->getMacroBlock($numcw);
         // set error correction level
@@ -281,11 +283,11 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         $codewords = $this->getCodewords($rows, $cols, $ecl);
         $barcode = '';
         // add horizontal quiet zones to start and stop patterns
-        $pstart = str_repeat('0', $this->quiet_horizontal).Data::$start_pattern;
+        $pstart = str_repeat('0', $this->quiet_horizontal) . Data::$start_pattern;
         $this->nrows = ($rows * $this->row_height) + (2 * $this->quiet_vertical);
         $this->ncols = (($cols + 2) * 17) + 35 + (2 * $this->quiet_horizontal);
         // build rows for vertical quiet zone
-        $empty_row = ','.str_repeat('0', $this->ncols);
+        $empty_row = ',' . str_repeat('0', $this->ncols);
         $empty_rows = str_repeat($empty_row, $this->quiet_vertical);
         $barcode .= $empty_rows;
         $kcw = 0; // codeword index
@@ -318,8 +320,8 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
             // right row indicator
             $row .= sprintf('%17b', Data::$clusters[$cid][$cval]);
             // row stop code
-            $row .= Data::$stop_pattern.str_repeat('0', $this->quiet_horizontal);
-            $brow = ','.str_repeat($row, $this->row_height);
+            $row .= Data::$stop_pattern . str_repeat('0', $this->quiet_horizontal);
+            $brow = ',' . str_repeat($row, $this->row_height);
             $barcode .= $brow;
             ++$cid;
             if ($cid > 2) {

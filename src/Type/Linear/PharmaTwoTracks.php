@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PharmaTwoTracks.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\PharmaTwoTracks;
@@ -39,7 +40,7 @@ class PharmaTwoTracks extends \Com\Tecnick\Barcode\Type\Linear
      * @var string
      */
     protected $format = 'PHARMA2T';
-    
+
     /**
      * Get the bars array
      *
@@ -65,7 +66,7 @@ class PharmaTwoTracks extends \Com\Tecnick\Barcode\Type\Linear
                     $code = (($code - 2) / 3);
             }
         } while ($code != 0);
-        
+
         $seq = strrev($seq);
         $this->ncols = 0;
         $this->nrows = 2;

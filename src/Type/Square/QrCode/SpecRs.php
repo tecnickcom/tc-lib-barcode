@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SpecRs.php
  *
@@ -15,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
-use \Com\Tecnick\Barcode\Type\Square\QrCode\Data;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
@@ -165,7 +166,7 @@ abstract class SpecRs
         }
         $setPattern = str_repeat("\xc0", 8);
         $frame = $this->qrstrset($frame, 0, 7, $setPattern);
-        $frame = $this->qrstrset($frame, $width-8, 7, $setPattern);
+        $frame = $this->qrstrset($frame, $width - 8, 7, $setPattern);
         $frame = $this->qrstrset($frame, 0, $width - 8, $setPattern);
         // Format info
         $setPattern = str_repeat("\x84", 9);

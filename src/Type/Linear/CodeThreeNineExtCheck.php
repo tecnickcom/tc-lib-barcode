@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeThreeNineExtCheck.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtCheck
@@ -160,7 +161,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $item = ord($code[$chr]);
             if ($item > 127) {
-                throw new BarcodeException('Invalid character: chr('.$item.')');
+                throw new BarcodeException('Invalid character: chr(' . $item . ')');
             }
             $ext .= $this->extcodes[$item];
         }
@@ -192,7 +193,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
     protected function formatCode()
     {
         $code = $this->getExtendCode(strtoupper($this->code));
-        $this->extcode = '*'.$code.$this->getChecksum($code).'*';
+        $this->extcode = '*' . $code . $this->getChecksum($code) . '*';
     }
 
     /**
@@ -212,7 +213,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (!isset($this->chbar[$char])) {
-                throw new BarcodeException('Invalid character: chr('.ord($char).')');
+                throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             for ($pos = 0; $pos < 9; ++$pos) {
                 $bar_width = intval($this->chbar[$char][$pos]);

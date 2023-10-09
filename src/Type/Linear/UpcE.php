@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UpcE.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\UpcE;
@@ -93,15 +94,15 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
     protected function convertUpceToUpca($code)
     {
         if ($code[5] < 3) {
-            return '0'.$code[0].$code[1].$code[5].'0000'.$code[2].$code[3].$code[4];
+            return '0' . $code[0] . $code[1] . $code[5] . '0000' . $code[2] . $code[3] . $code[4];
         }
         if ($code[5] == 3) {
-            return '0'.$code[0].$code[1].$code[2].'00000'.$code[3].$code[4];
+            return '0' . $code[0] . $code[1] . $code[2] . '00000' . $code[3] . $code[4];
         }
         if ($code[5] == 4) {
-            return '0'.$code[0].$code[1].$code[2].$code[3].'00000'.$code[4];
+            return '0' . $code[0] . $code[1] . $code[2] . $code[3] . '00000' . $code[4];
         }
-        return '0'.$code[0].$code[1].$code[2].$code[3].$code[4].'0000'.$code[5];
+        return '0' . $code[0] . $code[1] . $code[2] . $code[3] . $code[4] . '0000' . $code[5];
     }
 
     /**
@@ -116,20 +117,20 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
         $tmp = substr($code, 4, 3);
         if (($tmp == '000') || ($tmp == '100') || ($tmp == '200')) {
             // manufacturer code ends in 000, 100, or 200
-            return substr($code, 2, 2).substr($code, 9, 3).substr($code, 4, 1);
+            return substr($code, 2, 2) . substr($code, 9, 3) . substr($code, 4, 1);
         }
         $tmp = substr($code, 5, 2);
         if ($tmp == '00') {
             // manufacturer code ends in 00
-            return substr($code, 2, 3).substr($code, 10, 2).'3';
+            return substr($code, 2, 3) . substr($code, 10, 2) . '3';
         }
         $tmp = substr($code, 6, 1);
         if ($tmp == '0') {
             // manufacturer code ends in 0
-            return substr($code, 2, 4).substr($code, 11, 1).'4';
+            return substr($code, 2, 4) . substr($code, 11, 1) . '4';
         }
         // manufacturer code does not end in zero
-        return substr($code, 2, 5).substr($code, 11, 1);
+        return substr($code, 2, 5) . substr($code, 11, 1);
     }
 
     /**
@@ -144,7 +145,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
         $code = str_pad($code, ($this->code_length - 1), '0', STR_PAD_LEFT);
         $code .= $this->getChecksum($code);
         ++$this->code_length;
-        $this->extcode = '0'.$code;
+        $this->extcode = '0' . $code;
     }
 
     /**

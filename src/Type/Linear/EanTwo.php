@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EanTwo.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\EanTwo;
@@ -46,7 +47,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      * @var int
      */
     protected $code_length = 2;
-    
+
     /**
      * Map characters to barcodes
      *
@@ -54,28 +55,28 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected $chbar = array(
         'A' => array( // left odd parity
-            '0'=>'0001101',
-            '1'=>'0011001',
-            '2'=>'0010011',
-            '3'=>'0111101',
-            '4'=>'0100011',
-            '5'=>'0110001',
-            '6'=>'0101111',
-            '7'=>'0111011',
-            '8'=>'0110111',
-            '9'=>'0001011'
+            '0' => '0001101',
+            '1' => '0011001',
+            '2' => '0010011',
+            '3' => '0111101',
+            '4' => '0100011',
+            '5' => '0110001',
+            '6' => '0101111',
+            '7' => '0111011',
+            '8' => '0110111',
+            '9' => '0001011'
         ),
         'B' => array( // left even parity
-            '0'=>'0100111',
-            '1'=>'0110011',
-            '2'=>'0011011',
-            '3'=>'0100001',
-            '4'=>'0011101',
-            '5'=>'0111001',
-            '6'=>'0000101',
-            '7'=>'0010001',
-            '8'=>'0001001',
-            '9'=>'0010111'
+            '0' => '0100111',
+            '1' => '0110011',
+            '2' => '0011011',
+            '3' => '0100001',
+            '4' => '0011101',
+            '5' => '0111001',
+            '6' => '0000101',
+            '7' => '0010001',
+            '8' => '0001001',
+            '9' => '0010111'
         )
     );
 
@@ -110,7 +111,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
     {
         $this->extcode = str_pad($this->code, $this->code_length, '0', STR_PAD_LEFT);
     }
-    
+
     /**
      * Get the bars array
      *

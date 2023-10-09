@@ -1,4 +1,5 @@
 <?php
+
 /**
  * KlantIndex.php
  *
@@ -15,7 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use \Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Linear\KlantIndex;
@@ -47,7 +48,7 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
     {
         $this->extcode = strtoupper($this->code);
     }
-    
+
     /**
      * Get the bars array
      *

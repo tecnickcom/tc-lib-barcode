@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodabarTest.php
  *
@@ -16,7 +17,7 @@
 namespace Test\Linear;
 
 use PHPUnit\Framework\TestCase;
-use \Test\TestUtil;
+use Test\TestUtil;
 
 /**
  * Barcode class test
@@ -33,7 +34,7 @@ class CodabarTest extends TestUtil
 {
     protected function getTestObject()
     {
-        return new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode();
     }
 
     public function testGetGrid()
@@ -42,7 +43,7 @@ class CodabarTest extends TestUtil
         $bobj = $testObj->getBarcodeObj('CODABAR', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "10110010010101010011010101100101010010110110010101010110"
-            ."10010110101001010010101101001011010100110101011010010101011001001\n";
+            . "10010110101001010010101101001011010100110101011010010101011001001\n";
         $this->assertEquals($expected, $grid);
     }
 

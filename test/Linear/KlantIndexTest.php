@@ -1,4 +1,5 @@
 <?php
+
 /**
  * KlantIndexTest.php
  *
@@ -16,7 +17,7 @@
 namespace Test\Linear;
 
 use PHPUnit\Framework\TestCase;
-use \Test\TestUtil;
+use Test\TestUtil;
 
 /**
  * Barcode class test
@@ -33,7 +34,7 @@ class KlantIndexTest extends TestUtil
 {
     protected function getTestObject()
     {
-        return new \Com\Tecnick\Barcode\Barcode;
+        return new \Com\Tecnick\Barcode\Barcode();
     }
 
     public function testGetGrid()
@@ -42,8 +43,8 @@ class KlantIndexTest extends TestUtil
         $bobj = $testObj->getBarcodeObj('KIX', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "00001010000010100000101000001010000010100000101000100010001000100010001000100010\n"
-            ."10101010101010101010101010101010101010101010101010101010101010101010101010101010\n"
-            ."00001010001000100010100010000010100010001010000000001010001000100010100010000010\n";
+            . "10101010101010101010101010101010101010101010101010101010101010101010101010101010\n"
+            . "00001010001000100010100010000010100010001010000000001010001000100010100010000010\n";
         $this->assertEquals($expected, $grid);
     }
 }
