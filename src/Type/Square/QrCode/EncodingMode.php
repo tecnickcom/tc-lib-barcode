@@ -106,41 +106,6 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     }
 
     /**
-     * Look up the alphabet-numeric conversion table (see JIS X0510:2004, pp.19)
-     *
-     * @param int $chr Character value
-     *
-     * @return value
-     */
-    public function lookAnTable($chr)
-    {
-        return (($chr > 127) ? -1 : Data::$anTable[$chr]);
-    }
-
-    /**
-     * Return the size of length indicator for the mode and version
-     *
-     * @param int $mode Encoding mode
-     * @param int $version Version
-     *
-     * @return int the size of the appropriate length indicator (bits).
-     */
-    public function getLengthIndicator($mode)
-    {
-        if ($mode == Data::$encodingModes['ST']) {
-            return 0;
-        }
-        if ($this->version <= 9) {
-            $len = 0;
-        } elseif ($this->version <= 26) {
-            $len = 1;
-        } else {
-            $len = 2;
-        }
-        return Data::$lengthTableBits[$mode][$len];
-    }
-
-    /**
      * Append one bitstream to another
      *
      * @param array $bitstream Original bitstream

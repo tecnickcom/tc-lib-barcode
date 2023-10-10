@@ -33,6 +33,18 @@ use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimate
 {
     /**
+     * Look up the alphabet-numeric conversion table (see JIS X0510:2004, pp.19)
+     *
+     * @param int $chr Character value
+     *
+     * @return value
+     */
+    public function lookAnTable($chr)
+    {
+        return (($chr > 127) ? -1 : Data::$anTable[$chr]);
+    }
+
+    /**
      * Append data to an input object.
      * The data is copied and appended to the input object.
      *

@@ -50,7 +50,7 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
     }
 
     /**
-     * Get the bars array
+     * Set the bars array.
      *
      * @throws BarcodeException in case of error
      */

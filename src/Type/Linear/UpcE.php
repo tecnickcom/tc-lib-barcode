@@ -149,7 +149,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
     }
 
     /**
-     * Get the bars array
+     * Set the bars array.
      *
      * @throws BarcodeException in case of error
      */

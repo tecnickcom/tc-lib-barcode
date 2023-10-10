@@ -42,7 +42,7 @@ class ImbPre extends \Com\Tecnick\Barcode\Type\Linear
     protected $format = 'IMBPRE';
 
     /**
-     * Get the bars array
+     * Set the bars array.
      *
      * @throws BarcodeException in case of error
      */

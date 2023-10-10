@@ -35,6 +35,113 @@ use Com\Tecnick\Color\Exception as ColorException;
 abstract class Convert
 {
     /**
+     * Barcode type (linear or square)
+     *
+     * @var string
+     */
+    protected $type = '';
+
+    /**
+     * Barcode format
+     *
+     * @var string
+     */
+    protected $format = '';
+
+    /**
+     * Array containing extra parameters for the specified barcode type
+     *
+     * @var array
+     */
+    protected $params;
+
+    /**
+     * Code to convert (barcode content)
+     *
+     * @var string
+     */
+    protected $code = '';
+
+    /**
+     * Resulting code after applying checksum etc.
+     *
+     * @var string
+     */
+    protected $extcode = '';
+
+    /**
+     * Total number of columns
+     *
+     * @var int
+     */
+    protected $ncols = 0;
+
+    /**
+     * Total number of rows
+     *
+     * @var int
+     */
+    protected $nrows = 1;
+
+    /**
+     * Array containing the position and dimensions of each barcode bar
+     * (x, y, width, height)
+     *
+     * @var array
+     */
+    protected $bars = array();
+
+    /**
+     * Barcode width
+     *
+     * @var float
+     */
+    protected $width;
+
+    /**
+     * Barcode height
+     *
+     * @var float
+     */
+    protected $height;
+
+    /**
+     * Additional padding to add around the barcode (top, right, bottom, left) in user units.
+     * A negative value indicates the multiplication factor for each row or column.
+     *
+     * @var array
+     */
+    protected $padding = array('T' => 0, 'R' => 0, 'B' => 0, 'L' => 0);
+
+    /**
+     * Ratio between the barcode width and the number of rows
+     *
+     * @var float
+     */
+    protected $width_ratio;
+
+    /**
+     * Ratio between the barcode height and the number of columns
+     *
+     * @var float
+     */
+    protected $height_ratio;
+
+    /**
+     * Foreground Color object
+     *
+     * @var Color object
+     */
+    protected $color_obj;
+
+    /**
+     * Backgorund Color object
+     *
+     * @var Color object
+     */
+    protected $bg_color_obj;
+
+    /**
      * Import a binary sequence of comma-separated 01 strings
      *
      * @param string $code Code to process

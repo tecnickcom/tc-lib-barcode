@@ -70,9 +70,7 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
     }
 
     /**
-     * Get the bars array
-     *
-     * @return array
+     * Set the bars array.
      *
      * @throws BarcodeException in case of error
      */

@@ -76,8 +76,6 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      *
      * @param string  $code      Data to compact
      * @param string  $codewords Codewords
-     *
-     * @return array of codewords
      */
     protected function processTextCompaction($code, &$codewords)
     {
@@ -117,8 +115,6 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      *
      * @param string  $code      Data to compact
      * @param string  $codewords Codewords
-     *
-     * @return array of codewords
      */
     protected function processByteCompaction($code, &$codewords)
     {
@@ -162,8 +158,6 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      *
      * @param string  $code      Data to compact
      * @param string  $codewords Codewords
-     *
-     * @return array of codewords
      */
     protected function processNumericCompaction($code, &$codewords)
     {

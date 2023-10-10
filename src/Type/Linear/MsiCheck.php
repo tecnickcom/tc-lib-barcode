@@ -104,9 +104,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
     }
 
     /**
-     * Get the bars array
-     *
-     * @return array
+     * Set the bars array.
      *
      * @throws BarcodeException in case of error
      */

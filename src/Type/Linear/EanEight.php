@@ -49,7 +49,7 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
     protected $code_length = 8;
 
     /**
-     * Get the bars array
+     * Set the bars array.
      *
      * @throws BarcodeException in case of error
      */

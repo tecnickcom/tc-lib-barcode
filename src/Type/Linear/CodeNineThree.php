@@ -209,7 +209,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
     }
 
     /**
-     * Get the bars array
+     * Set the bars array.
      *
      * @throws BarcodeException in case of error
      *

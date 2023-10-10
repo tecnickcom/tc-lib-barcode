@@ -36,20 +36,6 @@ use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
 class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
 {
     /**
-     * Store last used encoding for data codewords.
-     *
-     * @var int
-     */
-    public $last_enc;
-
-    /**
-     * Datamatrix shape key (S=square, R=rectangular)
-     *
-     * @var string
-     */
-    public $shape;
-
-    /**
      * Initialize a new encode object
      *
      * @param string $shape Datamatrix shape key (S=square, R=rectangular)

@@ -42,7 +42,7 @@ class Pharma extends \Com\Tecnick\Barcode\Type\Linear
     protected $format = 'PHARMA';
 
     /**
-     * Get the bars array
+     * Set the bars array.
      *
      * @throws BarcodeException in case of error
      */

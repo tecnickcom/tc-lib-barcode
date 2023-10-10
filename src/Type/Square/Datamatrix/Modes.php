@@ -34,6 +34,20 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
 abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placement
 {
     /**
+     * Store last used encoding for data codewords.
+     *
+     * @var int
+     */
+    public $last_enc;
+
+    /**
+     * Datamatrix shape key (S=square, R=rectangular)
+     *
+     * @var string
+     */
+    public $shape;
+
+    /**
      * Return the 253-state codeword
      *
      * @param int $cdwpad Pad codeword.
