@@ -37,7 +37,8 @@ class TestUtil extends TestCase
             parent::assertEqualsWithDelta($expected, $actual, $delta, $message);
             return;
         }
-        return $this->assertEquals($expected, $actual, $message, $delta);
+        /* @phpstan-ignore-next-line */
+        $this->assertEquals($expected, $actual, $message, $delta);
     }
 
     public function bcExpectException($exception)
@@ -46,6 +47,7 @@ class TestUtil extends TestCase
             parent::expectException($exception);
             return;
         }
-        return parent::setExpectedException($exception);
+        /* @phpstan-ignore-next-line */
+        parent::setExpectedException($exception);
     }
 }

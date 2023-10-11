@@ -35,10 +35,10 @@ abstract class MaskNum
     /**
      * Make Mask Number
      *
-     * @param int  $maskNo Mask number
-     * @param int  $width  Width
-     * @param int  $frame  Frame
-     * @param int  $mask   Mask
+     * @param int   $maskNo Mask number
+     * @param int   $width  Width
+     * @param array $frame  Frame
+     * @param int   $mask   Mask
      *
      * @return int mask number
      */

@@ -50,7 +50,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     /**
      * Blocks
      *
-     * @var array
+     * @var int
      */
     protected $blocks;
 
@@ -172,7 +172,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      * @param int $endfor
      * @param int $dlv
      * @param int $elv
-     * @param int $rsv
+     * @param array $rsv
      * @param int $eccPos
      * @param int $blockNo
      * @param int $dataPos

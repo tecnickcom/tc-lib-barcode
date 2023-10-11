@@ -223,7 +223,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     protected function appendPaddingBit($bstream)
     {
         if (is_null($bstream)) {
-            return null;
+            return array();
         }
         $bits = count($bstream);
         $specObj = new Spec();

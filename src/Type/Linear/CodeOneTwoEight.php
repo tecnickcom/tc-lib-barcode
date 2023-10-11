@@ -77,7 +77,6 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @param array  $sequence   Sequence to process
      * @param array  $code_data  Array of codepoints to alter
-     * @param string $code       Code to process
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
      * @param string $seq        Sequence current value
@@ -103,7 +102,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
                 $code_data[] = 101;
             }
         }
-        $this->getCodeDataA($code_data, $seq[1], $seq[2]);
+        $this->getCodeDataA($code_data, $seq[1], (int)$seq[2]);
     }
 
     /**
@@ -111,7 +110,6 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @param array  $sequence   Sequence to process
      * @param array  $code_data  Array of codepoints to alter
-     * @param string $code       Code to process
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
      * @param string $seq        Sequence current value
@@ -125,7 +123,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         } elseif ($sequence[($key - 1)][0] != 'B') {
             $this->processSequenceBB($sequence, $code_data, $key, $seq);
         }
-        $this->getCodeDataB($code_data, $seq[1], $seq[2]);
+        $this->getCodeDataB($code_data, $seq[1], (int)$seq[2]);
     }
 
     /**
@@ -133,7 +131,6 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @param array  $sequence   Sequence to process
      * @param array  $code_data  Array of codepoints to alter
-     * @param string $code       Code to process
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
      * @param string $seq        Sequence current value
@@ -172,7 +169,6 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @param array  $sequence   Sequence to process
      * @param array  $code_data  Array of codepoints to alter
-     * @param string $code       Code to process
      * @param int    $key        Sequence current key
      * @param string $seq        Sequence current value
      *
@@ -200,7 +196,6 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @param array  $sequence   Sequence to process
      * @param array  $code_data  Array of codepoints to alter
-     * @param string $code       Code to process
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
      * @param string $seq        Sequence current value

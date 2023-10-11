@@ -53,7 +53,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      * @param int $cdwpad Pad codeword.
      * @param int $cdwpos Number of data codewords from the beginning of encoded data.
      *
-     * @return pad codeword
+     * @return int
      */
     public function get253StateCodeword($cdwpad, $cdwpos)
     {

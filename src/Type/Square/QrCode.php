@@ -79,7 +79,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      * If false, checks all masks available,
      * otherwise the value indicates the number of masks to be checked, mask id are random
      *
-     * @var int
+     * @var int|bool
      */
     protected $random_mask = false;
 
@@ -229,7 +229,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      *
      * @param string $data Data
      *
-     * @return
+     * @return string
      */
     protected function toUpper($data)
     {

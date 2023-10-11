@@ -148,10 +148,10 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
     /**
      * Return BCH encoded format information pattern.
      *
-     * @param array $maskNo Mask number
-     * @param int   $level  Error correction level
+     * @param int $maskNo Mask number
+     * @param int $level  Error correction level
      *
-     * @return BCH encoded format information pattern
+     * @return int
      */
     public function getFormatInfo($maskNo, $level)
     {

@@ -68,9 +68,9 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Calculate the checksum
      *
-     * @param $code (string) code to represent.
+     * @param string $code Code to represent.
      *
-     * @return char checksum.
+     * @return int char checksum.
      */
     protected function getChecksum($code)
     {

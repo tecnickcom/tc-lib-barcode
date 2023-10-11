@@ -74,7 +74,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     /**
      * Datamatrix variant (N=default, GS1=FNC1 codeword in first place)
      *
-     * @var string
+     * @var bool
      */
     protected $gsonemode = false;
 

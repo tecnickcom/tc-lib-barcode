@@ -38,7 +38,7 @@ class ErrorCorrection
      * @param int   $numb Second number to multiply.
      * @param array $log  Log table.
      * @param array $alog Anti-Log table.
-     * @param array $ngf  Number of Factors of the Reed-Solomon polynomial.
+     * @param int   $ngf  Number of Factors of the Reed-Solomon polynomial.
      *
      * @return int product
      */
@@ -117,7 +117,7 @@ class ErrorCorrection
      * Generate the log ($log) and antilog ($alog) tables
      *
      * @param array $log  Log table
-     * @param arrya $alog Anti-Log table
+     * @param array $alog Anti-Log table
      * @param int   $ngf  Number of fields on log/antilog table (power of 2).
      * @param int   $vpp  The value of its prime modulus polynomial (301 for ECC200).
      */

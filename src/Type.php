@@ -16,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
 use Com\Tecnick\Color\Exception as ColorException;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type
@@ -177,7 +177,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @param string $color Color in Web notation (color name, or hexadecimal code, or CSS syntax)
      *
-     * @return Color object or null
+     * @return \Com\Tecnick\Color\Model\Rgb|null
      *
      * @throws ColorException in case of color error
      */
@@ -382,15 +382,15 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the barcode as PNG image (requires Imagick library)
      *
-     * @return object
+     * @return string
      *
      * @throws BarcodeException if the Imagick library is not installed
      */
     public function getPngDataImagick()
     {
         $img = new \Imagick();
-        $width = ceil($this->width + $this->padding['L'] + $this->padding['R']);
-        $height = ceil($this->height + $this->padding['T'] + $this->padding['B']);
+        $width = (int)ceil($this->width + $this->padding['L'] + $this->padding['R']);
+        $height = (int)ceil($this->height + $this->padding['T'] + $this->padding['B']);
         $img->newImage($width, $height, 'none', 'png');
         $barcode = new \imagickdraw();
         if ($this->bg_color_obj !== null) {
@@ -419,8 +419,8 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      */
     public function getGd()
     {
-        $width = ceil($this->width + $this->padding['L'] + $this->padding['R']);
-        $height = ceil($this->height + $this->padding['T'] + $this->padding['B']);
+        $width = (int)ceil($this->width + $this->padding['L'] + $this->padding['R']);
+        $height = (int)ceil($this->height + $this->padding['T'] + $this->padding['B']);
         $img = imagecreate($width, $height);
         if ($this->bg_color_obj === null) {
             $bgobj = clone $this->color_obj;
@@ -436,7 +436,14 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         $bar_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
         $bars = $this->getBarsArray('XYXY');
         foreach ($bars as $rect) {
-            imagefilledrectangle($img, floor($rect[0]), floor($rect[1]), floor($rect[2]), floor($rect[3]), $bar_color);
+            imagefilledrectangle(
+                $img,
+                (int)floor($rect[0]),
+                (int)floor($rect[1]),
+                (int)floor($rect[2]),
+                (int)floor($rect[3]),
+                $bar_color
+            );
         }
         return $img;
     }

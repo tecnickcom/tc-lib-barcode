@@ -37,7 +37,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      *
      * @param int $chr Character value
      *
-     * @return value
+     * @return int
      */
     public function lookAnTable($chr)
     {
@@ -124,7 +124,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * checkModeNum
      *
      * @param int $size
-     * @param int $data
+     * @param array $data
      *
      * @return boolean true or false
      */
@@ -142,7 +142,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * checkModeAn
      *
      * @param int $size
-     * @param int $data
+     * @param array $data
      *
      * @return boolean true or false
      */
@@ -160,7 +160,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * checkModeKanji
      *
      * @param int $size
-     * @param int $data
+     * @param array $data
      *
      * @return boolean true or false
      */

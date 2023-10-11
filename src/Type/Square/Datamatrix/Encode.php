@@ -48,7 +48,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
     /**
      * Encode ASCII
      *
-     * @param int    $cdw
+     * @param array  $cdw
      * @param int    $cdw_num
      * @param int    $pos
      * @param int    $data_length
@@ -100,7 +100,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      * Encode EDF4
      *
      * @param int    $epos
-     * @param int    $cdw
+     * @param array  $cdw
      * @param int    $cdw_num
      * @param int    $pos
      * @param int    $data_length
@@ -197,7 +197,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
     /**
      * Encode Base256
      *
-     * @param int    $cdw
+     * @param array  $cdw
      * @param int    $cdw_num
      * @param int    $pos
      * @param int    $data_length
@@ -230,7 +230,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
             $cdw[] = $this->get255StateCodeword($field_length, ($cdw_num + 1));
             ++$cdw_num;
         } else {
-            $cdw[] = $this->get255StateCodeword((floor($field_length / 250) + 249), ($cdw_num + 1));
+            $cdw[] = $this->get255StateCodeword(((int)floor($field_length / 250) + 249), ($cdw_num + 1));
             $cdw[] = $this->get255StateCodeword(($field_length % 250), ($cdw_num + 2));
             $cdw_num += 2;
         }

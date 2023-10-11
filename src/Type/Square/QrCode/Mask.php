@@ -37,7 +37,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * If false, checks all masks available,
      * otherwise the value indicates the number of masks to be checked, mask id are random
      *
-     * @var int
+     * @var bool
      */
     protected $qr_find_from_random = false;
 
@@ -213,15 +213,16 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
     }
 
     /**
-     * Evaluate Symbol
+     * Evaluate Symbol and returns demerit value.
      *
      * @param int   $width Width
      * @param array $frame Frame
      *
-     * @return int demerit
+     * @return int
      */
     protected function evaluateSymbol($width, $frame)
     {
+        $frameY = $frameYM = $frame[0];
         for ($ypos = 0; $ypos < $width; ++$ypos) {
             $frameY = $frame[$ypos];
             if ($ypos > 0) {
@@ -229,8 +230,8 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
             } else {
                 $frameYM = $frameY;
             }
-            $demerit = $this->evaluateSymbolB($ypos, $width, $frameY, $frameYM);
         }
+        $demerit = $this->evaluateSymbolB($ypos, $width, $frameY, $frameYM);
         for ($xpos = 0; $xpos < $width; ++$xpos) {
             $head = 0;
             $this->runLength[0] = 1;

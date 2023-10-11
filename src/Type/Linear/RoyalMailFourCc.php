@@ -132,9 +132,9 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Calculate the checksum.
      *
-     * @param $code (string) code to represent.
+     * @param string $code code to represent.
      *
-     * @return char checksum.
+     * @return int char checksum.
      *
      * @throws BarcodeException in case of error
      */

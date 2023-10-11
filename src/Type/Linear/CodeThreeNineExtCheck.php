@@ -150,7 +150,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @param string $code Code to extend
      *
-     * @return encoded string.
+     * @return string
      *
      * @throws BarcodeException in case of error
      */
@@ -171,9 +171,9 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Calculate CODE 39 checksum (modulo 43).
      *
-     * @param $code (string) code to represent.
+     * @param string $code Code to represent.
      *
-     * @return char checksum.
+     * @return string char checksum.
      */
     protected function getChecksum($code)
     {

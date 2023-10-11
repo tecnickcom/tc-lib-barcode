@@ -40,7 +40,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      *
      * @param int $chr
      * @param int $enc
-     * @param int $temp_cw
+     * @param array $temp_cw
      * @param int $ptr
      */
     public function encodeTXTC40shift(&$chr, &$enc, &$temp_cw, &$ptr)
@@ -69,7 +69,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      *
      * @param string $data
      * @param int    $enc
-     * @param int    $temp_cw
+     * @param array  $temp_cw
      * @param int    $ptr
      * @param int    $epos
      * @param array  $charset
@@ -106,10 +106,10 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * before the start of the error correction codewords.
      *
      * @param int    $chr
-     * @param int    $cdw
+     * @param array  $cdw
      * @param int    $cdw_num
      * @param int    $enc
-     * @param int    $temp_cw
+     * @param array  $temp_cw
      * @param int    $ptr
      * @param int    $epos
      */

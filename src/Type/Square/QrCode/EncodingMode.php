@@ -136,7 +136,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     protected function appendNum($bitstream, $bits, $num)
     {
         if ($bits == 0) {
-            return 0;
+            return array();
         }
         return $this->appendBitstream($bitstream, $this->newFromNum($bits, $num));
     }
@@ -153,7 +153,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     protected function appendBytes($bitstream, $size, $data)
     {
         if ($size == 0) {
-            return 0;
+            return array();
         }
         return $this->appendBitstream($bitstream, $this->newFromBytes($size, $data));
     }

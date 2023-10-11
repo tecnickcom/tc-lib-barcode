@@ -49,12 +49,9 @@ class CodeOneTwoEightA extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
     protected function getCodeData()
     {
         $code = $this->code;
-        // array of symbols
-        $code_data = array();
-        // length of the code
         $len = strlen($code);
-        $startid = 103;
+        $code_data = array();
         $this->getCodeDataA($code_data, $code, $len);
-        return $this->finalizeCodeData($code_data, $startid);
+        return $this->finalizeCodeData($code_data, 103);
     }
 }

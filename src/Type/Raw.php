@@ -37,7 +37,7 @@ class Raw extends \Com\Tecnick\Barcode\Type
     /**
      * Get the pre-formatted code
      *
-     * @return string
+     * @return array
      */
     protected function getCodeRows()
     {

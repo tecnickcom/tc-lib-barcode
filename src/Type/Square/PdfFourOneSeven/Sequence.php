@@ -153,7 +153,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
      *
      * @param string $code Data to process
      *
-     * @return bidimensional array containing characters and classification
+     * @return array
      */
     protected function getInputSequences($code)
     {

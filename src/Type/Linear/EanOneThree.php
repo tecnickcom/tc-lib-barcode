@@ -53,7 +53,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var int
      */
-    protected $check = '';
+    protected $check = 0;
 
     /**
      * Map characters to barcodes
@@ -120,9 +120,9 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Calculate checksum
      *
-     * @param $code (string) code to represent.
+     * @param string $code Code to represent.
      *
-     * @return char checksum.
+     * @return int char checksum.
      *
      * @throws BarcodeException in case of error
      */
@@ -155,7 +155,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
             // wrong check digit
             throw new BarcodeException('Invalid check digit: ' . $this->check);
         }
-        return '';
+        return 0;
     }
 
     /**

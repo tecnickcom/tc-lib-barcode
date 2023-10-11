@@ -160,14 +160,14 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map ASCII characters for code A (ASCII 00 - 95)
      *
-     * @var array
+     * @var string
      */
     protected $keys_a = '';
 
     /**
      * Map ASCII characters for code B (ASCII 32 - 127)
      *
-     * @var array
+     * @var string
      */
     protected $keys_b = '';
 
@@ -298,7 +298,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             $char_id = ord($char);
             if (($char_id >= 241) && ($char_id <= 244)) {
                 $code_data[] = $this->fnc_a[$char_id];
-            } elseif (($char_id >= 0) && ($char_id <= 95)) {
+            } elseif ($char_id <= 95) {
                 $code_data[] = strpos($this->keys_a, $char);
             } else {
                 throw new BarcodeException('Invalid character sequence');

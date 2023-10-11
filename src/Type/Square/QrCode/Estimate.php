@@ -60,19 +60,19 @@ abstract class Estimate
     /**
      * Return the size of length indicator for the mode and version
      *
-     * @param int $mode Encoding mode
+     * @param int $mode    Encoding mode
      * @param int $version Version
      *
      * @return int the size of the appropriate length indicator (bits).
      */
-    public function getLengthIndicator($mode)
+    public function getLengthIndicator($mode, $version)
     {
         if ($mode == Data::$encodingModes['ST']) {
             return 0;
         }
-        if ($this->version <= 9) {
+        if ($version <= 9) {
             $len = 0;
-        } elseif ($this->version <= 26) {
+        } elseif ($version <= 26) {
             $len = 1;
         } else {
             $len = 2;

@@ -98,7 +98,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
     /**
      * Return Reed-Solomon block code
      *
-     * @return array rsblocks
+     * @return int rsblocks
      */
     protected function getCode()
     {

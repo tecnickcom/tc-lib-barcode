@@ -162,9 +162,9 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
     /**
      * Calculate CODE 93 checksum (modulo 47).
      *
-     * @param $code (string) code to represent.
+     * @param string $code Code to represent.
      *
-     * @return char checksum.
+     * @return string char checksum.
      */
     protected function getChecksum($code)
     {

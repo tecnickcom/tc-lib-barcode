@@ -221,13 +221,13 @@ abstract class SpecRs
      *
      * @return array srctab
      */
-    public function qrstrset($srctab, $xpos, $ypos, $repl, $replLen = false)
+    public function qrstrset($srctab, $xpos, $ypos, $repl, $replLen = null)
     {
         $srctab[$ypos] = substr_replace(
             $srctab[$ypos],
-            ($replLen !== false) ? substr($repl, 0, $replLen) : $repl,
+            ($replLen !== null) ? substr($repl, 0, $replLen) : $repl,
             $xpos,
-            ($replLen !== false) ? $replLen : strlen($repl)
+            ($replLen !== null) ? $replLen : strlen($repl)
         );
         return $srctab;
     }
@@ -290,7 +290,7 @@ abstract class SpecRs
      *
      * @param int $version Version
      *
-     * @return BCH encoded version information pattern
+     * @return int
      */
     public function getVersionPattern($version)
     {

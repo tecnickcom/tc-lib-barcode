@@ -76,13 +76,12 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
                 }
             }
         }
-        throw new BarcodeException('LookAhead Error');
     }
 
     /**
      * Step K
      *
-     * @param int $numch
+     * @param array $numch
      *
      * @return int
      */
@@ -149,8 +148,8 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step L
      *
-     * @param int $chr
-     * @param int $numch
+     * @param int   $chr
+     * @param array $numch
      */
     protected function stepL($chr, &$numch)
     {
@@ -168,8 +167,8 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step M
      *
-     * @param int $chr
-     * @param int $numch
+     * @param int   $chr
+     * @param array $numch
      */
     protected function stepM($chr, &$numch)
     {
@@ -185,8 +184,8 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step N
      *
-     * @param int $chr
-     * @param int $numch
+     * @param int   $chr
+     * @param array $numch
      */
     protected function stepN($chr, &$numch)
     {
@@ -202,8 +201,8 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step O
      *
-     * @param int $chr
-     * @param int $numch
+     * @param int   $chr
+     * @param array $numch
      */
     protected function stepO($chr, &$numch)
     {
@@ -219,8 +218,8 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step P
      *
-     * @param int $chr
-     * @param int $numch
+     * @param int   $chr
+     * @param array $numch
      */
     protected function stepP($chr, &$numch)
     {
@@ -236,8 +235,8 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step Q
      *
-     * @param int $chr
-     * @param int $numch
+     * @param int   $chr
+     * @param array $numch
      */
     protected function stepQ($chr, &$numch)
     {
@@ -251,13 +250,13 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step R-f
      *
-     * @param int    $numch
+     * @param array  $numch
      * @param int    $pos
      * @param int    $data_length
      * @param int    $charscount
      * @param string $data
      *
-     * @return int   Encoding mode
+     * @return int|null   Encoding mode
      */
     protected function stepRf($numch, $pos, $data_length, $charscount, $data)
     {
@@ -278,10 +277,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
                     $tmpchr = ord($data[$ker]);
                     if ($this->isCharMode($tmpchr, Data::ENC_X12)) {
                         return Data::ENC_X12;
-                    } elseif (
-                        !($this->isCharMode($tmpchr, Data::ENC_X12)
-                        || $this->isCharMode($tmpchr, Data::ENC_C40))
-                    ) {
+                    } elseif ($this->isCharMode($tmpchr, Data::ENC_C40)) {
                         break;
                     }
                     ++$ker;
@@ -295,7 +291,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step R
      *
-     * @param int    $numch
+     * @param array  $numch
      * @param int    $pos
      * @param int    $data_length
      * @param int    $charscount

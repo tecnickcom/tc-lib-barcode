@@ -163,6 +163,8 @@ endif
 deps: ensuretarget
 	rm -rf ./vendor/*
 	($(COMPOSER) install -vvv --no-interaction)
+	curl --silent --show-error --fail --location --output ./vendor/phpstan.phar https://github.com/phpstan/phpstan/releases/download/1.10.38/phpstan.phar \
+	&& chmod +x ./vendor/phpstan.phar
 
 # Generate source code documentation
 .PHONY: doc
@@ -205,6 +207,7 @@ lint:
 	./vendor/bin/phpcs --ignore="./vendor/" --standard=phpcs.xml src test
 	./vendor/bin/phpmd src text codesize,unusedcode,naming,design --exclude vendor
 	./vendor/bin/phpmd test text unusedcode,naming
+	php -r 'exit((int)version_compare(PHP_MAJOR_VERSION, "7", ">"));' || ./vendor/phpstan.phar analyse
 
 # Run all tests and reports
 .PHONY: qa
@@ -250,7 +253,9 @@ tag:
 # Run unit tests
 .PHONY: test
 test:
-	./vendor/bin/phpunit --stderr test
+	cp phpunit.xml.dist phpunit.xml
+	./vendor/bin/phpunit --migrate-configuration || true
+	./vendor/bin/phpunit test
 
 # Remove all installed files
 .PHONY: uninstall

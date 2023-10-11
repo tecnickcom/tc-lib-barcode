@@ -220,7 +220,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         // Conversion of Routing Code
         switch (strlen($routing_code)) {
             case 0:
-                return 0;
+                return '0';
             case 5:
                 return bcadd($routing_code, '1');
             case 9:
@@ -249,9 +249,9 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         if (isset($code_arr[1])) {
             $binary_code = $this->getRoutingCode($code_arr[1]);
         }
-        $binary_code = bcmul($binary_code, 10);
+        $binary_code = bcmul($binary_code, '10');
         $binary_code = bcadd($binary_code, $tracking_number[0]);
-        $binary_code = bcmul($binary_code, 5);
+        $binary_code = bcmul($binary_code, '5');
         $binary_code = bcadd($binary_code, $tracking_number[1]);
         $binary_code .= substr($tracking_number, 2, 18);
         // convert to hexadecimal
@@ -270,11 +270,11 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         // convert binary data to codewords
         $codewords = array();
         $data = $this->convertHexToDec($binary_code_102bit);
-        $codewords[0] = bcmod($data, 636) * 2;
-        $data = bcdiv($data, 636);
+        $codewords[0] = bcmod($data, '636') * 2;
+        $data = bcdiv($data, '636');
         for ($pos = 1; $pos < 9; ++$pos) {
-            $codewords[$pos] = bcmod($data, 1365);
-            $data = bcdiv($data, 1365);
+            $codewords[$pos] = bcmod($data, '1365');
+            $data = bcdiv($data, '1365');
         }
         $codewords[9] = $data;
         if (($fcs >> 10) == 1) {
@@ -294,7 +294,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
             }
             if (($fcs & $bitmask) > 0) {
                 // bitwise invert
-                $chrcode = ((~$chrcode) & 8191);
+                $chrcode = ((~(int)$chrcode) & 8191);
             }
             $characters[] = $chrcode;
             $bitmask /= 2;

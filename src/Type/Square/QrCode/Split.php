@@ -128,7 +128,7 @@ class Split
      */
     protected function eatNum($data)
     {
-        $lng = $this->bsObj->getLengthIndicator(Data::$encodingModes['NM']);
+        $lng = $this->bsObj->getLengthIndicator(Data::$encodingModes['NM'], $this->version);
         $pos = 0;
         while ($this->bsObj->isDigitAt($data, $pos)) {
             $pos++;
@@ -167,8 +167,8 @@ class Split
      */
     protected function eatAn($data)
     {
-        $lag = $this->bsObj->getLengthIndicator(Data::$encodingModes['AN']);
-        $lng = $this->bsObj->getLengthIndicator(Data::$encodingModes['NM']);
+        $lag = $this->bsObj->getLengthIndicator(Data::$encodingModes['AN'], $this->version);
+        $lng = $this->bsObj->getLengthIndicator(Data::$encodingModes['NM'], $this->version);
         $pos = 1 ;
         while ($this->bsObj->isAlphanumericAt($data, $pos)) {
             if ($this->bsObj->isDigitAt($data, $pos)) {
@@ -234,8 +234,8 @@ class Split
      */
     protected function eat8($data)
     {
-        $lag = $this->bsObj->getLengthIndicator(Data::$encodingModes['AN']);
-        $lng = $this->bsObj->getLengthIndicator(Data::$encodingModes['NM']);
+        $lag = $this->bsObj->getLengthIndicator(Data::$encodingModes['AN'], $this->version);
+        $lng = $this->bsObj->getLengthIndicator(Data::$encodingModes['NM'], $this->version);
         $pos = 1;
         $dataStrLen = strlen($data);
         while ($pos < $dataStrLen) {

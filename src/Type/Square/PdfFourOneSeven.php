@@ -78,7 +78,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     /**
      * Aspect ratio (width / height)
      *
-     * @var int
+     * @var float
      */
     protected $aspectratio = 2;
 
@@ -93,7 +93,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     /**
      * Information for macro block
      *
-     * @var int
+     * @var array
      */
     protected $macro = array();
 
@@ -271,7 +271,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     /**
      * Creates a PDF417 object as binary string
      *
-     * @return array barcode as binary string
+     * @return string barcode as binary string
      *
      * @throws BarcodeException in case of error
      */
@@ -296,6 +296,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         for ($rix = 0; $rix < $rows; ++$rix) {
             // row start code
             $row = $pstart;
+            $rval = $cval = 0;
             switch ($cid) {
                 case 0:
                     $rval = ((30 * intval($rix / 3)) + intval(($rows - 1) / 3));
