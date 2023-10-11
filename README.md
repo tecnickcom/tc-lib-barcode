@@ -3,7 +3,7 @@
 
 [![Latest Stable Version](https://poser.pugx.org/tecnickcom/tc-lib-barcode/version)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
 ![Build](https://github.com/tecnickcom/tc-lib-barcode/actions/workflows/check.yml/badge.svg)
-[![Coverage](https://coveralls.io/repos/tecnickcom/tc-lib-barcode/badge.svg?branch=main&service=github)](https://coveralls.io/github/tecnickcom/tc-lib-barcode?branch=main)
+[![Coverage](https://codecov.io/gh/tecnickcom/tc-lib-barcode/graph/badge.svg?token=PW6r97iVuW)](https://codecov.io/gh/tecnickcom/tc-lib-barcode)
 [![License](https://poser.pugx.org/tecnickcom/tc-lib-barcode/license)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
 [![Downloads](https://poser.pugx.org/tecnickcom/tc-lib-barcode/downloads)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
 
