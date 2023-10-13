@@ -50,7 +50,7 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
         // $sub is the new submode
         if (
             ((($idx + 1) == $codelen) || ((($idx + 1) < $codelen)
-            && (array_search(ord($code[($idx + 1)]), Data::$textsubmodes[$submode]) !== false)))
+            && (array_search(ord($code[($idx + 1)]), Data::TEXT_SUB_MODES[$submode]) !== false)))
             && (($sub == 3) || (($sub == 0) && ($submode == 1)))
         ) {
             // shift (temporary change only for this char)
@@ -63,7 +63,7 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
             }
         } else {
             // latch
-            $txtarr = array_merge($txtarr, Data::$textlatch['' . $submode . $sub]);
+            $txtarr = array_merge($txtarr, Data::TEXT_LATCH['' . $submode . $sub]);
             // set new submode
             $submode = $sub;
         }
@@ -84,14 +84,14 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
         $codelen = strlen($code);
         for ($idx = 0; $idx < $codelen; ++$idx) {
             $chval = ord($code[$idx]);
-            if (($key = array_search($chval, Data::$textsubmodes[$submode])) !== false) {
+            if (($key = array_search($chval, Data::TEXT_SUB_MODES[$submode])) !== false) {
                 // we are on the same sub-mode
                 $txtarr[] = $key;
             } else {
                 // the sub-mode is changed
                 for ($sub = 0; $sub < 4; ++$sub) {
                     // search new sub-mode
-                    if (($sub != $submode) && (($key = array_search($chval, Data::$textsubmodes[$sub])) !== false)) {
+                    if (($sub != $submode) && (($key = array_search($chval, Data::TEXT_SUB_MODES[$sub])) !== false)) {
                         $this->processTextCompactionSub($txtarr, $submode, $sub, $code, $key, $idx, $codelen);
                         break;
                     }

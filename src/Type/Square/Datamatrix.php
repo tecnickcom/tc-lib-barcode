@@ -86,10 +86,12 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected function setParameters()
     {
         parent::setParameters();
+
         // shape
         if (isset($this->params[0]) && ($this->params[0] == 'R')) {
             $this->shape = 'R';
         }
+
         // mode
         if (isset($this->params[1]) && ($this->params[1] == 'GS1')) {
             $this->gsonemode = true;

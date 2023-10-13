@@ -103,14 +103,17 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     protected function setParameters()
     {
         parent::setParameters();
+
         // aspect ratio
         if (!empty($this->params[0]) && (($aspectratio = floatval($this->params[0])) >= 1)) {
             $this->aspectratio = $aspectratio;
         }
+
         // error correction level (auto)
         if (isset($this->params[1]) && (($ecl = intval($this->params[1])) >= 0) && ($ecl <= 8)) {
             $this->ecl = $ecl;
         }
+
         // macro block
         $this->setMacroBlockParam();
     }
@@ -283,7 +286,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         $codewords = $this->getCodewords($rows, $cols, $ecl);
         $barcode = '';
         // add horizontal quiet zones to start and stop patterns
-        $pstart = str_repeat('0', $this->quiet_horizontal) . Data::$start_pattern;
+        $pstart = str_repeat('0', $this->quiet_horizontal) . Data::START_PATTERN;
         $this->nrows = ($rows * $this->row_height) + (2 * $this->quiet_vertical);
         $this->ncols = (($cols + 2) * 17) + 35 + (2 * $this->quiet_horizontal);
         // build rows for vertical quiet zone
@@ -312,16 +315,16 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
                     break;
             }
             // left row indicator
-            $row .= sprintf('%17b', Data::$clusters[$cid][$rval]);
+            $row .= sprintf('%17b', Data::CLUSTERS[$cid][$rval]);
             // for each column
             for ($cix = 0; $cix < $cols; ++$cix) {
-                $row .= sprintf('%17b', Data::$clusters[$cid][$codewords[$kcw]]);
+                $row .= sprintf('%17b', Data::CLUSTERS[$cid][$codewords[$kcw]]);
                 ++$kcw;
             }
             // right row indicator
-            $row .= sprintf('%17b', Data::$clusters[$cid][$cval]);
+            $row .= sprintf('%17b', Data::CLUSTERS[$cid][$cval]);
             // row stop code
-            $row .= Data::$stop_pattern . str_repeat('0', $this->quiet_horizontal);
+            $row .= Data::STOP_PATTERN . str_repeat('0', $this->quiet_horizontal);
             $brow = ',' . str_repeat($row, $this->row_height);
             $barcode .= $brow;
             ++$cid;

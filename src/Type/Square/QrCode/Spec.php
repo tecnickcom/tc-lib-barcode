@@ -42,7 +42,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function getDataLength($version, $level)
     {
-        return (Data::$capacity[$version][Data::QRCAP_WORDS] - Data::$capacity[$version][Data::QRCAP_EC][$level]);
+        return (Data::CAPACITY[$version][Data::QRCAP_WORDS] - Data::CAPACITY[$version][Data::QRCAP_EC][$level]);
     }
 
     /**
@@ -55,7 +55,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function getECCLength($version, $level)
     {
-        return Data::$capacity[$version][Data::QRCAP_EC][$level];
+        return Data::CAPACITY[$version][Data::QRCAP_EC][$level];
     }
 
     /**
@@ -67,7 +67,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function getWidth($version)
     {
-        return Data::$capacity[$version][Data::QRCAP_WIDTH];
+        return Data::CAPACITY[$version][Data::QRCAP_WIDTH];
     }
 
     /**
@@ -79,7 +79,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function getRemainder($version)
     {
-        return Data::$capacity[$version][Data::QRCAP_REMINDER];
+        return Data::CAPACITY[$version][Data::QRCAP_REMINDER];
     }
 
     /**
@@ -92,7 +92,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function maximumWords($mode, $version)
     {
-        if ($mode == Data::$encodingModes['ST']) {
+        if ($mode == Data::ENC_MODES['ST']) {
             return 3;
         }
         if ($version <= 9) {
@@ -102,9 +102,9 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
         } else {
             $lval = 2;
         }
-        $bits = Data::$lengthTableBits[$mode][$lval];
+        $bits = Data::LEN_TABLE_BITS[$mode][$lval];
         $words = (1 << $bits) - 1;
-        if ($mode == Data::$encodingModes['KJ']) {
+        if ($mode == Data::ENC_MODES['KJ']) {
             $words *= 2; // the number of bytes is required
         }
         return $words;
@@ -125,14 +125,14 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
         if (count($spec) < 5) {
             $spec = array(0, 0, 0, 0, 0);
         }
-        $bv1 = Data::$eccTable[$version][$level][0];
-        $bv2 = Data::$eccTable[$version][$level][1];
+        $bv1 = Data::ECC_TABLE[$version][$level][0];
+        $bv2 = Data::ECC_TABLE[$version][$level][1];
         $data = $this->getDataLength($version, $level);
         $ecc = $this->getECCLength($version, $level);
         if ($bv2 == 0) {
             $spec[0] = $bv1;
-            $spec[1] = (int)($data / $bv1);
-            $spec[2] = (int)($ecc / $bv1);
+            $spec[1] = (int)($data / $bv1); /* @phpstan-ignore-line */
+            $spec[2] = (int)($ecc / $bv1); /* @phpstan-ignore-line */
             $spec[3] = 0;
             $spec[4] = 0;
         } else {
@@ -163,6 +163,6 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
         ) {
             return 0;
         }
-        return Data::$formatInfo[$level][$maskNo];
+        return Data::FORMAT_INFO[$level][$maskNo];
     }
 }

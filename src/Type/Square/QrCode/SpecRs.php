@@ -151,7 +151,7 @@ abstract class SpecRs
      */
     public function createFrame($version)
     {
-        $width = Data::$capacity[$version][Data::QRCAP_WIDTH];
+        $width = Data::CAPACITY[$version][Data::QRCAP_WIDTH];
         $frameLine = str_repeat("\0", $width);
         $frame = array_fill(0, $width, $frameLine);
         // Finder pattern
@@ -297,7 +297,7 @@ abstract class SpecRs
         if (($version < 7) || ($version > Data::QRSPEC_VERSION_MAX)) {
             return 0;
         }
-        return Data::$versionPattern[($version - 7)];
+        return Data::VERSION_PATTERN[($version - 7)];
     }
 
     /**
@@ -314,28 +314,28 @@ abstract class SpecRs
         if ($version < 2) {
             return $frame;
         }
-        $dval = Data::$alignmentPattern[$version][1] - Data::$alignmentPattern[$version][0];
+        $dval = Data::ALIGN_PATTERN[$version][1] - Data::ALIGN_PATTERN[$version][0];
         if ($dval < 0) {
             $wdt = 2;
         } else {
-            $wdt = (int)(($width - Data::$alignmentPattern[$version][0]) / $dval + 2);
+            $wdt = (int)(($width - Data::ALIGN_PATTERN[$version][0]) / $dval + 2);
         }
         if ($wdt * $wdt - 3 == 1) {
-            $psx = Data::$alignmentPattern[$version][0];
-            $psy = Data::$alignmentPattern[$version][0];
+            $psx = Data::ALIGN_PATTERN[$version][0];
+            $psy = Data::ALIGN_PATTERN[$version][0];
             $frame = $this->putAlignmentMarker($frame, $psx, $psy);
             return $frame;
         }
-        $cpx = Data::$alignmentPattern[$version][0];
+        $cpx = Data::ALIGN_PATTERN[$version][0];
         $wdo = $wdt - 1;
         for ($xpos = 1; $xpos < $wdo; ++$xpos) {
             $frame = $this->putAlignmentMarker($frame, 6, $cpx);
             $frame = $this->putAlignmentMarker($frame, $cpx, 6);
             $cpx += $dval;
         }
-        $cpy = Data::$alignmentPattern[$version][0];
+        $cpy = Data::ALIGN_PATTERN[$version][0];
         for ($y = 0; $y < $wdo; ++$y) {
-            $cpx = Data::$alignmentPattern[$version][0];
+            $cpx = Data::ALIGN_PATTERN[$version][0];
             for ($xpos = 0; $xpos < $wdo; ++$xpos) {
                 $frame = $this->putAlignmentMarker($frame, $cpx, $cpy);
                 $cpx += $dval;

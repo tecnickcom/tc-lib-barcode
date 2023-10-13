@@ -41,7 +41,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      */
     public function lookAnTable($chr)
     {
-        return (($chr > 127) ? -1 : Data::$anTable[$chr]);
+        return (($chr > 127) ? -1 : Data::AN_TABLE[$chr]);
     }
 
     /**
@@ -106,15 +106,15 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
             return false;
         }
         switch ($mode) {
-            case Data::$encodingModes['NM']:
+            case Data::ENC_MODES['NM']:
                 return $this->checkModeNum($size, $data);
-            case Data::$encodingModes['AN']:
+            case Data::ENC_MODES['AN']:
                 return $this->checkModeAn($size, $data);
-            case Data::$encodingModes['KJ']:
+            case Data::ENC_MODES['KJ']:
                 return $this->checkModeKanji($size, $data);
-            case Data::$encodingModes['8B']:
+            case Data::ENC_MODES['8B']:
                 return true;
-            case Data::$encodingModes['ST']:
+            case Data::ENC_MODES['ST']:
                 return true;
         }
         return false;

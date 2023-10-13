@@ -43,13 +43,13 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     public function getEncodingMode($data, $pos)
     {
         if (!isset($data[$pos])) {
-            return Data::$encodingModes['NL'];
+            return Data::ENC_MODES['NL'];
         }
         if ($this->isDigitAt($data, $pos)) {
-            return Data::$encodingModes['NM'];
+            return Data::ENC_MODES['NM'];
         }
         if ($this->isAlphanumericAt($data, $pos)) {
-            return Data::$encodingModes['AN'];
+            return Data::ENC_MODES['AN'];
         }
         return $this->getEncodingModeKj($data, $pos);
     }
@@ -64,13 +64,13 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      */
     protected function getEncodingModeKj($data, $pos)
     {
-        if (($this->hint == Data::$encodingModes['KJ']) && isset($data[($pos + 1)])) {
+        if (($this->hint == Data::ENC_MODES['KJ']) && isset($data[($pos + 1)])) {
             $word = ((ord($data[$pos]) << 8) | ord($data[($pos + 1)]));
             if ((($word >= 0x8140) && ($word <= 0x9ffc)) || (($word >= 0xe040) && ($word <= 0xebbf))) {
-                return Data::$encodingModes['KJ'];
+                return Data::ENC_MODES['KJ'];
             }
         }
-        return Data::$encodingModes['8B'];
+        return Data::ENC_MODES['8B'];
     }
 
     /**

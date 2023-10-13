@@ -193,19 +193,19 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
             $inputitem['bstream'] = $this->appendBitstream($inputitem['bstream'], $st2['bstream']);
         } else {
             switch ($inputitem['mode']) {
-                case Data::$encodingModes['NM']:
+                case Data::ENC_MODES['NM']:
                     $inputitem = $this->encodeModeNum($inputitem, $version);
                     break;
-                case Data::$encodingModes['AN']:
+                case Data::ENC_MODES['AN']:
                     $inputitem = $this->encodeModeAn($inputitem, $version);
                     break;
-                case Data::$encodingModes['8B']:
+                case Data::ENC_MODES['8B']:
                     $inputitem = $this->encodeMode8($inputitem, $version);
                     break;
-                case Data::$encodingModes['KJ']:
+                case Data::ENC_MODES['KJ']:
                     $inputitem = $this->encodeModeKanji($inputitem, $version);
                     break;
-                case Data::$encodingModes['ST']:
+                case Data::ENC_MODES['ST']:
                     $inputitem = $this->encodeModeStructure($inputitem);
                     break;
             }

@@ -121,17 +121,18 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
     protected function setParameters()
     {
         parent::setParameters();
+
         // level
-        if (!isset($this->params[0]) || !isset(Data::$errCorrLevels[$this->params[0]])) {
+        if (!isset($this->params[0]) || !isset(Data::ECC_LEVELS[$this->params[0]])) {
             $this->params[0] = 'L';
         }
-        $this->level = Data::$errCorrLevels[$this->params[0]];
+        $this->level = Data::ECC_LEVELS[$this->params[0]];
 
         // hint
-        if (!isset($this->params[1]) || !isset(Data::$encodingModes[$this->params[1]])) {
+        if (!isset($this->params[1]) || !isset(Data::ENC_MODES[$this->params[1]])) {
             $this->params[1] = '8B';
         }
-        $this->hint = Data::$encodingModes[$this->params[1]];
+        $this->hint = Data::ENC_MODES[$this->params[1]];
 
         // version
         if (!isset($this->params[2]) || ($this->params[2] < 0) || ($this->params[2] > Data::QRSPEC_VERSION_MAX)) {
@@ -238,7 +239,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
 
         while ($pos < $len) {
             $mode = $this->bsObj->getEncodingMode($data, $pos);
-            if ($mode == Data::$encodingModes['KJ']) {
+            if ($mode == Data::ENC_MODES['KJ']) {
                 $pos += 2;
             } else {
                 if ((ord($data[$pos]) >= ord('a')) && (ord($data[$pos]) <= ord('z'))) {

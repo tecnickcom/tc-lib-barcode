@@ -93,10 +93,8 @@ class Data
      * <li>data codewords per block</li>
      * <li>error codewords per block</li>
      * </ul></li></ul>
-     *
-     * @var array
      */
-    public static $symbattr = array(
+    const SYMBATTR = array(
         'S' => array( // square form
             // 10x10
             array(
@@ -675,10 +673,8 @@ class Data
 
         /**
         * Map encodation modes whit character sets.
-        *
-        * @var array
         */
-    public static $chset_id = array(
+    const CHSET_ID = array(
             self::ENC_C40 => 'C40',
             self::ENC_TXT => 'TXT',
             self::ENC_X12 => 'X12'
@@ -686,10 +682,8 @@ class Data
 
         /**
         * Basic set of characters for each encodation mode.
-        *
-        * @var array
         */
-    public static $chset = array(
+    const CHSET = array(
         'C40' => array( // Basic set for C40
             'S1' => 0x00,
             'S2' => 0x01,
@@ -960,7 +954,7 @@ class Data
      */
     public static function getPaddingSize($shape, $ncw)
     {
-        foreach (Data::$symbattr[$shape] as $params) {
+        foreach (Data::SYMBATTR[$shape] as $params) {
             if ($params[11] >= $ncw) {
                 return $params;
             }
