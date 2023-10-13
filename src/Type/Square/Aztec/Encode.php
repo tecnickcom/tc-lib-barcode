@@ -174,13 +174,8 @@ abstract class Encode
         }
     }
 
-    protected function isSupportedChar($ord)
+    protected function charModes($ord)
     {
-        for ($mode = 0; $mode < 5; $mode++) {
-            if (isset(DATA::CHAR_ENC[$mode][$ord])) {
-                return true;
-            }
-        }
-        return false;
+        return isset(DATA::CHAR_MODES[$ord]) ? DATA::CHAR_MODES[$ord] : array();
     }
 }
