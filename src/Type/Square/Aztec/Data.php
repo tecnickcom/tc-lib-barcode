@@ -71,7 +71,7 @@ class Data
     /**
      * Code character encoding for each mode.
      */
-    const CHARENC = array(
+    const CHAR_ENC = array(
         // MODE_UPPER (initial mode)
         0 => array(
             0,0,0,0,0,0,0,0,0,0,
@@ -354,7 +354,7 @@ class Data
      * Latch map for changing character encoding mode.
      * Numbers represent: [number of bits to change, latch code value].
      */
-    const LATCHMAP = array(
+    const LATCH_MAP = array(
         // MODE_UPPER
         0 => array (
           0 => array(), // UPPER
@@ -394,6 +394,52 @@ class Data
           2 => array(array(5,31),array(5,30)), // -> UPPER -> DIGIT
           3 => array(array(5,31),array(5,29)), // -> UPPER -> MIXED
           4 => array() // PUNCT
+      )
+    );
+
+    /**
+     * Shift map for changing character encoding mode.
+     */
+    const SHIFT_MAP = array(
+      // MODE_UPPER
+      0 => array(
+        0 => -1,
+        1 => -1,
+        2 => -1,
+        3 => -1,
+        4 =>  0 // -> PUNCT
+      ),
+      // MODE_LOWER
+      1 => array (
+        0 => 28, // -> UPPER
+        1 => -1,
+        2 => -1,
+        3 => -1,
+        4 =>  0 // -> PUNCT
+      ),
+      // MODE_DIGIT
+      2 => array (
+        0 => 15, // -> UPPER
+        1 => -1,
+        2 => -1,
+        3 => -1,
+        4 =>  0 // -> PUNCT
+      ),
+      // MODE_MIXED
+      3 => array (
+        0 => -1,
+        1 => -1,
+        2 => -1,
+        3 => -1,
+        4 =>  0 // -> PUNCT
+      ),
+      // MODE_PUNCT
+      4 => array (
+        0 => -1,
+        1 => -1,
+        2 => -1,
+        3 => -1,
+        4 => -1
       )
     );
 }
