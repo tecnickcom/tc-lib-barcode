@@ -46,7 +46,14 @@ abstract class Encode
      *
      * @var array
      */
-    protected $cdws = array();// -> MODE_adCdw
+    protected $cdws = array();
+
+    /**
+     * Temporary array of codewords.
+     *
+     * @var array
+     */
+    protected $tmpCdws = array();
 
     /**
      * Count the total number of bits.
@@ -62,39 +69,54 @@ abstract class Encode
      * @param int $eci The ECI mode to use.
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function getHighLevelEncoding($code, $eci = 0)
     {
         $this->addFLG($eci);
         $chars = array_values(unpack('C*', $code));
         $maxidx = (count($chars) - 1);
-        for ($idx = 0; $idx < $maxidx; $idx += 2) {
-            $chr = $chars[$idx];
-            $nextchr = $chars[($idx + 1)];
-            $pmode = $this->pairMode($chr, $nextchr);
-            if ($pmode > 0) {
-                // add PUNCT pair
-                // ...
-            } else {
-                // add chars
-                // ...
+        for ($idx = 0; $idx < $maxidx; $idx++) {
+            $ppairs = $this->countPunctPairs($chars, $idx, $maxidx);
+            if ($ppairs > 0) {
+                switch ($this->encmode) {
+                    case Data::MODE_PUNCT:
+                        break;
+                    case Data::MODE_MIXED:
+                        $this->addLatch(Data::MODE_PUNCT);
+                        break;
+                    case Data::MODE_UPPER:
+                    case Data::MODE_LOWER:
+                        if ($ppairs > 1) {
+                            $this->addLatch(Data::MODE_PUNCT);
+                        }
+                        break;
+                    case Data::MODE_DIGIT:
+                        if ($ppairs > 2) {
+                            $this->addLatch(Data::MODE_PUNCT);
+                        }
+                        break;
+                }
+                $this->mergeTmpCwd(Data::MODE_PUNCT);
+                $idx += ($ppairs * 2);
             }
         }
-        return $this-> $cdws;
+        return $this->cdws;
     }
 
     /**
      * Returns the PUNCT two-bytes code if the given two characters are a punctuation pair.
      * Punct codes 2–5 encode two bytes each.
      *
-     * @param int $chr The current curacter code.
-     * @param int $nextchr The next character code.
+     * @param int $ord The current curacter code.
+     * @param int $next The next character code.
      *
      * @return int
      */
-    protected function pairMode($chr, $nextchr)
+    protected function punctPairMode($ord, $next)
     {
-        $key = (($chr << 8) + $nextchr);
+        $key = (($ord << 8) + $next);
         switch ($key) {
             case ((13 << 8) + 10): // '\r\n' (CR LF)
                 return 2;
@@ -105,9 +127,26 @@ abstract class Encode
             case ((58 << 8) + 32): // ': ' (: SP)
                 return 5;
         }
-        return 0;
+        return 0; // no punct pair
     }
 
+    protected function countPunctPairs(&$chars, $idx, $maxidx)
+    {
+        $this->tmpCdws = array();
+        $pairs = 0;
+        while ($idx < $maxidx) {
+            $ord = $chars[$idx];
+            $next = $chars[($idx + 1)];
+            $pmode = $this->punctPairMode($ord, $next);
+            if ($pmode == 0) {
+                return $pairs;
+            }
+            $this->tmpCdws[] = array(5, $pmode);
+            $pairs++;
+            $idx += 2;
+        }
+        return $pairs;
+    }
 
     protected function charEnc($mode, $ord)
     {
@@ -116,8 +155,35 @@ abstract class Encode
 
     protected function addRawCwd($bits, $value)
     {
-        $this->$cdws[] = array($bits, $value);
+        $this->cdws[] = array($bits, $value);
         $this->totbits += $bits;
+    }
+
+    protected function mergeTmpCwdWithShift($mode)
+    {
+        foreach ($this->tmpCdws as $item) {
+            $this->addShift($mode);
+            $this->cdws[] = $item;
+            $this->totbits += $item[0];
+        }
+    }
+
+    protected function mergeTmpCwdRaw()
+    {
+        foreach ($this->tmpCdws as $item) {
+            $this->cdws[] = $item;
+            $this->totbits += $item[0];
+        }
+    }
+
+    protected function mergeTmpCwd($mode = -1)
+    {
+        if (($mode < 0) || ($this->encmode == $mode)) {
+            $this->mergeTmpCwdRaw();
+        } else {
+            $this->mergeTmpCwdWithShift($mode);
+        }
+        $this->tmpCdws = array();
     }
 
     protected function addCdw($mode, $value)
@@ -127,12 +193,12 @@ abstract class Encode
 
     protected function addLatch($mode)
     {
-        if ($mode == $this->$encmode) {
+        if ($this->encmode == $mode) {
             return;
         }
-        $latch = Data::LATCH_MAP[$this->$encmode][$mode];
+        $latch = Data::LATCH_MAP[$this->encmode][$mode];
         foreach ($latch as $cdw) {
-            $this->$cdws[] = $cdw;
+            $this->cdws[] = $cdw;
             $this->totbits += $cdw[0];
         }
         $this->encmode = $mode;
@@ -140,15 +206,15 @@ abstract class Encode
 
     protected function addShift($mode)
     {
-        if ($this->$encmode == $mode) {
-            return $this->$encmode;
+        if ($this->encmode == $mode) {
+            return $this->encmode;
         }
-        $shift = Data::SHIFT_MAP[$this->$encmode][$mode];
+        $shift = Data::SHIFT_MAP[$this->encmode][$mode];
         if (empty($shift)) {
-            return $this->$encmode;
+            return $this->encmode;
         }
         foreach ($shift as $cdw) {
-            $this->$cdws[] = $cdw;
+            $this->cdws[] = $cdw;
             $this->totbits += $cdw[0];
         }
     }
@@ -169,13 +235,13 @@ abstract class Encode
         for ($idx = 0; $idx < $digits; $idx++) {
             $this->addCdw(
                 Data::MODE_DIGIT,
-                charEnc(Data::MODE_DIGIT, ord($seci[$idx]))
+                $this->charEnc(Data::MODE_DIGIT, ord($seci[$idx]))
             );
         }
     }
 
-    protected function charModes($ord)
+    protected function charMode($ord)
     {
-        return isset(DATA::CHAR_MODES[$ord]) ? DATA::CHAR_MODES[$ord] : array();
+        return isset(DATA::CHAR_MODES[$ord]) ? DATA::CHAR_MODES[$ord] : -1;
     }
 }

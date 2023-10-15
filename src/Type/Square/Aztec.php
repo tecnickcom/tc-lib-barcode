@@ -130,7 +130,7 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         ) {
             $this->params[0] = 0;
         }
-        $this->$layers = intval($this->params[2]);
+        $this->layers = intval($this->params[2]);
 
         // eci code. Used to set the charset encoding. See $this->eci.
         if (
