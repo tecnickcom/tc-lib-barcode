@@ -59,7 +59,7 @@ abstract class Encode
 
     /**
      * Count the total number of bits.
-     *
+     *$chrlen
      * @var int
      */
     protected $totbits = 0;
@@ -76,29 +76,171 @@ abstract class Encode
     {
         $this->addFLG($eci);
         $chars = array_values(unpack('C*', $code));
-        $maxidx = (count($chars) - 1);
-        for ($idx = 0; $idx < $maxidx; $idx++) {
-            if ($this->processPunctPairs($chars, $idx, $maxidx)) {
+        $chrlen = count($chars);
+        for ($idx = 0; $idx < $chrlen; $idx++) {
+            if ($this->processBinaryChars($chars, $idx, $chrlen)) {
                 continue;
             }
+            if ($this->processPunctPairs($chars, $idx, $chrlen)) {
+                continue;
+            }
+            $this->processModeChars($chars, $idx, $chrlen);
         }
         return $this->cdws;
     }
 
     /**
-     * Process special Punctuation Pairs.
+     * Process mode characters.
      *
      * @param array $chars The array of characters.
      * @param int $idx The current character index.
-     * @param int $maxidx The maximum character index.
+     * @param int $chrlen The total numebr of characters to process.
+     */
+    protected function processModeChars(&$chars, &$idx, $chrlen)
+    {
+        $ord = $chars[$idx];
+        if ($this->isSameMode($this->encmode, $ord)) {
+            $mode = $this->encmode;
+        } else {
+            $mode = $this->charMode($ord);
+        }
+        $nchr = $this->countModeChars($chars, $idx, $chrlen, $mode);
+        if ($this->encmode != $mode) {
+            if (($nchr == 1) && (!empty(Data::SHIFT_MAP[$this->encmode][$mode]))) {
+                $this->addShift($mode);
+            } else {
+                $this->addLatch($mode);
+            }
+        }
+        $this->mergeTmpCwd();
+    }
+
+    /**
+    * Count consecutive characters in the same mode.
+    *
+    * @param array $chars The array of characters.
+    * @param int $idx The current character index.
+    * @param int $chrlen The total numebr of characters to process.
+    * @param int $mode The current mode.
+    *
+    * @return int
+    */
+    protected function countModeChars(&$chars, $idx, $chrlen, $mode)
+    {
+        $this->tmpCdws = array();
+        $nbits = Data::MODE_BITS[$mode];
+        $count = 0;
+        do {
+            $ord = $chars[$idx];
+            if (!$this->isSameMode($mode, $ord)) {
+                return $count;
+            }
+            $this->tmpCdws[] = array($nbits, $this->charEnc($mode, $ord));
+            $count++;
+            $idx++;
+        } while ($idx < $chrlen);
+        return $count;
+    }
+
+    /**
+     * Checks if current character is supported by the current code.
+     *
+     * @param int $mode The mode to check.
+     * @param int $ord The character ASCII value to compare against.
+     *
+     * @return bool Returns true if the mode is the same as the ordinal value, false otherwise.
+     */
+    protected function isSameMode($mode, $ord)
+    {
+        return (
+            ($mode == $this->charMode($ord))
+            || (($ord == 32) && ($mode != Data::MODE_PUNCT))
+            || (($mode == Data::MODE_PUNCT) && (($ord == 13) || ($ord == 44) || ($ord == 46)))
+        );
+    }
+
+    /**
+     * Process consecutive binary characters.
+     *
+     * @param array $chars The array of characters.
+     * @param int $idx The current character index.
+     * @param int $chrlen The total numebr of characters to process.
+     *
+     * @return bool True if binary characters have been found and processed.
+     */
+    protected function processBinaryChars(&$chars, &$idx, $chrlen)
+    {
+        $binchrs = $this->countBinaryChars($chars, $idx, $chrlen);
+        if ($binchrs == 0) {
+            return false;
+        }
+        $this->addShift(Data::MODE_BINARY);
+        if ($binchrs > 62) {
+            $this->addRawCwd(5, 0);
+            $this->addRawCwd(11, $binchrs);
+            $this->mergeTmpCwdRaw();
+            return true;
+        }
+        if ($binchrs > 31) {
+            $this->addRawCwd(5, 31);
+            for ($bcw = 0; $bcw < 31; $bcw++) {
+                $this->cdws[] = $this->tmpCdws[$bcw];
+                $this->totbits += 8;
+            }
+            $this->addShift(Data::MODE_BINARY);
+            $this->addRawCwd(5, ($binchrs - 31));
+            for ($bcw = 31; $bcw < $binchrs; $bcw++) {
+                $this->cdws[] = $this->tmpCdws[$bcw];
+                $this->totbits += 8;
+            }
+            return true;
+        }
+        $this->addRawCwd(5, $binchrs);
+        $this->mergeTmpCwdRaw();
+        return true;
+    }
+
+    /**
+    * Count consecutive binary characters.
+    *
+    * @param array $chars The array of characters.
+    * @param int $idx The current character index.
+    * @param int $chrlen The total numebr of characters to process.
+    *
+    * @return int
+    *
+    * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+    */
+    protected function countBinaryChars(&$chars, $idx, $chrlen)
+    {
+        $this->tmpCdws = array();
+        $count = 0;
+        while (($idx < $chrlen) && ($count < 2048)) {
+            $ord = $chars[$idx];
+            if ($this->charMode($ord) != Data::MODE_BINARY) {
+                return $count;
+            }
+            $this->tmpCdws[] = array(8, $ord);
+            $count++;
+            $idx++;
+        }
+        return $count;
+    }
+
+    /**
+     * Process consecutive special Punctuation Pairs.
+     *
+     * @param array $chars The array of characters.
+     * @param int $idx The current character index.
+     * @param int $chrlen The total numebr of characters to process.
      *
      * @return bool True if pair characters have been found and processed.
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function processPunctPairs(&$chars, &$idx, $maxidx)
+    protected function processPunctPairs(&$chars, &$idx, $chrlen)
     {
-        $ppairs = $this->countPunctPairs($chars, $idx, $maxidx);
+        $ppairs = $this->countPunctPairs($chars, $idx, $chrlen);
         if ($ppairs == 0) {
             return false;
         }
@@ -115,7 +257,7 @@ abstract class Encode
                 }
                 break;
             case Data::MODE_DIGIT:
-                $common = $this->countPunctAndDigitChars($chars, $idx, $maxidx);
+                $common = $this->countPunctAndDigitChars($chars, $idx, $chrlen);
                 if ($common < 6) {
                     $this->mergeTmpCwdRaw();
                     $idx += $common;
@@ -131,6 +273,32 @@ abstract class Encode
         $this->mergeTmpCwd(Data::MODE_PUNCT);
         $idx += ($ppairs * 2);
         return true;
+    }
+
+    /**
+     * Count consecutive special Punctuation Pairs.
+     *
+     * @param array $chars The array of characters.
+     * @param int $idx The current character index.
+     * @param int $chrlen The total numebr of characters to process.
+     *
+     * @return int
+     */
+    protected function countPunctPairs(&$chars, $idx, $chrlen)
+    {
+        $this->tmpCdws = array();
+        $pairs = 0;
+        $maxidx = $chrlen - 1;
+        while ($idx < $maxidx) {
+            $pmode = $this->punctPairMode($chars[$idx], $chars[($idx + 1)]);
+            if ($pmode == 0) {
+                return $pairs;
+            }
+            $this->tmpCdws[] = array(5, $pmode);
+            $pairs++;
+            $idx += 2;
+        }
+        return $pairs;
     }
 
     /**
@@ -158,22 +326,6 @@ abstract class Encode
         return 0; // no punct pair
     }
 
-    protected function countPunctPairs(&$chars, $idx, $maxidx)
-    {
-        $this->tmpCdws = array();
-        $pairs = 0;
-        while ($idx < $maxidx) {
-            $pmode = $this->punctPairMode($chars[$idx], $chars[($idx + 1)]);
-            if ($pmode == 0) {
-                return $pairs;
-            }
-            $this->tmpCdws[] = array(5, $pmode);
-            $pairs++;
-            $idx += 2;
-        }
-        return $pairs;
-    }
-
     /**
      * Returns true if the character is in common between the PUNCT and DIGIT modes.
      * Characters ' ' (32), '.' (46) and ',' (44) are in common between the PUNCT and DIGIT modes.
@@ -187,11 +339,20 @@ abstract class Encode
         return (($ord == 32) || ($ord == 44) || ($ord == 46));
     }
 
-    protected function countPunctAndDigitChars(&$chars, $idx, $maxidx)
+    /**
+     * Counts the number of consecutive charcters that are in both PUNCT or DIGIT modes.
+     *
+     * @param string &$chars The string to count the characters in.
+     * @param int $idx The starting index to count from.
+     * @param int $chrlen The length of the string to count.
+     *
+     * @return int The number of punctuation and digit characters in the string.
+     */
+    protected function countPunctAndDigitChars(&$chars, $idx, $chrlen)
     {
         $this->tmpCdws = array();
         $count = 0;
-        while ($idx < $maxidx) {
+        while ($idx < $chrlen) {
             $ord = $chars[$idx];
             if (!$this->isPunctAndDigitChar($ord)) {
                 return $count;
@@ -203,17 +364,25 @@ abstract class Encode
         return $count;
     }
 
+    /**
+     * Encodes a character using the specified mode and ordinal value.
+     *
+     * @param int $mode The encoding mode.
+     * @param int $ord The ordinal value of the character to encode.
+     *
+     * @return int The encoded character.
+     */
     protected function charEnc($mode, $ord)
     {
         return isset(DATA::CHAR_ENC[$mode][$ord]) ? DATA::CHAR_ENC[$mode][$ord] : 0;
     }
 
-    protected function addRawCwd($bits, $value)
-    {
-        $this->cdws[] = array($bits, $value);
-        $this->totbits += $bits;
-    }
-
+    /**
+     * Merges the temporary codewords array with the current codewords array.
+     * Shift to the specified mode.
+     *
+     * @param int $mode The encoding mode for the codewords.
+     */
     protected function mergeTmpCwdWithShift($mode)
     {
         foreach ($this->tmpCdws as $item) {
@@ -223,6 +392,10 @@ abstract class Encode
         }
     }
 
+    /**
+     * Merges the temporary codewords array with the current codewords array.
+     * No shift is performed.
+     */
     protected function mergeTmpCwdRaw()
     {
         foreach ($this->tmpCdws as $item) {
@@ -231,6 +404,12 @@ abstract class Encode
         }
     }
 
+    /**
+     * Merge temporary codewords with current codewords based on the encoding mode.
+     *
+     * @param int $mode The encoding mode to use for merging codewords.
+     *                  If negative, the current encoding mode will be used.
+     */
     protected function mergeTmpCwd($mode = -1)
     {
         if (($mode < 0) || ($this->encmode == $mode)) {
@@ -241,11 +420,34 @@ abstract class Encode
         $this->tmpCdws = array();
     }
 
+    /**
+     * Add a new Codeword.
+     *
+     * @param int $bits The number of bits in the codeword.
+     * @param int $value The value of the codeword.
+     */
+    protected function addRawCwd($bits, $value)
+    {
+        $this->cdws[] = array($bits, $value);
+        $this->totbits += $bits;
+    }
+
+    /**
+     * Adds a Codeword.
+     *
+     * @param int $mode The encoding mode.
+     * @param int $value The value to encode.
+     */
     protected function addCdw($mode, $value)
     {
         $this->addRawCwd(Data::MODE_BITS[$mode], $value);
     }
 
+    /**
+     * Latch to another mode.
+     *
+     * @param int $mode The new encoding mode.
+     */
     protected function addLatch($mode)
     {
         if ($this->encmode == $mode) {
@@ -259,6 +461,11 @@ abstract class Encode
         $this->encmode = $mode;
     }
 
+    /**
+     * Shift to another mode.
+     *
+     * @param int $mode The new encoding mode.
+     */
     protected function addShift($mode)
     {
         if ($this->encmode == $mode) {
@@ -274,6 +481,11 @@ abstract class Encode
         }
     }
 
+    /**
+     * Adds the FLG (Function Length Group) codeword to the data codewords.
+     *
+     * @param int $eci Extended Channel Interpretation value. If negative, the function does nothing.
+     */
     protected function addFLG($eci)
     {
         if ($eci < 0) {
@@ -295,8 +507,15 @@ abstract class Encode
         }
     }
 
+    /**
+     * Returns the character mode for a given ASCII code.
+     *
+     * @param int $ord The ASCII code of the character.
+     *
+     * @return int The character mode.
+     */
     protected function charMode($ord)
     {
-        return isset(DATA::CHAR_MODES[$ord]) ? DATA::CHAR_MODES[$ord] : -1;
+        return isset(DATA::CHAR_MODES[$ord]) ? DATA::CHAR_MODES[$ord] : Data::MODE_BINARY;
     }
 }
