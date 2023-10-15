@@ -31,6 +31,8 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @copyright   2023-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 abstract class Encode
 {
@@ -69,8 +71,6 @@ abstract class Encode
      * @param int $eci The ECI mode to use.
      *
      * @return array
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function getHighLevelEncoding($code, $eci = 0)
     {
@@ -78,31 +78,59 @@ abstract class Encode
         $chars = array_values(unpack('C*', $code));
         $maxidx = (count($chars) - 1);
         for ($idx = 0; $idx < $maxidx; $idx++) {
-            $ppairs = $this->countPunctPairs($chars, $idx, $maxidx);
-            if ($ppairs > 0) {
-                switch ($this->encmode) {
-                    case Data::MODE_PUNCT:
-                        break;
-                    case Data::MODE_MIXED:
-                        $this->addLatch(Data::MODE_PUNCT);
-                        break;
-                    case Data::MODE_UPPER:
-                    case Data::MODE_LOWER:
-                        if ($ppairs > 1) {
-                            $this->addLatch(Data::MODE_PUNCT);
-                        }
-                        break;
-                    case Data::MODE_DIGIT:
-                        if ($ppairs > 2) {
-                            $this->addLatch(Data::MODE_PUNCT);
-                        }
-                        break;
-                }
-                $this->mergeTmpCwd(Data::MODE_PUNCT);
-                $idx += ($ppairs * 2);
+            if ($this->processPunctPairs($chars, $idx, $maxidx)) {
+                continue;
             }
         }
         return $this->cdws;
+    }
+
+    /**
+     * Process special Punctuation Pairs.
+     *
+     * @param array $chars The array of characters.
+     * @param int $idx The current character index.
+     * @param int $maxidx The maximum character index.
+     *
+     * @return bool True if pair characters have been found and processed.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function processPunctPairs(&$chars, &$idx, $maxidx)
+    {
+        $ppairs = $this->countPunctPairs($chars, $idx, $maxidx);
+        if ($ppairs == 0) {
+            return false;
+        }
+        switch ($this->encmode) {
+            case Data::MODE_PUNCT:
+                break;
+            case Data::MODE_MIXED:
+                $this->addLatch(Data::MODE_PUNCT);
+                break;
+            case Data::MODE_UPPER:
+            case Data::MODE_LOWER:
+                if ($ppairs > 1) {
+                    $this->addLatch(Data::MODE_PUNCT);
+                }
+                break;
+            case Data::MODE_DIGIT:
+                $common = $this->countPunctAndDigitChars($chars, $idx, $maxidx);
+                if ($common < 6) {
+                    $this->mergeTmpCwdRaw();
+                    $idx += $common;
+                    return true;
+                }
+                if ($ppairs > 2) {
+                    $this->addLatch(Data::MODE_PUNCT);
+                }
+                break;
+            default:
+                return false;
+        }
+        $this->mergeTmpCwd(Data::MODE_PUNCT);
+        $idx += ($ppairs * 2);
+        return true;
     }
 
     /**
@@ -135,9 +163,7 @@ abstract class Encode
         $this->tmpCdws = array();
         $pairs = 0;
         while ($idx < $maxidx) {
-            $ord = $chars[$idx];
-            $next = $chars[($idx + 1)];
-            $pmode = $this->punctPairMode($ord, $next);
+            $pmode = $this->punctPairMode($chars[$idx], $chars[($idx + 1)]);
             if ($pmode == 0) {
                 return $pairs;
             }
@@ -146,6 +172,35 @@ abstract class Encode
             $idx += 2;
         }
         return $pairs;
+    }
+
+    /**
+     * Returns true if the character is in common between the PUNCT and DIGIT modes.
+     * Characters ' ' (32), '.' (46) and ',' (44) are in common between the PUNCT and DIGIT modes.
+     *
+     * @param int $ord Integer ASCII code of the character to check.
+     *
+     * @return bool
+     */
+    protected function isPunctAndDigitChar($ord)
+    {
+        return (($ord == 32) || ($ord == 44) || ($ord == 46));
+    }
+
+    protected function countPunctAndDigitChars(&$chars, $idx, $maxidx)
+    {
+        $this->tmpCdws = array();
+        $count = 0;
+        while ($idx < $maxidx) {
+            $ord = $chars[$idx];
+            if (!$this->isPunctAndDigitChar($ord)) {
+                return $count;
+            }
+            $this->tmpCdws[] = array(4, $this->charEnc(Data::MODE_DIGIT, $ord));
+            $count++;
+            $idx++;
+        }
+        return $count;
     }
 
     protected function charEnc($mode, $ord)
