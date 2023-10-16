@@ -69,14 +69,66 @@ abstract class Encode
      *
      * @param string $code The code to encode.
      * @param int $eci The ECI mode to use.
-     *
-     * @return array
      */
-    protected function getHighLevelEncoding($code, $eci = 0)
+    protected function highLevelEncoding($code, $eci = 0, $hint = 'A')
     {
         $this->addFLG($eci);
         $chars = array_values(unpack('C*', $code));
         $chrlen = count($chars);
+        if ($chrlen == 0) {
+            return;
+        }
+        if ($hint == 'B') {
+            $this->binaryEncode($chars, $chrlen);
+            return;
+        }
+        $this->autoEncode($chars, $chrlen);
+    }
+
+    /**
+     * Forced binary encoding for the given characters.
+     *
+     * @param array $chars  Integer ASCII values of the characters to encode.
+     * @param int   $chrlen Lenght of the $chars array.
+     */
+    protected function binaryEncode($chars, $chrlen)
+    {
+        $bits = Data::MODE_BITS[Data::MODE_BINARY];
+        $this->addShift(Data::MODE_BINARY);
+        if ($chrlen > 62) {
+            $this->addRawCwd(5, 0);
+            $this->addRawCwd(11, $chrlen);
+            for ($idx = 0; $idx < $chrlen; $idx++) {
+                $this->addRawCwd($bits, $chars[$idx]);
+            }
+            return;
+        }
+        if ($chrlen > 31) {
+            $this->addRawCwd(5, 31);
+            for ($idx = 0; $idx < 31; $idx++) {
+                $this->addRawCwd($bits, $chars[$idx]);
+            }
+            $this->addShift(Data::MODE_BINARY);
+            $this->addRawCwd(5, ($chrlen - 31));
+            for ($idx = 31; $idx < $chrlen; $idx++) {
+                $this->addRawCwd($bits, $chars[$idx]);
+            }
+            return;
+        }
+        $this->addRawCwd(5, $chrlen);
+        for ($idx = 0; $idx < $chrlen; $idx++) {
+            $this->addRawCwd($bits, $chars[$idx]);
+        }
+    }
+
+    /**
+     * Automatic encoding for the given characters.
+     *
+     * @param array $chars  Integer ASCII values of the characters to encode.
+     * @param int   $chrlen Lenght of the $chars array.
+     */
+    protected function autoEncode($chars, $chrlen)
+    {
         for ($idx = 0; $idx < $chrlen; $idx++) {
             if ($this->processBinaryChars($chars, $idx, $chrlen)) {
                 continue;
@@ -86,7 +138,6 @@ abstract class Encode
             }
             $this->processModeChars($chars, $idx, $chrlen);
         }
-        return $this->cdws;
     }
 
     /**
@@ -182,16 +233,17 @@ abstract class Encode
             return true;
         }
         if ($binchrs > 31) {
+            $nbits = Data::MODE_BITS[Data::MODE_BINARY];
             $this->addRawCwd(5, 31);
             for ($bcw = 0; $bcw < 31; $bcw++) {
                 $this->cdws[] = $this->tmpCdws[$bcw];
-                $this->totbits += 8;
+                $this->totbits += $nbits;
             }
             $this->addShift(Data::MODE_BINARY);
             $this->addRawCwd(5, ($binchrs - 31));
             for ($bcw = 31; $bcw < $binchrs; $bcw++) {
                 $this->cdws[] = $this->tmpCdws[$bcw];
-                $this->totbits += 8;
+                $this->totbits += $nbits;
             }
             return true;
         }
@@ -215,12 +267,13 @@ abstract class Encode
     {
         $this->tmpCdws = array();
         $count = 0;
+        $nbits = Data::MODE_BITS[Data::MODE_BINARY];
         while (($idx < $chrlen) && ($count < 2048)) {
             $ord = $chars[$idx];
             if ($this->charMode($ord) != Data::MODE_BINARY) {
                 return $count;
             }
-            $this->tmpCdws[] = array(8, $ord);
+            $this->tmpCdws[] = array($nbits, $ord);
             $count++;
             $idx++;
         }
@@ -342,7 +395,7 @@ abstract class Encode
     /**
      * Counts the number of consecutive charcters that are in both PUNCT or DIGIT modes.
      *
-     * @param string &$chars The string to count the characters in.
+     * @param array &$chars The string to count the characters in.
      * @param int $idx The starting index to count from.
      * @param int $chrlen The length of the string to count.
      *
