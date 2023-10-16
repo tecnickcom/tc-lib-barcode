@@ -63,6 +63,13 @@ abstract class Codeword
     protected $totbits = 0;
 
     /**
+     * Number of bits for the Error Correction Code.
+     *
+     * @var int
+     */
+    protected $eccbits = 0;
+
+    /**
      * Encodes a character using the specified mode and ordinal value.
      *
      * @param int $mode The encoding mode.

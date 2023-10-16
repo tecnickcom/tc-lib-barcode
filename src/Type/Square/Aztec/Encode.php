@@ -32,7 +32,7 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  */
-abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
+abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
 {
      /**
      * Returns the high-level encoding for the given code and ECI mode.

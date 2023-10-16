@@ -57,11 +57,11 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
     protected $hint = 'A';
 
     /**
-     * Number of layers (0 = auto)
+     * Number of user-forced layers (0 = auto)
      *
      * @var int
      */
-    protected $layers = 0;
+    protected $usrlayers = 0;
 
     /**
      * Extended Channel Interpretation (ECI) code.
@@ -102,7 +102,7 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         ) {
             $this->params[0] = 0;
         }
-        $this->layers = intval($this->params[2]);
+        $this->usrlayers = intval($this->params[2]);
 
         // eci code. Used to set the charset encoding. See $this->eci.
         if (!isset($this->params[3]) || !isset(Data::ECI[$this->params[3]])) {
