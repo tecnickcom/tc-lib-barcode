@@ -17,6 +17,7 @@
 namespace Com\Tecnick\Barcode\Type\Square;
 
 use Com\Tecnick\Barcode\Type\Square\Aztec\Data;
+use Com\Tecnick\Barcode\Type\Square\Aztec\Encode;
 use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
@@ -105,5 +106,6 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         if (strlen((string)$this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
+        //$this->enc = new Encode($this->code, $this->ecc, $this->eci, $this->hint);
     }
 }

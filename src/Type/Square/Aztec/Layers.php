@@ -99,13 +99,13 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
     }
 
     /**
-     * Computes the type and number of required layers.
+     * Computes the type and number of required layers and performs bit stuffing
      *
      * @param int $ecc The error correction level.
      *
      * @return bool Returns true if the size computation was successful, false otherwise.
      */
-    protected function computeSize($ecc)
+    protected function sizeAndBitStuffing($ecc)
     {
         $nsbits = 0;
         $eccbits = (11 + intval(($this->totbits * $ecc) / 100));
