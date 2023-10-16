@@ -117,11 +117,13 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
         } while (($nsbits + $eccbits) > $this->layer[3]);
         $this->bitstream = array();
         $this->mergeTmpCwdRaw();
+        // Note: bitStuffing() already pads the bitstream to a codeword boundary.
         return true;
     }
 
     /**
-     * Performs bit stuffing on the bitstream and store the results in the tmpCdws array.
+     * Bit-stuffing the bitstream into Reed–Solomon codewords.
+     * The resulting codewords are stored in the temporary tmpCdws array.
      *
      * @return int The number of bits in the bitstream after bit stuffing.
      */
