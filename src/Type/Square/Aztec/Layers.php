@@ -59,37 +59,98 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
      * Returns the minimum number of layers required.
      *
      * @param array $data Either the Data::SIZE_COMPACT or Data::SIZE_FULL array.
+     * @param int   $numbits The number of bits to encode.
      *
      * @return int
      */
-    protected function getMinLayers($data)
+    protected function getMinLayers($data, $numbits)
     {
-        if ($this->totbits > $data[count($data)][3]) {
+        if ($numbits > $data[count($data)][3]) {
             return 0;
         }
         foreach ($data as $numlayers => $size) {
-            if ($this->totbits <= $size[3]) {
+            if ($numbits <= $size[3]) {
                 return $numlayers;
             }
         }
         return 0;
     }
 
-    protected function computeSize($ecc)
+    /**
+     * Select the layer by the numebr of bits to encode.
+     *
+     * @param int   $numbits The number of bits to encode.
+     *
+     * @return bool Returns true if the size computation was successful, false otherwise.
+     */
+    protected function setLayerByBits($numbits)
     {
-        $this->eccbits = 11 + intval(($this->totbits * $ecc) / 100);
-        $this->totbits += $this->eccbits;
-
         $this->compact = true;
-        $this->numlayers = $this->getMinLayers(Data::SIZE_COMPACT);
+        $this->numlayers = $this->getMinLayers(Data::SIZE_COMPACT, $numbits);
         if ($this->numlayers == 0) {
             $this->compact = false;
-            $this->numlayers = $this->getMinLayers(Data::SIZE_FULL);
+            $this->numlayers = $this->getMinLayers(Data::SIZE_FULL, $numbits);
         }
         if ($this->numlayers == 0) {
-            throw new BarcodeException('Data too long for Aztec');
+            return false;
         }
-
         $this->layer = $this->compact ? Data::SIZE_COMPACT[$this->numlayers] : Data::SIZE_FULL[$this->numlayers];
+        return true;
+    }
+
+    /**
+     * Computes the type and number of required layers.
+     *
+     * @param int $ecc The error correction level.
+     *
+     * @return bool Returns true if the size computation was successful, false otherwise.
+     */
+    protected function computeSize($ecc)
+    {
+        $nsbits = 0;
+        $eccbits = (11 + intval(($this->totbits * $ecc) / 100));
+        do {
+            if ($this->setLayerByBits($this->totbits + $nsbits + $eccbits)) {
+                return false;
+            }
+            $nsbits = $this->bitStuffing();
+        } while (($nsbits + $eccbits) > $this->layer[3]);
+        $this->bitstream = array();
+        $this->mergeTmpCwdRaw();
+        return true;
+    }
+
+    /**
+     * Performs bit stuffing on the bitstream and store the results in the tmpCdws array.
+     *
+     * @return int The number of bits in the bitstream after bit stuffing.
+     */
+    protected function bitStuffing()
+    {
+        $this->tmpCdws = array();
+        $nsbits = 0;
+        $wsize = $this->layer[2];
+        $mask = ((1 << $wsize) - 2); // b-1 bits at 1 and last bit at 0
+        for ($wid = 0; $wid < $this->totbits; $wid += $wsize) {
+            $word = 0;
+            for ($idx = 0; $idx < $wsize; $idx++) {
+                $bid = ($wid + $idx);
+                if (($bid >= $this->totbits) || ($this->bitstream[$bid] == 1)) {
+                    $word |= (1 << ($wsize - 1 - $idx)); // the first bit is MSB
+                }
+            }
+            // If the first b−1 bits of a code word have the same value,
+            // an extra bit with the complementary value is inserted into the data stream.
+            if (($word & $mask) == $mask) {
+                $word &= $mask;
+                $wid--;
+            } elseif (($word & $mask) == 0) {
+                $word |= 1;
+                $wid--;
+            }
+            $this->tmpCdws[] = array($wsize, $word);
+            $nsbits += $wsize;
+        }
+        return $nsbits;
     }
 }

@@ -34,16 +34,6 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
 class Data
 {
     /**
-     * Maximum number of layers supported by the compact core.
-     */
-    const LAYERS_MAX_FULL_COMPACT = 4;
-
-    /**
-     * Maximum number of layers supported by the full core.
-     */
-    const LAYERS_MAX_FULL_MAX = 32;
-
-    /**
      * Code character encoding mode for uppercase letters.
      */
     const MODE_UPPER = 0;
