@@ -31,40 +31,10 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @copyright   2023-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
- *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-abstract class Encode
+abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
 {
-    /**
-     * Current character encoding mode.
-     *
-     * @var int
-     */
-    protected $encmode = Data::MODE_UPPER;
-
-    /**
-     * Array containing the high-level encoding codewords.
-     *
-     * @var array
-     */
-    protected $cdws = array();
-
-    /**
-     * Temporary array of codewords.
-     *
-     * @var array
-     */
-    protected $tmpCdws = array();
-
-    /**
-     * Count the total number of bits.
-     *$chrlen
-     * @var int
-     */
-    protected $totbits = 0;
-
-    /**
+     /**
      * Returns the high-level encoding for the given code and ECI mode.
      *
      * @param string $code The code to encode.
@@ -194,23 +164,6 @@ abstract class Encode
     }
 
     /**
-     * Checks if current character is supported by the current code.
-     *
-     * @param int $mode The mode to check.
-     * @param int $ord The character ASCII value to compare against.
-     *
-     * @return bool Returns true if the mode is the same as the ordinal value, false otherwise.
-     */
-    protected function isSameMode($mode, $ord)
-    {
-        return (
-            ($mode == $this->charMode($ord))
-            || (($ord == 32) && ($mode != Data::MODE_PUNCT))
-            || (($mode == Data::MODE_PUNCT) && (($ord == 13) || ($ord == 44) || ($ord == 46)))
-        );
-    }
-
-    /**
      * Process consecutive binary characters.
      *
      * @param array $chars The array of characters.
@@ -236,14 +189,12 @@ abstract class Encode
             $nbits = Data::MODE_BITS[Data::MODE_BINARY];
             $this->addRawCwd(5, 31);
             for ($bcw = 0; $bcw < 31; $bcw++) {
-                $this->cdws[] = $this->tmpCdws[$bcw];
-                $this->totbits += $nbits;
+                $this->addRawCwd($nbits, $this->tmpCdws[$bcw][1]);
             }
             $this->addShift(Data::MODE_BINARY);
             $this->addRawCwd(5, ($binchrs - 31));
             for ($bcw = 31; $bcw < $binchrs; $bcw++) {
-                $this->cdws[] = $this->tmpCdws[$bcw];
-                $this->totbits += $nbits;
+                $this->addRawCwd($nbits, $this->tmpCdws[$bcw][1]);
             }
             return true;
         }
@@ -355,44 +306,6 @@ abstract class Encode
     }
 
     /**
-     * Returns the PUNCT two-bytes code if the given two characters are a punctuation pair.
-     * Punct codes 2–5 encode two bytes each.
-     *
-     * @param int $ord The current curacter code.
-     * @param int $next The next character code.
-     *
-     * @return int
-     */
-    protected function punctPairMode($ord, $next)
-    {
-        $key = (($ord << 8) + $next);
-        switch ($key) {
-            case ((13 << 8) + 10): // '\r\n' (CR LF)
-                return 2;
-            case ((46 << 8) + 32): // '. ' (. SP)
-                return 3;
-            case ((44 << 8) + 32): // ', ' (, SP)
-                return 4;
-            case ((58 << 8) + 32): // ': ' (: SP)
-                return 5;
-        }
-        return 0; // no punct pair
-    }
-
-    /**
-     * Returns true if the character is in common between the PUNCT and DIGIT modes.
-     * Characters ' ' (32), '.' (46) and ',' (44) are in common between the PUNCT and DIGIT modes.
-     *
-     * @param int $ord Integer ASCII code of the character to check.
-     *
-     * @return bool
-     */
-    protected function isPunctAndDigitChar($ord)
-    {
-        return (($ord == 32) || ($ord == 44) || ($ord == 46));
-    }
-
-    /**
      * Counts the number of consecutive charcters that are in both PUNCT or DIGIT modes.
      *
      * @param array &$chars The string to count the characters in.
@@ -415,160 +328,5 @@ abstract class Encode
             $idx++;
         }
         return $count;
-    }
-
-    /**
-     * Encodes a character using the specified mode and ordinal value.
-     *
-     * @param int $mode The encoding mode.
-     * @param int $ord The ordinal value of the character to encode.
-     *
-     * @return int The encoded character.
-     */
-    protected function charEnc($mode, $ord)
-    {
-        return isset(DATA::CHAR_ENC[$mode][$ord]) ? DATA::CHAR_ENC[$mode][$ord] : 0;
-    }
-
-    /**
-     * Merges the temporary codewords array with the current codewords array.
-     * Shift to the specified mode.
-     *
-     * @param int $mode The encoding mode for the codewords.
-     */
-    protected function mergeTmpCwdWithShift($mode)
-    {
-        foreach ($this->tmpCdws as $item) {
-            $this->addShift($mode);
-            $this->cdws[] = $item;
-            $this->totbits += $item[0];
-        }
-    }
-
-    /**
-     * Merges the temporary codewords array with the current codewords array.
-     * No shift is performed.
-     */
-    protected function mergeTmpCwdRaw()
-    {
-        foreach ($this->tmpCdws as $item) {
-            $this->cdws[] = $item;
-            $this->totbits += $item[0];
-        }
-    }
-
-    /**
-     * Merge temporary codewords with current codewords based on the encoding mode.
-     *
-     * @param int $mode The encoding mode to use for merging codewords.
-     *                  If negative, the current encoding mode will be used.
-     */
-    protected function mergeTmpCwd($mode = -1)
-    {
-        if (($mode < 0) || ($this->encmode == $mode)) {
-            $this->mergeTmpCwdRaw();
-        } else {
-            $this->mergeTmpCwdWithShift($mode);
-        }
-        $this->tmpCdws = array();
-    }
-
-    /**
-     * Add a new Codeword.
-     *
-     * @param int $bits The number of bits in the codeword.
-     * @param int $value The value of the codeword.
-     */
-    protected function addRawCwd($bits, $value)
-    {
-        $this->cdws[] = array($bits, $value);
-        $this->totbits += $bits;
-    }
-
-    /**
-     * Adds a Codeword.
-     *
-     * @param int $mode The encoding mode.
-     * @param int $value The value to encode.
-     */
-    protected function addCdw($mode, $value)
-    {
-        $this->addRawCwd(Data::MODE_BITS[$mode], $value);
-    }
-
-    /**
-     * Latch to another mode.
-     *
-     * @param int $mode The new encoding mode.
-     */
-    protected function addLatch($mode)
-    {
-        if ($this->encmode == $mode) {
-            return;
-        }
-        $latch = Data::LATCH_MAP[$this->encmode][$mode];
-        foreach ($latch as $cdw) {
-            $this->cdws[] = $cdw;
-            $this->totbits += $cdw[0];
-        }
-        $this->encmode = $mode;
-    }
-
-    /**
-     * Shift to another mode.
-     *
-     * @param int $mode The new encoding mode.
-     */
-    protected function addShift($mode)
-    {
-        if ($this->encmode == $mode) {
-            return $this->encmode;
-        }
-        $shift = Data::SHIFT_MAP[$this->encmode][$mode];
-        if (empty($shift)) {
-            return $this->encmode;
-        }
-        foreach ($shift as $cdw) {
-            $this->cdws[] = $cdw;
-            $this->totbits += $cdw[0];
-        }
-    }
-
-    /**
-     * Adds the FLG (Function Length Group) codeword to the data codewords.
-     *
-     * @param int $eci Extended Channel Interpretation value. If negative, the function does nothing.
-     */
-    protected function addFLG($eci)
-    {
-        if ($eci < 0) {
-            return;
-        }
-        $this->addShift(Data::MODE_PUNCT);
-        if ($eci == 0) {
-            $this->addRawCwd(3, 0); // FNC1
-            return;
-        }
-        $seci = (string)$eci;
-        $digits = strlen($seci);
-        $this->addRawCwd(3, $digits); // 1–6 digits
-        for ($idx = 0; $idx < $digits; $idx++) {
-            $this->addCdw(
-                Data::MODE_DIGIT,
-                $this->charEnc(Data::MODE_DIGIT, ord($seci[$idx]))
-            );
-        }
-    }
-
-    /**
-     * Returns the character mode for a given ASCII code.
-     *
-     * @param int $ord The ASCII code of the character.
-     *
-     * @return int The character mode.
-     */
-    protected function charMode($ord)
-    {
-        return isset(DATA::CHAR_MODES[$ord]) ? DATA::CHAR_MODES[$ord] : Data::MODE_BINARY;
     }
 }
