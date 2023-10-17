@@ -53,9 +53,12 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
                 throw new BarcodeException('Data too long');
         }
 
+        $wsize = $this->layer[2];
+        $nbits = $this->layer[3];
+        $this->addCheckWords($this->tmpCdws, $this->bitstream, $this->totbits, $nbits, $wsize);
+
        // TODO:
-       //  - Appending check codewords.
-               // $this->tmpCwdToWords($numwords);
+       //  - mode message
        //  - Arranging the complete message in a spiral around the core.
     }
 
