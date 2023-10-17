@@ -17,6 +17,7 @@
 namespace Com\Tecnick\Barcode\Type\Square\Aztec;
 
 use Com\Tecnick\Barcode\Type\Square\Aztec\Data;
+use Com\Tecnick\Barcode\Type\Square\Aztec\ErrorCorrection;
 use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
@@ -51,9 +52,57 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         if (!$this->sizeAndBitStuffing($ecc)) {
                 throw new BarcodeException('Data too long');
         }
+
        // TODO:
        //  - Appending check codewords.
                // $this->tmpCwdToWords($numwords);
        //  - Arranging the complete message in a spiral around the core.
+    }
+
+    /**
+     * Returns the Check Codewords array for the given data words.
+     *
+     * @param array $cdw Array of codewords.
+     * @param array $bitstream Array of bits.
+     * @param int   $totbits   Number of bits in the bitstream.
+     * @param int   $nbits     Number of bits per layer.
+     * @param int   $wsize     Word size.
+     */
+    protected function addCheckWords(array &$cdw, array &$bitstream, &$totbits, $nbits, $wsize)
+    {
+        $nwords = count($cdw);
+        $totwords = intval($nbits / $wsize);
+        $eccwords = ($totwords - $nwords);
+        $ecc = new ErrorCorrection($wsize);
+        $checkwords = $ecc->checkwords($cdw, $eccwords);
+        // append check codewords
+        foreach ($checkwords as $val) {
+                $cdw[] = array($wsize, $val);
+                $this->appendWordToBitstream($bitstream, $totbits, $wsize, $val);
+        }
+        // insert start padding
+        $pad = intval($nbits % $wsize);
+        if ($pad > 0) {
+                array_unshift($cdw, array($pad, 0));
+                array_unshift($bitstream, array_fill(0, $pad, 0));
+        }
+    }
+
+    /**
+     * Convert a Codeword entry to a big-endian bit sequence array.
+     *
+     * @param array $cdw Array of codewords.
+     *
+     * return array
+     */
+    protected function codewordsToBits(array $cdw)
+    {
+        $bits = array();
+        foreach ($cdw as $item) {
+            for ($idx = ($item[0] - 1); $idx >= 0; $idx--) {
+                $bits[] = ($item[1] >> $idx) & 1;
+            }
+        }
+        return $bits;
     }
 }

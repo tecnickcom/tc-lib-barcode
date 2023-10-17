@@ -89,12 +89,10 @@ class ErrorCorrection
      *
      * @return array
      */
-    public function encode(array $data, $necc)
+    public function checkwords(array $data, $necc)
     {
-        array_splice($data, -$necc);
         $coeff = $this->getCoefficients($data, $necc);
-        $pad = array_pad($coeff, -$necc, 0);
-        return array_merge($data, $pad);
+        return array_pad($coeff, -$necc, 0);
     }
 
     /**

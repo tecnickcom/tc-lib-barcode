@@ -150,6 +150,80 @@ abstract class Codeword
     }
 
     /**
+     * Append a new Codeword as a big-endian bit sequence.
+     *
+     * @param array $bitstream Array of bits to append to.
+     * @param int   $totbits   Number of bits in the bitstream.
+     * @param int   $wsize     The number of bits in the codeword.
+     * @param int   $value     The value of the codeword.
+     */
+    protected function appendWordToBitstream(array &$bitstream, &$totbits, $wsize, $value)
+    {
+        $totbits += $wsize;
+        for ($idx = ($wsize - 1); $idx >= 0; $idx--) {
+            $bitstream[] = ($value >> $idx) & 1;
+        }
+    }
+
+    /**
+     * Add a new Codeword as a big-endian bit sequence.
+     *
+     * @param int $bits The number of bits in the codeword.
+     * @param int $value The value of the codeword.
+     */
+    protected function addRawCwd($bits, $value)
+    {
+        $this->appendWordToBitstream($this->bitstream, $this->totbits, $bits, $value);
+    }
+
+    /**
+     * Adds a Codeword.
+     *
+     * @param int $mode The encoding mode.
+     * @param int $value The value to encode.
+     */
+    protected function addCdw($mode, $value)
+    {
+        $this->addRawCwd(Data::MODE_BITS[$mode], $value);
+    }
+
+    /**
+     * Latch to another mode.
+     *
+     * @param int $mode The new encoding mode.
+     */
+    protected function addLatch($mode)
+    {
+        if ($this->encmode == $mode) {
+            return;
+        }
+        $latch = Data::LATCH_MAP[$this->encmode][$mode];
+        foreach ($latch as $cdw) {
+            $this->addRawCwd($cdw[0], $cdw[1]);
+        }
+        $this->encmode = $mode;
+    }
+
+    /**
+     * Shift to another mode.
+     *
+     * @param int $mode The new encoding mode.
+     */
+    protected function addShift($mode)
+    {
+        if ($this->encmode == $mode) {
+            return $this->encmode;
+        }
+        $shift = Data::SHIFT_MAP[$this->encmode][$mode];
+        if (empty($shift)) {
+            return $this->encmode;
+        }
+        foreach ($shift as $cdw) {
+            $this->addRawCwd($cdw[0], $cdw[1]);
+        }
+    }
+
+    /**
      * Merges the temporary codewords array with the current codewords array.
      * Shift to the specified mode.
      *
@@ -200,67 +274,6 @@ abstract class Codeword
             $this->mergeTmpCwdWithShift($mode);
         }
         $this->tmpCdws = array();
-    }
-
-    /**
-     * Add a new Codeword as a big-endian bit sequence.
-     *
-     * @param int $bits The number of bits in the codeword.
-     * @param int $value The value of the codeword.
-     */
-    protected function addRawCwd($bits, $value)
-    {
-        $this->totbits += $bits;
-        for ($idx = ($bits - 1); $idx >= 0; $idx--) {
-            $this->bitstream[] = ($value >> $idx) & 1;
-        }
-    }
-
-    /**
-     * Adds a Codeword.
-     *
-     * @param int $mode The encoding mode.
-     * @param int $value The value to encode.
-     */
-    protected function addCdw($mode, $value)
-    {
-        $this->addRawCwd(Data::MODE_BITS[$mode], $value);
-    }
-
-    /**
-     * Latch to another mode.
-     *
-     * @param int $mode The new encoding mode.
-     */
-    protected function addLatch($mode)
-    {
-        if ($this->encmode == $mode) {
-            return;
-        }
-        $latch = Data::LATCH_MAP[$this->encmode][$mode];
-        foreach ($latch as $cdw) {
-            $this->addRawCwd($cdw[0], $cdw[1]);
-        }
-        $this->encmode = $mode;
-    }
-
-    /**
-     * Shift to another mode.
-     *
-     * @param int $mode The new encoding mode.
-     */
-    protected function addShift($mode)
-    {
-        if ($this->encmode == $mode) {
-            return $this->encmode;
-        }
-        $shift = Data::SHIFT_MAP[$this->encmode][$mode];
-        if (empty($shift)) {
-            return $this->encmode;
-        }
-        foreach ($shift as $cdw) {
-            $this->addRawCwd($cdw[0], $cdw[1]);
-        }
     }
 
     /**
