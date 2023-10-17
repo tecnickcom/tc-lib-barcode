@@ -87,22 +87,4 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
                 array_unshift($bitstream, array_fill(0, $pad, 0));
         }
     }
-
-    /**
-     * Convert a Codeword entry to a big-endian bit sequence array.
-     *
-     * @param array $cdw Array of codewords.
-     *
-     * return array
-     */
-    protected function codewordsToBits(array $cdw)
-    {
-        $bits = array();
-        foreach ($cdw as $item) {
-            for ($idx = ($item[0] - 1); $idx >= 0; $idx--) {
-                $bits[] = ($item[1] >> $idx) & 1;
-            }
-        }
-        return $bits;
-    }
 }
