@@ -53,6 +53,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         }
        // TODO:
        //  - Appending check codewords.
+               // $this->tmpCwdToWords($numwords);
        //  - Arranging the complete message in a spiral around the core.
     }
 }

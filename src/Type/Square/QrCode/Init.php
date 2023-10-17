@@ -301,6 +301,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
             throw new BarcodeException('Invalid parameters');
         }
     }
+
     /**
      * Initialize a Reed-Solomon codec and returns an array of values.
      *

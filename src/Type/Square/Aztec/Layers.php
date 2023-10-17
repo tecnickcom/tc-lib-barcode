@@ -116,6 +116,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
             $nsbits = $this->bitStuffing();
         } while (($nsbits + $eccbits) > $this->layer[3]);
         $this->bitstream = array();
+        $this->totbits = 0;
         $this->mergeTmpCwdRaw();
         // Note: bitStuffing() already pads the bitstream to a codeword boundary.
         return true;
@@ -129,10 +130,10 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
      */
     protected function bitStuffing()
     {
-        $this->tmpCdws = array();
         $nsbits = 0;
         $wsize = $this->layer[2];
         $mask = ((1 << $wsize) - 2); // b-1 bits at 1 and last bit at 0
+        $this->tmpCdws = array();
         for ($wid = 0; $wid < $this->totbits; $wid += $wsize) {
             $word = 0;
             for ($idx = 0; $idx < $wsize; $idx++) {

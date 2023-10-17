@@ -56,6 +56,13 @@ abstract class Codeword
     protected $tmpCdws = array();
 
     /**
+     * Array of data words.
+     *
+     * @var array
+     */
+    protected $words = array();
+
+    /**
      * Count the total number of bits in the bitstream.
      *
      * @var int
@@ -164,6 +171,18 @@ abstract class Codeword
     {
         foreach ($this->tmpCdws as $item) {
             $this->addRawCwd($item[0], $item[1]);
+        }
+    }
+
+    /**
+     * Merges the temporary codewords array with the current codewords array.
+     * No shift is performed.
+     */
+    protected function tmpCwdToWords($numwords)
+    {
+        $this->words = array_fill(0, $numwords, 0);
+        foreach ($this->tmpCdws as $item) {
+            $this->words[] = $item[1];
         }
     }
 
