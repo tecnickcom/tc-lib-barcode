@@ -35,6 +35,13 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
 {
+    /**
+     * Grid containing the encoded data.
+     *
+     * @var array
+     */
+    protected $grid = array();
+
      /**
      * Aztec main encoder.
      *

@@ -116,7 +116,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      *
      * @param array $chars The array of characters.
      * @param int $idx The current character index.
-     * @param int $chrlen The total numebr of characters to process.
+     * @param int $chrlen The total number of characters to process.
      */
     protected function processModeChars(&$chars, &$idx, $chrlen)
     {
@@ -142,7 +142,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     *
     * @param array $chars The array of characters.
     * @param int $idx The current character index.
-    * @param int $chrlen The total numebr of characters to process.
+    * @param int $chrlen The total number of characters to process.
     * @param int $mode The current mode.
     *
     * @return int
@@ -169,7 +169,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      *
      * @param array $chars The array of characters.
      * @param int $idx The current character index.
-     * @param int $chrlen The total numebr of characters to process.
+     * @param int $chrlen The total number of characters to process.
      *
      * @return bool True if binary characters have been found and processed.
      */
@@ -179,11 +179,13 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         if ($binchrs == 0) {
             return false;
         }
+        $encmode = $this->encmode;
         $this->addShift(Data::MODE_BINARY);
         if ($binchrs > 62) {
             $this->addRawCwd(5, 0);
             $this->addRawCwd(11, $binchrs);
             $this->mergeTmpCwdRaw();
+            $this->encmode = $encmode;
             return true;
         }
         if ($binchrs > 31) {
@@ -197,10 +199,12 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             for ($bcw = 31; $bcw < $binchrs; $bcw++) {
                 $this->addRawCwd($nbits, $this->tmpCdws[$bcw][1]);
             }
+            $this->encmode = $encmode;
             return true;
         }
         $this->addRawCwd(5, $binchrs);
         $this->mergeTmpCwdRaw();
+        $this->encmode = $encmode;
         return true;
     }
 
@@ -209,7 +213,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     *
     * @param array $chars The array of characters.
     * @param int $idx The current character index.
-    * @param int $chrlen The total numebr of characters to process.
+    * @param int $chrlen The total number of characters to process.
     *
     * @return int
     *
@@ -237,7 +241,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      *
      * @param array $chars The array of characters.
      * @param int $idx The current character index.
-     * @param int $chrlen The total numebr of characters to process.
+     * @param int $chrlen The total number of characters to process.
      *
      * @return bool True if pair characters have been found and processed.
      *
@@ -285,7 +289,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      *
      * @param array $chars The array of characters.
      * @param int $idx The current character index.
-     * @param int $chrlen The total numebr of characters to process.
+     * @param int $chrlen The total number of characters to process.
      *
      * @return int
      */
