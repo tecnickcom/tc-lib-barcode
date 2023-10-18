@@ -36,7 +36,7 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
 class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
 {
     /**
-     * Grid containing the encoded data.
+     * Bidimensional grid containing the encoded data.
      *
      * @var array
      */
@@ -96,5 +96,50 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
                 array_unshift($cdw, array($pad, 0));
                 array_unshift($bitstream, array_fill(0, $pad, 0));
         }
+    }
+
+    protected function setGrid()
+    {
+        // initialize grid
+        $size = $this->layer[0];
+        $row = array_fill(0, $size, 0);
+        $this->grid = array_fill(0, $size, $row);
+        // draw center
+        $center = intval(($size - 1) / 2);
+        $this->grid[$center][$center] = 1;
+        // draw bulls-eye and reference patterns
+        $bewidth = $this->compact ? 11 : 15;
+        $bemid = intval(($bewidth - 1) / 2);
+        for ($rng = 2; $rng < $bemid; $rng += 2) {
+            // center cross points
+            $this->grid[($center + $rng)][($center)] = 1;
+            $this->grid[($center - $rng)][($center)] = 1;
+            $this->grid[($center)][($center + $rng)] = 1;
+            $this->grid[($center)][($center - $rng)] = 1;
+            // corner points
+            $this->grid[($center + $rng)][($center + $rng)] = 1;
+            $this->grid[($center + $rng)][($center - $rng)] = 1;
+            $this->grid[($center - $rng)][($center + $rng)] = 1;
+            $this->grid[($center - $rng)][($center - $rng)] = 1;
+            for ($pos = 1; $pos < $rng; $pos++) {
+                // horizontal points
+                $this->grid[($center + $rng)][($center + $pos)] = 1;
+                $this->grid[($center + $rng)][($center - $pos)] = 1;
+                $this->grid[($center - $rng)][($center + $pos)] = 1;
+                $this->grid[($center - $rng)][($center - $pos)] = 1;
+                // vertical points
+                $this->grid[($center + $pos)][($center + $rng)] = 1;
+                $this->grid[($center + $pos)][($center - $rng)] = 1;
+                $this->grid[($center - $pos)][($center + $rng)] = 1;
+                $this->grid[($center - $pos)][($center - $rng)] = 1;
+            }
+        }
+        // draw orientation patterns
+        $this->grid[($center - $bemid)][($center - $bemid)] = 1;
+        $this->grid[($center - $bemid)][($center - $bemid + 1)] = 1;
+        $this->grid[($center - $bemid)][($center + $bemid)] = 1;
+        $this->grid[($center - $bemid - 1)][($center - $bemid)] = 1;
+        $this->grid[($center - $bemid - 1)][($center + $bemid)] = 1;
+        $this->grid[($center + $bemid - 1)][($center + $bemid)] = 1;
     }
 }
