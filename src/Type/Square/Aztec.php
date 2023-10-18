@@ -58,8 +58,10 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
     protected $hint = 'A';
 
     /**
-     * Extended Channel Interpretation (ECI) code.
+     * Extended Channel Interpretation (ECI) code to be added at the beginning of the stream.
      * See Data:ECI for the list of supported codes.
+     * NOTE: Even if special FNC1 or ECI flag characters could be inserted
+     *       at any points in the stream, this will only be added at the beginning of the stream.
      *
      * @var int
      */

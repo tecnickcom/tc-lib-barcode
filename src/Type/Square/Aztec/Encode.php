@@ -83,7 +83,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
                 $cdw[] = array($wsize, $val);
                 $this->appendWordToBitstream($bitstream, $totbits, $wsize, $val);
         }
-        // insert start padding
+        // insert padding at the beginning of the codewords and bitstream
         $pad = intval($nbits % $wsize);
         if ($pad > 0) {
                 array_unshift($cdw, array($pad, 0));
