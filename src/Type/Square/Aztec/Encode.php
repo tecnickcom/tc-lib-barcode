@@ -42,6 +42,13 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected $grid = array();
 
+    /**
+     * Coordinate of the grid center.
+     *
+     * @var int
+     */
+    protected $gridcenter = 0;
+
      /**
      * Aztec main encoder.
      *
@@ -59,14 +66,15 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         if (!$this->sizeAndBitStuffing($ecc)) {
                 throw new BarcodeException('Data too long');
         }
+        $numcdw = count($this->tmpCdws);
         $wsize = $this->layer[2];
         $nbits = $this->layer[3];
         $this->addCheckWords($this->tmpCdws, $this->bitstream, $this->totbits, $nbits, $wsize);
         $this->setGrid();
+        $this->compact ? $this->drawModeCompact($numcdw) : $this->drawModeFull($numcdw);
 
        // TODO:
-       //  - mode message
-       //  - Arranging the complete message in a spiral around the core.
+       //  - add the complete message in a spiral around the core.
     }
 
     /**
@@ -98,6 +106,9 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         }
     }
 
+    /**
+     * Initialize the grid with all patterns.
+     */
     protected function setGrid()
     {
         // initialize grid
@@ -106,6 +117,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $this->grid = array_fill(0, $size, $row);
         // draw center
         $center = intval(($size - 1) / 2);
+        $this->gridcenter = $center;
         $this->grid[$center][$center] = 1;
         // draw finder pattern (bulls-eye)
         $bewidth = $this->compact ? 11 : 15;
@@ -144,7 +156,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         if ($this->compact) {
             return;
         }
-        // draw reference grid
+        // draw reference grid for full mode
         $halfsize = intval(($size - 1) / 2);
         // central cross
         for ($pos = 8; $pos <= $halfsize; $pos += 2) {
@@ -168,6 +180,87 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
                 $this->grid[($center + $pos)][($center - $ref)] = 1;
                 $this->grid[($center - $pos)][($center + $ref)] = 1;
                 $this->grid[($center - $pos)][($center - $ref)] = 1;
+            }
+        }
+    }
+
+    /**
+     * Add the compact mode message to the grid.
+     *
+     * @param int $numcdw Number of data codewords.
+     */
+    protected function drawModeCompact($numcdw)
+    {
+        $modecwd = array();
+        $modebs = array();
+        $nbits = 0;
+        $modecwd[] = array(2, ($this->numlayers - 1));
+        $this->appendWordToBitstream($modebs, $nbits, $modecwd[0][0], $modecwd[0][1]);
+        $modecwd[] = array(6, ($numcdw - 1));
+        $this->appendWordToBitstream($modebs, $nbits, $modecwd[1][0], $modecwd[1][1]);
+        $this->addCheckWords($modecwd, $modebs, $nbits, 28, 4);
+        // draw the mode message in the grid (7 bits per side clockwise)
+        $rowt = $coll = ($this->gridcenter - 5);
+        $rowl = $rowr = $colt = ($this->gridcenter - 3);
+        $rowb = $colr = ($this->gridcenter + 5);
+        $colb = ($this->gridcenter + 3);
+        for ($pos = 0; $pos < 7; $pos++) {
+            // top
+            if (!empty($modebs[$pos])) {
+                $this->grid[$rowt][($colt + $pos)] = 1;
+            }
+            // right
+            if (!empty($modebs[($pos + 7)])) {
+                $this->grid[($rowr + $pos)][$colr] = 1;
+            }
+            // bottom
+            if (!empty($modebs[($pos + 14)])) {
+                $this->grid[$rowb][($colb - $pos)] = 1;
+            }
+            // left
+            if (!empty($modebs[($pos + 21)])) {
+                $this->grid[($rowl - $pos)][$coll] = 1;
+            }
+        }
+    }
+
+    /**
+     * Add the full mode message to the grid.
+     *
+     * @param int $numcdw Number of data codewords.
+     */
+    protected function drawModeFull($numcdw)
+    {
+        $modecwd = array();
+        $modebs = array();
+        $nbits = 0;
+        $modecwd[] = array(5, ($this->numlayers - 1));
+        $this->appendWordToBitstream($modebs, $nbits, $modecwd[0][0], $modecwd[0][1]);
+        $modecwd[] = array(11, ($numcdw - 1));
+        $this->appendWordToBitstream($modebs, $nbits, $modecwd[1][0], $modecwd[1][1]);
+        $this->addCheckWords($modecwd, $modebs, $nbits, 40, 4);
+        // draw the mode message in the grid (10 bits per side clockwise)
+        $rowt = $coll = ($this->gridcenter - 7);
+        $rowl = $rowr = $colt = ($this->gridcenter - 5);
+        $rowb = $colr = ($this->gridcenter + 7);
+        $colb = ($this->gridcenter + 5);
+        for ($pos = 0; $pos < 10; $pos++) {
+            $skip = intval($pos / 5); // used to skip the center position
+            // top
+            if (!empty($modebs[$pos])) {
+                $this->grid[$rowt][($colt + $pos + $skip)] = 1;
+            }
+            // right
+            if (!empty($modebs[($pos + 7)])) {
+                $this->grid[($rowr + $pos + $skip)][$colr] = 1;
+            }
+            // bottom
+            if (!empty($modebs[($pos + 14)])) {
+                $this->grid[$rowb][($colb - $pos - $skip)] = 1;
+            }
+            // left
+            if (!empty($modebs[($pos + 21)])) {
+                $this->grid[($rowl - $pos - $skip)][$coll] = 1;
             }
         }
     }
