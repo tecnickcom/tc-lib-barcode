@@ -59,10 +59,10 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         if (!$this->sizeAndBitStuffing($ecc)) {
                 throw new BarcodeException('Data too long');
         }
-
         $wsize = $this->layer[2];
         $nbits = $this->layer[3];
         $this->addCheckWords($this->tmpCdws, $this->bitstream, $this->totbits, $nbits, $wsize);
+        $this->setGrid();
 
        // TODO:
        //  - mode message
@@ -107,7 +107,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         // draw center
         $center = intval(($size - 1) / 2);
         $this->grid[$center][$center] = 1;
-        // draw bulls-eye and reference patterns
+        // draw finder pattern (bulls-eye)
         $bewidth = $this->compact ? 11 : 15;
         $bemid = intval(($bewidth - 1) / 2);
         for ($rng = 2; $rng < $bemid; $rng += 2) {
@@ -141,5 +141,34 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $this->grid[($center - $bemid - 1)][($center - $bemid)] = 1;
         $this->grid[($center - $bemid - 1)][($center + $bemid)] = 1;
         $this->grid[($center + $bemid - 1)][($center + $bemid)] = 1;
+        if ($this->compact) {
+            return;
+        }
+        // draw reference grid
+        $halfsize = intval(($size - 1) / 2);
+        // central cross
+        for ($pos = 8; $pos <= $halfsize; $pos += 2) {
+            // horizontal
+            $this->grid[($center)][($center + $pos)] = 1;
+            $this->grid[($center)][($center - $pos)] = 1;
+            // vertical
+            $this->grid[($center + $pos)][($center)] = 1;
+            $this->grid[($center + $pos)][($center)] = 1;
+        }
+        // grid lines
+        for ($pos = 2; $pos <= $halfsize; $pos += 2) {
+            for ($ref = 16; $ref <= $halfsize; $ref += 16) {
+                // horizontal
+                $this->grid[($center + $ref)][($center + $pos)] = 1;
+                $this->grid[($center + $ref)][($center - $pos)] = 1;
+                $this->grid[($center - $ref)][($center + $pos)] = 1;
+                $this->grid[($center - $ref)][($center - $pos)] = 1;
+                // vertical
+                $this->grid[($center + $pos)][($center + $ref)] = 1;
+                $this->grid[($center + $pos)][($center - $ref)] = 1;
+                $this->grid[($center - $pos)][($center + $ref)] = 1;
+                $this->grid[($center - $pos)][($center - $ref)] = 1;
+            }
+        }
     }
 }
