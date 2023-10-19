@@ -279,6 +279,16 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     }
 
     /**
+     * Returns a bit from the end of the bitstream and update the index.
+     *
+     * @return int
+     */
+    protected function popBit(&$bit)
+    {
+        return (empty($this->bitstream[$bit--]) ? 0 : 1);
+    }
+
+    /**
      * Draw the data bitstream in the grid in Compact mode.
      */
     protected function drawDataCompact()
@@ -290,36 +300,36 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $bit = ($this->totbits - 1); // index of last bitstream bit (first to draw)
         for ($layer = 0; $layer < $this->numlayers; $layer++) {
             // top
-            $rowt = ($center + $srow); // top row offset from the center (LSB)
-            $colt = ($center + $scol); // top column offset from the center (LSB)
-            for ($pos = 0; $pos < $llen; $pos++) {
-                $this->grid[($rowt)][($colt + $pos)] = $this->popBit($bit);
-                $this->grid[($rowt - 1)][($colt + $pos)] = $this->popBit($bit);
+            $rowt = ($center + $srow);
+            $colt = ($center + $scol);
+            for ($pos = $colt; $pos < ($colt + $llen); $pos++) {
+                $this->grid[$rowt][$pos] = $this->popBit($bit);
+                $this->grid[($rowt - 1)][$pos] = $this->popBit($bit);
             }
             // right
-            $rowr = ($rowt + 1); // right row offset from the center (LSB)
-            $colr = ($colt + $llen - 2); // right column offset from the center (LSB)
-            for ($pos = 0; $pos < $llen; $pos++) {
-                $this->grid[($rowr + $pos)][($colr)] = $this->popBit($bit);
-                $this->grid[($rowr + $pos)][($colr + 1)] = $this->popBit($bit);
+            $rowr = ($rowt + 1);
+            $colr = ($colt + $llen - 2);
+            for ($pos = $rowr; $pos < ($rowr + $llen); $pos++) {
+                $this->grid[$pos][$colr] = $this->popBit($bit);
+                $this->grid[$pos][($colr + 1)] = $this->popBit($bit);
             }
             // bottom
-            $rowb = ($rowt + $llen - 1); // bottom row offset from the center (LSB)
-            $colb = ($colr - 1); // bottom column offset from the center (LSB)
-            for ($pos = 0; $pos < $llen; $pos++) {
-                $this->grid[($rowb)][($colb - $pos)] = $this->popBit($bit);
-                $this->grid[($rowb + 1)][($colb - $pos)] = $this->popBit($bit);
+            $rowb = ($rowt + $llen - 1);
+            $colb = ($colr - 1);
+            for ($pos = $colb; $pos > ($colb - $llen); $pos--) {
+                $this->grid[$rowb][$pos] = $this->popBit($bit);
+                $this->grid[($rowb + 1)][$pos] = $this->popBit($bit);
             }
             // left
-            $rowl = ($rowb - 1); // left row offset from the center (LSB)
-            $coll = ($colt - 1); // left column offset from the center (LSB)
-            for ($pos = 0; $pos < $llen; $pos++) {
-                $this->grid[($rowl - $pos)][($coll)] = $this->popBit($bit);
-                $this->grid[($rowl - $pos)][($coll - 1)] = $this->popBit($bit);
+            $rowl = ($rowb - 1);
+            $coll = ($colt - 1);
+            for ($pos = $rowl; $pos > $rowl - $llen; $pos--) {
+                $this->grid[$pos][$coll] = $this->popBit($bit);
+                $this->grid[$pos][($coll - 1)] = $this->popBit($bit);
             }
             $llen += 4;
-            $rowt -= 2;
-            $colt -= 2;
+            $srow -= 2;
+            $scol -= 2;
         }
     }
 
@@ -328,23 +338,54 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected function drawDataFull()
     {
-        // $center = $this->gridcenter;
-        // $llen = 17; // width of the first layer side
-        // $srow = -8; // start top row offset from the center (LSB)
-        // $scol = -7; // start top column offset from the center (LSB)
-        //
-        // $bit = ($this->totbits - 1); // index of last bitstream bit (first to draw)
-        // for ($layer = 0; $layer < $this->numlayers; $layer++) {
-        // }
-    }
-
-    /**
-     * Returns a bit from the end of the bitstream and update the index.
-     *
-     * @return int
-     */
-    protected function popBit(&$bit)
-    {
-        return (empty($this->bitstream[$bit--]) ? 0 : 1);
+        $center = $this->gridcenter;
+        $llen = 17; // width of the first layer side
+        $srow = -8; // start top row offset from the center (LSB)
+        $scol = -7; // start top column offset from the center (LSB)
+        $next = 1; // distance to the next domino bit (dominoes may be between reference grid)
+        $bit = ($this->totbits - 1); // index of last bitstream bit (first to draw)
+        for ($layer = 0; $layer < $this->numlayers; $layer++) {
+            // top
+            $ypos = ($center + $srow);
+            $xpos = ($center + $scol);
+            for ($pos = 0; $pos < $llen; $pos++) {
+                $xpos += $pos;
+                $xpos += intval((($xpos - $center) % 16) == 0); // skip reference grid
+                $this->grid[$ypos][$xpos] = $this->popBit($bit);
+                $this->grid[($ypos - $next)][$xpos] = $this->popBit($bit);
+            }
+            // right
+            $ypos++;
+            $xpos--;
+            for ($pos = 0; $pos < $llen; $pos++) {
+                $ypos += $pos;
+                $ypos += intval((($ypos - $center) % 16) == 0); // skip reference grid
+                $this->grid[$ypos][$xpos] = $this->popBit($bit);
+                $this->grid[$ypos][($xpos + $next)] = $this->popBit($bit);
+            }
+            // bottom
+            $ypos--;
+            $xpos -= 2;
+            for ($pos = 0; $pos < $llen; $pos++) {
+                $xpos -= $pos;
+                $xpos -= intval((($xpos - $center) % 16) == 0); // skip reference grid
+                $this->grid[$ypos][$xpos] = $this->popBit($bit);
+                $this->grid[($ypos + $next)][$xpos] = $this->popBit($bit);
+            }
+            // left
+            $ypos -= 2;
+            $xpos++;
+            for ($pos = 0; $pos < $llen; $pos++) {
+                $ypos -= $pos;
+                $ypos -= intval((($ypos - $center) % 16) == 0); // skip reference grid
+                $this->grid[$ypos][$xpos] = $this->popBit($bit);
+                $this->grid[$ypos][($xpos - $next)] = $this->popBit($bit);
+            }
+            $scol = ($xpos - $center);
+            $srow = ($ypos - $center - 1);
+            $srow -= intval(($srow % 16) == 0);
+            $next = (1 + intval((($srow - 1) % 16) == 0));
+            $llen += 4;
+        }
     }
 }
