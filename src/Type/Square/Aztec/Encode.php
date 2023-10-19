@@ -71,10 +71,23 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $nbits = $this->layer[3];
         $this->addCheckWords($this->tmpCdws, $this->bitstream, $this->totbits, $nbits, $wsize);
         $this->setGrid();
-        $this->compact ? $this->drawModeCompact($numcdw) : $this->drawModeFull($numcdw);
+        if ($this->compact) {
+            $this->drawModeCompact($numcdw);
+            $this->drawDataCompact();
+            return;
+        }
+        $this->drawModeFull($numcdw);
+        $this->drawDataFull();
+    }
 
-       // TODO:
-       //  - add the complete message in a spiral around the core.
+    /**
+     * Returns the bidimensional grid containing the encoded data.
+     *
+     * @return array
+     */
+    public function getGrid()
+    {
+        return $this->grid;
     }
 
     /**
@@ -263,5 +276,75 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
                 $this->grid[($rowl - $pos - $skip)][$coll] = 1;
             }
         }
+    }
+
+    /**
+     * Draw the data bitstream in the grid in Compact mode.
+     */
+    protected function drawDataCompact()
+    {
+        $center = $this->gridcenter;
+        $llen = 13; // width of the first layer side
+        $srow = -6; // start top row offset from the center (LSB)
+        $scol = -5; // start top column offset from the center (LSB)
+        $bit = ($this->totbits - 1); // index of last bitstream bit (first to draw)
+        for ($layer = 0; $layer < $this->numlayers; $layer++) {
+            // top
+            $rowt = ($center + $srow); // top row offset from the center (LSB)
+            $colt = ($center + $scol); // top column offset from the center (LSB)
+            for ($pos = 0; $pos < $llen; $pos++) {
+                $this->grid[($rowt)][($colt + $pos)] = $this->popBit($bit);
+                $this->grid[($rowt - 1)][($colt + $pos)] = $this->popBit($bit);
+            }
+            // right
+            $rowr = ($rowt + 1); // right row offset from the center (LSB)
+            $colr = ($colt + $llen - 2); // right column offset from the center (LSB)
+            for ($pos = 0; $pos < $llen; $pos++) {
+                $this->grid[($rowr + $pos)][($colr)] = $this->popBit($bit);
+                $this->grid[($rowr + $pos)][($colr + 1)] = $this->popBit($bit);
+            }
+            // bottom
+            $rowb = ($rowt + $llen - 1); // bottom row offset from the center (LSB)
+            $colb = ($colr - 1); // bottom column offset from the center (LSB)
+            for ($pos = 0; $pos < $llen; $pos++) {
+                $this->grid[($rowb)][($colb - $pos)] = $this->popBit($bit);
+                $this->grid[($rowb + 1)][($colb - $pos)] = $this->popBit($bit);
+            }
+            // left
+            $rowl = ($rowb - 1); // left row offset from the center (LSB)
+            $coll = ($colt - 1); // left column offset from the center (LSB)
+            for ($pos = 0; $pos < $llen; $pos++) {
+                $this->grid[($rowl - $pos)][($coll)] = $this->popBit($bit);
+                $this->grid[($rowl - $pos)][($coll - 1)] = $this->popBit($bit);
+            }
+            $llen += 4;
+            $rowt -= 2;
+            $colt -= 2;
+        }
+    }
+
+    /**
+     * Draw the data bitstream in the grid in Full mode.
+     */
+    protected function drawDataFull()
+    {
+        // $center = $this->gridcenter;
+        // $llen = 17; // width of the first layer side
+        // $srow = -8; // start top row offset from the center (LSB)
+        // $scol = -7; // start top column offset from the center (LSB)
+        //
+        // $bit = ($this->totbits - 1); // index of last bitstream bit (first to draw)
+        // for ($layer = 0; $layer < $this->numlayers; $layer++) {
+        // }
+    }
+
+    /**
+     * Returns a bit from the end of the bitstream and update the index.
+     *
+     * @return int
+     */
+    protected function popBit(&$bit)
+    {
+        return (empty($this->bitstream[$bit--]) ? 0 : 1);
     }
 }
