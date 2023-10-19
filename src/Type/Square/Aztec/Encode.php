@@ -312,7 +312,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
             $srow += 2;
             $scol += 2;
         }
-        $dmoff = 1; // offset to the second bit of a domino
+        $dmoff = 1; // offset to the second domino bit
         $bit = ($this->totbits - 1); // index of last bitstream bit (first to draw)
         for ($layer = 0; $layer < $this->numlayers; $layer++) {
             // top
