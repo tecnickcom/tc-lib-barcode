@@ -259,15 +259,15 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
                 $this->grid[$rowt][($colt + $pos + $skip)] = 1;
             }
             // right
-            if (!empty($modebs[($pos + 7)])) {
+            if (!empty($modebs[($pos + 10)])) {
                 $this->grid[($rowr + $pos + $skip)][$colr] = 1;
             }
             // bottom
-            if (!empty($modebs[($pos + 14)])) {
+            if (!empty($modebs[($pos + 20)])) {
                 $this->grid[$rowb][($colb - $pos - $skip)] = 1;
             }
             // left
-            if (!empty($modebs[($pos + 21)])) {
+            if (!empty($modebs[($pos + 30)])) {
                 $this->grid[($rowl - $pos - $skip)][$coll] = 1;
             }
         }
@@ -319,37 +319,37 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
             $ypos = ($center + $srow);
             $xpos = ($center + $scol);
             for ($pos = 0; $pos < $llen; $pos++) {
-                $xpos += $pos;
                 $xpos += $this->skipRefGrid($xpos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
                 $this->grid[($ypos - $dmoff)][$xpos] = $this->popBit($bit);
+                $xpos++;
             }
             // right
             $ypos++;
             $xpos--;
             for ($pos = 0; $pos < $llen; $pos++) {
-                $ypos += $pos;
                 $ypos += $this->skipRefGrid($ypos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
                 $this->grid[$ypos][($xpos + $dmoff)] = $this->popBit($bit);
+                $ypos++;
             }
             // bottom
             $ypos--;
             $xpos -= 2;
             for ($pos = 0; $pos < $llen; $pos++) {
-                $xpos -= $pos;
                 $xpos -= $this->skipRefGrid($xpos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
                 $this->grid[($ypos + $dmoff)][$xpos] = $this->popBit($bit);
+                $xpos--;
             }
             // left
             $ypos -= 2;
             $xpos++;
             for ($pos = 0; $pos < $llen; $pos++) {
-                $ypos -= $pos;
                 $ypos -= $this->skipRefGrid($ypos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
                 $this->grid[$ypos][($xpos - $dmoff)] = $this->popBit($bit);
+                $ypos--;
             }
             $scol = ($xpos - $center);
             $srow = ($ypos - $center - 1);
