@@ -249,18 +249,6 @@ abstract class Codeword
     }
 
     /**
-     * Merges the temporary codewords array with the current codewords array.
-     * No shift is performed.
-     */
-    protected function tmpCwdToWords($numwords)
-    {
-        $this->words = array_fill(0, $numwords, 0);
-        foreach ($this->tmpCdws as $item) {
-            $this->words[] = $item[1];
-        }
-    }
-
-    /**
      * Merge temporary codewords with current codewords based on the encoding mode.
      *
      * @param int $mode The encoding mode to use for merging codewords.
@@ -274,6 +262,18 @@ abstract class Codeword
             $this->mergeTmpCwdWithShift($mode);
         }
         $this->tmpCdws = array();
+    }
+
+    /**
+     * Merges the temporary codewords array with the current codewords array.
+     * No shift is performed.
+     */
+    protected function tmpCwdToWords($numwords)
+    {
+        $this->words = array_fill(0, $numwords, 0);
+        foreach ($this->tmpCdws as $item) {
+            $this->words[] = $item[1];
+        }
     }
 
     /**

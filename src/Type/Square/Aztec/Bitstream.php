@@ -100,7 +100,8 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      */
     protected function autoEncode($chars, $chrlen)
     {
-        for ($idx = 0; $idx < $chrlen; $idx++) {
+        $idx = 0;
+        while($idx < $chrlen) {
             if ($this->processBinaryChars($chars, $idx, $chrlen)) {
                 continue;
             }
@@ -135,6 +136,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             }
         }
         $this->mergeTmpCwd();
+        $idx += $nchr;
     }
 
     /**
@@ -204,6 +206,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         }
         $this->addRawCwd(5, $binchrs);
         $this->mergeTmpCwdRaw();
+        $idx += $binchrs;
         $this->encmode = $encmode;
         return true;
     }
@@ -307,6 +310,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             $pairs++;
             $idx += 2;
         }
+
         return $pairs;
     }
 
