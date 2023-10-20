@@ -123,13 +123,13 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
         parent::setParameters();
 
         // level
-        if (!isset($this->params[0]) || !isset(Data::ECC_LEVELS[$this->params[0]])) {
+        if (!isset($this->params[0]) || !array_key_exists($this->params[0], Data::ECC_LEVELS)) {
             $this->params[0] = 'L';
         }
         $this->level = Data::ECC_LEVELS[$this->params[0]];
 
         // hint
-        if (!isset($this->params[1]) || !isset(Data::ENC_MODES[$this->params[1]])) {
+        if (!isset($this->params[1]) || !array_key_exists($this->params[1], Data::ENC_MODES)) {
             $this->params[1] = '8B';
         }
         $this->hint = Data::ENC_MODES[$this->params[1]];
