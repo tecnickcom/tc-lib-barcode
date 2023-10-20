@@ -124,11 +124,11 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
             throw new BarcodeException('Empty input');
         }
         try {
-            $this->enc = new Encode($this->code, $this->ecc, $this->eci, $this->hint, $this->mode);
+            $enc = new Encode($this->code, $this->ecc, $this->eci, $this->hint, $this->mode);
+            $grid = $enc->getGrid();
+            $this->processBinarySequence($grid);
         } catch (BarcodeException $e) {
-            throw new BarcodeException('AZTEC: '.$e->getMessage());
+            throw new BarcodeException('AZTEC: ' . $e->getMessage());
         }
-        $grid = $this->enc->getGrid();
-        $this->processBinarySequence($grid);
     }
 }

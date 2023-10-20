@@ -70,7 +70,6 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $wsize = $this->layer[2];
         $nbits = $this->layer[3];
         $numcdw = $this->addCheckWords($this->bitstream, $this->totbits, $nbits, $wsize);
-        //var_export($this->bitstream); return; // DEBUG
         $this->setGrid();
         $this->drawMode($numcdw);
         $this->drawData();
@@ -93,7 +92,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      * @param int   $totbits   Number of bits in the bitstream.
      * @param int   $nbits     Number of bits per layer.
      * @param int   $wsize     Word size.
-     * 
+     *
      * @return int The number of data codewords.
      */
     protected function addCheckWords(array &$bitstream, &$totbits, $nbits, $wsize)
@@ -200,6 +199,9 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      * Add the mode message to the grid.
      *
      * @param int $numcdw Number of data codewords.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function drawMode($numcdw)
     {

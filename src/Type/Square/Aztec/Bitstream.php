@@ -101,7 +101,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     protected function autoEncode($chars, $chrlen)
     {
         $idx = 0;
-        while($idx < $chrlen) {
+        while ($idx < $chrlen) {
             if ($this->processBinaryChars($chars, $idx, $chrlen)) {
                 continue;
             }

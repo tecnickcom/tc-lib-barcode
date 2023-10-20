@@ -167,11 +167,11 @@ abstract class Codeword
 
     /**
      * Convert the bitstream to words.
-     * 
+     *
      * @param array $bitstream Array of bits to convert.
      * @param int   $totbits   Number of bits in the bitstream.
      * @param int   $wsize     The word size.
-     * 
+     *
      * @return array
      */
     protected function bitstreamToWords(array $bitstream, $totbits, $wsize)
