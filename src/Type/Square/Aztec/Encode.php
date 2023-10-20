@@ -72,7 +72,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $numcdw = $this->addCheckWords($this->bitstream, $this->totbits, $nbits, $wsize);
         //var_export($this->bitstream); return; // DEBUG
         $this->setGrid();
-        //$this->drawMode($numcdw);
+        $this->drawMode($numcdw);
         //$this->drawData();
     }
 

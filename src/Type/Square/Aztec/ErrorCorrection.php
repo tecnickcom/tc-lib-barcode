@@ -138,13 +138,11 @@ class ErrorCorrection
         $deg = ($necc + 1);
         $coeff = $this->multiplyByMonomial($data, 1, $necc);
         $len = count($coeff);
-        echo "DEBUG getCoefficients\n"; //DEBUG
         while (($len >= $deg) && ($coeff[0] != 0)) {
             $scale = $this->multiply($coeff[0], 1);
             $largercoeffs = $this->multiplyByMonomial($gen, $scale, ($len - $deg));
             $coeff = $this->addOrSubtract($coeff, $largercoeffs);
             $len = count($coeff);
-            var_export($coeff); echo "\n\n---rrr-\n\n"; flush(); return $coeff; //DEBUG
         }
         return $coeff;
     }
@@ -233,10 +231,10 @@ class ErrorCorrection
      */
     protected function addOrSubtract(array $smaller, array $larger)
     {
-        if ($smaller[0] != 0) {
+        if ($smaller[0] == 0) {
             return $larger;
         }
-        if ($larger[0] != 0) {
+        if ($larger[0] == 0) {
             return $smaller;
         }
         $slen = count($smaller);
