@@ -157,9 +157,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             $ord = $chars[$idx];
             if (
                 (!$this->isSameMode($mode, $ord))
-                || (($mode == Data::MODE_DIGIT) && ($idx < ($chrlen - 1))
-                 && ($this->punctPairMode($ord, $chars[($idx + 1)]) > 0)
-                )
+                || (($idx < ($chrlen - 1)) && ($this->punctPairMode($ord, $chars[($idx + 1)]) > 0))
             ) {
                 return $count;
             }
