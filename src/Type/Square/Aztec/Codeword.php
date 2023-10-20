@@ -160,7 +160,7 @@ abstract class Codeword
     protected function appendWordToBitstream(array &$bitstream, &$totbits, $wsize, $value)
     {
         for ($idx = ($wsize - 1); $idx >= 0; $idx--) {
-            $bitstream[] = ($value >> $idx) & 1;
+            $bitstream[] = (($value >> $idx) & 1);
         }
         $totbits += $wsize;
     }

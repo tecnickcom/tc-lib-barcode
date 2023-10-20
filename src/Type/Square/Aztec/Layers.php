@@ -76,7 +76,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
     }
 
     /**
-     * Select the layer by the numebr of bits to encode.
+     * Select the layer by the number of bits to encode.
      *
      * @param int    $numbits The number of bits to encode.
      * @param string $mode    The mode to use (A = Automatic; F = Full Range mode).
@@ -122,7 +122,6 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
         $this->bitstream = array();
         $this->totbits = 0;
         $this->mergeTmpCwdRaw();
-        // Note: bitStuffing() already pads the bitstream to a codeword boundary.
         return true;
     }
 
