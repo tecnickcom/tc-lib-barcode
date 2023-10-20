@@ -48,7 +48,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         if (array_key_exists($chr, Data::CHSET['SH1'])) {
             $temp_cw[] = 0; // shift 1
             $shiftset = Data::CHSET['SH1'];
-        } elseif (isset($chr, Data::CHSET['SH2'][$chr])) {
+        } elseif (array_key_exists($chr, Data::CHSET['SH2'])) {
             $temp_cw[] = 1; // shift 2
             $shiftset = Data::CHSET['SH2'];
         } elseif (($enc == Data::ENC_C40) && array_key_exists($chr, Data::CHSET['S3C'])) {
