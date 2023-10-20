@@ -256,6 +256,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      */
     protected function processPunctPairs(&$chars, &$idx, $chrlen)
     {
+
         $ppairs = $this->countPunctPairs($chars, $idx, $chrlen);
         if ($ppairs == 0) {
             return false;
@@ -274,9 +275,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
                 break;
             case Data::MODE_DIGIT:
                 $common = $this->countPunctAndDigitChars($chars, $idx, $chrlen);
-                if (($common > 0) && ($common < 6)) {
+                $clen = count($common);
+                if (($clen > 0) && ($clen < 6)) {
+                    $this->tmpCdws = $common;
                     $this->mergeTmpCwdRaw();
-                    $idx += $common;
+                    $idx += $clen;
                     return true;
                 }
                 if ($ppairs > 2) {
@@ -317,26 +320,25 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
 
     /**
      * Counts the number of consecutive charcters that are in both PUNCT or DIGIT modes.
+     * Returns the array with the codewords.
      *
      * @param array &$chars The string to count the characters in.
      * @param int   $idx    The starting index to count from.
      * @param int   $chrlen The length of the string to count.
      *
-     * @return int The number of punctuation and digit characters in the string.
+     * @return array
      */
     protected function countPunctAndDigitChars(&$chars, $idx, $chrlen)
     {
-        $this->tmpCdws = array();
-        $count = 0;
+        $words = array();
         while ($idx < $chrlen) {
             $ord = $chars[$idx];
             if (!$this->isPunctAndDigitChar($ord)) {
-                return $count;
+                return $words;
             }
-            $this->tmpCdws[] = array(4, $this->charEnc(Data::MODE_DIGIT, $ord));
-            $count++;
+            $words[] = array(4, $this->charEnc(Data::MODE_DIGIT, $ord));
             $idx++;
         }
-        return $count;
+        return $words;
     }
 }

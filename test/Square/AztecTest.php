@@ -121,9 +121,9 @@ class AztecTest extends TestUtil
             . chr(178) . chr(179) . chr(180) . chr(181) . chr(182)
             . chr(183) . chr(184) . chr(185) . chr(186) . chr(187)
             . chr(188) . chr(189) . chr(190), 'ecbce8806e1522c123f316a7af9fd9d0'),
-            array('', '012345: : : : : : : : ', 'd0a526bc606d82d201a2ea326bca01f2'),
+            array('', '012345: : : : : : : : ', 'b7ae80e65d754dc17fe116aaddd33c24'),
             array('', '012345. , ', '92b442e5f1b33be91c576eddc12bcca7'),
-            array('', '012345. , . , . , . , ', 'a7f31e6eaed5d3acf2d9c7e89eb82fd3'),
+            array('', '012345. , . , . , . , ', '598fd97d8a28b1514cd0bf88369c68e9'),
             array('', '~~~~~~. , ', 'c40fc61717a7e802d7458897197227b1'),
             array('', '******. , ', 'abbe0bdfdc10ad059ad2c415e79dab31'),
             array('', chr(188) . chr(189) . chr(190) . '. , ', 'c9ae209e0c6d03014753363affffee8b')
