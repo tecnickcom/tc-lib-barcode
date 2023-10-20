@@ -156,12 +156,12 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
             }
         }
         // draw orientation patterns
-        $this->grid[($center - $bemid)][($center - $bemid)] = 1;
-        $this->grid[($center - $bemid)][($center - $bemid + 1)] = 1;
-        $this->grid[($center - $bemid)][($center + $bemid)] = 1;
-        $this->grid[($center - $bemid - 1)][($center - $bemid)] = 1;
-        $this->grid[($center - $bemid - 1)][($center + $bemid)] = 1;
-        $this->grid[($center + $bemid - 1)][($center + $bemid)] = 1;
+        $this->grid[($center - $bemid)][($center - $bemid)] = 1; // TL
+        $this->grid[($center - $bemid)][($center - $bemid + 1)] = 1; // TL-R
+        $this->grid[($center - $bemid + 1)][($center - $bemid)] = 1; // TL-B
+        $this->grid[($center - $bemid)][($center + $bemid)] = 1; // TR-T
+        $this->grid[($center - $bemid + 1)][($center + $bemid)] = 1; // TR-B
+        $this->grid[($center + $bemid - 1)][($center + $bemid)] = 1; // BR
         if ($this->compact) {
             return;
         }
@@ -170,25 +170,25 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         // central cross
         for ($pos = 8; $pos <= $halfsize; $pos += 2) {
             // horizontal
-            $this->grid[($center)][($center + $pos)] = 1;
             $this->grid[($center)][($center - $pos)] = 1;
+            $this->grid[($center)][($center + $pos)] = 1;
             // vertical
-            $this->grid[($center + $pos)][($center)] = 1;
+            $this->grid[($center - $pos)][($center)] = 1;
             $this->grid[($center + $pos)][($center)] = 1;
         }
         // grid lines
         for ($pos = 2; $pos <= $halfsize; $pos += 2) {
             for ($ref = 16; $ref <= $halfsize; $ref += 16) {
                 // horizontal
-                $this->grid[($center + $ref)][($center + $pos)] = 1;
-                $this->grid[($center + $ref)][($center - $pos)] = 1;
-                $this->grid[($center - $ref)][($center + $pos)] = 1;
                 $this->grid[($center - $ref)][($center - $pos)] = 1;
+                $this->grid[($center - $ref)][($center + $pos)] = 1;
+                $this->grid[($center + $ref)][($center - $pos)] = 1;
+                $this->grid[($center + $ref)][($center + $pos)] = 1;
                 // vertical
-                $this->grid[($center + $pos)][($center + $ref)] = 1;
-                $this->grid[($center + $pos)][($center - $ref)] = 1;
-                $this->grid[($center - $pos)][($center + $ref)] = 1;
                 $this->grid[($center - $pos)][($center - $ref)] = 1;
+                $this->grid[($center - $pos)][($center + $ref)] = 1;
+                $this->grid[($center + $pos)][($center - $ref)] = 1;
+                $this->grid[($center + $pos)][($center + $ref)] = 1;
             }
         }
     }

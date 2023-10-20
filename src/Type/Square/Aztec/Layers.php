@@ -115,7 +115,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
         $nsbits = 0;
         $eccbits = (11 + intval(($this->totbits * $ecc) / 100));
         do {
-            if ($this->setLayerByBits(($this->totbits + $nsbits + $eccbits), $mode)) {
+            if (!$this->setLayerByBits(($this->totbits + $nsbits + $eccbits), $mode)) {
                 return false;
             }
             $nsbits = $this->bitStuffing();

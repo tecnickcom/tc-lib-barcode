@@ -217,7 +217,7 @@ class ErrorCorrection
         $ncf = count($coeff);
         $prod = array_fill(0, ($ncf + $deg), 0);
         for ($idx = 0; $idx < $ncf; $idx++) {
-            $prod[$idx] = $this->multiply($coeff[$idx], $mon);
+            $prod[$idx] = $this->multiply($coeff[$idx][1], $mon);
         }
         return $this->trimCoefficients($prod);
     }
