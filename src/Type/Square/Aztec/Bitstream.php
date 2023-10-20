@@ -31,6 +31,8 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @copyright   2023-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
 {
@@ -153,7 +155,12 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         $count = 0;
         do {
             $ord = $chars[$idx];
-            if (!$this->isSameMode($mode, $ord)) {
+            if (
+                (!$this->isSameMode($mode, $ord))
+                || (($mode == Data::MODE_DIGIT) && ($idx < ($chrlen - 1))
+                 && ($this->punctPairMode($ord, $chars[($idx + 1)]) > 0)
+                )
+            ) {
                 return $count;
             }
             $this->tmpCdws[] = array($nbits, $this->charEnc($mode, $ord));
@@ -278,8 +285,6 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
                     $this->addLatch(Data::MODE_PUNCT);
                 }
                 break;
-            default:
-                return false;
         }
         $this->mergeTmpCwd(Data::MODE_PUNCT);
         $idx += ($ppairs * 2);
