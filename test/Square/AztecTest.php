@@ -80,7 +80,7 @@ class AztecTest extends TestUtil
             array('', 'aAb0c#d' . chr(126), 'f4c58cabbdb5d94fa0cc1c31d510936a'),
             array('', '#A$a%0&' . chr(126), 'a17634a1db6372efbf8ea25a303c38f8'),
             array('', chr(1) . 'A' . chr(1) . 'a' . chr(1) . '0' . chr(1) . '#', 'c1a585888c7a1eb424ff98bbf7b32d46'),
-            array('', 'PUNCT pairs , . : ', 'f2d5f259fc8d556bc179e3ab90b0777a'),
+            array('', 'PUNCT pairs , . : \r\n', '4204e49298873cb18c200ef81b279c3b'),
             array('', 'ABCDEabcdeABCDE012345ABCDE?[]{}ABCDE'
             . chr(1) . chr(2) . chr(3) . chr(4) . chr(5), '4ae19b80469a1afff8e490f5afaa8b73'),
             array('', 'abcdeABCDEabcde012345abcde?[]{}abcde'
@@ -98,7 +98,8 @@ class AztecTest extends TestUtil
             . ' Duis aute irure dolor in reprehenderit in voluptate velit esse'
             . ' cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat'
             . ' cupidatat non proident,' .
-            ' sunt in culpa qui officia deserunt mollit anim id est laborum.', 'bb2b103d59e035a581fed0619090f89c')
+            ' sunt in culpa qui officia deserunt mollit anim id est laborum.', 'bb2b103d59e035a581fed0619090f89c'),
+            array('', chr(128) . chr(129) . chr(130) . chr(131) . chr(132), 'da92b009c1f4430e2f62c76c5f708121')
         );
     }
 

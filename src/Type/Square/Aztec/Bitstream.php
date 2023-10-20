@@ -46,9 +46,6 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         $this->addFLG($eci);
         $chars = array_values(unpack('C*', $code));
         $chrlen = count($chars);
-        if ($chrlen == 0) {
-            return;
-        }
         if ($hint == 'B') {
             $this->binaryEncode($chars, $chrlen);
             return;
