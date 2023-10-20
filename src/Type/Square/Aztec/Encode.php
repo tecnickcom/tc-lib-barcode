@@ -73,7 +73,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         //var_export($this->bitstream); return; // DEBUG
         $this->setGrid();
         $this->drawMode($numcdw);
-        //$this->drawData();
+        $this->drawData();
     }
 
     /**
@@ -312,7 +312,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
             }
             // right
             $ypos++;
-            $xpos--;
+            $xpos -= 2;
             for ($pos = 0; $pos < $llen; $pos++) {
                 $ypos += $this->skipRefGrid($ypos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
@@ -320,8 +320,8 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
                 $ypos++;
             }
             // bottom
-            $ypos--;
-            $xpos -= 2;
+            $ypos -= 2;
+            $xpos--;
             for ($pos = 0; $pos < $llen; $pos++) {
                 $xpos -= $this->skipRefGrid($xpos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
@@ -329,16 +329,16 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
                 $xpos--;
             }
             // left
-            $ypos -= 2;
-            $xpos++;
+            $ypos--;
+            $xpos += 2;
             for ($pos = 0; $pos < $llen; $pos++) {
                 $ypos -= $this->skipRefGrid($ypos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
                 $this->grid[$ypos][($xpos - $dmoff)] = $this->popBit($bit);
                 $ypos--;
             }
-            $scol = ($xpos - $center);
-            $srow = ($ypos - $center - 1);
+            $srow = ($ypos - $center);
+            $scol = ($xpos - 1 - $center);
             $srow -= $this->skipRefGrid($srow);
             $dmoff = (1 + $this->skipRefGrid($srow - 1));
             $llen += 4;
