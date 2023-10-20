@@ -269,7 +269,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
                 break;
             case Data::MODE_DIGIT:
                 $common = $this->countPunctAndDigitChars($chars, $idx, $chrlen);
-                if ($common < 6) {
+                if (($common > 0) && ($common < 6)) {
                     $this->mergeTmpCwdRaw();
                     $idx += $common;
                     return true;
@@ -316,8 +316,8 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * Counts the number of consecutive charcters that are in both PUNCT or DIGIT modes.
      *
      * @param array &$chars The string to count the characters in.
-     * @param int $idx The starting index to count from.
-     * @param int $chrlen The length of the string to count.
+     * @param int   $idx    The starting index to count from.
+     * @param int   $chrlen The length of the string to count.
      *
      * @return int The number of punctuation and digit characters in the string.
      */
