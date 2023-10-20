@@ -101,7 +101,26 @@ class AztecTest extends TestUtil
             . ' cupidatat non proident,' .
             ' sunt in culpa qui officia deserunt mollit anim id est laborum.', 'bb2b103d59e035a581fed0619090f89c'),
             array('', chr(128) . chr(129) . chr(130) . chr(131) . chr(132), 'da92b009c1f4430e2f62c76c5f708121'),
-            array('', '0123456789. , . , . , 0123456789', 'c4ac2fe72e6cb8c3fe08d764626f0f44')
+            array('', chr(128) . chr(129) . chr(130) . chr(131) . chr(132)
+            . chr(133) . chr(134) . chr(135) . chr(136) . chr(137)
+            . chr(138) . chr(139) . chr(140) . chr(141) . chr(142)
+            . chr(143) . chr(144) . chr(145) . chr(146) . chr(147)
+            . chr(148) . chr(149) . chr(150) . chr(151) . chr(152)
+            . chr(153) . chr(154) . chr(155) . chr(156) . chr(157)
+            . chr(158) . chr(159) . chr(160), 'f3dfdda6d6fdbd747c86f042fc649193'),
+            array('', chr(128) . chr(129) . chr(130) . chr(131) . chr(132)
+            . chr(133) . chr(134) . chr(135) . chr(136) . chr(137)
+            . chr(138) . chr(139) . chr(140) . chr(141) . chr(142)
+            . chr(143) . chr(144) . chr(145) . chr(146) . chr(147)
+            . chr(148) . chr(149) . chr(150) . chr(151) . chr(152)
+            . chr(153) . chr(154) . chr(155) . chr(156) . chr(157)
+            . chr(158) . chr(159) . chr(160) . chr(161) . chr(162)
+            . chr(163) . chr(164) . chr(165) . chr(166) . chr(167)
+            . chr(168) . chr(169) . chr(170) . chr(171) . chr(172)
+            . chr(173) . chr(174) . chr(175) . chr(176) . chr(177)
+            . chr(178) . chr(179) . chr(180) . chr(181) . chr(182)
+            . chr(183) . chr(184) . chr(185) . chr(186) . chr(187)
+            . chr(188) . chr(189) . chr(190), 'ecbce8806e1522c123f316a7af9fd9d0')
         );
     }
 

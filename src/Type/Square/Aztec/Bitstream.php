@@ -184,6 +184,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             $this->addRawCwd(5, 0);
             $this->addRawCwd(11, $binchrs);
             $this->mergeTmpCwdRaw();
+            $idx += $binchrs;
             $this->encmode = $encmode;
             return true;
         }
@@ -198,6 +199,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             for ($bcw = 31; $bcw < $binchrs; $bcw++) {
                 $this->addRawCwd($nbits, $this->tmpCdws[$bcw][1]);
             }
+            $idx += $binchrs;
             $this->encmode = $encmode;
             return true;
         }
@@ -307,7 +309,6 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             $pairs++;
             $idx += 2;
         }
-
         return $pairs;
     }
 
