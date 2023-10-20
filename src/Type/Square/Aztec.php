@@ -123,6 +123,8 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         if (strlen((string)$this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
-        //$this->enc = new Encode($this->code, $this->ecc, $this->eci, $this->hint, $this->mode);
+        $this->enc = new Encode($this->code, $this->ecc, $this->eci, $this->hint, $this->mode);
+        $grid = $this->enc->getGrid();
+        $this->processBinarySequence($grid);
     }
 }
