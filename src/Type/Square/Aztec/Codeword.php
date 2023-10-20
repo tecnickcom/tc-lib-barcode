@@ -220,9 +220,6 @@ abstract class Codeword
      */
     protected function addLatch($mode)
     {
-        if ($this->encmode == $mode) {
-            return;
-        }
         $latch = Data::LATCH_MAP[$this->encmode][$mode];
         foreach ($latch as $cdw) {
             $this->addRawCwd($cdw[0], $cdw[1]);

@@ -61,9 +61,6 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     public function __construct($code, $ecc = 33, $eci = 0, $hint = 'A', $mode = 'A')
     {
         $this->highLevelEncoding($code, $eci, $hint);
-        if ($this->totbits == 0) {
-              throw new BarcodeException('No input data');
-        }
         if (!$this->sizeAndBitStuffing($ecc, $mode)) {
                 throw new BarcodeException('Data too long');
         }
@@ -106,12 +103,6 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         // append check codewords
         foreach ($checkwords as $val) {
                 $this->appendWordToBitstream($bitstream, $totbits, $wsize, $val);
-        }
-        // insert padding at the beginning of the codewords and bitstream
-        $pad = intval($nbits % $wsize);
-        if ($pad > 0) {
-                array_unshift($bitstream, array_fill(0, $pad, 0));
-                $totbits = count($bitstream);
         }
         return $numcdw;
     }
