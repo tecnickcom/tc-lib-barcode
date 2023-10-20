@@ -101,7 +101,6 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $numcdw = count($cdw);
         $totwords = intval($nbits / $wsize);
         $eccwords = ($totwords - $numcdw);
-        // $cdw = array_pad($cdw, $totwords, 0); // no need for padding
         $ecc = new ErrorCorrection($wsize);
         $checkwords = $ecc->checkwords($cdw, $eccwords);
         // append check codewords
