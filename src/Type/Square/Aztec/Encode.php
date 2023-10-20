@@ -73,7 +73,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         //var_export($this->bitstream);//DEBUG
         $this->setGrid();
         $this->drawMode($numcdw);
-        $this->drawData();
+        //DEBUG $this->drawData();
     }
 
     /**
@@ -232,7 +232,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $ypos = ($center + $srow);
         $xpos = ($center + $scol);
         for ($pos = 0; $pos < $sidelen; $pos++) {
-            $xpos += ($this->compact ? 0 : intval($pos / 5));
+            $xpos += $this->skipModeRefGrid($pos);
             $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
             $xpos++;
         }
@@ -240,7 +240,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $ypos += 2;
         $xpos++;
         for ($pos = 0; $pos < $sidelen; $pos++) {
-            $ypos += ($this->compact ? 0 : intval($pos / 5));
+            $ypos += $this->skipModeRefGrid($pos);
             $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
             $ypos++;
         }
@@ -248,7 +248,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $ypos++;
         $xpos -= 2;
         for ($pos = 0; $pos < $sidelen; $pos++) {
-            $xpos -= ($this->compact ? 0 : intval($pos / 5));
+            $xpos -= $this->skipModeRefGrid($pos);
             $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
             $xpos--;
         }
@@ -256,7 +256,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $ypos -= 2;
         $xpos--;
         for ($pos = 0; $pos < $sidelen; $pos++) {
-            $ypos -= ($this->compact ? 0 : intval($pos / 5));
+            $ypos -= $this->skipModeRefGrid($pos);
             $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
             $ypos--;
         }
@@ -272,6 +272,19 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     protected function popBit(&$bit)
     {
         return (empty($this->bitstream[$bit--]) ? 0 : 1);
+    }
+
+
+    /**
+     * Returns 1 if the current position must be skipped in Full mode.
+     *
+     * @param int $pos Position in the grid.
+     *
+     * @return int
+     */
+    protected function skipModeRefGrid($pos)
+    {
+        return intval((!$this->compact) && ($pos == 5));
     }
 
 
