@@ -58,6 +58,15 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
     protected $hint = 'A';
 
     /**
+     *  Mode:
+     *    - A = Automatic selection between Compact (priority) and Full Range.
+     *    - F = Force Full Range mode.
+     *
+     * @var string
+     */
+    protected $mode = 'A';
+
+    /**
      * Extended Channel Interpretation (ECI) code to be added at the beginning of the stream.
      * See Data:ECI for the list of supported codes.
      * NOTE: Even if special FNC1 or ECI flag characters could be inserted
@@ -86,7 +95,7 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         $this->ecc = intval($this->params[0]);
 
         // hint
-        if (!isset($this->params[1]) || !in_array($this->params[1], ['B', 'D'])) {
+        if (!isset($this->params[1]) || !in_array($this->params[1], ['A', 'B'])) {
             $this->params[1] = 'A';
         }
         $this->hint = $this->params[1];
@@ -108,6 +117,6 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         if (strlen((string)$this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
-        //$this->enc = new Encode($this->code, $this->ecc, $this->eci, $this->hint);
+        //$this->enc = new Encode($this->code, $this->ecc, $this->eci, $this->hint, $this->mode);
     }
 }

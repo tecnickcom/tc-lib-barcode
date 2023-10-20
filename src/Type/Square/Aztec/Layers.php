@@ -79,14 +79,18 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
     /**
      * Select the layer by the numebr of bits to encode.
      *
-     * @param int   $numbits The number of bits to encode.
+     * @param int    $numbits The number of bits to encode.
+     * @param string $mode    The mode to use (A = Automatic; F = Full Range mode).
      *
      * @return bool Returns true if the size computation was successful, false otherwise.
      */
-    protected function setLayerByBits($numbits)
+    protected function setLayerByBits($numbits, $mode = 'A')
     {
-        $this->compact = true;
-        $this->numlayers = $this->getMinLayers(Data::SIZE_COMPACT, $numbits);
+        $this->numlayers = 0;
+        if ($mode == 'A') {
+            $this->compact = true;
+            $this->numlayers = $this->getMinLayers(Data::SIZE_COMPACT, $numbits);
+        }
         if ($this->numlayers == 0) {
             $this->compact = false;
             $this->numlayers = $this->getMinLayers(Data::SIZE_FULL, $numbits);
@@ -101,16 +105,17 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
     /**
      * Computes the type and number of required layers and performs bit stuffing
      *
-     * @param int $ecc The error correction level.
+     * @param int    $ecc  The error correction level.
+     * @param string $mode The mode to use (A = Automatic; F = Full Range mode).
      *
      * @return bool Returns true if the size computation was successful, false otherwise.
      */
-    protected function sizeAndBitStuffing($ecc)
+    protected function sizeAndBitStuffing($ecc, $mode = 'A')
     {
         $nsbits = 0;
         $eccbits = (11 + intval(($this->totbits * $ecc) / 100));
         do {
-            if ($this->setLayerByBits($this->totbits + $nsbits + $eccbits)) {
+            if ($this->setLayerByBits(($this->totbits + $nsbits + $eccbits), $mode)) {
                 return false;
             }
             $nsbits = $this->bitStuffing();
