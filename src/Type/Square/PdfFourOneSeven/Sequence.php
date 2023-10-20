@@ -76,10 +76,10 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
     protected function getErrorCorrection($codewords, $ecl)
     {
         // get error correction coefficients
-        $ecc = Data::$rsfactors[$ecl];
+        $ecc = Data::RS_FACTORS[$ecl];
         // number of error correction factors
         $eclsize = (2 << $ecl);
-        // maximum index for $rsfactors[$ecl]
+        // maximum index for RS_FACTORS[$ecl]
         $eclmaxid = ($eclsize - 1);
         // initialize array of error correction codewords
         $ecw = array_fill(0, $eclsize, 0);

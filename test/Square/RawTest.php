@@ -19,7 +19,7 @@ namespace Test\Square;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Barcode class test
+ * Raw Barcode class test
  *
  * @since       2015-02-21
  * @category    Library

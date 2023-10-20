@@ -45,18 +45,18 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      */
     public function encodeTXTC40shift(&$chr, &$enc, &$temp_cw, &$ptr)
     {
-        if (isset(Data::$chset['SH1'][$chr])) {
+        if (array_key_exists($chr, Data::CHSET['SH1'])) {
             $temp_cw[] = 0; // shift 1
-            $shiftset = Data::$chset['SH1'];
-        } elseif (isset($chr, Data::$chset['SH2'][$chr])) {
+            $shiftset = Data::CHSET['SH1'];
+        } elseif (array_key_exists($chr, Data::CHSET['SH2'])) {
             $temp_cw[] = 1; // shift 2
-            $shiftset = Data::$chset['SH2'];
-        } elseif (($enc == Data::ENC_C40) && isset(Data::$chset['S3C'][$chr])) {
+            $shiftset = Data::CHSET['SH2'];
+        } elseif (($enc == Data::ENC_C40) && array_key_exists($chr, Data::CHSET['S3C'])) {
             $temp_cw[] = 2; // shift 3
-            $shiftset = Data::$chset['S3C'];
-        } elseif (($enc == Data::ENC_TXT) && isset(Data::$chset['S3T'][$chr])) {
+            $shiftset = Data::CHSET['S3C'];
+        } elseif (($enc == Data::ENC_TXT) && array_key_exists($chr, Data::CHSET['S3T'])) {
             $temp_cw[] = 2; // shift 3
-            $shiftset = Data::$chset['S3T'];
+            $shiftset = Data::CHSET['S3T'];
         } else {
             throw new BarcodeException('Error');
         }
@@ -171,9 +171,9 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         $ptr = 0;
         $epos = $pos;
         // get charset ID
-        $set_id = Data::$chset_id[$enc];
+        $set_id = Data::CHSET_ID[$enc];
         // get basic charset for current encoding
-        $charset = Data::$chset[$set_id];
+        $charset = Data::CHSET[$set_id];
         do {
             $chr = $this->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
             if ($ptr >= 3) {

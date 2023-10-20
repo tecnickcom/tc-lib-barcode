@@ -53,6 +53,7 @@ This library includes utility PHP classes to generate linear and bidimensional b
 * CODE11     : CODE 11
 * PHARMA     : PHARMACODE
 * PHARMA2T   : PHARMACODE TWO-TRACKS
+* AZTEC      : AZTEC Code (ISO/IEC 24778:2008)
 * DATAMATRIX : DATAMATRIX (ISO/IEC 16022)
 * PDF417     : PDF417 (ISO/IEC 15438:2006)
 * QRCODE     : QR-CODE
@@ -146,7 +147,7 @@ Create a composer.json in your projects root-directory:
 ```json
 {
     "require": {
-        "tecnickcom/tc-lib-barcode": "^1.17"
+        "tecnickcom/tc-lib-barcode": "^1.18"
     }
 }
 ```
@@ -154,7 +155,7 @@ Create a composer.json in your projects root-directory:
 Or add to an existing project with: 
 
 ```bash
-composer require tecnickcom/tc-lib-barcode ^1.17
+composer require tecnickcom/tc-lib-barcode ^1.18
 ```
 
 ## Packaging

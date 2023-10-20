@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**
- * Barcode class test
+ * PDF417 Barcode class test
  *
  * @since       2015-02-21
  * @category    Library

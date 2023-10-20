@@ -46,22 +46,22 @@ class Data
     // -----------------------------------------------------
 
     /**
-     * Matrix index to get width from $capacity array.
+     * Matrix index to get width from CAPACITY array.
      */
     const QRCAP_WIDTH = 0;
 
     /**
-     * Matrix index to get number of words from $capacity array.
+     * Matrix index to get number of words from CAPACITY array.
      */
     const QRCAP_WORDS = 1;
 
     /**
-     * Matrix index to get remainder from $capacity array.
+     * Matrix index to get remainder from CAPACITY array.
      */
     const QRCAP_REMINDER = 2;
 
     /**
-     * Matrix index to get error correction level from $capacity array.
+     * Matrix index to get error correction level from CAPACITY array.
      */
     const QRCAP_EC = 3;
 
@@ -113,10 +113,8 @@ class Data
      * 8B : Encoding mode 8bit byte data. In theory, 2953 characters or less can be stored in a QRcode.
      * KJ : Encoding mode KANJI. A KANJI character (multibyte character) is encoded to 13bit length.
      * ST : Encoding mode STRUCTURED
-     *
-     * @var array
      */
-    public static $encodingModes = array('NL' => -1, 'NM' => 0, 'AN' => 1, '8B' => 2, 'KJ' => 3, 'ST' => 4);
+    const ENC_MODES = array('NL' => -1, 'NM' => 0, 'AN' => 1, '8B' => 2, 'KJ' => 3, 'ST' => 4);
 
     /**
      * Array of valid error correction levels
@@ -126,17 +124,13 @@ class Data
      * M : About 15% or less errors can be corrected.
      * Q : About 25% or less errors can be corrected.
      * H : About 30% or less errors can be corrected.
-     *
-     * @var array
      */
-    public static $errCorrLevels = array('L' => 0, 'M' => 1, 'Q' => 2, 'H' => 3);
+    const ECC_LEVELS = array('L' => 0, 'M' => 1, 'Q' => 2, 'H' => 3);
 
     /**
      * Alphabet-numeric conversion table.
-     *
-     * @var array
      */
-    public static $anTable = array(
+    const AN_TABLE = array(
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, //
         36, -1, -1, -1, 37, 38, -1, -1, -1, -1, 39, 40, -1, 41, 42, 43, //
@@ -150,10 +144,8 @@ class Data
     /**
      * Array Table of the capacity of symbols.
      * See Table 1 (pp.13) and Table 12-16 (pp.30-36), JIS X0510:2004.
-     *
-     * @var array
      */
-    public static $capacity = array(
+    const CAPACITY = array(
         array(  0,    0, 0, array(   0,    0,    0,    0)), //
         array( 21,   26, 0, array(   7,   10,   13,   17)), //  1
         array( 25,   44, 7, array(  10,   16,   22,   28)), //
@@ -199,10 +191,8 @@ class Data
 
     /**
      * Array Length indicator.
-     *
-     * @var array
      */
-    public static $lengthTableBits = array(
+    const LEN_TABLE_BITS = array(
         array(10, 12, 14),
         array( 9, 11, 13),
         array( 8, 16, 16),
@@ -212,10 +202,8 @@ class Data
     /**
      * Array Table of the error correction code (Reed-Solomon block).
      * See Table 12-16 (pp.30-36), JIS X0510:2004.
-     *
-     * @var array
      */
-    public static $eccTable = array(
+    const ECC_TABLE = array(
         array(array( 0,  0), array( 0,  0), array( 0,  0), array( 0,  0)), //
         array(array( 1,  0), array( 1,  0), array( 1,  0), array( 1,  0)), //  1
         array(array( 1,  0), array( 1,  0), array( 1,  0), array( 1,  0)), //
@@ -264,10 +252,8 @@ class Data
      * This array includes only the second and the third position of the alignment patterns.
      * Rest of them can be calculated from the distance between them.
      * See Table 1 in Appendix E (pp.71) of JIS X0510:2004.
-     *
-     * @var array
      */
-    public static $alignmentPattern = array(
+    const ALIGN_PATTERN = array(
         array( 0,  0),
         array( 0,  0), array(18,  0), array(22,  0), array(26,  0), array(30,  0), //  1- 5
         array(34,  0), array(22, 38), array(24, 42), array(26, 46), array(28, 50), //  6-10
@@ -283,10 +269,8 @@ class Data
      * Array Version information pattern (BCH coded).
      * See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
      * size: [QRSPEC_VERSION_MAX - 6]
-     *
-     * @var array
      */
-    public static $versionPattern = array(
+    const VERSION_PATTERN = array(
         0x07c94, 0x085bc, 0x09a99, 0x0a4d3, 0x0bbf6, 0x0c762, 0x0d847, 0x0e60d, //
         0x0f928, 0x10b78, 0x1145d, 0x12a17, 0x13532, 0x149a6, 0x15683, 0x168c9, //
         0x177ec, 0x18ec4, 0x191e1, 0x1afab, 0x1b08e, 0x1cc1a, 0x1d33f, 0x1ed75, //
@@ -296,10 +280,8 @@ class Data
 
     /**
      * Array Format information
-     *
-     * @var array
      */
-    public static $formatInfo = array(
+    const FORMAT_INFO = array(
         array(0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976), //
         array(0x5412, 0x5125, 0x5e7c, 0x5b4b, 0x45f9, 0x40ce, 0x4f97, 0x4aa0), //
         array(0x355f, 0x3068, 0x3f31, 0x3a06, 0x24b4, 0x2183, 0x2eda, 0x2bed), //

@@ -33,24 +33,18 @@ abstract class Data
 {
     /**
      * Start pattern
-     *
-     * @var string
      */
-    public static $start_pattern = '11111111010101000';
+    const START_PATTERN = '11111111010101000';
 
     /**
      * Stop pattern
-     *
-     * @var string
      */
-    public static $stop_pattern = '111111101000101001';
+    const STOP_PATTERN = '111111101000101001';
 
     /**
      * Array of text Compaction Sub-Modes (values 0xFB - 0xFF are used for submode changers)
-     *
-     * @var array
      */
-    public static $textsubmodes = array(
+    const TEXT_SUB_MODES = array(
         array( // Alpha
             0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,
             0x4b,0x4c,0x4d,0x4e,0x4f,0x50,0x51,0x52,0x53,0x54,
@@ -75,10 +69,8 @@ abstract class Data
 
     /**
      * Array of switching codes for Text Compaction Sub-Modes
-     *
-     * @var array
      */
-    public static $textlatch = array(
+    const TEXT_LATCH = array(
         '01' => array(27),
         '02' => array(28),
         '03' => array(28,25),
@@ -113,10 +105,8 @@ abstract class Data
      *     926 : Identifier for a general purpose ECI format
      *     927 : Identifier for an ECI of a character set or code page
      *     928 : Macro marker codeword to indicate the beginning of a Macro PDF Control Block
-     *
-     * @var array
      */
-    public static $clusters = array(
+    const CLUSTERS = array(
         array( // cluster 0 -----------------------------------------------------------------------
             0x1d5c0,0x1eaf0,0x1f57c,0x1d4e0,0x1ea78,0x1f53e,0x1a8c0,0x1d470,0x1a860,0x15040, //  10
             0x1a830,0x15020,0x1adc0,0x1d6f0,0x1eb7c,0x1ace0,0x1d678,0x1eb3e,0x158c0,0x1ac70, //  20
@@ -407,10 +397,8 @@ abstract class Data
     /**
      * Array of factors of the Reed-Solomon polynomial equations used for error correction;
      * One sub array for each correction level (0-8).
-     *
-     * @var array
      */
-    public static $rsfactors = array(
+    const RS_FACTORS = array(
         array( // ECL 0 (2 factors) -------------------------------------------------------------------------------
             0x01b,0x395                                                                                      //   2
         ),
