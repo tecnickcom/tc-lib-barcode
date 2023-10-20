@@ -79,7 +79,7 @@ abstract class Codeword
      */
     protected function charEnc($mode, $ord)
     {
-        return isset(DATA::CHAR_ENC[$mode][$ord]) ? DATA::CHAR_ENC[$mode][$ord] : 0;
+        return array_key_exists($ord, DATA::CHAR_ENC[$mode]) ? DATA::CHAR_ENC[$mode][$ord] : 0;
     }
 
     /**
@@ -91,7 +91,7 @@ abstract class Codeword
      */
     protected function charMode($ord)
     {
-        return isset(DATA::CHAR_MODES[$ord]) ? DATA::CHAR_MODES[$ord] : Data::MODE_BINARY;
+        return array_key_exists($ord, DATA::CHAR_MODES) ? DATA::CHAR_MODES[$ord] : Data::MODE_BINARY;
     }
 
     /**
