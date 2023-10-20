@@ -115,7 +115,7 @@ class Barcode
         $params = explode(',', $type);
         $type = array_shift($params);
 
-        if (empty(self::TYPECLASS[$type])) {
+        if (!array_key_exists($type, self::TYPECLASS)) {
             throw new BarcodeException('Unsupported barcode type: ' . $type);
         }
         $bclass = '\\Com\\Tecnick\\Barcode\\Type\\' . self::TYPECLASS[$type];
