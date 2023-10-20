@@ -305,13 +305,13 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     protected function drawData()
     {
         $center = $this->gridcenter;
-        $llen = 17; // width of the first layer side
+        $llen = 16; // width of the first layer side
         $srow = -8; // start top row offset from the center (LSB)
         $scol = -7; // start top column offset from the center (LSB)
         if ($this->compact) {
-            $llen -= 4;
-            $srow += 2;
-            $scol += 2;
+            $llen = 13;
+            $srow = -6;
+            $scol = -5;
         }
         $dmoff = 1; // offset to the second domino bit
         $bit = ($this->totbits - 1); // index of last bitstream bit (first to draw)
