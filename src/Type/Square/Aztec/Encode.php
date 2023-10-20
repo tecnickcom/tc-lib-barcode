@@ -70,6 +70,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $wsize = $this->layer[2];
         $nbits = $this->layer[3];
         $numcdw = $this->addCheckWords($this->bitstream, $this->totbits, $nbits, $wsize);
+        //var_export($this->bitstream);//DEBUG
         $this->setGrid();
         $this->drawMode($numcdw);
         $this->drawData();
@@ -283,7 +284,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected function skipRefGrid($pos)
     {
-        return intval($this->compact && (($pos % 16) == 0));
+        return intval((!$this->compact) && (($pos % 16) == 0));
     }
 
     /**
