@@ -229,18 +229,13 @@ abstract class Codeword
 
     /**
      * Shift to another mode.
-     *
-     * @param int $mode The new encoding mode.
      */
     protected function addShift($mode)
     {
         if ($this->encmode == $mode) {
-            return $this->encmode;
+            return;
         }
         $shift = Data::SHIFT_MAP[$this->encmode][$mode];
-        if (empty($shift)) {
-            return $this->encmode;
-        }
         foreach ($shift as $cdw) {
             $this->addRawCwd($cdw[0], $cdw[1]);
         }
