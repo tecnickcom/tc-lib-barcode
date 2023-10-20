@@ -210,9 +210,9 @@ class ErrorCorrection
      */
     protected function multiplyByMonomial(array $coeff, $mon, $deg)
     {
-        if ($mon == 0) {
-            return array(0);
-        }
+        // if ($mon == 0) {
+        //     return array(0);
+        // }
         $ncf = count($coeff);
         $prod = array_fill(0, ($ncf + $deg), 0);
         for ($idx = 0; $idx < $ncf; $idx++) {
@@ -231,19 +231,19 @@ class ErrorCorrection
      */
     protected function addOrSubtract(array $smaller, array $larger)
     {
-        if ($smaller[0] == 0) {
-            return $larger;
-        }
-        if ($larger[0] == 0) {
-            return $smaller;
-        }
+        // if ($smaller[0] == 0) {
+        //     return $larger;
+        // }
+        // if ($larger[0] == 0) {
+        //     return $smaller;
+        // }
         $slen = count($smaller);
         $llen = count($larger);
-        if ($slen > $llen) {
-            // swap arrays
-            list($smaller, $larger) = array($larger, $smaller);
-            list($slen, $llen) = array($llen, $slen);
-        }
+        // if ($slen > $llen) {
+        //     // swap arrays
+        //     list($smaller, $larger) = array($larger, $smaller);
+        //     list($slen, $llen) = array($llen, $slen);
+        // }
         $lendiff = ($llen - $slen);
         $coeff = array_slice($larger, 0, $lendiff);
         for ($idx = $lendiff; $idx < $llen; $idx++) {

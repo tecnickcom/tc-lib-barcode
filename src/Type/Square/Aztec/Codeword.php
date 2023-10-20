@@ -232,9 +232,6 @@ abstract class Codeword
      */
     protected function addShift($mode)
     {
-        if ($this->encmode == $mode) {
-            return;
-        }
         $shift = Data::SHIFT_MAP[$this->encmode][$mode];
         foreach ($shift as $cdw) {
             $this->addRawCwd($cdw[0], $cdw[1]);
@@ -292,7 +289,9 @@ abstract class Codeword
         if ($eci < 0) {
             return;
         }
-        $this->addShift(Data::MODE_PUNCT);
+        if ($this->encmode != Data::MODE_PUNCT) {
+            $this->addShift(Data::MODE_PUNCT);
+        }
         if ($eci == 0) {
             $this->addRawCwd(3, 0); // FNC1
             return;
