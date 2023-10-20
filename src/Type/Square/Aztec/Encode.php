@@ -67,13 +67,13 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         if (!$this->sizeAndBitStuffing($ecc, $mode)) {
                 throw new BarcodeException('Data too long');
         }
-        $numcdw = count($this->tmpCdws);
         $wsize = $this->layer[2];
         $nbits = $this->layer[3];
-        $this->addCheckWords($this->tmpCdws, $this->bitstream, $this->totbits, $nbits, $wsize);
+        $numcdw = $this->addCheckWords($this->bitstream, $this->totbits, $nbits, $wsize);
+        //var_export($this->bitstream); return; // DEBUG
         $this->setGrid();
-        $this->drawMode($numcdw);
-        $this->drawData();
+        //$this->drawMode($numcdw);
+        //$this->drawData();
     }
 
     /**
@@ -89,30 +89,33 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     /**
      * Returns the Check Codewords array for the given data words.
      *
-     * @param array $cdw Array of codewords.
      * @param array $bitstream Array of bits.
      * @param int   $totbits   Number of bits in the bitstream.
      * @param int   $nbits     Number of bits per layer.
      * @param int   $wsize     Word size.
+     * 
+     * @return int The number of data codewords.
      */
-    protected function addCheckWords(array &$cdw, array &$bitstream, &$totbits, $nbits, $wsize)
+    protected function addCheckWords(array &$bitstream, &$totbits, $nbits, $wsize)
     {
-        $nwords = count($cdw);
+        $cdw = $this->bitstreamToWords($bitstream, $totbits, $wsize);
+        $numcdw = count($cdw);
         $totwords = intval($nbits / $wsize);
-        $eccwords = ($totwords - $nwords);
+        $eccwords = ($totwords - $numcdw);
+        // $cdw = array_pad($cdw, $totwords, 0); // no need for padding
         $ecc = new ErrorCorrection($wsize);
         $checkwords = $ecc->checkwords($cdw, $eccwords);
         // append check codewords
         foreach ($checkwords as $val) {
-                $cdw[] = array($wsize, $val);
                 $this->appendWordToBitstream($bitstream, $totbits, $wsize, $val);
         }
         // insert padding at the beginning of the codewords and bitstream
         $pad = intval($nbits % $wsize);
         if ($pad > 0) {
-                array_unshift($cdw, array($pad, 0));
                 array_unshift($bitstream, array_fill(0, $pad, 0));
+                $totbits = count($bitstream);
         }
+        return $numcdw;
     }
 
     /**
@@ -200,7 +203,6 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected function drawMode($numcdw)
     {
-        $modecwd = array();
         $modebs = array();
         $nbits = 0;
         $modebits = 40;
@@ -217,11 +219,9 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
             $srow = 5;
             $scol = 3;
         }
-        $modecwd[] = array($layersbits, ($this->numlayers - 1));
-        $this->appendWordToBitstream($modebs, $nbits, $modecwd[0][0], $modecwd[0][1]);
-        $modecwd[] = array($codewordsbits, ($numcdw - 1));
-        $this->appendWordToBitstream($modebs, $nbits, $modecwd[1][0], $modecwd[1][1]);
-        $this->addCheckWords($modecwd, $modebs, $nbits, $modebits, 4);
+        $this->appendWordToBitstream($modebs, $nbits, $layersbits, ($this->numlayers - 1));
+        $this->appendWordToBitstream($modebs, $nbits, $codewordsbits, ($numcdw - 1));
+        $this->addCheckWords($modebs, $nbits, $modebits, 4);
         // draw the mode message in the grid (10 bits per side clockwise)
         $rowt = $coll = ($this->gridcenter - $srow);
         $rowl = $rowr = $colt = ($this->gridcenter - $scol);

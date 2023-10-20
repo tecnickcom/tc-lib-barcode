@@ -159,10 +159,36 @@ abstract class Codeword
      */
     protected function appendWordToBitstream(array &$bitstream, &$totbits, $wsize, $value)
     {
-        $totbits += $wsize;
         for ($idx = ($wsize - 1); $idx >= 0; $idx--) {
             $bitstream[] = ($value >> $idx) & 1;
         }
+        $totbits += $wsize;
+    }
+
+    /**
+     * Convert the bitstream to words.
+     * 
+     * @param array $bitstream Array of bits to convert.
+     * @param int   $totbits   Number of bits in the bitstream.
+     * @param int   $wsize     The word size.
+     * 
+     * @return array
+     */
+    protected function bitstreamToWords(array $bitstream, $totbits, $wsize)
+    {
+        $words = array();
+        $numwords = intval(ceil($totbits / $wsize));
+        for ($idx = 0; $idx < $numwords; $idx++) {
+            $wrd = 0;
+            for ($bit = 0; $bit < $wsize; $bit++) {
+                $pos = (($idx * $wsize) + $bit);
+                if (!empty($bitstream[$pos]) || !isset($bitstream[$pos])) {
+                    $wrd |= (1 << ($wsize - $bit - 1)); // reverse order
+                }
+            }
+            $words[] = $wrd;
+        }
+        return $words;
     }
 
     /**
