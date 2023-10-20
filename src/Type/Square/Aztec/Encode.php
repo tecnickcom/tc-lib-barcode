@@ -205,46 +205,57 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     {
         $modebs = array();
         $nbits = 0;
+        $center = $this->gridcenter;
         $modebits = 40;
         $layersbits = 5;
         $codewordsbits = 11;
         $sidelen = 10;
-        $srow = 7;
-        $scol = 5;
+        $srow = -7;
+        $scol = -5;
         if ($this->compact) {
             $modebits = 28;
             $layersbits = 2;
             $codewordsbits = 6;
             $sidelen = 7;
-            $srow = 5;
-            $scol = 3;
+            $srow = -5;
+            $scol = -3;
         }
         $this->appendWordToBitstream($modebs, $nbits, $layersbits, ($this->numlayers - 1));
         $this->appendWordToBitstream($modebs, $nbits, $codewordsbits, ($numcdw - 1));
         $this->addCheckWords($modebs, $nbits, $modebits, 4);
-        // draw the mode message in the grid (10 bits per side clockwise)
-        $rowt = $coll = ($this->gridcenter - $srow);
-        $rowl = $rowr = $colt = ($this->gridcenter - $scol);
-        $rowb = $colr = ($this->gridcenter + $srow);
-        $colb = ($this->gridcenter + $scol);
+        // draw the mode message in the grid clockwise starting from the top left corner
+        $bit = 0;
+        // top
+        $ypos = ($center + $srow);
+        $xpos = ($center + $scol);
         for ($pos = 0; $pos < $sidelen; $pos++) {
-            $skip = ($this->compact ? 0 : intval($pos / 5)); // used to skip the center position in full mode
-            // top
-            if (!empty($modebs[$pos])) {
-                $this->grid[$rowt][($colt + $pos + $skip)] = 1;
-            }
-            // right
-            if (!empty($modebs[($pos + $sidelen)])) {
-                $this->grid[($rowr + $pos + $skip)][$colr] = 1;
-            }
-            // bottom
-            if (!empty($modebs[($pos + (2 * $sidelen))])) {
-                $this->grid[$rowb][($colb - $pos - $skip)] = 1;
-            }
-            // left
-            if (!empty($modebs[($pos + (3 * $sidelen))])) {
-                $this->grid[($rowl - $pos - $skip)][$coll] = 1;
-            }
+            $xpos += ($this->compact ? 0 : intval($pos / 5));
+            $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
+            $xpos++;
+        }
+        // right
+        $ypos += 2;
+        $xpos++;
+        for ($pos = 0; $pos < $sidelen; $pos++) {
+            $ypos += ($this->compact ? 0 : intval($pos / 5));
+            $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
+            $ypos++;
+        }
+        // bottom
+        $ypos++;
+        $xpos -= 2;
+        for ($pos = 0; $pos < $sidelen; $pos++) {
+            $xpos -= ($this->compact ? 0 : intval($pos / 5));
+            $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
+            $xpos--;
+        }
+        // left
+        $ypos -= 2;
+        $xpos--;
+        for ($pos = 0; $pos < $sidelen; $pos++) {
+            $ypos -= ($this->compact ? 0 : intval($pos / 5));
+            $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
+            $ypos--;
         }
     }
 
