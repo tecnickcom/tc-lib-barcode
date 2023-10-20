@@ -66,21 +66,22 @@ class AztecTest extends TestUtil
     public static function getGridDataProvider()
     {
         return array(
+            array(',100,A,A,0', 'A', 'c48da49052f674edc66fa02e52334b17'),
             array('', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ', '74f1e68830f0c635cd01167245743098'),
             array('', ' abcdefghijklmnopqrstuvwxyz', '100ebf910c88922b0ccee88256ba0c81'),
             array('', ' ,.0123456789', 'ee2a70b7c88a9e0956b1896983e93f91'),
-            array('', '\r!"#$%&\'()*+,-./:;<=>?[]{}', '0a3104f0ecc58700db0f724aa47c6226'),
+            array('', "\r" . '!"#$%&\'()*+,-./:;<=>?[]{}', '6965459e50f7c3029de42ef5dc5c1fdf'),
             array('', chr(1) . chr(2) . chr(3) . chr(4) . chr(5)
-                     . chr(6) . chr(7) . chr(8) . chr(9) . chr(10)
-                     . chr(11) . chr(12) . chr(13) . chr(27) . chr(28)
-                     . chr(29) . chr(30) . chr(31) . chr(64) . chr(92)
-                     . chr(94) . chr(95) . chr(96) . chr(124) . chr(126)
-                     . chr(127), 'b8961abf38519b529f7dc6a20e8f3e59'),
+            . chr(6) . chr(7) . chr(8) . chr(9) . chr(10)
+            . chr(11) . chr(12) . chr(13) . chr(27) . chr(28)
+            . chr(29) . chr(30) . chr(31) . chr(64) . chr(92)
+            . chr(94) . chr(95) . chr(96) . chr(124) . chr(126)
+            . chr(127), 'b8961abf38519b529f7dc6a20e8f3e59'),
             array('', 'AaB0C#D' . chr(126), '9b1f2af28b8d9d222de93dfe6a09a047'),
             array('', 'aAb0c#d' . chr(126), 'f4c58cabbdb5d94fa0cc1c31d510936a'),
             array('', '#A$a%0&' . chr(126), 'a17634a1db6372efbf8ea25a303c38f8'),
             array('', chr(1) . 'A' . chr(1) . 'a' . chr(1) . '0' . chr(1) . '#', 'c1a585888c7a1eb424ff98bbf7b32d46'),
-            array('', 'PUNCT pairs , . : \r\n', '4204e49298873cb18c200ef81b279c3b'),
+            array('', 'PUNCT pairs , . : ' . "\r\n", '35281793cc5247b291abb8e3fe5ed853'),
             array('', 'ABCDEabcdeABCDE012345ABCDE?[]{}ABCDE'
             . chr(1) . chr(2) . chr(3) . chr(4) . chr(5), '4ae19b80469a1afff8e490f5afaa8b73'),
             array('', 'abcdeABCDEabcde012345abcde?[]{}abcde'
@@ -99,7 +100,8 @@ class AztecTest extends TestUtil
             . ' cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat'
             . ' cupidatat non proident,' .
             ' sunt in culpa qui officia deserunt mollit anim id est laborum.', 'bb2b103d59e035a581fed0619090f89c'),
-            array('', chr(128) . chr(129) . chr(130) . chr(131) . chr(132), 'da92b009c1f4430e2f62c76c5f708121')
+            array('', chr(128) . chr(129) . chr(130) . chr(131) . chr(132), 'da92b009c1f4430e2f62c76c5f708121'),
+            array('', '0123456789. , . , . , 0123456789', 'c4ac2fe72e6cb8c3fe08d764626f0f44')
         );
     }
 
