@@ -67,7 +67,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         $this->addShift(Data::MODE_BINARY);
         if ($chrlen > 62) {
             $this->addRawCwd(5, 0);
-            $this->addRawCwd(11, $chrlen);
+            $this->addRawCwd(11, ($chrlen - 31));
             for ($idx = 0; $idx < $chrlen; $idx++) {
                 $this->addRawCwd($bits, $chars[$idx]);
             }
@@ -187,7 +187,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         $this->addShift(Data::MODE_BINARY);
         if ($binchrs > 62) {
             $this->addRawCwd(5, 0);
-            $this->addRawCwd(11, $binchrs);
+            $this->addRawCwd(11, ($binchrs - 31));
             $this->mergeTmpCwdRaw();
             $idx += $binchrs;
             $this->encmode = $encmode;
