@@ -48,7 +48,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
 
         // 128B (Code Set B) - ASCII characters 32 to 127 (0-9, A-Z, a-z), special characters
         $this->keys_b = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]'
-            . '^_`abcdefghijklmnopqrstuvwxyz{|}~' . chr(127);
+            . '^_`abcdefghijklmnopqrstuvwxyz{|}~' . "\x7F";
     }
 
     /**
