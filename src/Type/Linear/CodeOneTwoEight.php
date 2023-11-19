@@ -37,7 +37,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     /**
      * Set the ASCII maps values
      */
-    protected function setAsciiMaps()
+    protected function setAsciiMaps(): void
     {
         // 128A (Code Set A) - ASCII characters 00 to 95 (0-9, A-Z and control codes), special characters
         $this->keys_a = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'
@@ -56,7 +56,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeData()
+    protected function getCodeData(): array
     {
         $code = $this->code;
         // array of symbols
@@ -79,11 +79,17 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @param array  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
-     * @param string $seq        Sequence current value
+     * @param array $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */
-    protected function processSequenceA(&$sequence, &$code_data, &$startid, $key, $seq)
+    protected function processSequenceA(
+        array &$sequence, 
+        array  &$code_data, 
+        int &$startid, 
+        int $key, 
+        array $seq
+        ): void
     {
         if ($key == 0) {
             $startid = 103;
