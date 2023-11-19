@@ -308,7 +308,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $chars = $this->getCharsArray();
         for ($pos = 0; $pos < 65; ++$pos) {

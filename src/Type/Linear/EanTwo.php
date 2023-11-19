@@ -117,7 +117,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->formatCode();
         $chk = $this->getChecksum($this->extcode);

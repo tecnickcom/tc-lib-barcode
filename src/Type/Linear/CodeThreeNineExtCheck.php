@@ -201,7 +201,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->ncols = 0;
         $this->nrows = 1;

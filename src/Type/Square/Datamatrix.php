@@ -265,7 +265,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->dmx = new Encode($this->shape);
         $params = $this->getCodewords();

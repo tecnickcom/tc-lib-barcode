@@ -53,7 +53,7 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->formatCode();
         $seq = '101'; // left guard bar

@@ -146,7 +146,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         if (strlen((string)$this->code) == 0) {
             throw new BarcodeException('Empty input');

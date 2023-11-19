@@ -153,7 +153,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->formatCode();
         $upce_code = $this->convertUpcaToUpce($this->extcode);

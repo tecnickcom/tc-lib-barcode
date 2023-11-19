@@ -172,7 +172,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         if (!is_numeric($this->code)) {
             throw new BarcodeException('Input code must be a number');

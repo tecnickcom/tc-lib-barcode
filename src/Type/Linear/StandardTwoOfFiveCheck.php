@@ -97,7 +97,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->formatCode();
         if ((strlen($this->extcode) % 2) != 0) {

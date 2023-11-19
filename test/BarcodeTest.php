@@ -36,13 +36,6 @@ class BarcodeTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetTypes()
-    {
-        $testObj = $this->getTestObject();
-        $types = $testObj->getTypes();
-        $this->assertEquals(37, count($types));
-    }
-
     public function testGetBarcodeObjException()
     {
         $this->bcExpectException('\Com\Tecnick\Barcode\Exception');

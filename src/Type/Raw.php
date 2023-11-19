@@ -59,7 +59,7 @@ class Raw extends \Com\Tecnick\Barcode\Type
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $rows = $this->getCodeRows();
         if (empty($rows)) {

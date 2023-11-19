@@ -108,7 +108,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->formatCode();
         $seq = '110'; // left guard

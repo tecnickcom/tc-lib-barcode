@@ -217,7 +217,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->setAsciiMaps();
         $code_data = $this->getCodeData();

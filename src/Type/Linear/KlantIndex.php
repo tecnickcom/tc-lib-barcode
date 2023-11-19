@@ -54,7 +54,7 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->ncols = 0;
         $this->nrows = 3;

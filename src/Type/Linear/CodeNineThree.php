@@ -215,7 +215,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->extcodes = array(
             chr(131) . 'U',

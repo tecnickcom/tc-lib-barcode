@@ -46,7 +46,7 @@ class ImbPre extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $code = strtolower($this->code);
         if (preg_match('/^[fadt]{65}$/', $code) != 1) {
