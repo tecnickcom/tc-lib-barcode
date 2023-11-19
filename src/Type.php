@@ -419,11 +419,11 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the barcode as GD image object (requires GD library)
      *
-     * @return GdImage
+     * @return \GdImage
      *
      * @throws BarcodeException if the GD library is not installed
      */
-    public function getGd(): GdImage
+    public function getGd(): \GdImage
     {
         $width = (int)ceil($this->width + $this->padding['L'] + $this->padding['R']);
         $height = (int)ceil($this->height + $this->padding['T'] + $this->padding['B']);
