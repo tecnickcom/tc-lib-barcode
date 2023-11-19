@@ -39,7 +39,7 @@ class CodeOneTwoEightA extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
      *
      * @var string
      */
-    protected $format = 'C128A';
+    protected string $format = 'C128A';
 
     /**
      * Get the code point array

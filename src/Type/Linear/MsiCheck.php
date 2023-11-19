@@ -39,7 +39,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'MSI+';
+    protected string $format = 'MSI+';
 
     /**
      * Map characters to barcodes

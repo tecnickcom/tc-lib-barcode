@@ -39,7 +39,7 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
      *
      * @var string
      */
-    protected $format = 'I25+';
+    protected string $format = 'I25+';
 
     /**
      * Map characters to barcodes

@@ -39,7 +39,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'C39E+';
+    protected string $format = 'C39E+';
 
     /**
      * Map characters to barcodes

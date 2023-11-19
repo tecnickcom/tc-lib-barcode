@@ -39,7 +39,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'CODE11';
+    protected string $format = 'CODE11';
 
     /**
      * Map characters to barcodes

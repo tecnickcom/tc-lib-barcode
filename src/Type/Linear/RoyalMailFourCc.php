@@ -39,7 +39,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'RMS4CC';
+    protected string $format = 'RMS4CC';
 
     /**
      * Map characters to barcodes

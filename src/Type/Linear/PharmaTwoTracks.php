@@ -39,7 +39,7 @@ class PharmaTwoTracks extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'PHARMA2T';
+    protected string $format = 'PHARMA2T';
 
     /**
      * Set the bars array.

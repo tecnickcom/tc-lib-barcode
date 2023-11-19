@@ -39,7 +39,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @var string
      */
-    protected $format = 'C93';
+    protected string $format = 'C93';
 
     /**
      * Map characters to barcodes

@@ -39,7 +39,7 @@ class Msi extends \Com\Tecnick\Barcode\Type\Linear\MsiCheck
      *
      * @var string
      */
-    protected $format = 'MSI';
+    protected string $format = 'MSI';
 
     /**
      * Format code

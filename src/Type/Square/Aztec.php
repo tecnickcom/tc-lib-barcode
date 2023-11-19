@@ -40,7 +40,7 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var string
      */
-    protected $format = 'AZTEC';
+    protected string $format = 'AZTEC';
 
     /**
      * Error correction code percentage of error check words.

@@ -43,7 +43,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      *
      * @var string
      */
-    protected $format = 'UPCE';
+    protected string $format = 'UPCE';
 
     /**
      * Fixed code length

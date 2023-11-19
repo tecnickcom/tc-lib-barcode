@@ -39,7 +39,7 @@ class Planet extends \Com\Tecnick\Barcode\Type\Linear\Postnet
      *
      * @var string
      */
-    protected $format = 'PLANET';
+    protected string $format = 'PLANET';
 
     /**
      * Map characters to barcodes

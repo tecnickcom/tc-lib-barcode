@@ -39,7 +39,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'S25+';
+    protected string $format = 'S25+';
 
     /**
      * Map characters to barcodes

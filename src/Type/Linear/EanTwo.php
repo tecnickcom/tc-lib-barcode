@@ -39,7 +39,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'EAN2';
+    protected string $format = 'EAN2';
 
     /**
      * Fixed code length

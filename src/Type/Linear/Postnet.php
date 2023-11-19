@@ -39,7 +39,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'POSTNET';
+    protected string $format = 'POSTNET';
 
     /**
      * Map characters to barcodes

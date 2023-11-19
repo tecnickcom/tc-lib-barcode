@@ -52,7 +52,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      *
      * @var string
      */
-    protected $format = 'PDF417';
+    protected string $format = 'PDF417';
 
     /**
      * Row height respect X dimension of single module

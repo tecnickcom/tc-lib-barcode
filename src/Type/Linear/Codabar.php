@@ -38,7 +38,7 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'CODABAR';
+    protected string $format = 'CODABAR';
 
     /**
      * Map characters to barcodes

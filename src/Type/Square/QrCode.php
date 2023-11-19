@@ -42,7 +42,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var string
      */
-    protected $format = 'QRCODE';
+    protected string $format = 'QRCODE';
 
     /**
      * QR code version.

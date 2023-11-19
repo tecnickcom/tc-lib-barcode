@@ -16,6 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type;
 
+use Com\Tecnick\Barcode\Type\Raw;
 use Com\Tecnick\Color\Model\Rgb as Color;
 
 /**
@@ -38,49 +39,49 @@ abstract class Convert
      *
      * @var string
      */
-    protected $type = '';
+    protected string $type = '';
 
     /**
      * Barcode format
      *
      * @var string
      */
-    protected $format = '';
+    protected string $format = '';
 
     /**
      * Array containing extra parameters for the specified barcode type
      *
      * @var array
      */
-    protected $params;
+    protected array $params = [];
 
     /**
      * Code to convert (barcode content)
      *
-     * @var string
+     * @var string|array
      */
-    protected $code = '';
+    protected string|array $code = '';
 
     /**
      * Resulting code after applying checksum etc.
      *
-     * @var string
+     * @var string|array
      */
-    protected $extcode = '';
+    protected string|array $extcode = '';
 
     /**
      * Total number of columns
      *
      * @var int
      */
-    protected $ncols = 0;
+    protected int $ncols = 0;
 
     /**
      * Total number of rows
      *
      * @var int
      */
-    protected $nrows = 1;
+    protected int $nrows = 1;
 
     /**
      * Array containing the position and dimensions of each barcode bar
@@ -88,66 +89,66 @@ abstract class Convert
      *
      * @var array
      */
-    protected $bars = array();
+    protected array $bars = array();
 
     /**
      * Barcode width
      *
      * @var int
      */
-    protected $width;
+    protected int $width = 0;
 
     /**
      * Barcode height
      *
      * @var int
      */
-    protected $height;
+    protected int $height = 0;
 
     /**
      * Additional padding to add around the barcode (top, right, bottom, left) in user units.
      * A negative value indicates the multiplication factor for each row or column.
      *
-     * @var array
+     * @var array{'T': int, 'R': int, 'B': int, 'L': int}
      */
-    protected $padding = array('T' => 0, 'R' => 0, 'B' => 0, 'L' => 0);
+    protected array $padding = ['T' => 0, 'R' => 0, 'B' => 0, 'L' => 0];
 
     /**
      * Ratio between the barcode width and the number of rows
      *
      * @var float
      */
-    protected $width_ratio;
+    protected float $width_ratio = 0;
 
     /**
      * Ratio between the barcode height and the number of columns
      *
      * @var float
      */
-    protected $height_ratio;
+    protected float $height_ratio =  0;
 
     /**
      * Foreground Color object
      *
-     * @var Color
+     * @var ?Color
      */
-    protected $color_obj;
+    protected ?Color $color_obj = null;
 
     /**
      * Backgorund Color object
      *
-     * @var Color
+     * @var ?Color
      */
-    protected $bg_color_obj;
+    protected ?Color $bg_color_obj = null;
 
     /**
      * Import a binary sequence of comma-separated 01 strings
      *
-     * @param array|string $code Code to process
+     * @param string|array $code Code to process
      */
-    protected function processBinarySequence($code)
+    protected function processBinarySequence(string|array $code): void
     {
-        $raw = new \Com\Tecnick\Barcode\Type\Raw($code, $this->width, $this->height);
+        $raw = new Raw($code, $this->width, $this->height);
         $data = $raw->getArray();
         $this->ncols = $data['ncols'];
         $this->nrows = $data['nrows'];
@@ -161,7 +162,7 @@ abstract class Convert
      *
      * @return string hexadecimal representation
      */
-    protected function convertDecToHex($number)
+    protected function convertDecToHex(string $number): string
     {
         if ($number == 0) {
             return '00';
@@ -182,7 +183,7 @@ abstract class Convert
      *
      * @return string hexadecimal representation
      */
-    protected function convertHexToDec($hex)
+    protected function convertHexToDec(string  $hex): string
     {
         $dec = '0';
         $bitval = '1';
@@ -202,7 +203,10 @@ abstract class Convert
      *
      * @return array
      */
-    public function getGridArray($space_char = '0', $bar_char = '1')
+    public function getGridArray(
+        string $space_char = '0', 
+        string $bar_char = '1'
+    ): array
     {
         $raw = array_fill(0, $this->nrows, array_fill(0, $this->ncols, $space_char));
         foreach ($this->bars as $bar) {
@@ -222,7 +226,7 @@ abstract class Convert
      *
      * @return array
      */
-    protected function getRotatedBarArray()
+    protected function getRotatedBarArray(): array
     {
         $grid = $this->getGridArray();
         $cols = call_user_func_array('array_map', array(-1 => null) + $grid);
@@ -252,7 +256,7 @@ abstract class Convert
      *
      * @return array Bar coordinates
      */
-    protected function getBarRectXYXY($bar)
+    protected function getBarRectXYXY(array $bar): array
     {
         return array(
             ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
@@ -269,7 +273,7 @@ abstract class Convert
      *
      * @return array Bar coordinates
      */
-    protected function getBarRectXYWH($bar)
+    protected function getBarRectXYWH(array $bar): array
     {
         return array(
             ($this->padding['L'] + ($bar[0] * $this->width_ratio)),

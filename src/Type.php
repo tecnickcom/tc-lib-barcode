@@ -46,19 +46,19 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *                        A negative value indicates the multiplication factor for each row.
      * @param string $color   Foreground color in Web notation (color name, or hexadecimal code, or CSS syntax)
      * @param array  $params  Array containing extra parameters for the specified barcode type
-     * @param array  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
+     * @param array{int, int, int, int}  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
      *                        A negative value indicates the number or rows or columns.
      *
      * @throws BarcodeException in case of error
      * @throws ColorException in case of color error
      */
     public function __construct(
-        $code,
-        $width = -1,
-        $height = -1,
-        $color = 'black',
-        $params = array(),
-        $padding = array(0, 0, 0, 0)
+        string|array $code,
+        int $width = -1,
+        int $height = -1,
+        string $color = 'black',
+        array $params = [],
+        array $padding = [0, 0, 0, 0]
     ) {
         $this->code = $code;
         $this->extcode = $code;
@@ -94,9 +94,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *                        A negative value indicates the number or rows or columns.
      */
     public function setSize(
-        $width, 
-        $height, 
-        $padding = array(0, 0, 0, 0)
+        int $width, 
+        int $height, 
+        array $padding = [0, 0, 0, 0]
         ): static
     {
         $this->width = intval($width);
@@ -120,7 +120,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Set the barcode padding
      *
-     * @param array  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
+     * @param array{int, int, int, int} $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
      *                        A negative value indicates the number or rows or columns.
      *
      * @throws BarcodeException in case of error
@@ -183,7 +183,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @param string $color Color in Web notation (color name, or hexadecimal code, or CSS syntax)
      *
-     * @return \Com\Tecnick\Color\Model\Rgb|null
+     * @return Rgb|null
      *
      * @throws ColorException in case of color error
      */
@@ -228,9 +228,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the extended code (code + checksum)
      *
-     * @return string
+     * @return string|array
      */
-    public function getExtendedCode(): string
+    public function getExtendedCode(): string|array
     {
         return $this->extcode;
     }

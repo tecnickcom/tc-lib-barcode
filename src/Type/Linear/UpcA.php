@@ -39,7 +39,7 @@ class UpcA extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      *
      * @var string
      */
-    protected $format = 'UPCA';
+    protected string $format = 'UPCA';
 
     /**
      * Fixed code length

@@ -39,7 +39,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'EAN13';
+    protected string $format = 'EAN13';
 
     /**
      * Fixed code length

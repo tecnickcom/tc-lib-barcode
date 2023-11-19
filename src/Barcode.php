@@ -101,7 +101,7 @@ class Barcode
         int $width = -1,
         int $height = -1,
         string $color = 'black',
-        array $padding = array(0, 0, 0, 0)
+        array $padding = [0, 0, 0, 0]
     ): Type {
         // extract extra parameters (if any)
         $params = explode(',', $type);
