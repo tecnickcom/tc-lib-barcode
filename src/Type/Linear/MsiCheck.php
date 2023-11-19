@@ -46,7 +46,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected array $chbar = array(
+    protected const CHBAR = array(
         '0' => '100100100100',
         '1' => '100100100110',
         '2' => '100100110100',
@@ -115,10 +115,10 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($pos = 0; $pos < $clen; ++$pos) {
             $digit = $this->extcode[$pos];
-            if (!isset($this->chbar[$digit])) {
+            if (!isset(self::CHBAR[$digit])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
-            $seq .= $this->chbar[$digit];
+            $seq .= self::CHBAR[$digit];
         }
         $seq .= '1001'; // right guard
         $this->processBinarySequence($seq);
