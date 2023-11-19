@@ -44,9 +44,9 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $chbar = array(
+    protected array $chbar = array(
         '0' => '100100100100',
         '1' => '100100100110',
         '2' => '100100110100',
@@ -72,7 +72,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $clen = strlen($code);
         $pix = 2;
@@ -98,7 +98,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code . $this->getChecksum($this->code);
     }

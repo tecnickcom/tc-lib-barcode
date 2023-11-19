@@ -44,9 +44,9 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $chbar = array(
+    protected array $chbar = array(
         '0' => '3322',
         '1' => '3412',
         '2' => '3421',
@@ -88,9 +88,9 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Characters used for checksum
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $chksum = array(
+    protected array $chksum = array(
         '0' => '11',
         '1' => '12',
         '2' => '13',
@@ -138,7 +138,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $row = 0;
         $col = 0;
@@ -160,7 +160,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = strtoupper($this->code);
         $this->extcode = $code . $this->getChecksum($code);
@@ -171,7 +171,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCoreBars()
+    protected function getCoreBars(): void
     {
         $this->formatCode();
         $clen = strlen($this->extcode);

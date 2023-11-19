@@ -44,9 +44,9 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $chbar = array(
+    protected array $chbar = array(
         '0' => '22111',
         '1' => '11122',
         '2' => '11212',
@@ -66,7 +66,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $sum = 0;
         $len = strlen($code);
@@ -83,7 +83,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = preg_replace('/[-\s]+/', '', $this->code);
         $this->extcode = $code . $this->getChecksum($code);

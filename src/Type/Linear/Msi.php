@@ -44,7 +44,7 @@ class Msi extends \Com\Tecnick\Barcode\Type\Linear\MsiCheck
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code;
     }

@@ -44,9 +44,9 @@ class Planet extends \Com\Tecnick\Barcode\Type\Linear\Postnet
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $chbar = array(
+    protected array $chbar = array(
         '0' => '11222',
         '1' => '22211',
         '2' => '22121',
