@@ -44,9 +44,9 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int, string>
      */
-    protected $chbar = array(
+    protected const CHBAR = array(
         32  => '311211', // space
         36  => '321111', // $
         37  => '211131', // %
@@ -355,7 +355,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = ord($this->extcode[$chr]);
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = intval($this->chbar[$char][$pos]);
+                $bar_width = intval(self::CHBAR[$char][$pos]);
                 if (($pos % 2) == 0) {
                     $this->bars[] = array($this->ncols, 0, $bar_width, 1);
                 }
