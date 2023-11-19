@@ -43,7 +43,12 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * @param array $temp_cw
      * @param int $ptr
      */
-    public function encodeTXTC40shift(&$chr, &$enc, &$temp_cw, &$ptr)
+    public function encodeTXTC40shift(
+        int &$chr,
+        int &$enc, 
+        array &$temp_cw, 
+        int &$ptr
+    ): void
     {
         if (array_key_exists($chr, Data::CHSET['SH1'])) {
             $temp_cw[] = 0; // shift 1
@@ -76,7 +81,14 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      *
      * @return int   Curent character code
      */
-    public function encodeTXTC40(&$data, &$enc, &$temp_cw, &$ptr, &$epos, &$charset)
+    public function encodeTXTC40(
+        string &$data, 
+        int &$enc, 
+        array  &$temp_cw, 
+        int &$ptr, 
+        int &$epos, 
+        array  &$charset
+    ): int
     {
         // 2. process the next character in C40 encodation.
         $chr = ord($data[$epos]);
@@ -113,7 +125,15 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * @param int    $ptr
      * @param int    $epos
      */
-    public function encodeTXTC40last($chr, &$cdw, &$cdw_num, &$enc, &$temp_cw, &$ptr, &$epos)
+    public function encodeTXTC40last(
+        int $chr, 
+        array &$cdw, 
+        int &$cdw_num, 
+        int &$enc, 
+        array &$temp_cw, 
+        int &$ptr, 
+        int &$epos
+    ): void
     {
         // get remaining number of data symbols
         $cdwr = ($this->getMaxDataCodewords($cdw_num + $ptr) - $cdw_num);
@@ -158,14 +178,21 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
     /**
      * Encode TXT
      *
-     * @param int    $cdw
+     * @param array   $cdw
      * @param int    $cdw_num
      * @param int    $pos
      * @param int    $data_length
      * @param string $data
      * @param int    $enc
      */
-    public function encodeTXT(&$cdw, &$cdw_num, &$pos, &$data_length, &$data, &$enc)
+    public function encodeTXT(
+        array &$cdw, 
+        int &$cdw_num, 
+        int &$pos, 
+        int &$data_length, 
+        string &$data, 
+        int &$enc
+    ): void
     {
         $temp_cw = array();
         $ptr = 0;

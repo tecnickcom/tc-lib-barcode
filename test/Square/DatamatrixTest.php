@@ -56,10 +56,10 @@ class DatamatrixTest extends TestUtil
     {
         $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
         $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
-        $chr = null;
-        $enc = null;
-        $temp_cw = null;
-        $ptr = null;
+        $chr = -1;
+        $enc = -1;
+        $temp_cw = [];
+        $ptr = 0;
         $obj->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
     }
 
@@ -67,12 +67,12 @@ class DatamatrixTest extends TestUtil
     {
         $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
         $obj = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
-        $data = array(chr(0x80));
+        $data = "\x80";
         $enc = \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data::ENC_X12;
-        $temp_cw = null;
-        $ptr = null;
+        $temp_cw = [];
+        $ptr = 0;
         $epos = 0;
-        $charset = null;
+        $charset = [];
         $obj->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
     }
 

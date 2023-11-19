@@ -38,14 +38,14 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @var int
      */
-    public $last_enc;
+    public int $last_enc;
 
     /**
      * Datamatrix shape key (S=square, R=rectangular)
      *
      * @var string
      */
-    public $shape;
+    public string $shape;
 
     /**
      * Return the 253-state codeword
@@ -55,7 +55,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @return int
      */
-    public function get253StateCodeword($cdwpad, $cdwpos)
+    public function get253StateCodeword(int $cdwpad, int $cdwpos): int
     {
         $pad = ($cdwpad + (((149 * $cdwpos) % 253) + 1));
         if ($pad > 254) {
@@ -72,7 +72,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @return int pad codeword
      */
-    protected function get255StateCodeword($cdwpad, $cdwpos)
+    protected function get255StateCodeword(int $cdwpad, int $cdwpos): int 
     {
         $pad = ($cdwpad + (((149 * $cdwpos) % 255) + 1));
         if ($pad > 255) {
@@ -87,9 +87,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      * @param int $chr  Character (byte) to check.
      * @param int $mode Current encoding mode.
      *
-     * @return boolean true if the char is of the selected mode.
+     * @return bool true if the char is of the selected mode.
      */
-    protected function isCharMode($chr, $mode)
+    protected function isCharMode(int $chr, int $mode): bool
     {
         $map = array(
             //Data::ENC_ASCII     => 'isASCIIMode',
@@ -110,9 +110,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
     // *
     // * @param int $chr  Character (byte) to check.
     // *
-    // * @return boolean
+    // * @return bool
     // */
-    //protected function isASCIIMode($chr)
+    //protected function isASCIIMode(int $chr): bool
     //{
     //    return (($chr >= 0) && ($chr <= 127));
     //}
@@ -122,9 +122,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @param int $chr  Character (byte) to check.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function isC40Mode($chr)
+    protected function isC40Mode(int $chr): bool
     {
         return (($chr == 32) || (($chr >= 48) && ($chr <= 57)) || (($chr >= 65) && ($chr <= 90)));
     }
@@ -134,9 +134,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @param int $chr  Character (byte) to check.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function isTXTMode($chr)
+    protected function isTXTMode(int $chr): bool
     {
         return (($chr == 32) || (($chr >= 48) && ($chr <= 57)) || (($chr >= 97) && ($chr <= 122)));
     }
@@ -146,9 +146,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @param int $chr  Character (byte) to check.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function isX12Mode($chr)
+    protected function isX12Mode(int $chr): bool
     {
         return (($chr == 13) || ($chr == 42) || ($chr == 62));
     }
@@ -158,9 +158,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @param int $chr  Character (byte) to check.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function isEDFMode($chr)
+    protected function isEDFMode(int $chr): bool
     {
         return (($chr >= 32) && ($chr <= 94));
     }
@@ -170,9 +170,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @param int $chr  Character (byte) to check.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function isBASE256Mode($chr)
+    protected function isBASE256Mode(int $chr): bool
     {
         return (($chr == 232) || ($chr == 233) || ($chr == 234) || ($chr == 241));
     }
@@ -182,9 +182,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @param int $chr  Character (byte) to check.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function isASCIIEXTMode($chr)
+    protected function isASCIIEXTMode(int $chr): bool
     {
         return (($chr >= 128) && ($chr <= 255));
     }
@@ -194,9 +194,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @param int $chr  Character (byte) to check.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function isASCIINUMMode($chr)
+    protected function isASCIINUMMode(int $chr): bool
     {
         return (($chr >= 48) && ($chr <= 57));
     }
@@ -206,9 +206,9 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @param int $numcw Number of current codewords.
      *
-     * @return number of data codewords in matrix
+     * @return int number of data codewords in matrix
      */
-    protected function getMaxDataCodewords($numcw)
+    protected function getMaxDataCodewords(int $numcw): int
     {
         $mdc = 0;
         foreach (Data::SYMBATTR[$this->shape] as $matrix) {
@@ -222,11 +222,11 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
 
     /**
      * Get the switching codeword to a new encoding mode (latch codeword)
-     * @param $mode (int) New encoding mode.
-     * @return (int) Switch codeword.
+     * @param int $mode New encoding mode.
+     * @return int Switch codeword.
      * @protected
      */
-    protected function getSwitchEncodingCodeword($mode)
+    protected function getSwitchEncodingCodeword(int $mode): int
     {
         $map = array(
             Data::ENC_ASCII   => 254,

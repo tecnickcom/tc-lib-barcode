@@ -55,7 +55,14 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      * @param string $data
      * @param int    $enc
      */
-    public function encodeASCII(&$cdw, &$cdw_num, &$pos, &$data_length, &$data, &$enc)
+    public function encodeASCII(
+        array &$cdw, 
+        int &$cdw_num, 
+        int &$pos, 
+        int &$data_length, 
+        string &$data, 
+        int &$enc
+    ): void
     {
         if (
             ($data_length > 1)
@@ -108,9 +115,18 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      * @param int    $enc
      * @param array  $temp_cw
      *
-     * @return boolean true to break the loop
+     * @return bool true to break the loop
      */
-    public function encodeEDFfour($epos, &$cdw, &$cdw_num, &$pos, &$data_length, &$field_length, &$enc, &$temp_cw)
+    public function encodeEDFfour(
+        int $epos, 
+        array &$cdw, 
+        int &$cdw_num, 
+        int &$pos, 
+        int &$data_length, 
+        int &$field_length, 
+        int &$enc, 
+        array &$temp_cw
+    ): bool
     {
         if (($epos == $data_length)) {
             $enc = Data::ENC_ASCII;
@@ -160,7 +176,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
     /**
      * Encode EDF
      *
-     * @param int    $cdw
+     * @param array    $cdw
      * @param int    $cdw_num
      * @param int    $pos
      * @param int    $data_length
@@ -168,7 +184,15 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      * @param string $data
      * @param int    $enc
      */
-    public function encodeEDF(&$cdw, &$cdw_num, &$pos, &$data_length, &$field_length, &$data, &$enc)
+    public function encodeEDF(
+        array &$cdw, 
+        int &$cdw_num, 
+        int &$pos, 
+        int &$data_length, 
+        int &$field_length, 
+        string &$data, 
+        int &$enc
+    ): void
     {
         // initialize temporary array with 0 length
         $temp_cw = array();
@@ -205,7 +229,15 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      * @param string $data
      * @param int    $enc
      */
-    public function encodeBase256(&$cdw, &$cdw_num, &$pos, &$data_length, &$field_length, &$data, &$enc)
+    public function encodeBase256(
+        array &$cdw, 
+        int &$cdw_num, 
+        int &$pos, 
+        int &$data_length, 
+        int &$field_length, 
+        string &$data, 
+        int &$enc
+    ): void
     {
         // initialize temporary array with 0 length
         $temp_cw = array();

@@ -42,7 +42,13 @@ class ErrorCorrection
      *
      * @return int product
      */
-    protected function getGFProduct($numa, $numb, $log, $alog, $ngf)
+    protected function getGFProduct(
+        int $numa, 
+        int $numb, 
+        array $log, 
+        array $alog, 
+        int $ngf
+    ): int
     {
         if (($numa == 0) || ($numb == 0)) {
             return 0;
@@ -62,7 +68,14 @@ class ErrorCorrection
      *
      * @return array data codewords + error codewords
      */
-    public function getErrorCorrection($wdc, $nbk, $ncw, $ncc, $ngf = 256, $vpp = 301)
+    public function getErrorCorrection(
+        array $wdc, 
+        int $nbk, 
+        int $ncw, 
+        int $ncc, 
+        int $ngf = 256, 
+        int $vpp = 301
+    ): array
     {
         // generate the log ($log) and antilog ($alog) tables
         $log = array(0);
@@ -121,7 +134,12 @@ class ErrorCorrection
      * @param int   $ngf  Number of fields on log/antilog table (power of 2).
      * @param int   $vpp  The value of its prime modulus polynomial (301 for ECC200).
      */
-    protected function genLogs(&$log, &$alog, $ngf, $vpp)
+    protected function genLogs(
+        array &$log, 
+        array &$alog, 
+        int $ngf, 
+        int $vpp
+    ): void
     {
         for ($i = 1; $i < $ngf; ++$i) {
             $alog[$i] = ($alog[($i - 1)] * 2);
