@@ -60,7 +60,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, array<string, string>>
      */
-    protected array $chbar = array(
+    protected const CHBAR = array(
         'A' => array( // left odd parity
             '0' => '0001101',
             '1' => '0011001',
@@ -182,11 +182,11 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
         $half_len = intval(ceil($this->code_length / 2));
         $parity = $this->parities[$this->extcode[0]];
         for ($pos = 1; $pos < $half_len; ++$pos) {
-            $seq .= $this->chbar[$parity[($pos - 1)]][$this->extcode[$pos]];
+            $seq .= self::CHBAR[$parity[($pos - 1)]][$this->extcode[$pos]];
         }
         $seq .= '01010'; // center guard bar
         for ($pos = $half_len; $pos < $this->code_length; ++$pos) {
-            $seq .= $this->chbar['C'][$this->extcode[$pos]];
+            $seq .= self::CHBAR['C'][$this->extcode[$pos]];
         }
         $seq .= '101'; // right guard bar
         $this->processBinarySequence($seq);
