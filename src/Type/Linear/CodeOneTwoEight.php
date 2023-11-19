@@ -118,7 +118,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @param array  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
-     * @param string $seq        Sequence current value
+     * @param array $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */
@@ -139,7 +139,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @param array  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
-     * @param string $seq        Sequence current value
+     * @param array $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */
@@ -176,7 +176,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @param array  $sequence   Sequence to process
      * @param array  $code_data  Array of codepoints to alter
      * @param int    $key        Sequence current key
-     * @param string $seq        Sequence current value
+     * @param array $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */
@@ -204,7 +204,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @param array  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
-     * @param string $seq        Sequence current value
+     * @param array $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */
