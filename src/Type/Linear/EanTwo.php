@@ -53,7 +53,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, array<string, string>>
      */
-    protected array $chbar = array(
+    protected const CHBAR = array(
         'A' => array( // left odd parity
             '0' => '0001101',
             '1' => '0011001',
@@ -123,11 +123,11 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
         $chk = $this->getChecksum($this->extcode);
         $parity = $this->parities[$chk];
         $seq = '1011'; // left guard bar
-        $seq .= $this->chbar[$parity[0]][$this->extcode[0]];
+        $seq .= self::CHBAR[$parity[0]][$this->extcode[0]];
         $len = strlen($this->extcode);
         for ($pos = 1; $pos < $len; ++$pos) {
             $seq .= '01'; // separator
-            $seq .= $this->chbar[$parity[$pos]][$this->extcode[$pos]];
+            $seq .= self::CHBAR[$parity[$pos]][$this->extcode[$pos]];
         }
         $this->processBinarySequence($seq);
     }

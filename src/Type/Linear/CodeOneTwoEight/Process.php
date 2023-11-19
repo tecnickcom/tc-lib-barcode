@@ -46,7 +46,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string>
      */
-    protected $chbar = array(
+    protected const CHBAR = array(
         '212222', // 00
         '222122', // 01
         '222221', // 02
