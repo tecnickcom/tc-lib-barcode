@@ -43,7 +43,7 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $chbar = array(
         '0' => '11111221',
@@ -71,7 +71,7 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = 'A' . strtoupper($this->code) . 'A';
     }
