@@ -46,21 +46,21 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var int
      */
-    protected $code_length = 13;
+    protected int $code_length = 13;
 
     /**
      * Check digit
      *
      * @var int
      */
-    protected $check = 0;
+    protected int $check = 0;
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, array<string, string>>
      */
-    protected $chbar = array(
+    protected array $chbar = array(
         'A' => array( // left odd parity
             '0' => '0001101',
             '1' => '0011001',
@@ -102,9 +102,9 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map parities
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $parities = array(
+    protected array $parities = array(
         '0' => 'AAAAAA',
         '1' => 'AABABB',
         '2' => 'AABBAB',
@@ -126,7 +126,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $data_len = ($this->code_length - 1);
         $code_len = strlen($code);
@@ -161,7 +161,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = str_pad($this->code, ($this->code_length - 1), '0', STR_PAD_LEFT);
         $this->extcode = $code . $this->getChecksum($code);

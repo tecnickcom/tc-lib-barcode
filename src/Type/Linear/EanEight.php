@@ -46,7 +46,7 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      *
      * @var int
      */
-    protected $code_length = 8;
+    protected int $code_length = 8;
 
     /**
      * Set the bars array.

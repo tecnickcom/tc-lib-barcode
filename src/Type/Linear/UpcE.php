@@ -50,14 +50,14 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      *
      * @var int
      */
-    protected $code_length = 12;
+    protected int $code_length = 12;
 
     /**
      * Map parities
      *
-     * @var array
+     * @var array<int, array<string, array<string>>>
      */
-    protected $parities = array(
+    protected array $parities = array(
         0 => array(
             '0' => array('B','B','B','A','A','A'),
             '1' => array('B','B','A','B','A','A'),
@@ -91,7 +91,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      *
      * @return string
      */
-    protected function convertUpceToUpca($code)
+    protected function convertUpceToUpca(string $code): string
     {
         if ($code[5] < 3) {
             return '0' . $code[0] . $code[1] . $code[5] . '0000' . $code[2] . $code[3] . $code[4];
@@ -112,7 +112,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      *
      * @return string
      */
-    protected function convertUpcaToUpce($code)
+    protected function convertUpcaToUpce(string $code): string
     {
         $tmp = substr($code, 4, 3);
         if (($tmp == '000') || ($tmp == '100') || ($tmp == '200')) {
@@ -136,7 +136,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
     /**
      * Format the code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = $this->code;
         if (strlen($code) == 6) {

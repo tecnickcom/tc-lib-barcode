@@ -46,12 +46,12 @@ class UpcA extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      *
      * @var int
      */
-    protected $code_length = 12;
+    protected int $code_length = 12;
 
     /**
      * Format the code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = str_pad($this->code, ($this->code_length - 1), '0', STR_PAD_LEFT);
         $code .= $this->getChecksum($code);

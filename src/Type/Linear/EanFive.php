@@ -46,14 +46,14 @@ class EanFive extends \Com\Tecnick\Barcode\Type\Linear\EanTwo
      *
      * @var int
      */
-    protected $code_length = 5;
+    protected int $code_length = 5;
 
     /**
      * Map parities
      *
-     * @var array
+     * @var array<string, array<string>>
      */
-    protected $parities = array(
+    protected array $parities = array(
         '0' => array('B','B','A','A','A'),
         '1' => array('B','A','B','A','A'),
         '2' => array('B','A','A','B','A'),
@@ -73,7 +73,7 @@ class EanFive extends \Com\Tecnick\Barcode\Type\Linear\EanTwo
      *
      * @return int char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         return (((3 * (intval($code[0]) + intval($code[2]) + intval($code[4])))
             + (9 * (intval($code[1]) + intval($code[3])))) % 10);

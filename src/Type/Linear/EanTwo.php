@@ -46,14 +46,14 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var int
      */
-    protected $code_length = 2;
+    protected int $code_length = 2;
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, array<string, string>>
      */
-    protected $chbar = array(
+    protected array $chbar = array(
         'A' => array( // left odd parity
             '0' => '0001101',
             '1' => '0011001',
@@ -83,9 +83,9 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map parities
      *
-     * @var array
+     * @var array<string, array<string>>
      */
-    protected $parities = array(
+    protected array $parities = array(
         '0' => array('A','A'),
         '1' => array('A','B'),
         '2' => array('B','A'),
@@ -99,7 +99,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         return (intval($code) % 4);
     }
@@ -107,7 +107,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = str_pad($this->code, $this->code_length, '0', STR_PAD_LEFT);
     }
