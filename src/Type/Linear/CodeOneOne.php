@@ -44,9 +44,9 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $chbar = array(
+    protected const CHBAR = array(
         '0' => '111121',
         '1' => '211121',
         '2' => '121121',
@@ -68,7 +68,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return string char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): string
     {
         $len = strlen($code);
         // calculate check digit C
@@ -137,11 +137,11 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset($this->chbar[$char])) {
+            if (!isset(self::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = intval($this->chbar[$char][$pos]);
+                $bar_width = intval(self::CHBAR[$char][$pos]);
                 if ((($pos % 2) == 0) && ($bar_width > 0)) {
                     $this->bars[] = array($this->ncols, 0, $bar_width, 1);
                 }
