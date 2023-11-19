@@ -39,7 +39,7 @@ class Raw extends \Com\Tecnick\Barcode\Type
      *
      * @return array
      */
-    protected function getCodeRows()
+    protected function getCodeRows(): array
     {
         if (is_array($this->code)) {
             return $this->code;
