@@ -138,7 +138,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string>
      */
-    protected $chksum = array(
+    protected const CHKSUM = array(
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
         'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
@@ -180,11 +180,11 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         $sum = 0;
         $clen = strlen($code);
         for ($chr = 0; $chr < $clen; ++$chr) {
-            $key = array_keys($this->chksum, $code[$chr]);
+            $key = array_keys($this::CHKSUM, $code[$chr]);
             $sum += $key[0];
         }
         $idx = ($sum % 43);
-        return $this->chksum[$idx];
+        return $this::CHKSUM[$idx];
     }
 
     /**

@@ -90,7 +90,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected array $chksum = array(
+    protected const CHKSUM= array(
         '0' => '11',
         '1' => '12',
         '2' => '13',
@@ -145,15 +145,15 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         $len = strlen($code);
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
-            if (!isset($this->chksum[$char])) {
+            if (!isset($this::CHKSUM[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
-            $row += intval($this->chksum[$char][0]);
-            $col += intval($this->chksum[$char][1]);
+            $row += intval($this::CHKSUM[$char][0]);
+            $col += intval($this::CHKSUM[$char][1]);
         }
         $row %= 6;
         $col %= 6;
-        $check = array_keys($this->chksum, $row . $col);
+        $check = array_keys($this::CHKSUM, $row . $col);
         return $check[0];
     }
 

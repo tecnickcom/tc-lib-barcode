@@ -46,7 +46,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @var array<int, string>
      */
-    protected const CHBAR = array(
+    protected const CHBAR = [
         32  => '311211', // space
         36  => '321111', // $
         37  => '211131', // %
@@ -95,7 +95,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         129 => '311121', // (/)
         130 => '122211', // (+)
         131 => '312111'  // (%)
-    );
+    ];
 
     /**
      * Map for extended characters
@@ -238,7 +238,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @var array<string>
      */
-    protected $chksum = array(
+    protected const CHKSUM = array(
         '0',
     '1',
     '2',
@@ -304,7 +304,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         $pck = 1;
         $check = 0;
         for ($idx = ($clen - 1); $idx >= 0; --$idx) {
-            $key = array_keys($this->chksum, $code[$idx]);
+            $key = array_keys($this::CHKSUM, $code[$idx]);
             $check += ($key[0] * $pck);
             ++$pck;
             if ($pck > 20) {
@@ -312,13 +312,13 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
             }
         }
         $check %= 47;
-        $chk = $this->chksum[$check];
+        $chk = $this::CHKSUM[$check];
         $code .= $chk;
         // calculate check digit K
         $pck = 1;
         $check = 0;
         for ($idx = $clen; $idx >= 0; --$idx) {
-            $key = array_keys($this->chksum, $code[$idx]);
+            $key = array_keys($this::CHKSUM, $code[$idx]);
             $check += ($key[0] * $pck);
             ++$pck;
             if ($pck > 15) {
@@ -326,7 +326,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
             }
         }
         $check %= 47;
-        $key = $this->chksum[$check];
+        $key = $this::CHKSUM[$check];
         $checksum = $chk . $key;
         // restore special characters
         $checksum = strtr(
