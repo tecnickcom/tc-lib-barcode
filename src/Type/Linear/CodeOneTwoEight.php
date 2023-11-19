@@ -122,7 +122,13 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function processSequenceB(&$sequence, &$code_data, &$startid, $key, $seq)
+    protected function processSequenceB(
+        array &$sequence, 
+        array &$code_data, 
+        int &$startid, 
+        int $key, 
+        array $seq
+        ): void
     {
         if ($key == 0) {
             $this->processSequenceBA($sequence, $code_data, $startid, $key, $seq);
@@ -143,7 +149,13 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function processSequenceBA(&$sequence, &$code_data, &$startid, $key, $seq)
+    protected function processSequenceBA(
+        array &$sequence, 
+        array &$code_data, 
+        int &$startid, 
+        int $key, 
+        array $seq
+        ): void
     {
         $tmpchr = ord($seq[1][0]);
         if (
@@ -180,7 +192,12 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function processSequenceBB(&$sequence, &$code_data, $key, $seq)
+    protected function processSequenceBB(
+        array &$sequence, 
+        array &$code_data, 
+        int $key, 
+        array $seq
+        ): void
     {
         if (
             ($seq[2] == 1)
@@ -208,7 +225,13 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function processSequenceC(&$sequence, &$code_data, &$startid, $key, $seq)
+    protected function processSequenceC(
+        array  &$sequence, 
+        array &$code_data, 
+        int &$startid, 
+        int $key, 
+        array $seq
+        ): void
     {
         if ($key == 0) {
             $startid = 105;
