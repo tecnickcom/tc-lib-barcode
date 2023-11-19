@@ -90,14 +90,14 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
         for ($idx = 0; $idx < $clen; $idx = ($idx + 2)) {
             $char_bar = $this->extcode[$idx];
             $char_space = $this->extcode[($idx + 1)];
-            if ((!isset(self::CHBAR[$char_bar])) || (!isset(self::CHBAR[$char_space]))) {
+            if ((!isset($this::CHBAR[$char_bar])) || (!isset($this::CHBAR[$char_space]))) {
                 throw new BarcodeException('Invalid character sequence: ' . $char_bar . $char_space);
             }
             // create a bar-space sequence
             $seq = '';
-            $chrlen = strlen(self::CHBAR[$char_bar]);
+            $chrlen = strlen($this::CHBAR[$char_bar]);
             for ($pos = 0; $pos < $chrlen; ++$pos) {
-                $seq .= self::CHBAR[$char_bar][$pos] . self::CHBAR[$char_space][$pos];
+                $seq .= $this::CHBAR[$char_bar][$pos] . $this::CHBAR[$char_space][$pos];
             }
             $seqlen = strlen($seq);
             for ($pos = 0; $pos < $seqlen; ++$pos) {

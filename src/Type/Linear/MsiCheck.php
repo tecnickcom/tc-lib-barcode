@@ -115,10 +115,10 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($pos = 0; $pos < $clen; ++$pos) {
             $digit = $this->extcode[$pos];
-            if (!isset(self::CHBAR[$digit])) {
+            if (!isset($this::CHBAR[$digit])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
-            $seq .= self::CHBAR[$digit];
+            $seq .= $this::CHBAR[$digit];
         }
         $seq .= '1001'; // right guard
         $this->processBinarySequence($seq);

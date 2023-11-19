@@ -160,7 +160,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
         $seq = '101'; // left guard bar
         $parity = $this->parities[$this->extcode[1]][$this->check];
         for ($pos = 0; $pos < 6; ++$pos) {
-            $seq .= self::CHBAR[$parity[$pos]][$upce_code[$pos]];
+            $seq .= $this::CHBAR[$parity[$pos]][$upce_code[$pos]];
         }
         $seq .= '010101'; // right guard bar
         $this->processBinarySequence($seq);

@@ -254,7 +254,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         $this->nrows = 1;
         $this->bars = array();
         foreach ($code_data as $val) {
-            $seq = self::CHBAR[$val];
+            $seq = $this::CHBAR[$val];
             for ($pos = 0; $pos < 6; ++$pos) {
                 $bar_width = intval($seq[$pos]);
                 if ((($pos % 2) == 0) && ($bar_width > 0)) {

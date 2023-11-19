@@ -137,11 +137,11 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset(self::CHBAR[$char])) {
+            if (!isset($this::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = intval(self::CHBAR[$char][$pos]);
+                $bar_width = intval($this::CHBAR[$char][$pos]);
                 if ((($pos % 2) == 0) && ($bar_width > 0)) {
                     $this->bars[] = array($this->ncols, 0, $bar_width, 1);
                 }

@@ -182,11 +182,11 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
         $half_len = intval(ceil($this->code_length / 2));
         $parity = $this->parities[$this->extcode[0]];
         for ($pos = 1; $pos < $half_len; ++$pos) {
-            $seq .= self::CHBAR[$parity[($pos - 1)]][$this->extcode[$pos]];
+            $seq .= $this::CHBAR[$parity[($pos - 1)]][$this->extcode[$pos]];
         }
         $seq .= '01010'; // center guard bar
         for ($pos = $half_len; $pos < $this->code_length; ++$pos) {
-            $seq .= self::CHBAR['C'][$this->extcode[$pos]];
+            $seq .= $this::CHBAR['C'][$this->extcode[$pos]];
         }
         $seq .= '101'; // right guard bar
         $this->processBinarySequence($seq);
