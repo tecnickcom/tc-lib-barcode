@@ -83,7 +83,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      *     1: SHAPE - S=square (default), R=rectangular
      *     2: MODE - N=default, GS1 = the FNC1 codeword is added in the first position of Data Matrix ECC 200 version
      */
-    protected function setParameters()
+    protected function setParameters(): void
     {
         parent::setParameters();
 

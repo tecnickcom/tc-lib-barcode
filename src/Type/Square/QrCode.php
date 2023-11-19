@@ -118,7 +118,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function setParameters()
+    protected function setParameters(): void
     {
         parent::setParameters();
 

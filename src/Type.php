@@ -70,7 +70,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Set extra (optional) parameters
      */
-    protected function setParameters()
+    protected function setParameters(): void
     {
     }
 

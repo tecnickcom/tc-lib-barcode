@@ -100,7 +100,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     /**
      * Set extra (optional) parameters
      */
-    protected function setParameters()
+    protected function setParameters(): void
     {
         parent::setParameters();
 
