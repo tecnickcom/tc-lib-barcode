@@ -176,14 +176,14 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<int, int>
      */
-    protected array $fnc_a = array(241 => 102, 242 => 97, 243 => 96, 244 => 101);
+    protected const FNC_A = array(241 => 102, 242 => 97, 243 => 96, 244 => 101);
 
     /**
      * Map special FNC codes for Code Set B (FNC 1-4)
      *
      * @var array<int, int>
      */
-    protected array $fnc_b = array(241 => 102, 242 => 97, 243 => 96, 244 => 100);
+    protected const FNC_B = array(241 => 102, 242 => 97, 243 => 96, 244 => 100);
 
     /**
      * Get the numeric sequence (if any)
@@ -299,7 +299,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             $char = $code[$pos];
             $char_id = ord($char);
             if (($char_id >= 241) && ($char_id <= 244)) {
-                $code_data[] = $this->fnc_a[$char_id];
+                $code_data[] = $this::FNC_A[$char_id];
             } elseif ($char_id <= 95) {
                 $code_data[] = strpos($this->keys_a, $char);
             } else {
@@ -327,7 +327,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             $char = $code[$pos];
             $char_id = ord($char);
             if (($char_id >= 241) && ($char_id <= 244)) {
-                $code_data[] = $this->fnc_b[$char_id];
+                $code_data[] = $this::FNC_B[$char_id];
             } elseif (($char_id >= 32) && ($char_id <= 127)) {
                 $code_data[] = strpos($this->keys_b, $char);
             } else {

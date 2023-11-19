@@ -169,12 +169,12 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
                 case 'A':
                     $startid = 103;
                     $sequence[$key][0] = 'A';
-                    $code_data[] = $this->fnc_a[$tmpchr];
+                    $code_data[] = $this::FNC_A[$tmpchr];
                     break;
                 case 'C':
                     $startid = 105;
                     $sequence[$key][0] = 'C';
-                    $code_data[] = $this->fnc_a[$tmpchr];
+                    $code_data[] = $this::FNC_A[$tmpchr];
                     break;
             }
         } else {
