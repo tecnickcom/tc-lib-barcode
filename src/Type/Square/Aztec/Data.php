@@ -36,37 +36,37 @@ class Data
     /**
      * Code character encoding mode for uppercase letters.
      */
-    const MODE_UPPER = 0;
+    public const MODE_UPPER = 0;
 
     /**
      * Code character encoding mode for lowercase letters.
      */
-    const MODE_LOWER = 1;
+    public const MODE_LOWER = 1;
 
     /**
      * Code character encoding mode for digits.
      */
-    const MODE_DIGIT = 2;
+    public const MODE_DIGIT = 2;
 
     /**
      * Code character encoding mode for mixed cases.
      */
-    const MODE_MIXED = 3;
+    public const MODE_MIXED = 3;
 
     /**
      * Code character encoding mode for punctuation.
      */
-    const MODE_PUNCT = 4;
+    public const MODE_PUNCT = 4;
 
     /**
      * Code character encoding mode for binary.
      */
-    const MODE_BINARY = 5;
+    public const MODE_BINARY = 5;
 
     /**
      * Number of bits for each character encoding mode.
      */
-    const MODE_BITS = array(
+    public const MODE_BITS = array(
         5, // 0 = MODE_UPPER
         5, // 1 = MODE_LOWER
         4, // 2 = MODE_DIGIT
@@ -78,7 +78,7 @@ class Data
     /**
      * Code character encoding for each mode.
      */
-    const CHAR_ENC = array(
+    public const CHAR_ENC = array(
         // MODE_UPPER (initial mode)
         0 => array(
           32 =>  1, // ' ' (SP)
@@ -224,7 +224,7 @@ class Data
      *   - the carriage return '\r' character (13) that maps for modes 3,4.
      *   - the comma ',' and dot '.' characters (44,46) that map for modes 2,4.
      */
-    const CHAR_MODES = array(
+    public const CHAR_MODES = array(
         1 => 3, // '^A' (SOH)
         2 => 3, // '^B' (STX)
         3 => 3, // '^C' (ETX)
@@ -345,7 +345,7 @@ class Data
      * Latch map for changing character encoding mode.
      * Numbers represent: [number of bits to change, latch code value].
      */
-    const LATCH_MAP = array(
+    public const LATCH_MAP = array(
         // MODE_UPPER
         0 => array (
           1 => array(array(5,28)), // -> LOWER
@@ -387,7 +387,7 @@ class Data
      * Shift map for changing character encoding mode.
      * Numbers represent: [number of bits to change, shift code value].
      */
-    const SHIFT_MAP = array(
+    public const SHIFT_MAP = array(
       // MODE_UPPER
       0 => array(
         1 => array(),
@@ -433,7 +433,7 @@ class Data
     /**
      * Extended Channel Interpretation (ECI) codes.
      */
-    const ECI = array(
+    public const ECI = array(
          0 => 'FNC1',        // Function 1 character
          2 => 'Cp437',       // Code page 437
          3 => 'ISO-8859-1',  // ISO/IEC 8859-1 - Latin-1 (Default encoding)
@@ -475,7 +475,7 @@ class Data
      *   - 5: symbol data text capacity;
      *   - 6: symbol data bytes capacity.
      */
-    const SIZE_COMPACT = array(
+    public const SIZE_COMPACT = array(
       1 => array(15, 17, 6, 102,  13, 12,  6),
       2 => array(19, 40, 6, 240,  40, 33, 19),
       3 => array(23, 51, 8, 408,  70, 57, 33),
@@ -493,7 +493,7 @@ class Data
      *   - 5: symbol data text capacity;
      *   - 6: symbol data bytes capacity.
      */
-    const SIZE_FULL = array(
+    public const SIZE_FULL = array(
        1 => array( 19,   21,  6,   126,   18,   15,    8),
        2 => array( 23,   48,  6,   288,   49,   40,   24),
        3 => array( 27,   60,  8,   480,   84,   68,   40),

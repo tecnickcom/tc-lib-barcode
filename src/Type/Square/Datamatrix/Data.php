@@ -36,42 +36,42 @@ class Data
     /**
      * ASCII encoding: ASCII character 0 to 127 (1 byte per CW)
      */
-    const ENC_ASCII = 0;
+    public const ENC_ASCII = 0;
 
     /**
      * C40 encoding: Upper-case alphanumeric (3/2 bytes per CW)
      */
-    const ENC_C40 = 1;
+    public const ENC_C40 = 1;
 
     /**
      * TEXT encoding: Lower-case alphanumeric (3/2 bytes per CW)
      */
-    const ENC_TXT = 2;
+    public const ENC_TXT = 2;
 
     /**
      * X12 encoding: ANSI X12 (3/2 byte per CW)
      */
-    const ENC_X12 = 3;
+    public const ENC_X12 = 3;
 
     /**
      * EDIFACT encoding: ASCII character 32 to 94 (4/3 bytes per CW)
      */
-    const ENC_EDF = 4;
+    public const ENC_EDF = 4;
 
     /**
      * BASE 256 encoding: ASCII character 0 to 255 (1 byte per CW)
      */
-    const ENC_BASE256 = 5;
+    public const ENC_BASE256 = 5;
 
     /**
      * ASCII extended encoding: ASCII character 128 to 255 (1/2 byte per CW)
      */
-    const ENC_ASCII_EXT = 6;
+    public const ENC_ASCII_EXT = 6;
 
     /**
      * ASCII number encoding: ASCII digits (2 bytes per CW)
      */
-    const ENC_ASCII_NUM = 7;
+    public const ENC_ASCII_NUM = 7;
 
     /**
      * Table of Data Matrix ECC 200 Symbol Attributes:
@@ -94,7 +94,7 @@ class Data
      * <li>error codewords per block</li>
      * </ul></li></ul>
      */
-    const SYMBATTR = array(
+    public const SYMBATTR = array(
         'S' => array( // square form
             // 10x10
             array(
@@ -674,7 +674,7 @@ class Data
         /**
         * Map encodation modes whit character sets.
         */
-    const CHSET_ID = array(
+    public const CHSET_ID = array(
             self::ENC_C40 => 'C40',
             self::ENC_TXT => 'TXT',
             self::ENC_X12 => 'X12'
@@ -683,7 +683,7 @@ class Data
         /**
         * Basic set of characters for each encodation mode.
         */
-    const CHSET = array(
+        public const CHSET = array(
         'C40' => array( // Basic set for C40
             'S1' => 0x00,
             'S2' => 0x01,
