@@ -159,17 +159,21 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
 
     /**
      * Map ASCII characters for code A (ASCII 00 - 95)
+     * // 128A (Code Set A) - ASCII characters 00 to 95 (0-9, A-Z and control codes), special characters
      *
      * @var string
      */
-    protected string $keys_a = '';
+    protected const KEYS_A = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'
+    . "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F";
 
     /**
      * Map ASCII characters for code B (ASCII 32 - 127)
+     * // 128B (Code Set B) - ASCII characters 32 to 127 (0-9, A-Z, a-z), special characters
      *
      * @var string
      */
-    protected string $keys_b = '';
+    protected const KEYS_B = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]'
+    . '^_`abcdefghijklmnopqrstuvwxyz{|}~' . "\x7F";
 
     /**
      * Map special FNC codes for Code Set A (FNC 1-4)
@@ -301,7 +305,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             if (($char_id >= 241) && ($char_id <= 244)) {
                 $code_data[] = $this::FNC_A[$char_id];
             } elseif ($char_id <= 95) {
-                $code_data[] = strpos($this->keys_a, $char);
+                $code_data[] = strpos($this::KEYS_A, $char);
             } else {
                 throw new BarcodeException('Invalid character sequence');
             }
@@ -329,7 +333,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             if (($char_id >= 241) && ($char_id <= 244)) {
                 $code_data[] = $this::FNC_B[$char_id];
             } elseif (($char_id >= 32) && ($char_id <= 127)) {
-                $code_data[] = strpos($this->keys_b, $char);
+                $code_data[] = strpos($this::KEYS_B, $char);
             } else {
                 throw new BarcodeException('Invalid character sequence: ' . $char_id);
             }

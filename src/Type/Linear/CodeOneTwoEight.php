@@ -35,23 +35,6 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
 class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\Process
 {
     /**
-     * Set the ASCII maps values
-     */
-    protected function setAsciiMaps(): void
-    {
-        // 128A (Code Set A) - ASCII characters 00 to 95 (0-9, A-Z and control codes), special characters
-        $this->keys_a = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'
-            . chr(0) . chr(1) . chr(2) . chr(3) . chr(4) . chr(5) . chr(6) . chr(7) . chr(8) . chr(9)
-            . chr(10) . chr(11) . chr(12) . chr(13) . chr(14) . chr(15) . chr(16) . chr(17) . chr(18) . chr(19)
-            . chr(20) . chr(21) . chr(22) . chr(23) . chr(24) . chr(25) . chr(26) . chr(27) . chr(28) . chr(29)
-            . chr(30) . chr(31);
-
-        // 128B (Code Set B) - ASCII characters 32 to 127 (0-9, A-Z, a-z), special characters
-        $this->keys_b = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]'
-            . '^_`abcdefghijklmnopqrstuvwxyz{|}~' . "\x7F";
-    }
-
-    /**
      * Get the coe point array
      *
      * @throws BarcodeException in case of error
@@ -248,7 +231,6 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      */
     protected function setBars(): void
     {
-        $this->setAsciiMaps();
         $code_data = $this->getCodeData();
         $this->ncols = 0;
         $this->nrows = 1;
