@@ -36,5 +36,5 @@ abstract class Square extends \Com\Tecnick\Barcode\Type
      *
      * @var string
      */
-    protected string $type = 'square';
+    protected const TYPE = 'square';
 }

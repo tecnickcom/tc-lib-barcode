@@ -39,7 +39,7 @@ abstract class Convert
      *
      * @var string
      */
-    protected string $type = '';
+    protected const TYPE = '';
 
     /**
      * Barcode format

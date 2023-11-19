@@ -36,5 +36,5 @@ abstract class Linear extends \Com\Tecnick\Barcode\Type
      *
      * @var string
      */
-    protected string $type = 'linear';
+    protected const TYPE = 'linear';
 }

@@ -39,7 +39,7 @@ class Raw extends \Com\Tecnick\Barcode\Type\Raw
      *
      * @var string
      */
-    protected string $type = 'linear';
+    protected const TYPE = 'linear';
 
     /**
      * Barcode format

@@ -205,7 +205,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     public function getArray(): array
     {
         return array(
-            'type'         => $this->type,
+            'type'         => $this::TYPE,
             'format'       => $this->format,
             'params'       => $this->params,
             'code'         => $this->code,
