@@ -482,15 +482,22 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @return array
      */
-    public function getBarsArray($type = 'XYXY')
+    public function getBarsArray(
+        string $type = 'XYXY'
+    ): array
     {
-        $mtd = 'getBarRect' . $type;
+        $mtd = match ($type) {
+            'XYXY' => 'getBarRectXYXY',
+            'XYWH' => 'getBarRectXYWH',
+        };
+
         $rect = array();
         foreach ($this->bars as $bar) {
             if (($bar[2] > 0) && ($bar[3] > 0)) {
                 $rect[] = $this->$mtd($bar);
             }
         }
+
         if ($this->nrows > 1) {
             // reprint rotated to cancel row gaps
             $rot = $this->getRotatedBarArray();
