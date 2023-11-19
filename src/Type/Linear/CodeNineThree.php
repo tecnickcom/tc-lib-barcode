@@ -100,14 +100,14 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
     /**
      * Map for extended characters
      *
-     * @var array
+     * @var array<string>
      */
     protected $extcodes = array();
 
     /**
      * Characters used for checksum
      *
-     * @var array
+     * @var array<string>
      */
     protected $chksum = array(
         '0',

@@ -96,7 +96,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map for extended characters
      *
-     * @var array
+     * @var array<string>
      */
     protected $extcodes = array(
         '%U', '$A', '$B', '$C',
@@ -136,7 +136,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Characters used for checksum
      *
-     * @var array
+     * @var array<string>
      */
     protected $chksum = array(
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
