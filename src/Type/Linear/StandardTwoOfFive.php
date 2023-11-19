@@ -44,7 +44,7 @@ class StandardTwoOfFive extends \Com\Tecnick\Barcode\Type\Linear\StandardTwoOfFi
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code;
     }

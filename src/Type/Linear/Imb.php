@@ -65,9 +65,9 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * ASC characters
      *
-     * @var array
+     * @var array<int>
      */
-    const ASC_CHR = array(
+    protected const ASC_CHR = array(
         4,0,2,6,3,5,1,9,8,7,
         1,2,0,6,4,8,2,9,5,3,
         0,1,3,7,4,6,8,9,2,0,
@@ -80,9 +80,9 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * DSC characters
      *
-     * @var array
+     * @var array<int>
      */
-    const DSC_CHR = array(
+    protected const DSC_CHR = array(
         7,1,9,5,8,0,2,4,6,3,
         5,8,9,7,3,0,6,1,7,4,
         6,8,9,2,5,1,7,5,4,3,
@@ -94,18 +94,18 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * ASC positions
      *
-     * @var array
+     * @var array<int>
      */
-    const ASC_POS = array(
+    protected const ASC_POS = array(
         3,0,8,11,1,12,8,11,10,6,4,12,2,7,9,6,7,9,2,8,4,0,12,7,10,9,0,7,10,5,7,9,
         6,8,2,12,1,4,2,0,1,5,4,6,12,1,0,9,4,7,5,10,2,6,9,11,2,12,6,7,5,11,0,3,2);
 
     /**
      * DSC positions
      *
-     * @var array
+     * @var array<int>
      */
-    const DSC_POS = array(
+    protected const DSC_POS = array(
         2,10,12,5,9,1,5,4,3,9,11,5,10,1,6,3,4,1,10,0,2,11,8,6,1,12,3,8,6,4,4,11,
         0,6,1,9,11,5,3,7,3,10,7,11,8,2,10,3,5,8,0,3,12,11,8,4,5,1,3,0,7,12,9,8,10);
 
@@ -116,7 +116,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int reversed value
      */
-    protected function getReversedUnsignedShort($num)
+    protected function getReversedUnsignedShort(int $num): int
     {
         $rev = 0;
         for ($pos = 0; $pos < 16; ++$pos) {
@@ -134,7 +134,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int 11 bit Frame Check Sequence as integer (decimal base)
      */
-    protected function getFrameCheckSequence($code_arr)
+    protected function getFrameCheckSequence(array $code_arr): int
     {
         $genpoly = 0x0F35; // generator polynomial
         $fcs = 0x07FF; // Frame Check Sequence
@@ -173,7 +173,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return array requested table
      */
-    protected function getTables($type, $size)
+    protected function getTables(int $type, int $size): array
     {
         $table = array();
         $lli = 0; // LUT lower index
@@ -215,7 +215,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getRoutingCode($routing_code)
+    protected function getRoutingCode(string $routing_code): string
     {
         // Conversion of Routing Code
         switch (strlen($routing_code)) {
@@ -238,7 +238,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCharsArray()
+    protected function getCharsArray(): array
     {
         $this->ncols = 0;
         $this->nrows = 3;

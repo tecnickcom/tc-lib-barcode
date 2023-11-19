@@ -44,7 +44,7 @@ class InterleavedTwoOfFive extends \Com\Tecnick\Barcode\Type\Linear\InterleavedT
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code;
     }

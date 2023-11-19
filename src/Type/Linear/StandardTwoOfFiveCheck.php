@@ -44,9 +44,9 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, string>
      */
-    protected $chbar = array(
+    protected array $chbar = array(
         '0' => '10101110111010',
         '1' => '11101010101110',
         '2' => '10111010101110',
@@ -66,7 +66,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $clen = strlen($code);
         $sum = 0;
@@ -87,7 +87,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code . $this->getChecksum($this->code);
     }
