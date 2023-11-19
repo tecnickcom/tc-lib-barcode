@@ -104,7 +104,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected array $parities = array(
+    protected const PARITIES = array(
         '0' => 'AAAAAA',
         '1' => 'AABABB',
         '2' => 'AABBAB',
@@ -180,7 +180,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
         $this::FORMATCode();
         $seq = '101'; // left guard bar
         $half_len = intval(ceil($this->code_length / 2));
-        $parity = $this->parities[$this->extcode[0]];
+        $parity = $this::PARITIES[$this->extcode[0]];
         for ($pos = 1; $pos < $half_len; ++$pos) {
             $seq .= $this::CHBAR[$parity[($pos - 1)]][$this->extcode[$pos]];
         }

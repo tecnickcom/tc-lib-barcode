@@ -85,7 +85,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, array<string>>
      */
-    protected array $parities = array(
+    protected const PARITIES = array(
         '0' => array('A','A'),
         '1' => array('A','B'),
         '2' => array('B','A'),
@@ -121,7 +121,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
     {
         $this::FORMATCode();
         $chk = $this->getChecksum($this->extcode);
-        $parity = $this->parities[$chk];
+        $parity = $this::PARITIES[$chk];
         $seq = '1011'; // left guard bar
         $seq .= $this::CHBAR[$parity[0]][$this->extcode[0]];
         $len = strlen($this->extcode);

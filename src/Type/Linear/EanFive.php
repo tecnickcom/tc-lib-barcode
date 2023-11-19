@@ -53,7 +53,7 @@ class EanFive extends \Com\Tecnick\Barcode\Type\Linear\EanTwo
      *
      * @var array<string, array<string>>
      */
-    protected array $parities = array(
+    protected const PARITIES = array(
         '0' => array('B','B','A','A','A'),
         '1' => array('B','A','B','A','A'),
         '2' => array('B','A','A','B','A'),
