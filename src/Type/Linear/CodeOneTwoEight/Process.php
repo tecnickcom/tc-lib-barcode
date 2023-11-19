@@ -162,28 +162,28 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $keys_a = '';
+    protected string $keys_a = '';
 
     /**
      * Map ASCII characters for code B (ASCII 32 - 127)
      *
      * @var string
      */
-    protected $keys_b = '';
+    protected string $keys_b = '';
 
     /**
      * Map special FNC codes for Code Set A (FNC 1-4)
      *
-     * @var array
+     * @var array<int, int>
      */
-    protected $fnc_a = array(241 => 102, 242 => 97, 243 => 96, 244 => 101);
+    protected array $fnc_a = array(241 => 102, 242 => 97, 243 => 96, 244 => 101);
 
     /**
      * Map special FNC codes for Code Set B (FNC 1-4)
      *
-     * @var array
+     * @var array<int, int>
      */
-    protected $fnc_b = array(241 => 102, 242 => 97, 243 => 96, 244 => 100);
+    protected array $fnc_b = array(241 => 102, 242 => 97, 243 => 96, 244 => 100);
 
     /**
      * Get the numeric sequence (if any)
@@ -194,7 +194,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getNumericSequence($code)
+    protected function getNumericSequence(string $code): array
     {
         $sequence = array();
         $len = strlen($code);
@@ -243,7 +243,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return array sequence
      */
-    protected function get128ABsequence($code)
+    protected function get128ABsequence(string $code): array
     {
         $len = strlen($code);
         $sequence = array();
@@ -287,11 +287,13 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      * @param string $code       Code to process
      * @param int    $len        Number of characters to process
      *
-     * @retun array
-     *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeDataA(&$code_data, $code, $len)
+    protected function getCodeDataA(
+        array &$code_data, 
+        string $code, 
+        int $len
+        ): void
     {
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
@@ -313,11 +315,13 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      * @param string $code       Code to process
      * @param int    $len        Number of characters to process
      *
-     * @retun array
-     *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeDataB(&$code_data, $code, $len)
+    protected function getCodeDataB(
+        array &$code_data, 
+        string $code, 
+        int $len
+        ): void
     {
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
@@ -338,11 +342,12 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      * @param array  $code_data  Array of codepoints to alter
      * @param string $code       Code to process
      *
-     * @retun array
-     *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeDataC(&$code_data, $code)
+    protected function getCodeDataC(
+        array &$code_data,
+        string $code
+        ): void
     {
         // code blocks separated by FNC1 (chr 241)
         $blocks = explode(chr(241), $code);
@@ -378,7 +383,10 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return array
      */
-    protected function finalizeCodeData($code_data, $startid)
+    protected function finalizeCodeData(
+        array $code_data, 
+        int $startid
+        ): array
     {
         // calculate check character
         $sum = $startid;

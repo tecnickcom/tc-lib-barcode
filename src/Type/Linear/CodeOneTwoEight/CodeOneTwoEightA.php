@@ -46,7 +46,7 @@ class CodeOneTwoEightA extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeData()
+    protected function getCodeData(): array
     {
         $code = $this->code;
         $len = strlen($code);
