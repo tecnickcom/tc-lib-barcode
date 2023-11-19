@@ -202,7 +202,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @return array
      */
-    public function getArray()
+    public function getArray(): array
     {
         return array(
             'type'         => $this->type,
@@ -230,7 +230,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @return string
      */
-    public function getExtendedCode()
+    public function getExtendedCode(): string
     {
         return $this->extcode;
     }
@@ -238,7 +238,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the barcode as SVG image object
      */
-    public function getSvg()
+    public function getSvg(): void
     {
         $data = $this->getSvgCode();
         header('Content-Type: application/svg+xml');
@@ -259,7 +259,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @return string SVG code
      */
-    public function getSvgCode()
+    public function getSvgCode(): string
     {
         // flags for htmlspecialchars
         $hflag = ENT_NOQUOTES;
@@ -317,7 +317,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @return string HTML code (DIV block)
      */
-    public function getHtmlDiv()
+    public function getHtmlDiv(): string
     {
         $html = '<div style="'
             . 'width:' . sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R'])) . 'px;'
@@ -351,7 +351,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get Barcode as PNG Image (requires GD or Imagick library)
      */
-    public function getPng()
+    public function getPng(): void
     {
         $data = $this->getPngData();
         header('Content-Type: image/png');
@@ -374,7 +374,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @return string PNG image data
      */
-    public function getPngData($imagick = true)
+    public function getPngData(bool $imagick = true): string
     {
         if ($imagick && extension_loaded('imagick')) {
             return $this->getPngDataImagick();
@@ -392,7 +392,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @throws BarcodeException if the Imagick library is not installed
      */
-    public function getPngDataImagick()
+    public function getPngDataImagick(): string
     {
         $img = new \Imagick();
         $width = (int)ceil($this->width + $this->padding['L'] + $this->padding['R']);
@@ -419,11 +419,11 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the barcode as GD image object (requires GD library)
      *
-     * @return object
+     * @return GdImage
      *
      * @throws BarcodeException if the GD library is not installed
      */
-    public function getGd()
+    public function getGd(): GdImage
     {
         $width = (int)ceil($this->width + $this->padding['L'] + $this->padding['R']);
         $height = (int)ceil($this->height + $this->padding['T'] + $this->padding['B']);
@@ -462,7 +462,10 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @return string
      */
-    public function getGrid($space_char = '0', $bar_char = '1')
+    public function getGrid(
+        string $space_char = '0', 
+        string $bar_char = '1'
+    ): string
     {
         $raw = $this->getGridArray($space_char, $bar_char);
         $grid = '';
