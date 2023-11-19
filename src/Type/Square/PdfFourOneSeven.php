@@ -59,28 +59,28 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      *
      * @var int
      */
-    protected $row_height = 2;
+    protected int $row_height = 2;
 
     /**
      * Horizontal quiet zone in modules
      *
      * @var int
      */
-    protected $quiet_vertical = 2;
+    protected int $quiet_vertical = 2;
 
     /**
      * Vertical quiet zone in modules
      *
      * @var int
      */
-    protected $quiet_horizontal = 2;
+    protected int $quiet_horizontal = 2;
 
     /**
      * Aspect ratio (width / height)
      *
      * @var float
      */
-    protected $aspectratio = 2;
+    protected float $aspectratio = 2;
 
     /**
      * Error correction level (0-8);
@@ -88,14 +88,14 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      *
      * @var int
      */
-    protected $ecl = -1;
+    protected int $ecl = -1;
 
     /**
      * Information for macro block
      *
      * @var array
      */
-    protected $macro = array();
+    protected array $macro = array();
 
     /**
      * Set extra (optional) parameters
@@ -121,7 +121,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     /**
      * Set macro block parameter
      */
-    protected function setMacroBlockParam()
+    protected function setMacroBlockParam(): void
     {
         if (
             isset($this->params[4])
@@ -162,7 +162,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      *
      * @return array
      */
-    protected function getMacroBlock(&$numcw)
+    protected function getMacroBlock(int &$numcw): array
     {
         if (empty($this->macro)) {
             return array();
@@ -212,7 +212,11 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      *
      * @throws BarcodeException in case of error
      */
-    public function getCodewords(&$rows, &$cols, &$ecl)
+    public function getCodewords(
+        int &$rows, 
+        int &$cols, 
+        int &$ecl
+    ): array
     {
         $codewords = array(); // array of code-words
         // get the input sequence array
@@ -278,7 +282,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      *
      * @throws BarcodeException in case of error
      */
-    public function getBinSequence()
+    public function getBinSequence(): string
     {
         $rows = 0;
         $cols = 0;

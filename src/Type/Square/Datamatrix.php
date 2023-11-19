@@ -48,35 +48,35 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var array
      */
-    protected $cdw = array();
+    protected array $cdw = array();
 
     /**
      * Binary grid
      *
      * @var array
      */
-    protected $grid = array();
+    protected array $grid = array();
 
     /**
      * Datamatrix Encoding object
      *
-     * @var \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode
+     * @var Encode
      */
-    protected $dmx;
+    protected Encode $dmx;
 
     /**
      * Datamatrix shape key (S=square, R=rectangular)
      *
      * @var string
      */
-    protected $shape = 'S';
+    protected string $shape = 'S';
 
     /**
      * Datamatrix variant (N=default, GS1=FNC1 codeword in first place)
      *
      * @var bool
      */
-    protected $gsonemode = false;
+    protected bool $gsonemode = false;
 
     /**
      * Set extra (optional) parameters:
@@ -106,7 +106,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      *
      * @throws BarcodeException in case of error
      */
-    protected function addPadding($size, $ncw)
+    protected function addPadding(int $size, int $ncw): void
     {
         if ($size <= $ncw) {
             return;
@@ -138,7 +138,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCodewords()
+    protected function getCodewords(): array
     {
         if (strlen((string)$this->code) == 0) {
             throw new BarcodeException('Empty input');
@@ -177,7 +177,16 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      * @param int $rdri
      * @param int $rdci
      */
-    protected function setGrid(&$idx, &$places, &$row, &$col, &$rdx, &$cdx, &$rdri, &$rdci)
+    protected function setGrid(
+        int &$idx, 
+        array &$places, 
+        int &$row, 
+        int &$col, 
+        int &$rdx, 
+        int &$cdx, 
+        int &$rdri, 
+        int &$rdci
+        ): void
     {
         // braw bits by case
         if ($rdx == 0) {
@@ -210,13 +219,13 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     /**
      * Get high level encoding using the minimum symbol data characters for ECC 200
      *
-     * @param $data (string) data to encode
+     * @param string $data data to encode
      *
      * @return array of codewords
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function getHighLevelEncoding($data)
+    protected function getHighLevelEncoding(string $data): array
     {
         // STEP A. Start in ASCII encodation.
         $enc = Data::ENC_ASCII; // current encoding mode

@@ -48,14 +48,14 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var int
      */
-    protected $ecc = 33;
+    protected int $ecc = 33;
 
     /**
      * Encoding mode
      *
      * @var string
      */
-    protected $hint = 'A';
+    protected string $hint = 'A';
 
     /**
      *  Mode:
@@ -64,7 +64,7 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var string
      */
-    protected $mode = 'A';
+    protected string $mode = 'A';
 
     /**
      * Extended Channel Interpretation (ECI) code to be added at the beginning of the stream.
@@ -74,7 +74,7 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var int
      */
-    protected $eci = -1;
+    protected int $eci = -1;
 
     /**
      * Set extra (optional) parameters:

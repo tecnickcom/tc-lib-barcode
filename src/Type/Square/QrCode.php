@@ -52,28 +52,28 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var int
      */
-    protected $version = 0;
+    protected int $version = 0;
 
     /**
      * Error correction level
      *
      * @var int
      */
-    protected $level = 0;
+    protected int $level = 0;
 
     /**
      * Encoding mode
      *
      * @var int
      */
-    protected $hint = 2;
+    protected int $hint = 2;
 
     /**
      * Boolean flag, if false the input string will be converted to uppercase.
      *
-     * @var boolean
+     * @var bool
      */
-    protected $case_sensitive = true;
+    protected bool $case_sensitive = true;
 
     /**
      * If false, checks all masks available,
@@ -81,7 +81,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var int|bool
      */
-    protected $random_mask = false;
+    protected int|bool $random_mask = false;
 
     /**
      * If true, estimates best mask (spec. default, but extremally slow;
@@ -89,21 +89,21 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var bool
      */
-    protected $best_mask = true;
+    protected bool $best_mask = true;
 
     /**
      * Default mask used when $this->best_mask === false
      *
      * @var int
      */
-    protected $default_mask = 2;
+    protected int $default_mask = 2;
 
     /**
      * ByteStream class object
      *
-     * @var \Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream
+     * @var ByteStream
      */
-    protected $bsObj;
+    protected ByteStream $bsObj;
 
     /**
      * Set extra (optional) parameters:
@@ -190,7 +190,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      *
      * @return array frame in binary form
      */
-    protected function binarize($frame)
+    protected function binarize(array $frame): array
     {
         $len = count($frame);
         // the frame is square (width = height)
@@ -207,7 +207,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      *
      * @param string $data input string to encode
      */
-    protected function encodeString($data)
+    protected function encodeString(string $data): array
     {
         if (!$this->case_sensitive) {
             $data = $this->toUpper($data);
@@ -232,7 +232,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      *
      * @return string
      */
-    protected function toUpper($data)
+    protected function toUpper(string $data): string
     {
         $len = strlen($data);
         $pos = 0;
