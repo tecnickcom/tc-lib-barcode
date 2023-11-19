@@ -16,6 +16,8 @@
 
 namespace Com\Tecnick\Barcode;
 
+use Com\Tecnick\Color\Pdf;
+use Com\Tecnick\Color\Model\Rgb;
 use Com\Tecnick\Color\Exception as ColorException;
 use Com\Tecnick\Barcode\Exception as BarcodeException;
 
@@ -37,7 +39,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Initialize a new barcode object
      *
-     * @param string $code    Barcode content
+     * @param string|array $code    Barcode content
      * @param int    $width   Barcode width in user units (excluding padding).
      *                        A negative value indicates the multiplication factor for each column.
      * @param int    $height  Barcode height in user units (excluding padding).
@@ -88,10 +90,14 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *                        A negative value indicates the multiplication factor for each column.
      * @param int    $height  Barcode height in user units (excluding padding).
      *                        A negative value indicates the multiplication factor for each row.
-     * @param array  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
+     * @param array{int, int, int, int}  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
      *                        A negative value indicates the number or rows or columns.
      */
-    public function setSize($width, $height, $padding = array(0, 0, 0, 0))
+    public function setSize(
+        $width, 
+        $height, 
+        $padding = array(0, 0, 0, 0)
+        ): static
     {
         $this->width = intval($width);
         if ($this->width <= 0) {
@@ -119,7 +125,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @throws BarcodeException in case of error
      */
-    protected function setPadding($padding)
+    protected function setPadding(array $padding): static
     {
         if (!is_array($padding) || (count($padding) != 4)) {
             throw new BarcodeException('Invalid padding, expecting an array of 4 numbers (top, right, bottom, left)');
@@ -150,7 +156,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @throws ColorException in case of color error
      * @throws BarcodeException in case of empty or transparent color
      */
-    public function setColor($color)
+    public function setColor(string $color): static
     {
         $this->color_obj = $this->getRgbColorObject($color);
         if ($this->color_obj === null) {
@@ -166,7 +172,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @throws ColorException in case of color error
      */
-    public function setBackgroundColor($color)
+    public function setBackgroundColor(string $color): static
     {
         $this->bg_color_obj = $this->getRgbColorObject($color);
         return $this;
@@ -181,12 +187,12 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @throws ColorException in case of color error
      */
-    protected function getRgbColorObject($color)
+    protected function getRgbColorObject(string $color): ?Rgb
     {
-        $conv = new \Com\Tecnick\Color\Pdf();
+        $conv = new Pdf();
         $cobj = $conv->getColorObject($color);
         if ($cobj !== null) {
-            return new \Com\Tecnick\Color\Model\Rgb($cobj->toRgbArray());
+            return new Rgb($cobj->toRgbArray());
         }
         return null;
     }
