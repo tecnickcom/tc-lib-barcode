@@ -44,7 +44,7 @@ class CodeThreeNineCheck extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineE
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = strtoupper($this->code);
         $this->extcode = '*' . $code . $this->getChecksum($code) . '*';

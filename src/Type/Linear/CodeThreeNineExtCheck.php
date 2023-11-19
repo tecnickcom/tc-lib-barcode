@@ -46,7 +46,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected const CHBAREX = array(
+    protected const CHBAREXCHK = array(
         '0' => '111331311',
         '1' => '311311113',
         '2' => '113311113',
@@ -154,7 +154,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getExtendCode($code)
+    protected function getExtendCode(string $code): string
     {
         $ext = '';
         $clen = strlen($code);
@@ -175,7 +175,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return string char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): string
     {
         $sum = 0;
         $clen = strlen($code);
@@ -190,7 +190,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = $this->getExtendCode(strtoupper($this->code));
         $this->extcode = '*' . $code . $this->getChecksum($code) . '*';
@@ -210,11 +210,11 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset(self::CHBAREX[$char])) {
+            if (!isset(self::CHBAREXCHK[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             for ($pos = 0; $pos < 9; ++$pos) {
-                $bar_width = intval(self::CHBAREX[$char][$pos]);
+                $bar_width = intval(self::CHBAREXCHK[$char][$pos]);
                 if ((($pos % 2) == 0) && ($bar_width > 0)) {
                     $this->bars[] = array($this->ncols, 0, $bar_width, 1);
                 }

@@ -166,7 +166,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @return string char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): string
     {
         // translate special characters
         $code = strtr($code, chr(128) . chr(131) . chr(129) . chr(130), '<=>?');
