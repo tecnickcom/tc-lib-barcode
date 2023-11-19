@@ -44,7 +44,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string>
      */
     protected $chbar = array(
         '212222', // 00
