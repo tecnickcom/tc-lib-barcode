@@ -40,14 +40,14 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      *
      * @var array
      */
-    protected $grid = array();
+    protected array $grid = array();
 
     /**
      * Coordinate of the grid center.
      *
      * @var int
      */
-    protected $gridcenter = 0;
+    protected int $gridcenter = 0;
 
      /**
      * Aztec main encoder.
@@ -58,7 +58,13 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      * @param string $hint The mode to use.
      * @param string $mode The mode to use (A = Automatic; F = Full Range mode).
      */
-    public function __construct($code, $ecc = 33, $eci = 0, $hint = 'A', $mode = 'A')
+    public function __construct(
+        string $code, 
+        int $ecc = 33, 
+        int $eci = 0, 
+        string $hint = 'A', 
+        string $mode = 'A'
+    )
     {
         $this->highLevelEncoding($code, $eci, $hint);
         if (!$this->sizeAndBitStuffing($ecc, $mode)) {
@@ -77,7 +83,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      *
      * @return array
      */
-    public function getGrid()
+    public function getGrid(): array
     {
         return $this->grid;
     }
@@ -92,7 +98,12 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      *
      * @return int The number of data codewords.
      */
-    protected function addCheckWords(array &$bitstream, &$totbits, $nbits, $wsize)
+    protected function addCheckWords(
+        array &$bitstream, 
+        int &$totbits, 
+        int $nbits, 
+        int $wsize
+    ): int 
     {
         $cdw = $this->bitstreamToWords($bitstream, $totbits, $wsize);
         $numcdw = count($cdw);
@@ -110,7 +121,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     /**
      * Initialize the grid with all patterns.
      */
-    protected function setGrid()
+    protected function setGrid(): void
     {
         // initialize grid
         $size = $this->layer[0];
@@ -193,7 +204,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function drawMode($numcdw)
+    protected function drawMode(int $numcdw): void
     {
         $modebs = array();
         $nbits = 0;
@@ -258,7 +269,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      *
      * @return int
      */
-    protected function popBit(&$bit)
+    protected function popBit(int &$bit): int
     {
         return (empty($this->bitstream[$bit--]) ? 0 : 1);
     }
@@ -271,7 +282,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      *
      * @return int
      */
-    protected function skipModeRefGrid($pos)
+    protected function skipModeRefGrid(int $pos): int
     {
         return intval((!$this->compact) && ($pos == 5));
     }
@@ -284,7 +295,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      *
      * @return int
      */
-    protected function skipRefGrid($pos)
+    protected function skipRefGrid(int $pos): int
     {
         return intval((!$this->compact) && (($pos % 16) == 0));
     }
@@ -292,7 +303,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     /**
      * Draw the data bitstream in the grid in Full mode.
      */
-    protected function drawData()
+    protected function drawData(): void
     {
         $center = $this->gridcenter;
         $llen = 16; // width of the first layer side

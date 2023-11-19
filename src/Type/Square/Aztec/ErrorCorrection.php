@@ -36,7 +36,7 @@ class ErrorCorrection
     /**
      * Galois Field primitive by word size.
      */
-    const GF = array(
+    protected const GF = array(
          4 =>   19, //         10011  GF(16)   (x^4 + x + 1)                 Mode message
          6 =>   67, //       1000011  GF(64)   (x^6 + x + 1)                 01–02 layers
          8 =>  301, //     100101101  GF(256)  (x^8 + x^5 + x^3 + x^2 + 1)   03–08 layers
@@ -48,7 +48,7 @@ class ErrorCorrection
      * Map the log and exp (inverse log) tables by word size.
      * NOTE: It is equal to 2^word_size.
      */
-    const TSIZE = array(
+    protected const TSIZE = array(
          4 =>   16,
          6 =>   64,
          8 =>  256,
@@ -59,24 +59,24 @@ class ErrorCorrection
     /**
      * Log table.
      */
-    protected $tlog = array();
+    protected array $tlog = array();
 
     /**
      * Exponential (inverse log) table.
      */
-    protected $texp = array();
+    protected array $texp = array();
 
     /**
      * Size of the log and exp tables.
      */
-    protected $tsize = 0;
+    protected int $tsize = 0;
 
     /**
      * Initialize the the Reed-Solomon Error Correction.
      *
      * @param int $wsize Size of a word in bits.
      */
-    public function __construct($wsize)
+    public function __construct(int $wsize)
     {
         $this->genTables($wsize);
     }
@@ -89,7 +89,7 @@ class ErrorCorrection
      *
      * @return array
      */
-    public function checkwords(array $data, $necc)
+    public function checkwords(array $data, int $necc): array
     {
         $coeff = $this->getCoefficients($data, $necc);
         return array_pad($coeff, -$necc, 0);
@@ -100,7 +100,7 @@ class ErrorCorrection
      *
      * @param int $wsize Size of the word in bits.
      */
-    protected function genTables($wsize)
+    protected function genTables(int $wsize): void
     {
         $this->tsize = self::TSIZE[$wsize];
         $this->tlog = array_fill(0, $this->tsize, 0);
@@ -129,7 +129,7 @@ class ErrorCorrection
      *
      * @return array Array of coefficients.
      */
-    protected function getCoefficients(array $data, $necc)
+    protected function getCoefficients(array $data, int $necc): array
     {
         $gen = array(1);
         for ($idx = 1; $idx <= $necc; $idx++) {
@@ -155,7 +155,7 @@ class ErrorCorrection
      *
      * @return array
      */
-    protected function multiplyCoeff(array $acf, array $bcf)
+    protected function multiplyCoeff(array $acf, array $bcf): array
     {
         $alen = count($acf);
         $blen = count($bcf);
@@ -176,7 +176,7 @@ class ErrorCorrection
      *
      * @return int
      */
-    protected function multiply($aval, $bval)
+    protected function multiply(int $aval, int $bval): int
     {
         if ($aval == 0 || $bval == 0) {
             return 0;
@@ -191,7 +191,7 @@ class ErrorCorrection
      *
      * @return array
      */
-    protected function trimCoefficients($coeff)
+    protected function trimCoefficients(array $coeff): array
     {
         while (!empty($coeff) && $coeff[0] == 0) {
             array_shift($coeff);
@@ -208,7 +208,7 @@ class ErrorCorrection
      *
      * @return array
      */
-    protected function multiplyByMonomial(array $coeff, $mon, $deg)
+    protected function multiplyByMonomial(array $coeff, int $mon, int $deg): array
     {
         // if ($mon == 0) {
         //     return array(0);
@@ -229,7 +229,7 @@ class ErrorCorrection
      *
      * @return array
      */
-    protected function addOrSubtract(array $smaller, array $larger)
+    protected function addOrSubtract(array $smaller, array $larger): array
     {
         // if ($smaller[0] == 0) {
         //     return $larger;

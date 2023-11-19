@@ -39,35 +39,35 @@ abstract class Codeword
      *
      * @var int
      */
-    protected $encmode = Data::MODE_UPPER;
+    protected int $encmode = Data::MODE_UPPER;
 
     /**
      * Array containing the high-level encoding bitstream.
      *
      * @var array
      */
-    protected $bitstream = array();
+    protected array $bitstream = array();
 
     /**
      * Temporary array of codewords.
      *
      * @var array
      */
-    protected $tmpCdws = array();
+    protected array $tmpCdws = array();
 
     /**
      * Array of data words.
      *
      * @var array
      */
-    protected $words = array();
+    protected array $words = array();
 
     /**
      * Count the total number of bits in the bitstream.
      *
      * @var int
      */
-    protected $totbits = 0;
+    protected int $totbits = 0;
 
     /**
      * Encodes a character using the specified mode and ordinal value.
@@ -77,7 +77,7 @@ abstract class Codeword
      *
      * @return int The encoded character.
      */
-    protected function charEnc($mode, $ord)
+    protected function charEnc(int $mode, int $ord): int
     {
         return array_key_exists($ord, DATA::CHAR_ENC[$mode]) ? DATA::CHAR_ENC[$mode][$ord] : 0;
     }
@@ -89,7 +89,7 @@ abstract class Codeword
      *
      * @return int The character mode.
      */
-    protected function charMode($ord)
+    protected function charMode(int $ord): int
     {
         return array_key_exists($ord, DATA::CHAR_MODES) ? DATA::CHAR_MODES[$ord] : Data::MODE_BINARY;
     }
@@ -102,7 +102,7 @@ abstract class Codeword
      *
      * @return bool Returns true if the mode is the same as the ordinal value, false otherwise.
      */
-    protected function isSameMode($mode, $ord)
+    protected function isSameMode(int $mode, int $ord): bool
     {
         return (
             ($mode == $this->charMode($ord))
@@ -119,7 +119,7 @@ abstract class Codeword
      *
      * @return bool
      */
-    protected function isPunctAndDigitChar($ord)
+    protected function isPunctAndDigitChar(int $ord): bool
     {
         return (($ord == 32) || ($ord == 44) || ($ord == 46));
     }
@@ -133,7 +133,7 @@ abstract class Codeword
      *
      * @return int
      */
-    protected function punctPairMode($ord, $next)
+    protected function punctPairMode(int $ord, int $next): int
     {
         $key = (($ord << 8) + $next);
         switch ($key) {
@@ -157,7 +157,12 @@ abstract class Codeword
      * @param int   $wsize     The number of bits in the codeword.
      * @param int   $value     The value of the codeword.
      */
-    protected function appendWordToBitstream(array &$bitstream, &$totbits, $wsize, $value)
+    protected function appendWordToBitstream(
+        array &$bitstream, 
+        int &$totbits, 
+        int $wsize, 
+        int $value
+    ): VOID
     {
         for ($idx = ($wsize - 1); $idx >= 0; $idx--) {
             $bitstream[] = (($value >> $idx) & 1);
@@ -174,7 +179,11 @@ abstract class Codeword
      *
      * @return array
      */
-    protected function bitstreamToWords(array $bitstream, $totbits, $wsize)
+    protected function bitstreamToWords(
+        array $bitstream, 
+        int $totbits, 
+        int $wsize
+    ): array
     {
         $words = array();
         $numwords = intval(ceil($totbits / $wsize));
@@ -197,7 +206,7 @@ abstract class Codeword
      * @param int $bits The number of bits in the codeword.
      * @param int $value The value of the codeword.
      */
-    protected function addRawCwd($bits, $value)
+    protected function addRawCwd(int $bits, int $value): void
     {
         $this->appendWordToBitstream($this->bitstream, $this->totbits, $bits, $value);
     }
@@ -208,7 +217,7 @@ abstract class Codeword
      * @param int $mode The encoding mode.
      * @param int $value The value to encode.
      */
-    protected function addCdw($mode, $value)
+    protected function addCdw(int $mode, int $value): void
     {
         $this->addRawCwd(Data::MODE_BITS[$mode], $value);
     }
@@ -218,7 +227,7 @@ abstract class Codeword
      *
      * @param int $mode The new encoding mode.
      */
-    protected function addLatch($mode)
+    protected function addLatch(int $mode): void
     {
         $latch = Data::LATCH_MAP[$this->encmode][$mode];
         foreach ($latch as $cdw) {
@@ -230,7 +239,7 @@ abstract class Codeword
     /**
      * Shift to another mode.
      */
-    protected function addShift($mode)
+    protected function addShift(int $mode): void
     {
         $shift = Data::SHIFT_MAP[$this->encmode][$mode];
         foreach ($shift as $cdw) {
@@ -244,7 +253,7 @@ abstract class Codeword
      *
      * @param int $mode The encoding mode for the codewords.
      */
-    protected function mergeTmpCwdWithShift($mode)
+    protected function mergeTmpCwdWithShift(int $mode): void
     {
         foreach ($this->tmpCdws as $item) {
             $this->addShift($mode);
@@ -256,7 +265,7 @@ abstract class Codeword
      * Merges the temporary codewords array with the current codewords array.
      * No shift is performed.
      */
-    protected function mergeTmpCwdRaw()
+    protected function mergeTmpCwdRaw(): void
     {
         foreach ($this->tmpCdws as $item) {
             $this->addRawCwd($item[0], $item[1]);
@@ -269,7 +278,7 @@ abstract class Codeword
      * @param int $mode The encoding mode to use for merging codewords.
      *                  If negative, the current encoding mode will be used.
      */
-    protected function mergeTmpCwd($mode = -1)
+    protected function mergeTmpCwd(int $mode = -1): void
     {
         if (($mode < 0) || ($this->encmode == $mode)) {
             $this->mergeTmpCwdRaw();
@@ -284,7 +293,7 @@ abstract class Codeword
      *
      * @param int $eci Extended Channel Interpretation value. If negative, the function does nothing.
      */
-    protected function addFLG($eci)
+    protected function addFLG(int $eci): void
     {
         if ($eci < 0) {
             return;

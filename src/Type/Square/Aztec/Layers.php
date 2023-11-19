@@ -39,21 +39,21 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
      *
      * @var bool
      */
-    protected $compact = true;
+    protected bool $compact = true;
 
     /**
      * Number of data layers.
      *
      * @var int
      */
-    protected $numlayers = 0;
+    protected int $numlayers = 0;
 
     /**
      * Size data for the selected layer.
      *
      * @var array
      */
-    protected $layer = array();
+    protected array $layer = array();
 
     /**
      * Returns the minimum number of layers required.
@@ -63,7 +63,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
      *
      * @return int
      */
-    protected function getMinLayers($data, $numbits)
+    protected function getMinLayers(array $data, int $numbits): int
     {
         if ($numbits <= $data[count($data)][3]) {
             foreach ($data as $numlayers => $size) {
@@ -83,7 +83,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
      *
      * @return bool Returns true if the size computation was successful, false otherwise.
      */
-    protected function setLayerByBits($numbits, $mode = 'A')
+    protected function setLayerByBits(int $numbits, string $mode = 'A'): bool
     {
         $this->numlayers = 0;
         if ($mode == 'A') {
@@ -109,7 +109,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
      *
      * @return bool Returns true if the size computation was successful, false otherwise.
      */
-    protected function sizeAndBitStuffing($ecc, $mode = 'A')
+    protected function sizeAndBitStuffing(int $ecc, string $mode = 'A'): bool
     {
         $nsbits = 0;
         $eccbits = (11 + intval(($this->totbits * $ecc) / 100));
@@ -131,7 +131,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
      *
      * @return int The number of bits in the bitstream after bit stuffing.
      */
-    protected function bitStuffing()
+    protected function bitStuffing(): int
     {
         $nsbits = 0;
         $wsize = $this->layer[2];

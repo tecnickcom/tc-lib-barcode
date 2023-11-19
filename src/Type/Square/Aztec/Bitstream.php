@@ -43,7 +43,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param int $eci The ECI mode to use.
      * @param string $hint The mode to use.
      */
-    protected function highLevelEncoding($code, $eci = 0, $hint = 'A')
+    protected function highLevelEncoding(
+        string $code, 
+        int $eci = 0, 
+        string $hint = 'A'
+    ): void
     {
         $this->addFLG($eci);
         $chars = array_values(unpack('C*', $code));
@@ -61,7 +65,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param array $chars  Integer ASCII values of the characters to encode.
      * @param int   $chrlen Lenght of the $chars array.
      */
-    protected function binaryEncode($chars, $chrlen)
+    protected function binaryEncode(array $chars, int $chrlen): void
     {
         $bits = Data::MODE_BITS[Data::MODE_BINARY];
         $this->addShift(Data::MODE_BINARY);
@@ -97,7 +101,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param array $chars  Integer ASCII values of the characters to encode.
      * @param int   $chrlen Lenght of the $chars array.
      */
-    protected function autoEncode($chars, $chrlen)
+    protected function autoEncode(array $chars, int $chrlen): void
     {
         $idx = 0;
         while ($idx < $chrlen) {
@@ -118,7 +122,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      */
-    protected function processModeChars(&$chars, &$idx, $chrlen)
+    protected function processModeChars(array &$chars, int &$idx, int $chrlen): void
     {
         $ord = $chars[$idx];
         if ($this->isSameMode($this->encmode, $ord)) {
@@ -148,7 +152,12 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     *
     * @return int
     */
-    protected function countModeChars(&$chars, $idx, $chrlen, $mode)
+    protected function countModeChars(
+        array &$chars, 
+        int $idx, 
+        int $chrlen, 
+        int $mode
+    ): int
     {
         $this->tmpCdws = array();
         $nbits = Data::MODE_BITS[$mode];
@@ -177,7 +186,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      *
      * @return bool True if binary characters have been found and processed.
      */
-    protected function processBinaryChars(&$chars, &$idx, $chrlen)
+    protected function processBinaryChars(
+        array &$chars, 
+        int &$idx, 
+        int $chrlen
+    ): bool
     {
         $binchrs = $this->countBinaryChars($chars, $idx, $chrlen);
         if ($binchrs == 0) {
@@ -226,7 +239,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     *
     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
     */
-    protected function countBinaryChars(&$chars, $idx, $chrlen)
+    protected function countBinaryChars(
+        array &$chars, 
+        int $idx, 
+        int $chrlen
+    ): int
     {
         $this->tmpCdws = array();
         $count = 0;
@@ -254,7 +271,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function processPunctPairs(&$chars, &$idx, $chrlen)
+    protected function processPunctPairs(
+        array &$chars, 
+        int &$idx, 
+        int $chrlen
+    ): bool
     {
 
         $ppairs = $this->countPunctPairs($chars, $idx, $chrlen);
@@ -301,7 +322,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      *
      * @return int
      */
-    protected function countPunctPairs(&$chars, $idx, $chrlen)
+    protected function countPunctPairs(
+        array &$chars, 
+        int $idx, 
+        int $chrlen
+    ): int
     {
         $this->tmpCdws = array();
         $pairs = 0;
@@ -328,7 +353,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      *
      * @return array
      */
-    protected function countPunctAndDigitChars(&$chars, $idx, $chrlen)
+    protected function countPunctAndDigitChars(
+        array &$chars,
+        int $idx,
+        int $chrlen
+    ): array
     {
         $words = array();
         while ($idx < $chrlen) {
