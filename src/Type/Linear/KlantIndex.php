@@ -39,7 +39,7 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
      *
      * @var string
      */
-    protected string $format = 'KIX';
+    protected const FORMAT = 'KIX';
 
     /**
      * Format code

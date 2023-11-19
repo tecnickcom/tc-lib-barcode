@@ -39,7 +39,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'POSTNET';
+    protected const FORMAT = 'POSTNET';
 
     /**
      * Map characters to barcodes
@@ -99,7 +99,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols = 0;
         $this->nrows = 2;
         $this->bars = array();
-        $this->formatCode();
+        $this::FORMATCode();
         $clen = strlen($this->extcode);
         // start bar
         $this->bars[] = array($this->ncols, 0, 1, 2);

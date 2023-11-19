@@ -41,7 +41,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var string
      */
-    protected string $format = 'DATAMATRIX';
+    protected const FORMAT = 'DATAMATRIX';
 
     /**
      * Array of codewords.

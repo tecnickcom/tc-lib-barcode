@@ -39,7 +39,7 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
      *
      * @var string
      */
-    protected string $format = 'I25+';
+    protected const FORMAT = 'I25+';
 
     /**
      * Map characters to barcodes
@@ -76,7 +76,7 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
      */
     protected function setBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         if ((strlen($this->extcode) % 2) != 0) {
             // add leading zero if code-length is odd
             $this->extcode = '0' . $this->extcode;

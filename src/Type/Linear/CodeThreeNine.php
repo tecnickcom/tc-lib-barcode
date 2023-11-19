@@ -39,7 +39,7 @@ class CodeThreeNine extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @var string
      */
-    protected string $format = 'C39';
+    protected const FORMAT = 'C39';
 
     /**
      * Format code

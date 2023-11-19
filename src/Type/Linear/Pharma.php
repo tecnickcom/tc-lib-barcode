@@ -39,7 +39,7 @@ class Pharma extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'PHARMA';
+    protected const FORMAT = 'PHARMA';
 
     /**
      * Set the bars array.

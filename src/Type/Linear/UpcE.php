@@ -43,7 +43,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      *
      * @var string
      */
-    protected string $format = 'UPCE';
+    protected const FORMAT = 'UPCE';
 
     /**
      * Fixed code length
@@ -155,7 +155,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      */
     protected function setBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         $upce_code = $this->convertUpcaToUpce($this->extcode);
         $seq = '101'; // left guard bar
         $parity = $this->parities[$this->extcode[1]][$this->check];

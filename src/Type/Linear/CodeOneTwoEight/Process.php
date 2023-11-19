@@ -39,7 +39,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'C128';
+    protected const FORMAT = 'C128';
 
     /**
      * Map characters to barcodes

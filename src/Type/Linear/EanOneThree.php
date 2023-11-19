@@ -39,7 +39,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'EAN13';
+    protected const FORMAT = 'EAN13';
 
     /**
      * Fixed code length
@@ -177,7 +177,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
         if (!is_numeric($this->code)) {
             throw new BarcodeException('Input code must be a number');
         }
-        $this->formatCode();
+        $this::FORMATCode();
         $seq = '101'; // left guard bar
         $half_len = intval(ceil($this->code_length / 2));
         $parity = $this->parities[$this->extcode[0]];

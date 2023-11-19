@@ -39,7 +39,7 @@ class StandardTwoOfFive extends \Com\Tecnick\Barcode\Type\Linear\StandardTwoOfFi
      *
      * @var string
      */
-    protected string $format = 'S25';
+    protected const FORMAT = 'S25';
 
     /**
      * Format code

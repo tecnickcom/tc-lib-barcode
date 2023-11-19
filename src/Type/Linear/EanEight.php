@@ -39,7 +39,7 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      *
      * @var string
      */
-    protected string $format = 'EAN8';
+    protected const FORMAT = 'EAN8';
 
     /**
      * Fixed code length
@@ -55,7 +55,7 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      */
     protected function setBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         $seq = '101'; // left guard bar
         $half_len = intval(ceil($this->code_length / 2));
         for ($pos = 0; $pos < $half_len; ++$pos) {

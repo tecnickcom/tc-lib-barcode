@@ -39,7 +39,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'MSI+';
+    protected const FORMAT = 'MSI+';
 
     /**
      * Map characters to barcodes
@@ -110,7 +110,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         $seq = '110'; // left guard
         $clen = strlen($this->extcode);
         for ($pos = 0; $pos < $clen; ++$pos) {

@@ -39,7 +39,7 @@ class InterleavedTwoOfFive extends \Com\Tecnick\Barcode\Type\Linear\InterleavedT
      *
      * @var string
      */
-    protected string $format = 'I25';
+    protected const FORMAT = 'I25';
 
     /**
      * Format code

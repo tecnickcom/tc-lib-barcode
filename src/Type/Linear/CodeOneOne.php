@@ -39,7 +39,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'CODE11';
+    protected const FORMAT = 'CODE11';
 
     /**
      * Map characters to barcodes
@@ -133,7 +133,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols = 0;
         $this->nrows = 1;
         $this->bars = array();
-        $this->formatCode();
+        $this::FORMATCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];

@@ -60,7 +60,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'IMB';
+    protected const FORMAT = 'IMB';
 
     /**
      * ASC characters

@@ -39,7 +39,7 @@ class EanFive extends \Com\Tecnick\Barcode\Type\Linear\EanTwo
      *
      * @var string
      */
-    protected string $format = 'EAN5';
+    protected const FORMAT = 'EAN5';
 
     /**
      * Fixed code length

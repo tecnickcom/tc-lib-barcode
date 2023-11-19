@@ -46,7 +46,7 @@ abstract class Convert
      *
      * @var string
      */
-    protected string $format = '';
+    protected const FORMAT = '';
 
     /**
      * Array containing extra parameters for the specified barcode type

@@ -39,7 +39,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'S25+';
+    protected const FORMAT = 'S25+';
 
     /**
      * Map characters to barcodes
@@ -99,7 +99,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         if ((strlen($this->extcode) % 2) != 0) {
             // add leading zero if code-length is odd
             $this->extcode = '0' . $this->extcode;

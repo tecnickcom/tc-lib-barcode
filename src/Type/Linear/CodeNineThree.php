@@ -39,7 +39,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @var string
      */
-    protected string $format = 'C93';
+    protected const FORMAT = 'C93';
 
     /**
      * Map characters to barcodes
@@ -350,7 +350,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         $this->ncols = 0;
         $this->nrows = 1;
         $this->bars = array();
-        $this->formatCode();
+        $this::FORMATCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = ord($this->extcode[$chr]);

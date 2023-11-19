@@ -39,7 +39,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'EAN2';
+    protected const FORMAT = 'EAN2';
 
     /**
      * Fixed code length
@@ -119,7 +119,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         $chk = $this->getChecksum($this->extcode);
         $parity = $this->parities[$chk];
         $seq = '1011'; // left guard bar

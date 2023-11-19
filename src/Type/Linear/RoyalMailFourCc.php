@@ -39,7 +39,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected string $format = 'RMS4CC';
+    protected const FORMAT = 'RMS4CC';
 
     /**
      * Map characters to barcodes
@@ -173,7 +173,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getCoreBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
