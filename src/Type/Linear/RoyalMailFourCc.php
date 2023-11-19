@@ -46,7 +46,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected array $chbar = array(
+    protected const CHBAR = array(
         '0' => '3322',
         '1' => '3412',
         '2' => '3421',
@@ -178,7 +178,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             for ($pos = 0; $pos < 4; ++$pos) {
-                switch ($this->chbar[$char][$pos]) {
+                switch ($this::CHBAR[$char][$pos]) {
                     case '1':
                         $this->bars[] = array($this->ncols, 0, 1, 2);
                         break;

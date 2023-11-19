@@ -46,7 +46,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected array $chbar = array(
+    protected const CHBAR = array(
         '0' => '10101110111010',
         '1' => '11101010101110',
         '2' => '10111010101110',
@@ -108,10 +108,10 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($idx = 0; $idx < $clen; ++$idx) {
             $digit = $this->extcode[$idx];
-            if (!isset($this->chbar[$digit])) {
+            if (!isset($this::CHBAR[$digit])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
-            $seq .= $this->chbar[$digit];
+            $seq .= $this::CHBAR[$digit];
         }
         $seq .= '111010111';
         $this->processBinarySequence($seq);
