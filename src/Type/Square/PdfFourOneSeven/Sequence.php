@@ -42,7 +42,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
      *
      * @return int error correction level
      */
-    protected function getErrorCorrectionLevel($ecl, $numcw)
+    protected function getErrorCorrectionLevel(int $ecl, int $numcw): int
     {
         $maxecl = 8; // maximum error level
         $maxerrsize = (928 - $numcw); // available codewords for error
@@ -73,7 +73,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
      *
      * @return array of error correction codewords
      */
-    protected function getErrorCorrection($codewords, $ecl)
+    protected function getErrorCorrection(array $codewords, int $ecl): array
     {
         // get error correction coefficients
         $ecc = Data::RS_FACTORS[$ecl];
@@ -111,7 +111,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
      * @param int    $seq             Current sequence
      * @param int    $offset          Current code offset
      */
-    protected function processSequence(&$sequence_array, $code, $seq, $offset)
+    protected function processSequence(array &$sequence_array, string $code, int $seq, int $offset): void
     {
         // extract text sequence before the number sequence
         $prevseq = substr($code, $offset, ($seq - $offset));
@@ -155,7 +155,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
      *
      * @return array
      */
-    protected function getInputSequences($code)
+    protected function getInputSequences(string $code): array
     {
         $sequence_array = array(); // array to be returned
         $numseq = array();

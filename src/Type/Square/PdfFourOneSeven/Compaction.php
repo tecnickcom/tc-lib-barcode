@@ -45,7 +45,15 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      * @param int     $idx
      * @param int     $codelen
      */
-    protected function processTextCompactionSub(&$txtarr, &$submode, $sub, $code, $key, $idx, $codelen)
+    protected function processTextCompactionSub(
+        array &$txtarr, 
+        int &$submode, 
+        int $sub, 
+        string $code, 
+        int $key, 
+        int $idx, 
+        int $codelen
+        ): void
     {
         // $sub is the new submode
         if (
@@ -75,9 +83,9 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      * Process Text Compaction
      *
      * @param string  $code      Data to compact
-     * @param string  $codewords Codewords
+     * @param array  $codewords Codewords
      */
-    protected function processTextCompaction($code, &$codewords)
+    protected function processTextCompaction(string $code, array &$codewords): void
     {
         $submode = 0; // default Alpha sub-mode
         $txtarr = array(); // array of characters and sub-mode switching characters
@@ -114,9 +122,9 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      * Process Byte Compaction
      *
      * @param string  $code      Data to compact
-     * @param string  $codewords Codewords
+     * @param array  $codewords Codewords
      */
-    protected function processByteCompaction($code, &$codewords)
+    protected function processByteCompaction(string $code, array &$codewords): void
     {
         while (($codelen = strlen($code)) > 0) {
             if ($codelen > 6) {
@@ -157,9 +165,9 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      * Process Numeric Compaction
      *
      * @param string  $code      Data to compact
-     * @param string  $codewords Codewords
+     * @param array  $codewords Codewords
      */
-    protected function processNumericCompaction($code, &$codewords)
+    protected function processNumericCompaction(string $code, array &$codewords): void
     {
         while (($codelen = strlen($code)) > 0) {
             $rest = '';
@@ -182,11 +190,15 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      *
      * @param int     $mode    Compaction mode number
      * @param string  $code    Data to compact
-     * @param boolean $addmode If true add the mode codeword in the first position
+     * @param bool $addmode If true add the mode codeword in the first position
      *
      * @return array of codewords
      */
-    protected function getCompaction($mode, $code, $addmode = true)
+    protected function getCompaction(
+        int $mode, 
+        string $code, 
+        bool $addmode = true
+    ): array
     {
         $codewords = array(); // array of codewords to return
         switch ($mode) {
