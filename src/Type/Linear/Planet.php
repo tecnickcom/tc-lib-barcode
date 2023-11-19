@@ -46,7 +46,7 @@ class Planet extends \Com\Tecnick\Barcode\Type\Linear\Postnet
      *
      * @var array<string, string>
      */
-    protected array $chbar = array(
+    protected const CHBAR = array(
         '0' => '11222',
         '1' => '22211',
         '2' => '22121',

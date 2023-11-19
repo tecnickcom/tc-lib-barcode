@@ -46,7 +46,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected array $chbar = array(
+    protected const CHBAR = array(
         '0' => '22111',
         '1' => '11122',
         '2' => '11212',
@@ -106,11 +106,11 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols += 2;
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset($this->chbar[$char])) {
+            if (!isset($this::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             for ($pos = 0; $pos < 5; ++$pos) {
-                $bar_height = intval($this->chbar[$char][$pos]);
+                $bar_height = intval($this::CHBAR[$char][$pos]);
                 $this->bars[] = array($this->ncols, floor(1 / $bar_height), 1, $bar_height);
                 $this->ncols += 2;
             }
