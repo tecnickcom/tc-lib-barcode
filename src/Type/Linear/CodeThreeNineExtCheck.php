@@ -46,7 +46,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected const CHBAREXCHK = array(
+    protected const CHBAR = array(
         '0' => '111331311',
         '1' => '311311113',
         '2' => '113311113',
@@ -210,11 +210,11 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset($this::CHBAREXCHK[$char])) {
+            if (!isset($this::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
             for ($pos = 0; $pos < 9; ++$pos) {
-                $bar_width = intval($this::CHBAREXCHK[$char][$pos]);
+                $bar_width = intval($this::CHBAR[$char][$pos]);
                 if ((($pos % 2) == 0) && ($bar_width > 0)) {
                     $this->bars[] = array($this->ncols, 0, $bar_width, 1);
                 }
