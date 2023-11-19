@@ -98,7 +98,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string>
      */
-    protected $extcodes = array(
+    protected const EXTCODES = array(
         '%U', '$A', '$B', '$C',
         '$D', '$E', '$F', '$G',
         '$H', '$I', '$J', '$K',
@@ -163,7 +163,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
             if ($item > 127) {
                 throw new BarcodeException('Invalid character: chr(' . $item . ')');
             }
-            $ext .= $this->extcodes[$item];
+            $ext .= $this::EXTCODES[$item];
         }
         return $ext;
     }
