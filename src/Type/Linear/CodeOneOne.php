@@ -116,7 +116,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = 'S' . $this->code . $this->getChecksum($this->code) . 'S';
     }
