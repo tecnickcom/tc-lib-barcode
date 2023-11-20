@@ -41,7 +41,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Initialize a new barcode object
      *
-     * @param string|array              $code    Barcode content
+     * @param string                    $code    Barcode content
      * @param int                       $width   Barcode width in user units (excluding padding).
      *                                           A negative value indicates the multiplication
      *                                           factor for each column.
@@ -60,7 +60,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @throws ColorException in case of color error
      */
     public function __construct(
-        string|array $code,
+        string $code,
         int $width = -1,
         int $height = -1,
         string $color = 'black',

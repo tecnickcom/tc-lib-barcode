@@ -34,8 +34,6 @@ class Raw extends \Com\Tecnick\Barcode\Type
 {
     /**
      * Get the bars array
-     *
-     * @throws BarcodeException in case of error
      */
     protected function setBars(): void
     {

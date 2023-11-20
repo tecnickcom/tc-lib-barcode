@@ -16,8 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type;
 
-use Com\Tecnick\Color\Model\Rgb as Color;
 use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Color\Model\Rgb as Color;
 
 /**
  * Com\Tecnick\Barcode\Type\Convert
@@ -56,7 +56,7 @@ abstract class Convert
     /**
      * Code to convert (barcode content)
      */
-    protected string|array $code = '';
+    protected string $code = '';
 
     /**
      * Resulting code after applying checksum etc.
@@ -272,8 +272,6 @@ abstract class Convert
 
     /**
      * Get the pre-formatted code
-     * 
-     * @param string|array $data
      */
     protected function getRawCodeRows(string|array $data): array
     {
@@ -293,8 +291,6 @@ abstract class Convert
 
     /**
      * Get the bars array
-     * 
-     * @param string|array $data
      *
      * @throws BarcodeException in case of error
      */

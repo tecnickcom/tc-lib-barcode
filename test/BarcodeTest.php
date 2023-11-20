@@ -72,7 +72,7 @@ class BarcodeTest extends TestUtil
     {
         $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $barcode->getBarcodeObj('LRAW', []);
+        $barcode->getBarcodeObj('LRAW', '');
     }
 
     public function testSpotColor(): void

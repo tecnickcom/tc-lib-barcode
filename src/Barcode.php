@@ -82,7 +82,7 @@ class Barcode
      * Get the barcode object
      *
      * @param string                    $type    Barcode type
-     * @param string|array              $code    Barcode content
+     * @param string                    $code    Barcode content
      * @param int                       $width   Barcode width in user units (excluding padding).
      *                                           A negative value indicates the multiplication
      *                                           factor for each column.
@@ -100,7 +100,7 @@ class Barcode
      */
     public function getBarcodeObj(
         string $type,
-        string|array $code,
+        string $code,
         int $width = -1,
         int $height = -1,
         string $color = 'black',
