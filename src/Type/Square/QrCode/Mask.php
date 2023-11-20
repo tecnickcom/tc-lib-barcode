@@ -39,7 +39,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @var bool
      */
-    protected $qr_find_from_random = false;
+    protected bool $qr_find_from_random = false;
 
     /**
      * If true, estimates best mask (spec. default, but extremally slow;
@@ -47,21 +47,21 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @var bool
      */
-    protected $qr_find_best_mask = true;
+    protected bool $qr_find_best_mask = true;
 
     /**
      * Default mask used when $this->qr_find_best_mask === false
      *
      * @var int
      */
-    protected $qr_default_mask = 2;
+    protected int $qr_default_mask = 2;
 
     /**
      * Run length
      *
      * @var array
      */
-    protected $runLength = array();
+    protected array $runLength = array();
 
     /**
      * QR code version.
@@ -71,21 +71,21 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @var int
      */
-    public $version = 0;
+    public int $version = 0;
 
     /**
      * Error correction level
      *
      * @var int
      */
-    protected $level = 0;
+    protected int $level = 0;
 
     /**
      * Spec class object
      *
-     * @var \Com\Tecnick\Barcode\Type\Square\QrCode\Spec
+     * @var Spec
      */
-    protected $spc;
+    protected Spec $spc;
 
     /**
      * Initialize
@@ -97,7 +97,13 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * @param bool $best_mask     If true, estimates best mask (slow)
      * @param int  $default_mask  Default mask used when $fbm is false
      */
-    public function __construct($version, $level, $random_mask = false, $best_mask = true, $default_mask = 2)
+    public function __construct(
+        int $version, 
+        int $level, 
+        bool $random_mask = false, 
+        bool $best_mask = true, 
+        int $default_mask = 2
+        )
     {
         $this->version = $version;
         $this->level = $level;
@@ -116,7 +122,11 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @return array best mask
      */
-    protected function mask($width, $frame, $level)
+    protected function mask(
+        int $width, 
+        array $frame, 
+        int $level
+    ): array
     {
         $minDemerit = PHP_INT_MAX;
         $bestMask = array();
@@ -157,7 +167,12 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @return array mask
      */
-    protected function makeMask($width, $frame, $maskNo, $level)
+    protected function makeMask(
+        int $width, 
+        array $frame, 
+        int $maskNo, 
+        int $level
+    ): array
     {
         $this->makeMaskNo($maskNo, $width, $frame, $mask);
         $this->writeFormatInformation($width, $mask, $maskNo, $level);
@@ -174,7 +189,12 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @return int blacks
      */
-    protected function writeFormatInformation($width, &$frame, $maskNo, $level)
+    protected function writeFormatInformation(
+        int $width, 
+        array &$frame, 
+        int $maskNo, 
+        int $level
+    ): int
     {
         $blacks = 0;
         $spec = new Spec();
@@ -220,7 +240,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @return int
      */
-    protected function evaluateSymbol($width, $frame)
+    protected function evaluateSymbol(int $width, array $frame): int
     {
         $frameY = $frameYM = $frame[0];
         for ($ypos = 0; $ypos < $width; ++$ypos) {
@@ -259,12 +279,17 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @param int   $ypos   Y position
      * @param int   $width  Width
-     * @param array $frameY
-     * @param array $frameYM
+     * @param string $frameY
+     * @param string $frameYM
      *
      * @return int demerit
      */
-    protected function evaluateSymbolB($ypos, $width, $frameY, $frameYM)
+    protected function evaluateSymbolB(
+        int $ypos, 
+        int $width, 
+        string $frameY, 
+        string $frameYM
+    ): int
     {
         $head = 0;
         $demerit = 0;
@@ -306,7 +331,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @return int demerit
      */
-    protected function calcN1N3($length)
+    protected function calcN1N3(int $length): int
     {
         $demerit = 0;
         for ($idx = 0; $idx < $length; ++$idx) {
@@ -328,7 +353,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @return int demerit delta
      */
-    protected function calcN1N3delta($length, $idx)
+    protected function calcN1N3delta(int $length, int $idx): int
     {
         $fact = (int)($this->runLength[$idx] / 3);
         if (
