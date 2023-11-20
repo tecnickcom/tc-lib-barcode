@@ -17,6 +17,7 @@
 namespace Com\Tecnick\Barcode\Type;
 
 use Com\Tecnick\Color\Model\Rgb as Color;
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Convert
@@ -124,15 +125,11 @@ abstract class Convert
     /**
      * Import a binary sequence of comma-separated 01 strings
      *
-     * @param string|array $code Code to process
+     * @param string|array $data Binary sequence data to process
      */
-    protected function processBinarySequence(string|array $code): void
+    protected function processBinarySequence(string|array $data): void
     {
-        $raw = new Raw($code, $this->width, $this->height);
-        $data = $raw->getArray();
-        $this->ncols = $data['ncols'];
-        $this->nrows = $data['nrows'];
-        $this->bars = $data['bars'];
+        $this->getRawBars($data);
     }
 
     /**
@@ -271,5 +268,71 @@ abstract class Convert
             ($bar[2] * $this->width_ratio),
             ($bar[3] * $this->height_ratio),
         ];
+    }
+
+    /**
+     * Get the pre-formatted code
+     * 
+     * @param string|array $data
+     */
+    protected function getRawCodeRows(string|array $data): array
+    {
+        if (is_array($data)) {
+            return $data;
+        }
+
+        // remove spaces and newlines
+        $code = preg_replace('/[\s]*/s', '', $data);
+        // remove trailing brackets or commas
+        $code = preg_replace('/^[\[,]+/', '', $code);
+        $code = preg_replace('/[\],]+$/', '', $code);
+        // convert bracket -separated to comma-separated
+        $code = preg_replace('/[\]][\[]$/', ',', $code);
+        return explode(',', $code);
+    }
+
+    /**
+     * Get the bars array
+     * 
+     * @param string|array $data
+     *
+     * @throws BarcodeException in case of error
+     */
+    protected function getRawBars(string|array $data): void
+    {
+        $rows = $this->getRawCodeRows($data);
+        if ($rows === []) {
+            throw new BarcodeException('Empty input string');
+        }
+
+        $this->nrows = count($rows);
+        $this->ncols = is_array($rows[0]) ? count($rows[0]) : strlen($rows[0]);
+
+        if ($this->ncols === 0) {
+            throw new BarcodeException('Empty columns');
+        }
+
+        $this->bars = [];
+        foreach ($rows as $posy => $row) {
+            if (! is_array($row)) {
+                $row = str_split($row, 1);
+            }
+
+            $prevcol = '';
+            $bar_width = 0;
+            $row[] = '0';
+            for ($posx = 0; $posx <= $this->ncols; ++$posx) {
+                if ($row[$posx] != $prevcol) {
+                    if ($prevcol == '1') {
+                        $this->bars[] = [($posx - $bar_width), $posy, $bar_width, 1];
+                    }
+
+                    $bar_width = 0;
+                }
+
+                ++$bar_width;
+                $prevcol = $row[$posx];
+            }
+        }
     }
 }

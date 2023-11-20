@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Raw
  *
@@ -35,64 +33,12 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
 class Raw extends \Com\Tecnick\Barcode\Type
 {
     /**
-     * Get the pre-formatted code
-     */
-    protected function getCodeRows(): array
-    {
-        if (is_array($this->code)) {
-            return $this->code;
-        }
-
-        // remove spaces and newlines
-        $code = preg_replace('/[\s]*/s', '', $this->code);
-        // remove trailing brackets or commas
-        $code = preg_replace('/^[\[,]+/', '', $code);
-        $code = preg_replace('/[\],]+$/', '', $code);
-        // convert bracket -separated to comma-separated
-        $code = preg_replace('/[\]][\[]$/', ',', $code);
-        return explode(',', $code);
-    }
-
-    /**
      * Get the bars array
      *
      * @throws BarcodeException in case of error
      */
     protected function setBars(): void
     {
-        $rows = $this->getCodeRows();
-        if ($rows === []) {
-            throw new BarcodeException('Empty input string');
-        }
-
-        $this->nrows = count($rows);
-        $this->ncols = is_array($rows[0]) ? count($rows[0]) : strlen($rows[0]);
-
-        if ($this->ncols === 0) {
-            throw new BarcodeException('Empty columns');
-        }
-
-        $this->bars = [];
-        foreach ($rows as $posy => $row) {
-            if (! is_array($row)) {
-                $row = str_split($row, 1);
-            }
-
-            $prevcol = '';
-            $bar_width = 0;
-            $row[] = '0';
-            for ($posx = 0; $posx <= $this->ncols; ++$posx) {
-                if ($row[$posx] != $prevcol) {
-                    if ($prevcol == '1') {
-                        $this->bars[] = [($posx - $bar_width), $posy, $bar_width, 1];
-                    }
-
-                    $bar_width = 0;
-                }
-
-                ++$bar_width;
-                $prevcol = $row[$posx];
-            }
-        }
+        $this->getRawBars($this->code);
     }
 }
