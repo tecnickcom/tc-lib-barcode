@@ -38,112 +38,112 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *
      * @var array
      */
-    protected $datacode = array();
+    protected array $datacode = array();
 
     /**
      * Error correction code
      *
      * @var array
      */
-    protected $ecccode = array();
+    protected array $ecccode = array();
 
     /**
      * Blocks
      *
      * @var int
      */
-    protected $blocks;
+    protected int $blocks;
 
     /**
      * Reed-Solomon blocks
      *
      * @var array
      */
-    protected $rsblocks = array(); //of RSblock
+    protected array $rsblocks = array(); //of RSblock
 
     /**
      * Counter
      *
      * @var int
      */
-    protected $count;
+    protected int $count;
 
     /**
      * Data length
      *
      * @var int
      */
-    protected $dataLength;
+    protected int $dataLength;
 
     /**
      * Error correction length
      *
      * @var int
      */
-    protected $eccLength;
+    protected int $eccLength;
 
     /**
      * Value bv1
      *
      * @var int
      */
-    protected $bv1;
+    protected int $bv1;
 
     /**
      * Width.
      *
      * @var int
      */
-    protected $width;
+    protected int $width;
 
     /**
      * Frame
      *
      * @var array
      */
-    protected $frame;
+    protected array $frame;
 
     /**
      * Horizontal bit position
      *
      * @var int
      */
-    protected $xpos;
+    protected int $xpos;
 
     /**
      * Vertical bit position
      *
      * @var int
      */
-    protected $ypos;
+    protected int $ypos;
 
     /**
      * Direction
      *
      * @var int
      */
-    protected $dir;
+    protected int $dir;
 
     /**
      * Single bit value
      *
      * @var int
      */
-    protected $bit;
+    protected int $bit;
 
     /**
      * Reed-Solomon items
      *
      * @va array
      */
-    protected $rsitems = array();
+    protected array $rsitems = array();
 
     /**
      * Initialize code
      *
      * @param array $spec Array of ECC specification
      */
-    protected function init($spec)
+    protected function init(array $spec): void
     {
         $dlv = $this->spc->rsDataCodes1($spec);
         $elv = $this->spc->rsEccCodes1($spec);
@@ -151,6 +151,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         $blockNo = 0;
         $dataPos = 0;
         $eccPos = 0;
+        $ecc = [];
         $endfor = $this->spc->rsBlockNum1($spec);
         $this->initLoop($endfor, $dlv, $elv, $rsv, $eccPos, $blockNo, $dataPos, $ecc);
         if ($this->spc->rsBlockNum2($spec) == 0) {
@@ -176,9 +177,18 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      * @param int $eccPos
      * @param int $blockNo
      * @param int $dataPos
-     * @param int $ecc
+     * @param array $ecc
      */
-    protected function initLoop($endfor, $dlv, $elv, $rsv, &$eccPos, &$blockNo, &$dataPos, &$ecc)
+    protected function initLoop(
+        int $endfor, 
+        int $dlv, 
+        int $elv, 
+        array $rsv, 
+        int &$eccPos, 
+        int &$blockNo, 
+        int &$dataPos, 
+        array &$ecc
+    ): void
     {
         for ($idx = 0; $idx < $endfor; ++$idx) {
             $ecc = array_slice($this->ecccode, $eccPos);
@@ -219,7 +229,14 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *          pad = Padding bytes in shortened block;
      *          gfpoly.
      */
-    protected function initRs($symsize, $gfpoly, $fcr, $prim, $nroots, $pad)
+    protected function initRs(
+        int $symsize, 
+        int $gfpoly, 
+        int $fcr, 
+        int $prim, 
+        int $nroots, 
+        int $pad
+    ): array
     {
         foreach ($this->rsitems as $rsv) {
             if (
@@ -247,7 +264,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *
      * @return int X position
      */
-    protected function modnn($rsv, $xpos)
+    protected function modnn(array $rsv, int $xpos): int
     {
         while ($xpos >= $rsv['nn']) {
             $xpos -= $rsv['nn'];
@@ -265,7 +282,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *
      * @throws BarcodeException in case of error
      */
-    protected function checkRsCharParamsA($symsize, $fcr, $prim)
+    protected function checkRsCharParamsA(int $symsize, int $fcr, int $prim): void
     {
         $shfsymsize = (1 << $symsize);
         if (
@@ -289,7 +306,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *
      * @throws BarcodeException in case of error
      */
-    protected function checkRsCharParamsB($symsize, $nroots, $pad)
+    protected function checkRsCharParamsB(int $symsize, int $nroots, int $pad): void
     {
         $shfsymsize = (1 << $symsize);
         if (
@@ -326,7 +343,14 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *          pad = Padding bytes in shortened block;
      *          gfpoly.
      */
-    protected function initRsChar($symsize, $gfpoly, $fcr, $prim, $nroots, $pad)
+    protected function initRsChar(
+        int $symsize, 
+        int $gfpoly, 
+        int $fcr, 
+        int $prim, 
+        int $nroots, 
+        int $pad
+    ): array
     {
         $this->checkRsCharParamsA($symsize, $fcr, $prim);
         $this->checkRsCharParamsB($symsize, $nroots, $pad);
@@ -397,7 +421,11 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *
      * @return array Parity array
      */
-    protected function encodeRsChar($rsv, $data, $parity)
+    protected function encodeRsChar(
+        array $rsv, 
+        array $data, 
+        array $parity
+    ): array
     {
         // the total number of symbols in a RS block
         $nnv =& $rsv['nn'];
