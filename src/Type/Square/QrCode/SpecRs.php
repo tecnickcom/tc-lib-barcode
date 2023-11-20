@@ -41,7 +41,7 @@ abstract class SpecRs
      *
      * @return int value
      */
-    public function rsBlockNum($spec)
+    public function rsBlockNum(array $spec): int
     {
         return ($spec[0] + $spec[3]);
     }
@@ -53,7 +53,7 @@ abstract class SpecRs
      *
      * @return int value
      */
-    public function rsBlockNum1($spec)
+    public function rsBlockNum1(array $spec): int
     {
         return $spec[0];
     }
@@ -65,7 +65,7 @@ abstract class SpecRs
      *
      * @return int value
      */
-    public function rsDataCodes1($spec)
+    public function rsDataCodes1(array $spec): int
     {
         return $spec[1];
     }
@@ -77,7 +77,7 @@ abstract class SpecRs
      *
      * @return int value
      */
-    public function rsEccCodes1($spec)
+    public function rsEccCodes1(array $spec): int
     {
         return $spec[2];
     }
@@ -89,7 +89,7 @@ abstract class SpecRs
      *
      * @return int value
      */
-    public function rsBlockNum2($spec)
+    public function rsBlockNum2(array $spec): int
     {
         return $spec[3];
     }
@@ -101,7 +101,7 @@ abstract class SpecRs
      *
      * @return int value
      */
-    public function rsDataCodes2($spec)
+    public function rsDataCodes2(array $spec): int
     {
         return $spec[4];
     }
@@ -113,7 +113,7 @@ abstract class SpecRs
      *
      * @return int value
      */
-    public function rsEccCodes2($spec)
+    public function rsEccCodes2(array $spec): int
     {
         return $spec[2];
     }
@@ -125,7 +125,7 @@ abstract class SpecRs
      *
      * @return int value
      */
-    public function rsDataLength($spec)
+    public function rsDataLength(array $spec): int
     {
         return ($spec[0] * $spec[1]) + ($spec[3] * $spec[4]);
     }
@@ -137,7 +137,7 @@ abstract class SpecRs
      *
      * @return int value
      */
-    public function rsEccLength($spec)
+    public function rsEccLength(array $spec): int
     {
         return ($spec[0] + $spec[3]) * $spec[2];
     }
@@ -147,9 +147,9 @@ abstract class SpecRs
      *
      * @param int $version Version
      *
-     * @return Array of unsigned char.
+     * @return array of unsigned char.
      */
-    public function createFrame($version)
+    public function createFrame(int $version): array
     {
         $width = Data::CAPACITY[$version][Data::QRCAP_WIDTH];
         $frameLine = str_repeat("\0", $width);
@@ -221,7 +221,13 @@ abstract class SpecRs
      *
      * @return array srctab
      */
-    public function qrstrset($srctab, $xpos, $ypos, $repl, $replLen = null)
+    public function qrstrset(
+        array $srctab, 
+        int $xpos, 
+        int $ypos, 
+        string $repl, 
+        int $replLen = null
+    ): array
     {
         $srctab[$ypos] = substr_replace(
             $srctab[$ypos],
@@ -241,7 +247,11 @@ abstract class SpecRs
      *
      * @return array frame
      */
-    public function putAlignmentMarker($frame, $pox, $poy)
+    public function putAlignmentMarker(
+        array $frame, 
+        int $pox, 
+        int $poy
+    ): array
     {
         $finder = array(
             "\xa1\xa1\xa1\xa1\xa1",
@@ -267,7 +277,11 @@ abstract class SpecRs
      *
      * @return array frame
      */
-    public function putFinderPattern($frame, $pox, $poy)
+    public function putFinderPattern(
+        array $frame, 
+        int $pox, 
+        int $poy
+    ): array
     {
         $finder = array(
             "\xc1\xc1\xc1\xc1\xc1\xc1\xc1",
@@ -292,7 +306,7 @@ abstract class SpecRs
      *
      * @return int
      */
-    public function getVersionPattern($version)
+    public function getVersionPattern(int $version): int
     {
         if (($version < 7) || ($version > Data::QRSPEC_VERSION_MAX)) {
             return 0;
@@ -309,7 +323,11 @@ abstract class SpecRs
      *
      * @return array frame
      */
-    public function putAlignmentPattern($version, $frame, $width)
+    public function putAlignmentPattern(
+        int $version, 
+        array $frame, 
+        int $width
+    ): array
     {
         if ($version < 2) {
             return $frame;
