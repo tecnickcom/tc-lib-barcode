@@ -439,16 +439,31 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         if (! $this->bg_color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
             $bgobj = clone $this->color_obj;
             $rgbcolor = $bgobj->invertColor()->getNormalizedArray(255);
-            $background_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
+            $background_color = imagecolorallocate(
+                $img,
+                (int) round($rgbcolor['R']),
+                (int) round($rgbcolor['G']),
+                (int) round($rgbcolor['B']),
+            );
             imagecolortransparent($img, $background_color);
         } else {
             $rgbcolor = $this->bg_color_obj->getNormalizedArray(255);
-            $bg_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
+            $bg_color = imagecolorallocate(
+                $img,
+                (int) round($rgbcolor['R']),
+                (int) round($rgbcolor['G']),
+                (int) round($rgbcolor['B']),
+            );
             imagefilledrectangle($img, 0, 0, $width, $height, $bg_color);
         }
 
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
-        $bar_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
+        $bar_color = imagecolorallocate(
+            $img,
+            (int) round($rgbcolor['R']),
+            (int) round($rgbcolor['G']),
+            (int) round($rgbcolor['B']),
+        );
         $bars = $this->getBarsArrayXYXY();
         foreach ($bars as $bar) {
             imagefilledrectangle(

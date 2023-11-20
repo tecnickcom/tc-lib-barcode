@@ -57,7 +57,7 @@ class BarcodeTest extends TestUtil
             -2,
             -2,
             'purple',
-            [10]
+            [10] //@phpstan-ignore-line
         );
     }
 
