@@ -41,7 +41,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
      * @param int $version Code version
      * @param int $level   Error Correction Level
      */
-    public function __construct($hint, $version, $level)
+    public function __construct(int $hint, int $version, int $level)
     {
         $this->hint = $hint;
         $this->version = $version;
@@ -55,7 +55,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
      *
      * @return array padded merged byte stream
      */
-    public function getByteStream($items)
+    public function getByteStream(array $items): array
     {
         return $this->bitstreamToByte(
             $this->appendPaddingBit(
@@ -71,7 +71,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
      *
      * @return array of bytes
      */
-    protected function bitstreamToByte($bstream)
+    protected function bitstreamToByte(array $bstream): array
     {
         $size = count($bstream);
         if ($size == 0) {
@@ -108,7 +108,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
      *
      * @return array bitstream
      */
-    protected function mergeBitStream($items)
+    protected function mergeBitStream(array $items): array
     {
         $items = $this->convertData($items);
         $bstream = array();
@@ -125,7 +125,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
      *
      * @return array items
      */
-    protected function convertData($items)
+    protected function convertData(array $items): array
     {
         $ver = $this->estimateVersion($items, $this->level);
         if ($ver > $this->version) {
@@ -151,11 +151,11 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     /**
      * Create BitStream
      *
-     * @param $items
+     * @param array $items
      *
      * @return array of items and total bits
      */
-    protected function createBitStream($items)
+    protected function createBitStream(array $items): array
     {
         $total = 0;
         foreach ($items as $key => $item) {
@@ -174,7 +174,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
      *
      * @return array input item
      */
-    public function encodeBitStream($inputitem, $version)
+    public function encodeBitStream(array $inputitem, int $version): array
     {
         $inputitem['bstream'] = array();
         $specObj = new Spec();
@@ -220,7 +220,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
      *
      * @return array bitstream
      */
-    protected function appendPaddingBit($bstream)
+    protected function appendPaddingBit(array $bstream): array
     {
         if (is_null($bstream)) {
             return array();
