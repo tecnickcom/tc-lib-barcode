@@ -40,7 +40,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int maximum size (bytes)
      */
-    public function getDataLength($version, $level)
+    public function getDataLength(int $version, int $level): int
     {
         return (Data::CAPACITY[$version][Data::QRCAP_WORDS] - Data::CAPACITY[$version][Data::QRCAP_EC][$level]);
     }
@@ -53,7 +53,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int ECC size (bytes)
      */
-    public function getECCLength($version, $level)
+    public function getECCLength(int $version, int $level): int
     {
         return Data::CAPACITY[$version][Data::QRCAP_EC][$level];
     }
@@ -65,7 +65,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int width
      */
-    public function getWidth($version)
+    public function getWidth(int $version): int
     {
         return Data::CAPACITY[$version][Data::QRCAP_WIDTH];
     }
@@ -77,7 +77,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int number of remainder bits
      */
-    public function getRemainder($version)
+    public function getRemainder(int $version): int
     {
         return Data::CAPACITY[$version][Data::QRCAP_REMINDER];
     }
@@ -90,7 +90,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int the maximum length (bytes)
      */
-    public function maximumWords($mode, $version)
+    public function maximumWords(int $mode, int $version): int
     {
         if ($mode == Data::ENC_MODES['ST']) {
             return 3;
@@ -120,7 +120,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return array spec
      */
-    public function getEccSpec($version, $level, $spec)
+    public function getEccSpec(int $version, int $level, array $spec): array
     {
         if (count($spec) < 5) {
             $spec = array(0, 0, 0, 0, 0);
@@ -153,7 +153,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int
      */
-    public function getFormatInfo($maskNo, $level)
+    public function getFormatInfo(int $maskNo, int $level): int
     {
         if (
             ($maskNo < 0)
