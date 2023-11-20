@@ -44,7 +44,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array<string, string>
+     * @var array<int|string, string>
      */
     protected const CHBAR = [
         '0' => '10101110111010',

@@ -44,7 +44,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array<string, string>
+     * @var array<int|string, string>
      */
     protected const CHBAR = [
         '0' => '3322',
@@ -88,7 +88,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Characters used for checksum
      *
-     * @var array<string, string>
+     * @var array<int|string, string>
      */
     protected const CHKSUM = [
         '0' => '11',

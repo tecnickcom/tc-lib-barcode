@@ -49,7 +49,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array<string, array<string, string>>
+     * @var array<string, array<int|string, string>>
      */
     protected const CHBAR = [
         'A' => [
@@ -83,7 +83,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map parities
      *
-     * @var array<string, array<string>>
+     * @var array<int|string, array<string>>
      */
     protected const PARITIES = [
         '0' => ['A', 'A'],

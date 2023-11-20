@@ -53,9 +53,9 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
     /**
      * Map parities
      *
-     * @var array<int, array<string, array<string>>>
+     * @var array<int|string, array<int|string, array<string>>>
      */
-    protected const PARITIES = [
+    protected const PARITIES_UPCE = [
         0 => [
             '0' => ['B', 'B', 'B', 'A', 'A', 'A'],
             '1' => ['B', 'B', 'A', 'B', 'A', 'A'],
@@ -159,7 +159,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
         $this::FORMATCode();
         $upce_code = $this->convertUpcaToUpce($this->extcode);
         $seq = '101'; // left guard bar
-        $parity = $this::PARITIES[$this->extcode[1]][$this->check];
+        $parity = $this::PARITIES_UPCE[$this->extcode[1]][$this->check];
         for ($pos = 0; $pos < 6; ++$pos) {
             $seq .= $this::CHBAR[$parity[$pos]][$upce_code[$pos]];
         }

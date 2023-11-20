@@ -44,7 +44,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
     /**
      * Map characters to barcodes
      *
-     * @var array<int, string>
+     * @var array<int|string, string>
      */
     protected const CHBAR = [
         32 => '311211', // space

@@ -47,7 +47,7 @@ class EanFive extends \Com\Tecnick\Barcode\Type\Linear\EanTwo
     /**
      * Map parities
      *
-     * @var array<string, array<string>>
+     * @var array<int|string, array<string>>
      */
     protected const PARITIES = [
         '0' => ['B', 'B', 'A', 'A', 'A'],

@@ -44,7 +44,7 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
     /**
      * Map characters to barcodes
      *
-     * @var array<string, string>
+     * @var array<int|string, string>
      */
     protected const CHBAR = [
         '0' => '11221',

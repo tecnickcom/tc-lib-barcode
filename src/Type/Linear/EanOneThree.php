@@ -54,7 +54,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map characters to barcodes
      *
-     * @var array<string, array<string, string>>
+     * @var array<int|string, array<int|string, string>>
      */
     protected const CHBAR = [
         'A' => [
@@ -101,7 +101,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Map parities
      *
-     * @var array<string, string>
+     * @var array<int|string, string>
      */
     protected const PARITIES = [
         '0' => 'AAAAAA',
