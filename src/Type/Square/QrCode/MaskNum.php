@@ -38,11 +38,16 @@ abstract class MaskNum
      * @param int   $maskNo Mask number
      * @param int   $width  Width
      * @param array $frame  Frame
-     * @param int   $mask   Mask
+     * @param array   $mask   Mask
      *
      * @return int mask number
      */
-    protected function makeMaskNo($maskNo, $width, $frame, &$mask)
+    protected function makeMaskNo(
+        int $maskNo, 
+        int $width, 
+        array $frame, 
+        array &$mask
+    ): int
     {
         $bnum = 0;
         $bitMask = $this->generateMaskNo($maskNo, $width, $frame);
@@ -67,7 +72,11 @@ abstract class MaskNum
      *
      * @return array bit mask
      */
-    protected function generateMaskNo($maskNo, $width, $frame)
+    protected function generateMaskNo(
+        int $maskNo,
+        int $width, 
+        array $frame
+    ): array
     {
         $bitMask = array_fill(0, $width, array_fill(0, $width, 0));
         for ($ypos = 0; $ypos < $width; ++$ypos) {
@@ -91,7 +100,7 @@ abstract class MaskNum
      *
      * @return int mask
      */
-    protected function mask0($xpos, $ypos)
+    protected function mask0(int $xpos, int $ypos): int
     {
         return (($xpos + $ypos) & 1);
     }
@@ -104,7 +113,7 @@ abstract class MaskNum
      *
      * @return int mask
      */
-    protected function mask1($xpos, $ypos)
+    protected function mask1(int $xpos, int $ypos): int
     {
         $xpos = null;
         return ($ypos & 1);
@@ -118,7 +127,7 @@ abstract class MaskNum
      *
      * @return int mask
      */
-    protected function mask2($xpos, $ypos)
+    protected function mask2(int $xpos, int $ypos): int
     {
         $ypos = null;
         return ($xpos % 3);
@@ -132,7 +141,7 @@ abstract class MaskNum
      *
      * @return int mask
      */
-    protected function mask3($xpos, $ypos)
+    protected function mask3(int $xpos, int $ypos): int
     {
         return (($xpos + $ypos) % 3);
     }
@@ -145,7 +154,7 @@ abstract class MaskNum
      *
      * @return int mask
      */
-    protected function mask4($xpos, $ypos)
+    protected function mask4(int $xpos, int $ypos): int
     {
         return ((((int)($ypos / 2)) + ((int)($xpos / 3))) & 1);
     }
@@ -158,7 +167,7 @@ abstract class MaskNum
      *
      * @return int mask
      */
-    protected function mask5($xpos, $ypos)
+    protected function mask5(int $xpos, int $ypos): int
     {
         return ((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3);
     }
@@ -171,7 +180,7 @@ abstract class MaskNum
      *
      * @return int mask
      */
-    protected function mask6($xpos, $ypos)
+    protected function mask6(int $xpos, int $ypos): int
     {
         return (((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3) & 1);
     }
@@ -184,7 +193,7 @@ abstract class MaskNum
      *
      * @return int mask
      */
-    protected function mask7($xpos, $ypos)
+    protected function mask7(int $xpos, int $ypos): int
     {
         return (((($xpos * $ypos) % 3) + (($xpos + $ypos) & 1)) & 1);
     }
