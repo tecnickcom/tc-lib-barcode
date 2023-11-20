@@ -41,7 +41,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
      *
      * @return array Encoded Mask
      */
-    public function encodeMask($maskNo, $datacode)
+    public function encodeMask(int $maskNo, array $datacode): array
     {
         // initialize values
         $this->datacode = $datacode;
@@ -100,7 +100,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
      *
      * @return int rsblocks
      */
-    protected function getCode()
+    protected function getCode(): int
     {
         if ($this->count < $this->dataLength) {
             $row = ($this->count % $this->blocks);
@@ -126,7 +126,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
      * @param array $pos X,Y position
      * @param int   $val Value of the character to set
      */
-    protected function setFrameAt($pos, $val)
+    protected function setFrameAt(array $pos, int $val): void
     {
         $this->frame[$pos['y']][$pos['x']] = chr($val);
     }
@@ -136,7 +136,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
      *
      * @return array of x,y coordinates
      */
-    protected function getNextPosition()
+    protected function getNextPosition(): array
     {
         do {
             if ($this->bit == -1) {
@@ -164,7 +164,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
      * @param int $ypos
      * @param int $wdt
      */
-    protected function getNextPositionB(&$xpos, &$ypos, $wdt)
+    protected function getNextPositionB(int &$xpos, int &$ypos, int $wdt): void
     {
         if ($this->bit == 0) {
             --$xpos;
