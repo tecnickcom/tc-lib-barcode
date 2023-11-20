@@ -46,20 +46,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected const CHBAR = array(
-        '0' => '111121',
-        '1' => '211121',
-        '2' => '121121',
-        '3' => '221111',
-        '4' => '112121',
-        '5' => '212111',
-        '6' => '122111',
-        '7' => '111221',
-        '8' => '211211',
-        '9' => '211111',
-        '-' => '112111',
-        'S' => '112211'
-    );
+    protected const CHBAR = ['0' => '111121', '1' => '211121', '2' => '121121', '3' => '221111', '4' => '112121', '5' => '212111', '6' => '122111', '7' => '111221', '8' => '211211', '9' => '211111', '-' => '112111', 'S' => '112211'];
 
     /**
      * Calculate the checksum.
@@ -76,41 +63,39 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         $ccheck = 0;
         for ($pos = ($len - 1); $pos >= 0; --$pos) {
             $digit = $code[$pos];
-            if ($digit == '-') {
-                $dval = 10;
-            } else {
-                $dval = intval($digit);
-            }
+            $dval = $digit == '-' ? 10 : (int) $digit;
+
             $ccheck += ($dval * $ptr);
             ++$ptr;
             if ($ptr > 10) {
                 $ptr = 1;
             }
         }
+
         $ccheck %= 11;
         if ($ccheck == 10) {
             $ccheck = '-';
         }
+
         if ($len <= 10) {
             return $ccheck;
         }
+
         // calculate check digit K
         $code .= $ccheck;
         $ptr = 1;
         $kcheck = 0;
         for ($pos = $len; $pos >= 0; --$pos) {
             $digit = $code[$pos];
-            if ($digit == '-') {
-                $dval = 10;
-            } else {
-                $dval = intval($digit);
-            }
+            $dval = $digit == '-' ? 10 : (int) $digit;
+
             $kcheck += ($dval * $ptr);
             ++$ptr;
             if ($ptr > 9) {
                 $ptr = 1;
             }
         }
+
         $kcheck %= 11;
         return $ccheck . $kcheck;
     }
@@ -132,7 +117,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
     {
         $this->ncols = 0;
         $this->nrows = 1;
-        $this->bars = array();
+        $this->bars = [];
         $this::FORMATCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
@@ -140,14 +125,17 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
             if (!isset($this::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
+
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = intval($this::CHBAR[$char][$pos]);
+                $bar_width = (int) $this::CHBAR[$char][$pos];
                 if ((($pos % 2) == 0) && ($bar_width > 0)) {
-                    $this->bars[] = array($this->ncols, 0, $bar_width, 1);
+                    $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
+
                 $this->ncols += $bar_width;
             }
         }
+
         --$this->ncols;
     }
 }

@@ -32,16 +32,16 @@ use Test\TestUtil;
  */
 class CodeThreeNineExtTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('C39E', '0123456789');
-        $grid = $bobj->getGrid();
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('C39E', '0123456789');
+        $grid = $type->getGrid();
         $expected = "10001011101110101010001110111010111010001010111010111000101011101110111000101010101000"
             . "111010111011101000111010101011100011101010101000101110111011101000101110101011100010111010100"
             . "010111011101\n";

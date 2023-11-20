@@ -57,9 +57,11 @@ abstract class MaskNum
                 if ($bitMask[$ypos][$xpos] == 1) {
                     $mask[$ypos][$xpos] = chr(ord($frame[$ypos][$xpos]) ^ ((int)($bitMask[$ypos][$xpos])));
                 }
-                $bnum += (int)(ord($mask[$ypos][$xpos]) & 1);
+
+                $bnum += ord($mask[$ypos][$xpos]) & 1;
             }
         }
+
         return $bnum;
     }
 
@@ -81,14 +83,15 @@ abstract class MaskNum
         $bitMask = array_fill(0, $width, array_fill(0, $width, 0));
         for ($ypos = 0; $ypos < $width; ++$ypos) {
             for ($xpos = 0; $xpos < $width; ++$xpos) {
-                if (ord($frame[$ypos][$xpos]) & 0x80) {
+                if ((ord($frame[$ypos][$xpos]) & 0x80) !== 0) {
                     $bitMask[$ypos][$xpos] = 0;
                 } else {
-                    $maskFunc = call_user_func(array($this, 'mask' . $maskNo), $xpos, $ypos);
+                    $maskFunc = call_user_func([$this, 'mask' . $maskNo], $xpos, $ypos);
                     $bitMask[$ypos][$xpos] = (($maskFunc == 0) ? 1 : 0);
                 }
             }
         }
+
         return $bitMask;
     }
 
@@ -115,7 +118,6 @@ abstract class MaskNum
      */
     protected function mask1(int $xpos, int $ypos): int
     {
-        $xpos = null;
         return ($ypos & 1);
     }
 
@@ -129,7 +131,6 @@ abstract class MaskNum
      */
     protected function mask2(int $xpos, int $ypos): int
     {
-        $ypos = null;
         return ($xpos % 3);
     }
 

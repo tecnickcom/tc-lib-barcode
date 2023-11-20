@@ -36,36 +36,26 @@ abstract class Codeword
 {
     /**
      * Current character encoding mode.
-     *
-     * @var int
      */
     protected int $encmode = Data::MODE_UPPER;
 
     /**
      * Array containing the high-level encoding bitstream.
-     *
-     * @var array
      */
-    protected array $bitstream = array();
+    protected array $bitstream = [];
 
     /**
      * Temporary array of codewords.
-     *
-     * @var array
      */
-    protected array $tmpCdws = array();
+    protected array $tmpCdws = [];
 
     /**
      * Array of data words.
-     *
-     * @var array
      */
-    protected array $words = array();
+    protected array $words = [];
 
     /**
      * Count the total number of bits in the bitstream.
-     *
-     * @var int
      */
     protected int $totbits = 0;
 
@@ -105,7 +95,7 @@ abstract class Codeword
     protected function isSameMode(int $mode, int $ord): bool
     {
         return (
-            ($mode == $this->charMode($ord))
+            ($mode === $this->charMode($ord))
             || (($ord == 32) && ($mode != Data::MODE_PUNCT))
             || (($mode == Data::MODE_PUNCT) && (($ord == 13) || ($ord == 44) || ($ord == 46)))
         );
@@ -116,8 +106,6 @@ abstract class Codeword
      * Characters ' ' (32), '.' (46) and ',' (44) are in common between the PUNCT and DIGIT modes.
      *
      * @param int $ord Integer ASCII code of the character to check.
-     *
-     * @return bool
      */
     protected function isPunctAndDigitChar(int $ord): bool
     {
@@ -130,23 +118,17 @@ abstract class Codeword
      *
      * @param int $ord The current curacter code.
      * @param int $next The next character code.
-     *
-     * @return int
      */
     protected function punctPairMode(int $ord, int $next): int
     {
         $key = (($ord << 8) + $next);
-        switch ($key) {
-            case ((13 << 8) + 10): // '\r\n' (CR LF)
-                return 2;
-            case ((46 << 8) + 32): // '. ' (. SP)
-                return 3;
-            case ((44 << 8) + 32): // ', ' (, SP)
-                return 4;
-            case ((58 << 8) + 32): // ': ' (: SP)
-                return 5;
-        }
-        return 0; // no punct pair
+        return match ($key) {
+            (13 << 8) + 10 => 2,
+            (46 << 8) + 32 => 3,
+            (44 << 8) + 32 => 4,
+            (58 << 8) + 32 => 5,
+            default => 0,
+        }; // no punct pair
     }
 
     /**
@@ -164,9 +146,10 @@ abstract class Codeword
         int $value
     ): VOID
     {
-        for ($idx = ($wsize - 1); $idx >= 0; $idx--) {
+        for ($idx = ($wsize - 1); $idx >= 0; --$idx) {
             $bitstream[] = (($value >> $idx) & 1);
         }
+
         $totbits += $wsize;
     }
 
@@ -176,8 +159,6 @@ abstract class Codeword
      * @param array $bitstream Array of bits to convert.
      * @param int   $totbits   Number of bits in the bitstream.
      * @param int   $wsize     The word size.
-     *
-     * @return array
      */
     protected function bitstreamToWords(
         array $bitstream, 
@@ -185,18 +166,20 @@ abstract class Codeword
         int $wsize
     ): array
     {
-        $words = array();
-        $numwords = intval(ceil($totbits / $wsize));
-        for ($idx = 0; $idx < $numwords; $idx++) {
+        $words = [];
+        $numwords = (int) ceil($totbits / $wsize);
+        for ($idx = 0; $idx < $numwords; ++$idx) {
             $wrd = 0;
-            for ($bit = 0; $bit < $wsize; $bit++) {
+            for ($bit = 0; $bit < $wsize; ++$bit) {
                 $pos = (($idx * $wsize) + $bit);
                 if (!empty($bitstream[$pos]) || !isset($bitstream[$pos])) {
                     $wrd |= (1 << ($wsize - $bit - 1)); // reverse order
                 }
             }
+
             $words[] = $wrd;
         }
+
         return $words;
     }
 
@@ -233,6 +216,7 @@ abstract class Codeword
         foreach ($latch as $cdw) {
             $this->addRawCwd($cdw[0], $cdw[1]);
         }
+
         $this->encmode = $mode;
     }
 
@@ -255,9 +239,9 @@ abstract class Codeword
      */
     protected function mergeTmpCwdWithShift(int $mode): void
     {
-        foreach ($this->tmpCdws as $item) {
+        foreach ($this->tmpCdws as $tmpCdw) {
             $this->addShift($mode);
-            $this->addRawCwd($item[0], $item[1]);
+            $this->addRawCwd($tmpCdw[0], $tmpCdw[1]);
         }
     }
 
@@ -267,8 +251,8 @@ abstract class Codeword
      */
     protected function mergeTmpCwdRaw(): void
     {
-        foreach ($this->tmpCdws as $item) {
-            $this->addRawCwd($item[0], $item[1]);
+        foreach ($this->tmpCdws as $tmpCdw) {
+            $this->addRawCwd($tmpCdw[0], $tmpCdw[1]);
         }
     }
 
@@ -285,7 +269,8 @@ abstract class Codeword
         } else {
             $this->mergeTmpCwdWithShift($mode);
         }
-        $this->tmpCdws = array();
+
+        $this->tmpCdws = [];
     }
 
     /**
@@ -298,17 +283,20 @@ abstract class Codeword
         if ($eci < 0) {
             return;
         }
+
         if ($this->encmode != Data::MODE_PUNCT) {
             $this->addShift(Data::MODE_PUNCT);
         }
+
         if ($eci == 0) {
             $this->addRawCwd(3, 0); // FNC1
             return;
         }
+
         $seci = (string)$eci;
         $digits = strlen($seci);
         $this->addRawCwd(3, $digits); // 1–6 digits
-        for ($idx = 0; $idx < $digits; $idx++) {
+        for ($idx = 0; $idx < $digits; ++$idx) {
             $this->addCdw(
                 Data::MODE_DIGIT,
                 $this->charEnc(Data::MODE_DIGIT, ord($seci[$idx]))

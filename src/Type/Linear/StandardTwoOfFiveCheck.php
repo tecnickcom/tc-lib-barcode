@@ -46,18 +46,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected const CHBAR = array(
-        '0' => '10101110111010',
-        '1' => '11101010101110',
-        '2' => '10111010101110',
-        '3' => '11101110101010',
-        '4' => '10101110101110',
-        '5' => '11101011101010',
-        '6' => '10111011101010',
-        '7' => '10101011101110',
-        '8' => '11101010111010',
-        '9' => '10111010111010'
-    );
+    protected const CHBAR = ['0' => '10101110111010', '1' => '11101010101110', '2' => '10111010101110', '3' => '11101110101010', '4' => '10101110101110', '5' => '11101011101010', '6' => '10111011101010', '7' => '10101011101110', '8' => '11101010111010', '9' => '10111010111010'];
 
     /**
      * Calculate the checksum
@@ -71,16 +60,19 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($code);
         $sum = 0;
         for ($idx = 0; $idx < $clen; $idx += 2) {
-            $sum += intval($code[$idx]);
+            $sum += (int) $code[$idx];
         }
+
         $sum *= 3;
         for ($idx = 1; $idx < $clen; $idx += 2) {
-            $sum += intval($code[$idx]);
+            $sum += (int) $code[$idx];
         }
+
         $check = $sum % 10;
         if ($check > 0) {
-            $check = (10 - $check);
+            return 10 - $check;
         }
+
         return $check;
     }
 
@@ -100,10 +92,11 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
     protected function setBars(): void
     {
         $this::FORMATCode();
-        if ((strlen($this->extcode) % 2) != 0) {
+        if (strlen($this->extcode) % 2 != 0) {
             // add leading zero if code-length is odd
             $this->extcode = '0' . $this->extcode;
         }
+
         $seq = '1110111010';
         $clen = strlen($this->extcode);
         for ($idx = 0; $idx < $clen; ++$idx) {
@@ -111,8 +104,10 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
             if (!isset($this::CHBAR[$digit])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
+
             $seq .= $this::CHBAR[$digit];
         }
+
         $seq .= '111010111';
         $this->processBinarySequence($seq);
     }

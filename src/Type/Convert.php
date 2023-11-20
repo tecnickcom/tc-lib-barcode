@@ -50,58 +50,42 @@ abstract class Convert
 
     /**
      * Array containing extra parameters for the specified barcode type
-     *
-     * @var array
      */
     protected array $params = [];
 
     /**
      * Code to convert (barcode content)
-     *
-     * @var string|array
      */
     protected string|array $code = '';
 
     /**
      * Resulting code after applying checksum etc.
-     *
-     * @var string|array
      */
     protected string|array $extcode = '';
 
     /**
      * Total number of columns
-     *
-     * @var int
      */
     protected int $ncols = 0;
 
     /**
      * Total number of rows
-     *
-     * @var int
      */
     protected int $nrows = 1;
 
     /**
      * Array containing the position and dimensions of each barcode bar
      * (x, y, width, height)
-     *
-     * @var array
      */
-    protected array $bars = array();
+    protected array $bars = [];
 
     /**
      * Barcode width
-     *
-     * @var int
      */
     protected int $width = 0;
 
     /**
      * Barcode height
-     *
-     * @var int
      */
     protected int $height = 0;
 
@@ -115,29 +99,21 @@ abstract class Convert
 
     /**
      * Ratio between the barcode width and the number of rows
-     *
-     * @var float
      */
     protected float $width_ratio = 0;
 
     /**
      * Ratio between the barcode height and the number of columns
-     *
-     * @var float
      */
     protected float $height_ratio =  0;
 
     /**
      * Foreground Color object
-     *
-     * @var ?Color
      */
     protected ?Color $color_obj = null;
 
     /**
      * Backgorund Color object
-     *
-     * @var ?Color
      */
     protected ?Color $bg_color_obj = null;
 
@@ -167,13 +143,15 @@ abstract class Convert
         if ($number == 0) {
             return '00';
         }
-        $hex = array();
+
+        $hex = [];
         while ($number > 0) {
-            array_push($hex, strtoupper((string)dechex((int)bcmod($number, '16'))));
+            $hex[] = strtoupper(dechex((int)bcmod($number, '16')));
             $number = bcdiv($number, '16', 0);
         }
+
         $hex = array_reverse($hex);
-        return implode($hex);
+        return implode('', $hex);
     }
 
     /**
@@ -192,6 +170,7 @@ abstract class Convert
             $dec = bcadd($dec, bcmul((string)hexdec($hex[$pos]), $bitval));
             $bitval = bcmul($bitval, '16');
         }
+
         return $dec;
     }
 
@@ -200,8 +179,6 @@ abstract class Convert
      *
      * @param string $space_char Character or string to use for filling empty spaces
      * @param string $bar_char   Character or string to use for filling bars
-     *
-     * @return array
      */
     public function getGridArray(
         string $space_char = '0', 
@@ -210,27 +187,32 @@ abstract class Convert
     {
         $raw = array_fill(0, $this->nrows, array_fill(0, $this->ncols, $space_char));
         foreach ($this->bars as $bar) {
-            if (($bar[2] > 0) && ($bar[3] > 0)) {
-                for ($vert = 0; $vert < $bar[3]; ++$vert) {
-                    for ($horiz = 0; $horiz < $bar[2]; ++$horiz) {
-                        $raw[($bar[1] + $vert)][($bar[0] + $horiz)] = $bar_char;
-                    }
+            if ($bar[2] <= 0) {
+                continue;
+            }
+
+            if ($bar[3] <= 0) {
+                continue;
+            }
+
+            for ($vert = 0; $vert < $bar[3]; ++$vert) {
+                for ($horiz = 0; $horiz < $bar[2]; ++$horiz) {
+                    $raw[($bar[1] + $vert)][($bar[0] + $horiz)] = $bar_char;
                 }
             }
         }
+
         return $raw;
     }
 
     /**
      * Returns the bars array ordered by columns
-     *
-     * @return array
      */
     protected function getRotatedBarArray(): array
     {
         $grid = $this->getGridArray();
-        $cols = call_user_func_array('array_map', array(-1 => null) + $grid);
-        $bars = array();
+        $cols = array_map(...[-1 => null] + $grid);
+        $bars = [];
         foreach ($cols as $posx => $col) {
             $prevrow = '';
             $bar_height = 0;
@@ -238,14 +220,17 @@ abstract class Convert
             for ($posy = 0; $posy <= $this->nrows; ++$posy) {
                 if ($col[$posy] != $prevrow) {
                     if ($prevrow == '1') {
-                        $bars[] = array($posx, ($posy - $bar_height), 1, $bar_height);
+                        $bars[] = [$posx, ($posy - $bar_height), 1, $bar_height];
                     }
+
                     $bar_height = 0;
                 }
+
                 ++$bar_height;
                 $prevrow = $col[$posy];
             }
         }
+
         return $bars;
     }
 
@@ -258,12 +243,7 @@ abstract class Convert
      */
     protected function getBarRectXYXY(array $bar): array
     {
-        return array(
-            ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
-            ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
-            ($this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1),
-            ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1)
-        );
+        return [($this->padding['L'] + ($bar[0] * $this->width_ratio)), ($this->padding['T'] + ($bar[1] * $this->height_ratio)), ($this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1), ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1)];
     }
 
     /**
@@ -275,11 +255,6 @@ abstract class Convert
      */
     protected function getBarRectXYWH(array $bar): array
     {
-        return array(
-            ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
-            ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
-            ($bar[2] * $this->width_ratio),
-            ($bar[3] * $this->height_ratio)
-        );
+        return [($this->padding['L'] + ($bar[0] * $this->width_ratio)), ($this->padding['T'] + ($bar[1] * $this->height_ratio)), ($bar[2] * $this->width_ratio), ($bar[3] * $this->height_ratio)];
     }
 }

@@ -35,15 +35,11 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
 {
     /**
      * Store last used encoding for data codewords.
-     *
-     * @var int
      */
     public int $last_enc;
 
     /**
      * Datamatrix shape key (S=square, R=rectangular)
-     *
-     * @var string
      */
     public string $shape;
 
@@ -52,8 +48,6 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @param int $cdwpad Pad codeword.
      * @param int $cdwpos Number of data codewords from the beginning of encoded data.
-     *
-     * @return int
      */
     public function get253StateCodeword(int $cdwpad, int $cdwpos): int
     {
@@ -61,6 +55,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
         if ($pad > 254) {
             $pad -= 254;
         }
+
         return $pad;
     }
 
@@ -72,12 +67,13 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      *
      * @return int pad codeword
      */
-    protected function get255StateCodeword(int $cdwpad, int $cdwpos): int 
+    protected function get255StateCodeword(int $cdwpad, int $cdwpos): int
     {
         $pad = ($cdwpad + (((149 * $cdwpos) % 255) + 1));
         if ($pad > 255) {
             $pad -= 256;
         }
+
         return $pad;
     }
 
@@ -91,7 +87,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      */
     protected function isCharMode(int $chr, int $mode): bool
     {
-        $map = array(
+        $map = [
             //Data::ENC_ASCII     => 'isASCIIMode',
             Data::ENC_C40       => 'isC40Mode',
             Data::ENC_TXT       => 'isTXTMode',
@@ -99,8 +95,8 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
             Data::ENC_EDF       => 'isEDFMode',
             Data::ENC_BASE256   => 'isBASE256Mode',
             Data::ENC_ASCII_EXT => 'isASCIIEXTMode',
-            Data::ENC_ASCII_NUM => 'isASCIINUMMode'
-        );
+            Data::ENC_ASCII_NUM => 'isASCIINUMMode',
+        ];
         $method = $map[$mode];
         return $this->$method($chr);
     }
@@ -116,13 +112,10 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
     //{
     //    return (($chr >= 0) && ($chr <= 127));
     //}
-
     /**
      * Tell if char is Upper-case alphanumeric
      *
      * @param int $chr  Character (byte) to check.
-     *
-     * @return bool
      */
     protected function isC40Mode(int $chr): bool
     {
@@ -133,8 +126,6 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      * Tell if char is Lower-case alphanumeric
      *
      * @param int $chr  Character (byte) to check.
-     *
-     * @return bool
      */
     protected function isTXTMode(int $chr): bool
     {
@@ -145,8 +136,6 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      * Tell if char is ANSI X12
      *
      * @param int $chr  Character (byte) to check.
-     *
-     * @return bool
      */
     protected function isX12Mode(int $chr): bool
     {
@@ -157,8 +146,6 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      * Tell if char is ASCII character 32 to 94
      *
      * @param int $chr  Character (byte) to check.
-     *
-     * @return bool
      */
     protected function isEDFMode(int $chr): bool
     {
@@ -169,8 +156,6 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      * Tell if char is Function character (FNC1, Structured Append, Reader Program, or Code Page)
      *
      * @param int $chr  Character (byte) to check.
-     *
-     * @return bool
      */
     protected function isBASE256Mode(int $chr): bool
     {
@@ -181,8 +166,6 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      * Tell if char is ASCII character 128 to 255
      *
      * @param int $chr  Character (byte) to check.
-     *
-     * @return bool
      */
     protected function isASCIIEXTMode(int $chr): bool
     {
@@ -193,8 +176,6 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      * Tell if char is ASCII digits
      *
      * @param int $chr  Character (byte) to check.
-     *
-     * @return bool
      */
     protected function isASCIINUMMode(int $chr): bool
     {
@@ -217,6 +198,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
                 break;
             }
         }
+
         return $mdc;
     }
 
@@ -228,18 +210,16 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      */
     protected function getSwitchEncodingCodeword(int $mode): int
     {
-        $map = array(
-            Data::ENC_ASCII   => 254,
-            Data::ENC_C40     => 230,
-            Data::ENC_TXT     => 239,
-            Data::ENC_X12     => 238,
-            Data::ENC_EDF     => 240,
-            Data::ENC_BASE256 => 231
-        );
+        $map = [Data::ENC_ASCII   => 254, Data::ENC_C40     => 230, Data::ENC_TXT     => 239, Data::ENC_X12     => 238, Data::ENC_EDF     => 240, Data::ENC_BASE256 => 231];
         $cdw = $map[$mode];
-        if (($cdw == 254) && ($this->last_enc == Data::ENC_EDF)) {
-            $cdw = 124;
+        if ($cdw != 254) {
+            return $cdw;
         }
-        return $cdw;
+
+        if ($this->last_enc != Data::ENC_EDF) {
+            return $cdw;
+        }
+
+        return 124;
     }
 }

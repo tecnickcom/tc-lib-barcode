@@ -56,6 +56,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             $this->binaryEncode($chars, $chrlen);
             return;
         }
+
         $this->autoEncode($chars, $chrlen);
     }
 
@@ -72,25 +73,30 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         if ($chrlen > 62) {
             $this->addRawCwd(5, 0);
             $this->addRawCwd(11, ($chrlen - 31));
-            for ($idx = 0; $idx < $chrlen; $idx++) {
+            for ($idx = 0; $idx < $chrlen; ++$idx) {
                 $this->addRawCwd($bits, $chars[$idx]);
             }
+
             return;
         }
+
         if ($chrlen > 31) {
             $this->addRawCwd(5, 31);
-            for ($idx = 0; $idx < 31; $idx++) {
+            for ($idx = 0; $idx < 31; ++$idx) {
                 $this->addRawCwd($bits, $chars[$idx]);
             }
+
             $this->addShift(Data::MODE_BINARY);
             $this->addRawCwd(5, ($chrlen - 31));
-            for ($idx = 31; $idx < $chrlen; $idx++) {
+            for ($idx = 31; $idx < $chrlen; ++$idx) {
                 $this->addRawCwd($bits, $chars[$idx]);
             }
+
             return;
         }
+
         $this->addRawCwd(5, $chrlen);
-        for ($idx = 0; $idx < $chrlen; $idx++) {
+        for ($idx = 0; $idx < $chrlen; ++$idx) {
             $this->addRawCwd($bits, $chars[$idx]);
         }
     }
@@ -108,9 +114,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             if ($this->processBinaryChars($chars, $idx, $chrlen)) {
                 continue;
             }
+
             if ($this->processPunctPairs($chars, $idx, $chrlen)) {
                 continue;
             }
+
             $this->processModeChars($chars, $idx, $chrlen);
         }
     }
@@ -125,33 +133,29 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     protected function processModeChars(array &$chars, int &$idx, int $chrlen): void
     {
         $ord = $chars[$idx];
-        if ($this->isSameMode($this->encmode, $ord)) {
-            $mode = $this->encmode;
-        } else {
-            $mode = $this->charMode($ord);
-        }
+        $mode = $this->isSameMode($this->encmode, $ord) ? $this->encmode : $this->charMode($ord);
+
         $nchr = $this->countModeChars($chars, $idx, $chrlen, $mode);
-        if ($this->encmode != $mode) {
-            if (($nchr == 1) && (!empty(Data::SHIFT_MAP[$this->encmode][$mode]))) {
+        if ($this->encmode !== $mode) {
+            if (($nchr == 1) && (isset(Data::SHIFT_MAP[$this->encmode][$mode]) && Data::SHIFT_MAP[$this->encmode][$mode] !== [])) {
                 $this->addShift($mode);
             } else {
                 $this->addLatch($mode);
             }
         }
+
         $this->mergeTmpCwd();
         $idx += $nchr;
     }
 
     /**
-    * Count consecutive characters in the same mode.
-    *
-    * @param array $chars The array of characters.
-    * @param int $idx The current character index.
-    * @param int $chrlen The total number of characters to process.
-    * @param int $mode The current mode.
-    *
-    * @return int
-    */
+     * Count consecutive characters in the same mode.
+     *
+     * @param array $chars The array of characters.
+     * @param int $idx The current character index.
+     * @param int $chrlen The total number of characters to process.
+     * @param int $mode The current mode.
+     */
     protected function countModeChars(
         array &$chars, 
         int $idx, 
@@ -159,7 +163,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         int $mode
     ): int
     {
-        $this->tmpCdws = array();
+        $this->tmpCdws = [];
         $nbits = Data::MODE_BITS[$mode];
         $count = 0;
         do {
@@ -170,10 +174,12 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             ) {
                 return $count;
             }
-            $this->tmpCdws[] = array($nbits, $this->charEnc($mode, $ord));
-            $count++;
-            $idx++;
+
+            $this->tmpCdws[] = [$nbits, $this->charEnc($mode, $ord)];
+            ++$count;
+            ++$idx;
         } while ($idx < $chrlen);
+
         return $count;
     }
 
@@ -196,6 +202,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         if ($binchrs == 0) {
             return false;
         }
+
         $encmode = $this->encmode;
         $this->addShift(Data::MODE_BINARY);
         if ($binchrs > 62) {
@@ -206,21 +213,25 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             $this->encmode = $encmode;
             return true;
         }
+
         if ($binchrs > 31) {
             $nbits = Data::MODE_BITS[Data::MODE_BINARY];
             $this->addRawCwd(5, 31);
-            for ($bcw = 0; $bcw < 31; $bcw++) {
+            for ($bcw = 0; $bcw < 31; ++$bcw) {
                 $this->addRawCwd($nbits, $this->tmpCdws[$bcw][1]);
             }
+
             $this->addShift(Data::MODE_BINARY);
             $this->addRawCwd(5, ($binchrs - 31));
-            for ($bcw = 31; $bcw < $binchrs; $bcw++) {
+            for ($bcw = 31; $bcw < $binchrs; ++$bcw) {
                 $this->addRawCwd($nbits, $this->tmpCdws[$bcw][1]);
             }
+
             $idx += $binchrs;
             $this->encmode = $encmode;
             return true;
         }
+
         $this->addRawCwd(5, $binchrs);
         $this->mergeTmpCwdRaw();
         $idx += $binchrs;
@@ -229,23 +240,22 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     }
 
     /**
-    * Count consecutive binary characters.
-    *
-    * @param array $chars The array of characters.
-    * @param int $idx The current character index.
-    * @param int $chrlen The total number of characters to process.
-    *
-    * @return int
-    *
-    * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-    */
+     * Count consecutive binary characters.
+     *
+     * @param array $chars The array of characters.
+     * @param int $idx The current character index.
+     * @param int $chrlen The total number of characters to process.
+     *
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
     protected function countBinaryChars(
         array &$chars, 
         int $idx, 
         int $chrlen
     ): int
     {
-        $this->tmpCdws = array();
+        $this->tmpCdws = [];
         $count = 0;
         $nbits = Data::MODE_BITS[Data::MODE_BINARY];
         while (($idx < $chrlen) && ($count < 2048)) {
@@ -253,10 +263,12 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             if ($this->charMode($ord) != Data::MODE_BINARY) {
                 return $count;
             }
-            $this->tmpCdws[] = array($nbits, $ord);
-            $count++;
-            $idx++;
+
+            $this->tmpCdws[] = [$nbits, $ord];
+            ++$count;
+            ++$idx;
         }
+
         return $count;
     }
 
@@ -282,6 +294,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         if ($ppairs == 0) {
             return false;
         }
+
         switch ($this->encmode) {
             case Data::MODE_PUNCT:
                 break;
@@ -293,6 +306,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
                 if ($ppairs > 1) {
                     $this->addLatch(Data::MODE_PUNCT);
                 }
+
                 break;
             case Data::MODE_DIGIT:
                 $common = $this->countPunctAndDigitChars($chars, $idx, $chrlen);
@@ -303,11 +317,14 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
                     $idx += $clen;
                     return true;
                 }
+
                 if ($ppairs > 2) {
                     $this->addLatch(Data::MODE_PUNCT);
                 }
+
                 break;
         }
+
         $this->mergeTmpCwd(Data::MODE_PUNCT);
         $idx += ($ppairs * 2);
         return true;
@@ -319,8 +336,6 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param array $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
-     *
-     * @return int
      */
     protected function countPunctPairs(
         array &$chars, 
@@ -328,7 +343,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         int $chrlen
     ): int
     {
-        $this->tmpCdws = array();
+        $this->tmpCdws = [];
         $pairs = 0;
         $maxidx = $chrlen - 1;
         while ($idx < $maxidx) {
@@ -336,10 +351,12 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             if ($pmode == 0) {
                 return $pairs;
             }
-            $this->tmpCdws[] = array(5, $pmode);
-            $pairs++;
+
+            $this->tmpCdws[] = [5, $pmode];
+            ++$pairs;
             $idx += 2;
         }
+
         return $pairs;
     }
 
@@ -350,8 +367,6 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param array &$chars The string to count the characters in.
      * @param int   $idx    The starting index to count from.
      * @param int   $chrlen The length of the string to count.
-     *
-     * @return array
      */
     protected function countPunctAndDigitChars(
         array &$chars,
@@ -359,15 +374,17 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         int $chrlen
     ): array
     {
-        $words = array();
+        $words = [];
         while ($idx < $chrlen) {
             $ord = $chars[$idx];
             if (!$this->isPunctAndDigitChar($ord)) {
                 return $words;
             }
-            $words[] = array(4, $this->charEnc(Data::MODE_DIGIT, $ord));
-            $idx++;
+
+            $words[] = [4, $this->charEnc(Data::MODE_DIGIT, $ord)];
+            ++$idx;
         }
+
         return $words;
     }
 }

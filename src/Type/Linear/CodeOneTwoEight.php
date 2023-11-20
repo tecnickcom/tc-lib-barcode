@@ -43,7 +43,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     {
         $code = $this->code;
         // array of symbols
-        $code_data = array();
+        $code_data = [];
         // split code into sequences
         $sequence = $this->getNumericSequence($code);
         // process the sequence
@@ -52,6 +52,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
             $processMethod = 'processSequence' . $seq[0];
             $this->$processMethod($sequence, $code_data, $startid, $key, $seq);
         }
+
         return $this->finalizeCodeData($code_data, $startid);
     }
 
@@ -91,6 +92,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
                 $code_data[] = 101;
             }
         }
+
         $this->getCodeDataA($code_data, $seq[1], (int)$seq[2]);
     }
 
@@ -118,6 +120,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         } elseif ($sequence[($key - 1)][0] != 'B') {
             $this->processSequenceBB($sequence, $code_data, $key, $seq);
         }
+
         $this->getCodeDataB($code_data, $seq[1], (int)$seq[2]);
     }
 
@@ -221,6 +224,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         } elseif ($sequence[($key - 1)][0] != 'C') {
             $code_data[] = 99;
         }
+
         $this->getCodeDataC($code_data, $seq[1]);
     }
 
@@ -234,14 +238,15 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         $code_data = $this->getCodeData();
         $this->ncols = 0;
         $this->nrows = 1;
-        $this->bars = array();
+        $this->bars = [];
         foreach ($code_data as $val) {
             $seq = $this::CHBAR[$val];
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = intval($seq[$pos]);
+                $bar_width = (int) $seq[$pos];
                 if ((($pos % 2) == 0) && ($bar_width > 0)) {
-                    $this->bars[] = array($this->ncols, 0, $bar_width, 1);
+                    $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
+
                 $this->ncols += $bar_width;
             }
         }

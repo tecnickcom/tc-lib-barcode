@@ -35,15 +35,13 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     /**
      * encode Mode Num
      *
-     * @param array $inputitem
-     * @param int   $version
      *
      * @return array input item
      */
     protected function encodeModeNum(array $inputitem, int $version): array
     {
         $words = (int)($inputitem['size'] / 3);
-        $inputitem['bstream'] = array();
+        $inputitem['bstream'] = [];
         $val = 0x1;
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $val);
         $inputitem['bstream'] = $this->appendNum(
@@ -57,6 +55,7 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $val += (ord($inputitem['data'][$i * 3 + 2]) - ord('0'));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 10, $val);
         }
+
         if ($inputitem['size'] - $words * 3 == 1) {
             $val = ord($inputitem['data'][$words * 3]) - ord('0');
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $val);
@@ -65,21 +64,20 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $val += (ord($inputitem['data'][$words * 3 + 1]) - ord('0'));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 7, $val);
         }
+
         return $inputitem;
     }
 
     /**
      * encode Mode An
      *
-     * @param array $inputitem
-     * @param int   $version
      *
      * @return array input item
      */
     protected function encodeModeAn(array $inputitem, int $version): array
     {
         $words = (int)($inputitem['size'] / 2);
-        $inputitem['bstream'] = array();
+        $inputitem['bstream'] = [];
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x02);
         $inputitem['bstream'] = $this->appendNum(
             $inputitem['bstream'],
@@ -87,28 +85,28 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $inputitem['size']
         );
         for ($idx = 0; $idx < $words; ++$idx) {
-            $val  = (int)($this->lookAnTable(ord($inputitem['data'][($idx * 2)])) * 45);
-            $val += (int)($this->lookAnTable(ord($inputitem['data'][($idx * 2) + 1])));
+            $val  = $this->lookAnTable(ord($inputitem['data'][($idx * 2)])) * 45;
+            $val += $this->lookAnTable(ord($inputitem['data'][($idx * 2) + 1]));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 11, $val);
         }
-        if ($inputitem['size'] & 1) {
+
+        if (($inputitem['size'] & 1) !== 0) {
             $val = $this->lookAnTable(ord($inputitem['data'][($words * 2)]));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 6, $val);
         }
+
         return $inputitem;
     }
 
     /**
      * encode Mode 8
      *
-     * @param array $inputitem
-     * @param int   $version
      *
      * @return array input item
      */
     protected function encodeMode8(array $inputitem, int $version): array
     {
-        $inputitem['bstream'] = array();
+        $inputitem['bstream'] = [];
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x4);
         $inputitem['bstream'] = $this->appendNum(
             $inputitem['bstream'],
@@ -118,20 +116,19 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
         for ($idx = 0; $idx < $inputitem['size']; ++$idx) {
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 8, ord($inputitem['data'][$idx]));
         }
+
         return $inputitem;
     }
 
     /**
      * encode Mode Kanji
      *
-     * @param array $inputitem
-     * @param int   $version
      *
      * @return array input item
      */
     protected function encodeModeKanji(array $inputitem, int $version): array
     {
-        $inputitem['bstream'] = array();
+        $inputitem['bstream'] = [];
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x8);
         $inputitem['bstream'] = $this->appendNum(
             $inputitem['bstream'],
@@ -145,22 +142,23 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             } else {
                 $val -= 0xc140;
             }
+
             $val = ($val & 0xff) + (($val >> 8) * 0xc0);
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 13, $val);
         }
+
         return $inputitem;
     }
 
     /**
      * encode Mode Structure
      *
-     * @param array $inputitem
      *
      * @return array input item
      */
     protected function encodeModeStructure(array $inputitem): array
     {
-        $inputitem['bstream'] = array();
+        $inputitem['bstream'] = [];
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x03);
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, ord($inputitem['data'][1]) - 1);
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, ord($inputitem['data'][0]) - 1);

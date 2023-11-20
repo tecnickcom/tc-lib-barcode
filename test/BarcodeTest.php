@@ -31,16 +31,16 @@ use PHPUnit\Framework\TestCase;
  */
 class BarcodeTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetBarcodeObjException()
+    public function testGetBarcodeObjException(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj(
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj(
             'ERROR',
             '01001100011100001111,10110011100011110000',
             -2,
@@ -49,97 +49,97 @@ class BarcodeTest extends TestUtil
         );
     }
 
-    public function testSetPaddingException()
+    public function testSetPaddingException(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj(
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj(
             'LRAW,AB,12,E3F',
             '01001100011100001111,10110011100011110000',
             -2,
             -2,
             'purple',
-            array(10)
+            [10]
         );
     }
 
-    public function testEmptyColumns()
+    public function testEmptyColumns(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj('LRAW', '');
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('LRAW', '');
     }
 
-    public function testEmptyInput()
+    public function testEmptyInput(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj('LRAW', array());
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('LRAW', []);
     }
 
-    public function testSpotColor()
+    public function testSpotColor(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj(
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj(
             'LRAW',
             '01001100011100001111,10110011100011110000',
             -2,
             -2,
             'all',
-            array(-2, 3, 0, 1)
+            [-2, 3, 0, 1]
         );
-        $bobjarr = $bobj->getArray();
+        $bobjarr = $type->getArray();
         $this->assertEquals('#000000ff', $bobjarr['color_obj']->getRgbaHexColor());
         $this->assertNUll($bobjarr['bg_color_obj']);
     }
 
-    public function testBackgroundColor()
+    public function testBackgroundColor(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj(
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj(
             'LRAW',
             '01001100011100001111,10110011100011110000',
             -2,
             -2,
             'all',
-            array(-2, 3, 0, 1)
+            [-2, 3, 0, 1]
         )->setBackgroundColor('mediumaquamarine');
-        $bobjarr = $bobj->getArray();
+        $bobjarr = $type->getArray();
         $this->assertEquals('#66cdaaff', $bobjarr['bg_color_obj']->getRgbaHexColor());
     }
 
-    public function testNoColorException()
+    public function testNoColorException(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj(
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj(
             'LRAW',
             '01001100011100001111,10110011100011110000',
             -2,
             -2,
             '',
-            array(-2, 3, 0, 1)
+            [-2, 3, 0, 1]
         );
     }
 
-    public function testExportMethods()
+    public function testExportMethods(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj(
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj(
             'LRAW,AB,12,E3F',
             '01001100011100001111,10110011100011110000',
             -2,
             -2,
             'purple',
-            array(-2, 3, 0, 1)
+            [-2, 3, 0, 1]
         );
 
-        $this->assertEquals('01001100011100001111,10110011100011110000', $bobj->getExtendedCode());
+        $this->assertEquals('01001100011100001111,10110011100011110000', $type->getExtendedCode());
 
-        $barr = $bobj->getArray();
+        $barr = $type->getArray();
         $this->assertEquals('linear', $barr['type']);
         $this->assertEquals('LRAW', $barr['format']);
-        $this->assertEquals(array('AB', '12', 'E3F'), $barr['params']);
+        $this->assertEquals(['AB', '12', 'E3F'], $barr['params']);
         $this->assertEquals('01001100011100001111,10110011100011110000', $barr['code']);
         $this->assertEquals('01001100011100001111,10110011100011110000', $barr['extcode']);
         $this->assertEquals(20, $barr['ncols']);
@@ -148,28 +148,19 @@ class BarcodeTest extends TestUtil
         $this->assertEquals(4, $barr['height']);
         $this->assertEquals(2, $barr['width_ratio']);
         $this->assertEquals(2, $barr['height_ratio']);
-        $this->assertEquals(array('T' => 4, 'R' => 3, 'B' => 0, 'L' => 1), $barr['padding']);
+        $this->assertEquals(['T' => 4, 'R' => 3, 'B' => 0, 'L' => 1], $barr['padding']);
         $this->assertEquals(44, $barr['full_width']);
         $this->assertEquals(8, $barr['full_height']);
 
-        $expected = array(
-            array(1,0,1,1),
-            array(4,0,2,1),
-            array(9,0,3,1),
-            array(16,0,4,1),
-            array(0,1,1,1),
-            array(2,1,2,1),
-            array(6,1,3,1),
-            array(12,1,4,1),
-        );
+        $expected = [[1, 0, 1, 1], [4, 0, 2, 1], [9, 0, 3, 1], [16, 0, 4, 1], [0, 1, 1, 1], [2, 1, 2, 1], [6, 1, 3, 1], [12, 1, 4, 1]];
         $this->assertEquals($expected, $barr['bars']);
         $this->assertEquals('#800080ff', $barr['color_obj']->getRgbaHexColor());
 
-        $grid = $bobj->getGrid('A', 'B');
+        $grid = $type->getGrid('A', 'B');
         $expected = "ABAABBAAABBBAAAABBBB\nBABBAABBBAAABBBBAAAA\n";
         $this->assertEquals($expected, $grid);
 
-        $svg = $bobj->setBackgroundColor('yellow')->getSvgCode();
+        $svg = $type->setBackgroundColor('yellow')->getSvgCode();
         $expected = '<?xml version="1.0" standalone="no" ?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="44.000000" height="8.000000"'
@@ -211,7 +202,7 @@ class BarcodeTest extends TestUtil
 ';
         $this->assertEquals($expected, $svg);
 
-        $hdiv = $bobj->setBackgroundColor('lightcoral')->getHtmlDiv();
+        $hdiv = $type->setBackgroundColor('lightcoral')->getHtmlDiv();
         $expected = '<div style="width:44.000000px;height:8.000000px;position:relative;font-size:0;'
         . 'border:none;padding:0;margin:0;background-color:rgba(94%,50%,50%,1);">
 	<div style="background-color:rgba(50%,0%,50%,1);left:3.000000px;top:4.000000px;'
@@ -275,21 +266,21 @@ class BarcodeTest extends TestUtil
         $this->assertEquals($expected, $hdiv);
 
         if (extension_loaded('imagick')) {
-            $pngik = $bobj->setBackgroundColor('white')->getPngData(true);
+            $pngik = $type->setBackgroundColor('white')->getPngData(true);
             $this->assertEquals('PNG', substr($pngik, 1, 3));
         }
 
-        $pnggd = $bobj->setBackgroundColor('white')->getPngData(false);
+        $pnggd = $type->setBackgroundColor('white')->getPngData(false);
         $this->assertEquals('PNG', substr($pnggd, 1, 3));
 
-        $pnggd = $bobj->setBackgroundColor('')->getPngData(false);
+        $pnggd = $type->setBackgroundColor('')->getPngData(false);
         $this->assertEquals('PNG', substr($pnggd, 1, 3));
     }
 
-    public function testGetSvg()
+    public function testGetSvg(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj(
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj(
             'LRAW,AB,12,E3F',
             '01001100011100001111,10110011100011110000',
             -2,
@@ -297,15 +288,15 @@ class BarcodeTest extends TestUtil
             'purple'
         );
         ob_start();
-        $bobj->getSvg();
+        $type->getSvg();
         $svg = ob_get_clean();
         $this->assertEquals('86e0362768e8b1b26032381232c0367f', md5($svg));
     }
 
-    public function testGetPng()
+    public function testGetPng(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj(
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj(
             'LRAW,AB,12,E3F',
             '01001100011100001111,10110011100011110000',
             -2,
@@ -313,7 +304,7 @@ class BarcodeTest extends TestUtil
             'purple'
         );
         ob_start();
-        $bobj->getPng();
+        $type->getPng();
         $png = ob_get_clean();
         $this->assertEquals('PNG', substr($png, 1, 3));
     }

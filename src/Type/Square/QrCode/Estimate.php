@@ -34,8 +34,6 @@ abstract class Estimate
 {
     /**
      * Encoding mode
-     *
-     * @var int
      */
     protected int $hint = 2;
 
@@ -44,15 +42,11 @@ abstract class Estimate
      * The Size of QRcode is defined as version. Version is an integer value from 1 to 40.
      * Version 1 is 21*21 matrix. And 4 modules increases whenever 1 version increases.
      * So version 40 is 177*177 matrix.
-     *
-     * @var int
      */
     public int $version = 0;
 
     /**
      * Error correction level
-     *
-     * @var int
      */
     protected int $level = 0;
 
@@ -70,6 +64,7 @@ abstract class Estimate
         if ($mode == Data::ENC_MODES['ST']) {
             return 0;
         }
+
         if ($version <= 9) {
             $len = 0;
         } elseif ($version <= 26) {
@@ -77,13 +72,13 @@ abstract class Estimate
         } else {
             $len = 2;
         }
+
         return Data::LEN_TABLE_BITS[$mode][$len];
     }
 
     /**
      * estimateBitsModeNum
      *
-     * @param int $size
      *
      * @return int number of bits
      */
@@ -91,49 +86,44 @@ abstract class Estimate
     {
         $wdt = (int)($size / 3);
         $bits = ($wdt * 10);
-        switch ($size - ($wdt * 3)) {
-            case 1:
-                $bits += 4;
-                break;
-            case 2:
-                $bits += 7;
-                break;
-        }
+        match ($size - ($wdt * 3)) {
+            1 => $bits += 4,
+            2 => $bits += 7,
+            default => $bits,
+        };
         return $bits;
     }
 
     /**
      * estimateBitsModeAn
      *
-     * @param int $size
      *
      * @return int number of bits
      */
     public function estimateBitsModeAn(int $size): int
     {
         $bits = (int)($size * 5.5); // (size / 2 ) * 11
-        if ($size & 1) {
+        if (($size & 1) !== 0) {
             $bits += 6;
         }
+
         return $bits;
     }
 
     /**
      * estimateBitsMode8
      *
-     * @param int $size
      *
      * @return int number of bits
      */
     public function estimateBitsMode8(int $size): int
     {
-        return (int)($size * 8);
+        return $size * 8;
     }
 
     /**
      * estimateBitsModeKanji
      *
-     * @param int $size
      *
      * @return int number of bits
      */
@@ -145,8 +135,6 @@ abstract class Estimate
     /**
      * Estimate version
      *
-     * @param array $items
-     * @param int   $level
      *
      * @return int version
      */
@@ -162,6 +150,7 @@ abstract class Estimate
                 return -1;
             }
         } while ($version > $prev);
+
         return $version;
     }
 
@@ -183,6 +172,7 @@ abstract class Estimate
                 return $idx;
             }
         }
+
         throw new BarcodeException(
             'The size of input data is greater than Data::QR capacity, try to lower the error correction mode'
         );
@@ -191,8 +181,6 @@ abstract class Estimate
     /**
      * estimateBitStreamSize
      *
-     * @param array $items
-     * @param int   $version
      *
      * @return int bits
      */
@@ -202,6 +190,7 @@ abstract class Estimate
         if ($version == 0) {
             $version = 1;
         }
+
         foreach ($items as $item) {
             switch ($item['mode']) {
                 case Data::ENC_MODES['NM']:
@@ -221,11 +210,13 @@ abstract class Estimate
                 default:
                     return 0;
             }
+
             $len = $this->getLengthIndicator($item['mode'], $version);
             $mod = 1 << $len;
             $num = (int)(($item['size'] + $mod - 1) / $mod);
             $bits += $num * (4 + $len);
         }
+
         return $bits;
     }
 }

@@ -45,36 +45,26 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
 
     /**
      * Array of codewords.
-     *
-     * @var array
      */
-    protected array $cdw = array();
+    protected array $cdw = [];
 
     /**
      * Binary grid
-     *
-     * @var array
      */
-    protected array $grid = array();
+    protected array $grid = [];
 
     /**
      * Datamatrix Encoding object
-     *
-     * @var Encode
      */
     protected Encode $dmx;
 
     /**
      * Datamatrix shape key (S=square, R=rectangular)
-     *
-     * @var string
      */
     protected string $shape = 'S';
 
     /**
      * Datamatrix variant (N=default, GS1=FNC1 codeword in first place)
-     *
-     * @var bool
      */
     protected bool $gsonemode = false;
 
@@ -93,9 +83,15 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
 
         // mode
-        if (isset($this->params[1]) && ($this->params[1] == 'GS1')) {
-            $this->gsonemode = true;
+        if (!isset($this->params[1])) {
+            return;
         }
+
+        if ($this->params[1] != 'GS1') {
+            return;
+        }
+
+        $this->gsonemode = true;
     }
 
     /**
@@ -111,15 +107,14 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         if ($size <= $ncw) {
             return;
         }
+
         if (($this->dmx->last_enc != Data::ENC_ASCII) && ($this->dmx->last_enc != Data::ENC_BASE256)) {
             // return to ASCII encodation before padding
-            if ($this->dmx->last_enc == Data::ENC_EDF) {
-                $this->cdw[] = 124;
-            } else {
-                $this->cdw[] = 254;
-            }
+            $this->cdw[] = $this->dmx->last_enc == Data::ENC_EDF ? 124 : 254;
+
             ++$ncw;
         }
+
         if ($size > $ncw) {
             // add first pad
             $this->cdw[] = 129;
@@ -167,15 +162,6 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
 
     /**
      * Set the grid
-     *
-     * @param int $idx
-     * @param array $places
-     * @param int $row
-     * @param int $col
-     * @param int $rdx
-     * @param int $cdx
-     * @param int $rdri
-     * @param int $rdci
      */
     protected function setGrid(
         int &$idx, 
@@ -191,7 +177,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         // braw bits by case
         if ($rdx == 0) {
             // top finder pattern
-            $this->grid[$row][$col] = intval(($cdx % 2) == 0);
+            $this->grid[$row][$col] = (int) (($cdx % 2) == 0);
         } elseif ($rdx == $rdri) {
             // bottom finder pattern
             $this->grid[$row][$col] = 1;
@@ -200,7 +186,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
             $this->grid[$row][$col] = 1;
         } elseif ($cdx == $rdci) {
             // right finder pattern
-            $this->grid[$row][$col] = intval(($rdx % 2) > 0);
+            $this->grid[$row][$col] = (int) (($rdx % 2) > 0);
         } else {
             // data bit
             if ($places[$idx] < 2) {
@@ -209,9 +195,10 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                 // codeword ID
                 $cdw_id = (floor($places[$idx] / 10) - 1);
                 // codeword BIT mask
-                $cdw_bit = pow(2, (8 - ($places[$idx] % 10)));
+                $cdw_bit = 2 ** (8 - ($places[$idx] % 10));
                 $this->grid[$row][$col] = (($this->cdw[$cdw_id] & $cdw_bit) == 0) ? 0 : 1;
             }
+
             ++$idx;
         }
     }
@@ -231,7 +218,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $enc = Data::ENC_ASCII; // current encoding mode
         $this->dmx->last_enc = $enc; // last used encoding
         $pos = 0; // current position
-        $cdw = array(); // array of codewords to be returned
+        $cdw = []; // array of codewords to be returned
         $cdw_num = 0; // number of data codewords
         $data_length = strlen($data); // number of chars
         $field_length = 0; // number of chars in current field
@@ -243,6 +230,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                 ++$cdw_num;
                 continue;
             }
+
             switch ($enc) {
                 case Data::ENC_ASCII:
                     // STEP B. While in ASCII encodation
@@ -265,8 +253,10 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                     $this->dmx->encodeBase256($cdw, $cdw_num, $pos, $data_length, $field_length, $data, $enc);
                     break;
             }
+
             $this->dmx->last_enc = $enc;
         }
+
         return $cdw;
     }
 
@@ -284,7 +274,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         // get placement map
         $places = $this->dmx->getPlacementMap($params[2], $params[3]);
         // fill the grid with data
-        $this->grid = array();
+        $this->grid = [];
         $idx = 0;
         // region data row max index
         $rdri = ($params[4] - 1);
@@ -307,6 +297,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                 }
             }
         }
+
         $this->processBinarySequence($this->grid);
     }
 }

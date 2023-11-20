@@ -36,8 +36,6 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * Look up the alphabet-numeric conversion table (see JIS X0510:2004, pp.19)
      *
      * @param int $chr Character value
-     *
-     * @return int
      */
     public function lookAnTable(int $chr): int
     {
@@ -63,9 +61,10 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
     ): array
     {
         $newitem = $this->newInputItem($mode, $size, $data);
-        if (!empty($newitem)) {
+        if ($newitem !== []) {
             $items[] = $newitem;
         }
+
         return $items;
     }
 
@@ -90,15 +89,12 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
         if (count($setData) < $size) {
             $setData = array_merge($setData, array_fill(0, ($size - count($setData)), 0));
         }
+
         if (!$this->check($mode, $size, $setData)) {
             throw new BarcodeException('Invalid input item');
         }
-        return array(
-            'mode'    => $mode,
-            'size'    => $size,
-            'data'    => $setData,
-            'bstream' => $bstream,
-        );
+
+        return ['mode'    => $mode, 'size'    => $size, 'data'    => $setData, 'bstream' => $bstream];
     }
 
     /**
@@ -119,26 +115,20 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
         if ($size <= 0) {
             return false;
         }
-        switch ($mode) {
-            case Data::ENC_MODES['NM']:
-                return $this->checkModeNum($size, $data);
-            case Data::ENC_MODES['AN']:
-                return $this->checkModeAn($size, $data);
-            case Data::ENC_MODES['KJ']:
-                return $this->checkModeKanji($size, $data);
-            case Data::ENC_MODES['8B']:
-                return true;
-            case Data::ENC_MODES['ST']:
-                return true;
-        }
-        return false;
+
+        return match ($mode) {
+            Data::ENC_MODES['NM'] => $this->checkModeNum($size, $data),
+            Data::ENC_MODES['AN'] => $this->checkModeAn($size, $data),
+            Data::ENC_MODES['KJ'] => $this->checkModeKanji($size, $data),
+            Data::ENC_MODES['8B'] => true,
+            Data::ENC_MODES['ST'] => true,
+            default => false,
+        };
     }
 
     /**
      * checkModeNum
      *
-     * @param int $size
-     * @param array $data
      *
      * @return bool true or false
      */
@@ -149,14 +139,13 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * checkModeAn
      *
-     * @param int $size
-     * @param array $data
      *
      * @return bool true or false
      */
@@ -167,28 +156,29 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * checkModeKanji
      *
-     * @param int $size
-     * @param array $data
      *
      * @return bool true or false
      */
     protected function checkModeKanji(int $size, array $data): bool
     {
-        if ($size & 1) {
+        if (($size & 1) !== 0) {
             return false;
         }
+
         for ($idx = 0; $idx < $size; $idx += 2) {
             $val = (ord($data[$idx]) << 8) | ord($data[($idx + 1)]);
             if (($val < 0x8140) || (($val > 0x9ffc) && ($val < 0xe040)) || ($val > 0xebbf)) {
                 return false;
             }
         }
+
         return true;
     }
 }

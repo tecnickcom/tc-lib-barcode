@@ -32,15 +32,15 @@ use Test\TestUtil;
  */
 class ImbTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('IMB', '00000-');
+        $barcode = $this->getTestObject();
+        $bobj = $barcode->getBarcodeObj('IMB', '00000-');
         $grid = $bobj->getGrid();
         $expected = "100000101010001000101000101000000010000010100010001010100000"
             . "100010001000000010101000001010101000100000000000100010001000100000001\n"
@@ -50,7 +50,7 @@ class ImbTest extends TestUtil
             . "01010001010001010000010101000101000101000000000001000001000100\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $testObj->getBarcodeObj('IMB', '0123456789');
+        $bobj = $barcode->getBarcodeObj('IMB', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "001010100010101000100010001010101010001000001000101010001010"
             . "101010100000000000000010101000000010001010100010001000101010001000001\n"
@@ -60,7 +60,7 @@ class ImbTest extends TestUtil
             . "00010100000100010001000001010101000001010000010101010100010101\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $testObj->getBarcodeObj('IMB', '01234567094987654321-01234567891');
+        $bobj = $barcode->getBarcodeObj('IMB', '01234567094987654321-01234567891');
         $grid = $bobj->getGrid();
         $expected = "10100000101000100000100000101000101000100000000010101000000000000000101010001"
             . "0000000001010100000000000100010101010001000001010001\n"
@@ -70,7 +70,7 @@ class ImbTest extends TestUtil
             . "001010101010000000001010000000101000100000100\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $testObj->getBarcodeObj('IMB', '01234567094987654321-012345678');
+        $bobj = $barcode->getBarcodeObj('IMB', '01234567094987654321-012345678');
         $grid = $bobj->getGrid();
         $expected = "10001000001010000000000010100000100000101010001000100010000010101010000010001"
             . "0001000000000000000100000001000100010000000101000101\n"
@@ -80,7 +80,7 @@ class ImbTest extends TestUtil
             . "101000100000001000100010101000100\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $testObj->getBarcodeObj('IMB', '01234567094987654321-01234');
+        $bobj = $barcode->getBarcodeObj('IMB', '01234567094987654321-01234');
         $grid = $bobj->getGrid();
         $expected = "00000010101000000000100000001000100000000010001000101010001010000000100010101"
             . "0100000001000101010100000100000001010000000000010100\n"
@@ -90,7 +90,7 @@ class ImbTest extends TestUtil
             . "000010100000000010101000101000101010001010100\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $testObj->getBarcodeObj('IMB', '01234567094987654321-');
+        $bobj = $barcode->getBarcodeObj('IMB', '01234567094987654321-');
         $grid = $bobj->getGrid();
         $expected = "10000010100000000000100000101000000000000010000000101000001010001000100010101"
             . "0101000100010101010100000101000001010001000100000000\n"
@@ -100,7 +100,7 @@ class ImbTest extends TestUtil
             . "000010000000000010101000100000101000101000100\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $testObj->getBarcodeObj('IMB', '01234567094987654321-01234567891');
+        $bobj = $barcode->getBarcodeObj('IMB', '01234567094987654321-01234567891');
         $grid = $bobj->getGrid();
         $expected = "10100000101000100000100000101000101000100000000010101000000000000000101010001"
             . "0000000001010100000000000100010101010001000001010001\n"
@@ -111,10 +111,10 @@ class ImbTest extends TestUtil
         $this->assertEquals($expected, $grid);
     }
 
-    public function testInvalidRoutingCode()
+    public function testInvalidRoutingCode(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj('IMB', '01234567094987654321-1');
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('IMB', '01234567094987654321-1');
     }
 }

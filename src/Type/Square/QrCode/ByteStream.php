@@ -75,29 +75,34 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     {
         $size = count($bstream);
         if ($size == 0) {
-            return array();
+            return [];
         }
+
         $data = array_fill(0, (int)(($size + 7) / 8), 0);
         $bytes = (int)($size / 8);
         $pos = 0;
         for ($idx = 0; $idx < $bytes; ++$idx) {
             $val = 0;
             for ($jdx = 0; $jdx < 8; ++$jdx) {
-                $val = $val << 1;
+                $val <<= 1;
                 $val |= $bstream[$pos];
-                $pos++;
+                ++$pos;
             }
+
             $data[$idx] = $val;
         }
-        if ($size & 7) {
+
+        if (($size & 7) !== 0) {
             $val = 0;
             for ($jdx = 0; $jdx < ($size & 7); ++$jdx) {
-                $val = $val << 1;
+                $val <<= 1;
                 $val |= $bstream[$pos];
-                $pos++;
+                ++$pos;
             }
+
             $data[$bytes] = $val;
         }
+
         return $data;
     }
 
@@ -111,10 +116,11 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     protected function mergeBitStream(array $items): array
     {
         $items = $this->convertData($items);
-        $bstream = array();
+        $bstream = [];
         foreach ($items as $item) {
             $bstream = $this->appendBitstream($bstream, $item['bstream']);
         }
+
         return $bstream;
     }
 
@@ -131,6 +137,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
         if ($ver > $this->version) {
             $this->version = $ver;
         }
+
         while (true) {
             $cbs = $this->createBitStream($items);
             $items = $cbs[0];
@@ -138,6 +145,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
             if ($bits < 0) {
                 throw new BarcodeException('Negative Bits value');
             }
+
             $ver = $this->getMinimumVersion((int)(($bits + 7) / 8), $this->level);
             if ($ver > $this->version) {
                 $this->version = $ver;
@@ -145,13 +153,13 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
                 break;
             }
         }
+
         return $items;
     }
 
     /**
      * Create BitStream
      *
-     * @param array $items
      *
      * @return array of items and total bits
      */
@@ -163,22 +171,21 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
             $bits = count($items[$key]['bstream']);
             $total += $bits;
         }
-        return array($items, $total);
+
+        return [$items, $total];
     }
 
     /**
      * Encode BitStream
      *
-     * @param array $inputitem
-     * @param int   $version
      *
      * @return array input item
      */
     public function encodeBitStream(array $inputitem, int $version): array
     {
-        $inputitem['bstream'] = array();
-        $specObj = new Spec();
-        $words = $specObj->maximumWords($inputitem['mode'], $version);
+        $inputitem['bstream'] = [];
+        $spec = new Spec();
+        $words = $spec->maximumWords($inputitem['mode'], $version);
         if ($inputitem['size'] > $words) {
             $st1 = $this->newInputItem($inputitem['mode'], $words, $inputitem['data']);
             $st2 = $this->newInputItem(
@@ -188,7 +195,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
             );
             $st1 = $this->encodeBitStream($st1, $version);
             $st2 = $this->encodeBitStream($st2, $version);
-            $inputitem['bstream'] = array();
+            $inputitem['bstream'] = [];
             $inputitem['bstream'] = $this->appendBitstream($inputitem['bstream'], $st1['bstream']);
             $inputitem['bstream'] = $this->appendBitstream($inputitem['bstream'], $st2['bstream']);
         } else {
@@ -210,6 +217,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
                     break;
             }
         }
+
         return $inputitem;
     }
 
@@ -223,30 +231,36 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     protected function appendPaddingBit(array $bstream): array
     {
         if (is_null($bstream)) {
-            return array();
+            return [];
         }
+
         $bits = count($bstream);
-        $specObj = new Spec();
-        $maxwords = $specObj->getDataLength($this->version, $this->level);
+        $spec = new Spec();
+        $maxwords = $spec->getDataLength($this->version, $this->level);
         $maxbits = $maxwords * 8;
         if ($maxbits == $bits) {
             return $bstream;
         }
+
         if ($maxbits - $bits < 5) {
             return $this->appendNum($bstream, $maxbits - $bits, 0);
         }
+
         $bits += 4;
         $words = (int)(($bits + 7) / 8);
-        $padding = array();
+        $padding = [];
         $padding = $this->appendNum($padding, $words * 8 - $bits + 4, 0);
+
         $padlen = $maxwords - $words;
         if ($padlen > 0) {
-            $padbuf = array();
+            $padbuf = [];
             for ($idx = 0; $idx < $padlen; ++$idx) {
-                $padbuf[$idx] = (($idx & 1) ? 0x11 : 0xec);
+                $padbuf[$idx] = ((($idx & 1) !== 0) ? 0x11 : 0xec);
             }
+
             $padding = $this->appendBytes($padding, $padlen, $padbuf);
         }
+
         return $this->appendBitstream($bstream, $padding);
     }
 }

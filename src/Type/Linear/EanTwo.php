@@ -43,8 +43,6 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
 
     /**
      * Fixed code length
-     *
-     * @var int
      */
     protected int $code_length = 2;
 
@@ -53,44 +51,38 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, array<string, string>>
      */
-    protected const CHBAR = array(
-        'A' => array( // left odd parity
-            '0' => '0001101',
-            '1' => '0011001',
-            '2' => '0010011',
-            '3' => '0111101',
-            '4' => '0100011',
-            '5' => '0110001',
-            '6' => '0101111',
-            '7' => '0111011',
-            '8' => '0110111',
-            '9' => '0001011'
-        ),
-        'B' => array( // left even parity
-            '0' => '0100111',
-            '1' => '0110011',
-            '2' => '0011011',
-            '3' => '0100001',
-            '4' => '0011101',
-            '5' => '0111001',
-            '6' => '0000101',
-            '7' => '0010001',
-            '8' => '0001001',
-            '9' => '0010111'
-        )
-    );
+    protected const CHBAR = ['A' => [
+        // left odd parity
+        '0' => '0001101',
+        '1' => '0011001',
+        '2' => '0010011',
+        '3' => '0111101',
+        '4' => '0100011',
+        '5' => '0110001',
+        '6' => '0101111',
+        '7' => '0111011',
+        '8' => '0110111',
+        '9' => '0001011',
+    ], 'B' => [
+        // left even parity
+        '0' => '0100111',
+        '1' => '0110011',
+        '2' => '0011011',
+        '3' => '0100001',
+        '4' => '0011101',
+        '5' => '0111001',
+        '6' => '0000101',
+        '7' => '0010001',
+        '8' => '0001001',
+        '9' => '0010111',
+    ]];
 
     /**
      * Map parities
      *
      * @var array<string, array<string>>
      */
-    protected const PARITIES = array(
-        '0' => array('A','A'),
-        '1' => array('A','B'),
-        '2' => array('B','A'),
-        '3' => array('B','B')
-    );
+    protected const PARITIES = ['0' => ['A', 'A'], '1' => ['A', 'B'], '2' => ['B', 'A'], '3' => ['B', 'B']];
 
     /**
      * Calculate checksum
@@ -101,7 +93,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getChecksum(string $code): int
     {
-        return (intval($code) % 4);
+        return ((int) $code % 4);
     }
 
     /**
@@ -129,6 +121,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
             $seq .= '01'; // separator
             $seq .= $this::CHBAR[$parity[$pos]][$this->extcode[$pos]];
         }
+
         $this->processBinarySequence($seq);
     }
 }

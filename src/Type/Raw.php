@@ -36,14 +36,13 @@ class Raw extends \Com\Tecnick\Barcode\Type
 {
     /**
      * Get the pre-formatted code
-     *
-     * @return array
      */
     protected function getCodeRows(): array
     {
         if (is_array($this->code)) {
             return $this->code;
         }
+
         // remove spaces and newlines
         $code = preg_replace('/[\s]*/s', '', $this->code);
         // remove trailing brackets or commas
@@ -62,33 +61,35 @@ class Raw extends \Com\Tecnick\Barcode\Type
     protected function setBars(): void
     {
         $rows = $this->getCodeRows();
-        if (empty($rows)) {
+        if ($rows === []) {
             throw new BarcodeException('Empty input string');
         }
+
         $this->nrows = count($rows);
-        if (is_array($rows[0])) {
-            $this->ncols = count($rows[0]);
-        } else {
-            $this->ncols = strlen($rows[0]);
-        }
-        if (empty($this->ncols)) {
+        $this->ncols = is_array($rows[0]) ? count($rows[0]) : strlen($rows[0]);
+
+        if ($this->ncols === 0) {
             throw new BarcodeException('Empty columns');
         }
-        $this->bars = array();
+
+        $this->bars = [];
         foreach ($rows as $posy => $row) {
             if (!is_array($row)) {
                 $row = str_split($row, 1);
             }
+
             $prevcol = '';
             $bar_width = 0;
             $row[] = '0';
             for ($posx = 0; $posx <= $this->ncols; ++$posx) {
                 if ($row[$posx] != $prevcol) {
                     if ($prevcol == '1') {
-                        $this->bars[] = array(($posx - $bar_width), $posy, $bar_width, 1);
+                        $this->bars[] = [($posx - $bar_width), $posy, $bar_width, 1];
                     }
+
                     $bar_width = 0;
                 }
+
                 ++$bar_width;
                 $prevcol = $row[$posx];
             }

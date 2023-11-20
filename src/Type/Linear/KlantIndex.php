@@ -58,7 +58,7 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
     {
         $this->ncols = 0;
         $this->nrows = 3;
-        $this->bars = array();
+        $this->bars = [];
         $this->getCoreBars();
     }
 }

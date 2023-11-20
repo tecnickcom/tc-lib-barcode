@@ -36,32 +36,24 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
 {
     /**
      * True for compact mode (up to 4 layers), false for full-range mode (up to 32 layers).
-     *
-     * @var bool
      */
     protected bool $compact = true;
 
     /**
      * Number of data layers.
-     *
-     * @var int
      */
     protected int $numlayers = 0;
 
     /**
      * Size data for the selected layer.
-     *
-     * @var array
      */
-    protected array $layer = array();
+    protected array $layer = [];
 
     /**
      * Returns the minimum number of layers required.
      *
      * @param array $data Either the Data::SIZE_COMPACT or Data::SIZE_FULL array.
      * @param int   $numbits The number of bits to encode.
-     *
-     * @return int
      */
     protected function getMinLayers(array $data, int $numbits): int
     {
@@ -72,6 +64,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
                 }
             }
         }
+
         return 0;
     }
 
@@ -90,13 +83,16 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
             $this->compact = true;
             $this->numlayers = $this->getMinLayers(Data::SIZE_COMPACT, $numbits);
         }
+
         if ($this->numlayers == 0) {
             $this->compact = false;
             $this->numlayers = $this->getMinLayers(Data::SIZE_FULL, $numbits);
         }
+
         if ($this->numlayers == 0) {
             return false;
         }
+
         $this->layer = $this->compact ? Data::SIZE_COMPACT[$this->numlayers] : Data::SIZE_FULL[$this->numlayers];
         return true;
     }
@@ -112,14 +108,16 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
     protected function sizeAndBitStuffing(int $ecc, string $mode = 'A'): bool
     {
         $nsbits = 0;
-        $eccbits = (11 + intval(($this->totbits * $ecc) / 100));
+        $eccbits = (11 + (int) (($this->totbits * $ecc) / 100));
         do {
             if (!$this->setLayerByBits(($this->totbits + $nsbits + $eccbits), $mode)) {
                 return false;
             }
+
             $nsbits = $this->bitStuffing();
         } while (($nsbits + $eccbits) > $this->layer[3]);
-        $this->bitstream = array();
+
+        $this->bitstream = [];
         $this->totbits = 0;
         $this->mergeTmpCwdRaw();
         return true;
@@ -136,27 +134,30 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
         $nsbits = 0;
         $wsize = $this->layer[2];
         $mask = ((1 << $wsize) - 2); // b-1 bits at 1 and last bit at 0
-        $this->tmpCdws = array();
+        $this->tmpCdws = [];
         for ($wid = 0; $wid < $this->totbits; $wid += $wsize) {
             $word = 0;
-            for ($idx = 0; $idx < $wsize; $idx++) {
+            for ($idx = 0; $idx < $wsize; ++$idx) {
                 $bid = ($wid + $idx);
                 if (($bid >= $this->totbits) || ($this->bitstream[$bid] == 1)) {
                     $word |= (1 << ($wsize - 1 - $idx)); // the first bit is MSB
                 }
             }
+
             // If the first b−1 bits of a code word have the same value,
             // an extra bit with the complementary value is inserted into the data stream.
-            if (($word & $mask) == $mask) {
+            if (($word & $mask) === $mask) {
                 $word &= $mask;
-                $wid--;
+                --$wid;
             } elseif (($word & $mask) == 0) {
                 $word |= 1;
-                $wid--;
+                --$wid;
             }
-            $this->tmpCdws[] = array($wsize, $word);
+
+            $this->tmpCdws[] = [$wsize, $word];
             $nsbits += $wsize;
         }
+
         return $nsbits;
     }
 }

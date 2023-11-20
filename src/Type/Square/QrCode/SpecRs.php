@@ -37,7 +37,6 @@ abstract class SpecRs
     /**
      * Return block number 0
      *
-     * @param array $spec
      *
      * @return int value
      */
@@ -49,7 +48,6 @@ abstract class SpecRs
     /**
      * Return block number 1
      *
-     * @param array $spec
      *
      * @return int value
      */
@@ -61,7 +59,6 @@ abstract class SpecRs
     /**
      * Return data codes 1
      *
-     * @param array $spec
      *
      * @return int value
      */
@@ -73,7 +70,6 @@ abstract class SpecRs
     /**
      * Return ecc codes 1
      *
-     * @param array $spec
      *
      * @return int value
      */
@@ -85,7 +81,6 @@ abstract class SpecRs
     /**
      * Return block number 2
      *
-     * @param array $spec
      *
      * @return int value
      */
@@ -97,7 +92,6 @@ abstract class SpecRs
     /**
      * Return data codes 2
      *
-     * @param array $spec
      *
      * @return int value
      */
@@ -109,7 +103,6 @@ abstract class SpecRs
     /**
      * Return ecc codes 2
      *
-     * @param array $spec
      *
      * @return int value
      */
@@ -121,7 +114,6 @@ abstract class SpecRs
     /**
      * Return data length
      *
-     * @param array $spec
      *
      * @return int value
      */
@@ -133,7 +125,6 @@ abstract class SpecRs
     /**
      * Return ecc length
      *
-     * @param array $spec
      *
      * @return int value
      */
@@ -166,6 +157,7 @@ abstract class SpecRs
             $frame[$yOffset][7] = "\xc0";
             ++$yOffset;
         }
+
         $setPattern = str_repeat("\xc0", 8);
         $frame = $this->qrstrset($frame, 0, 7, $setPattern);
         $frame = $this->qrstrset($frame, $width - 8, 7, $setPattern);
@@ -174,17 +166,20 @@ abstract class SpecRs
         $setPattern = str_repeat("\x84", 9);
         $frame = $this->qrstrset($frame, 0, 8, $setPattern);
         $frame = $this->qrstrset($frame, $width - 8, 8, $setPattern, 8);
+
         $yOffset = $width - 8;
         for ($ypos = 0; $ypos < 8; ++$ypos, ++$yOffset) {
             $frame[$ypos][8] = "\x84";
             $frame[$yOffset][8] = "\x84";
         }
+
         // Timing pattern
         $wdo = $width - 15;
         for ($idx = 1; $idx < $wdo; ++$idx) {
             $frame[6][(7 + $idx)] = chr(0x90 | ($idx & 1));
             $frame[(7 + $idx)][6] = chr(0x90 | ($idx & 1));
         }
+
         // Alignment pattern
         $frame = $this->putAlignmentPattern($version, $frame, $width);
         // Version information
@@ -194,17 +189,19 @@ abstract class SpecRs
             for ($xpos = 0; $xpos < 6; ++$xpos) {
                 for ($ypos = 0; $ypos < 3; ++$ypos) {
                     $frame[(($width - 11) + $ypos)][$xpos] = chr(0x88 | ($val & 1));
-                    $val = $val >> 1;
+                    $val >>= 1;
                 }
             }
+
             $val = $vinf;
             for ($ypos = 0; $ypos < 6; ++$ypos) {
                 for ($xpos = 0; $xpos < 3; ++$xpos) {
                     $frame[$ypos][($xpos + ($width - 11))] = chr(0x88 | ($val & 1));
-                    $val = $val >> 1;
+                    $val >>= 1;
                 }
             }
         }
+
         // and a little bit...
         $frame[$width - 8][8] = "\x81";
         return $frame;
@@ -213,12 +210,10 @@ abstract class SpecRs
     /**
      * Replace a value on the array at the specified position
      *
-     * @param array $srctab
      * @param int    $xpos       X position
      * @param int    $ypos       Y position
      * @param string $repl    Value to replace
      * @param int    $replLen Length of the repl string
-     *
      * @return array srctab
      */
     public function qrstrset(
@@ -233,7 +228,7 @@ abstract class SpecRs
             $srctab[$ypos],
             ($replLen !== null) ? substr($repl, 0, $replLen) : $repl,
             $xpos,
-            ($replLen !== null) ? $replLen : strlen($repl)
+            $replLen ?? strlen($repl)
         );
         return $srctab;
     }
@@ -253,18 +248,13 @@ abstract class SpecRs
         int $poy
     ): array
     {
-        $finder = array(
-            "\xa1\xa1\xa1\xa1\xa1",
-            "\xa1\xa0\xa0\xa0\xa1",
-            "\xa1\xa0\xa1\xa0\xa1",
-            "\xa1\xa0\xa0\xa0\xa1",
-            "\xa1\xa1\xa1\xa1\xa1"
-        );
+        $finder = ["\xa1\xa1\xa1\xa1\xa1", "\xa1\xa0\xa0\xa0\xa1", "\xa1\xa0\xa1\xa0\xa1", "\xa1\xa0\xa0\xa0\xa1", "\xa1\xa1\xa1\xa1\xa1"];
         $yStart = $poy - 2;
         $xStart = $pox - 2;
         for ($ydx = 0; $ydx < 5; ++$ydx) {
             $frame = $this->qrstrset($frame, $xStart, ($yStart + $ydx), $finder[$ydx]);
         }
+
         return $frame;
     }
 
@@ -283,18 +273,11 @@ abstract class SpecRs
         int $poy
     ): array
     {
-        $finder = array(
-            "\xc1\xc1\xc1\xc1\xc1\xc1\xc1",
-            "\xc1\xc0\xc0\xc0\xc0\xc0\xc1",
-            "\xc1\xc0\xc1\xc1\xc1\xc0\xc1",
-            "\xc1\xc0\xc1\xc1\xc1\xc0\xc1",
-            "\xc1\xc0\xc1\xc1\xc1\xc0\xc1",
-            "\xc1\xc0\xc0\xc0\xc0\xc0\xc1",
-            "\xc1\xc1\xc1\xc1\xc1\xc1\xc1"
-        );
+        $finder = ["\xc1\xc1\xc1\xc1\xc1\xc1\xc1", "\xc1\xc0\xc0\xc0\xc0\xc0\xc1", "\xc1\xc0\xc1\xc1\xc1\xc0\xc1", "\xc1\xc0\xc1\xc1\xc1\xc0\xc1", "\xc1\xc0\xc1\xc1\xc1\xc0\xc1", "\xc1\xc0\xc0\xc0\xc0\xc0\xc1", "\xc1\xc1\xc1\xc1\xc1\xc1\xc1"];
         for ($ypos = 0; $ypos < 7; ++$ypos) {
             $frame = $this->qrstrset($frame, $pox, ($poy + $ypos), $finder[$ypos]);
         }
+
         return $frame;
     }
 
@@ -303,14 +286,13 @@ abstract class SpecRs
      * Use lower 18 bits.
      *
      * @param int $version Version
-     *
-     * @return int
      */
     public function getVersionPattern(int $version): int
     {
         if (($version < 7) || ($version > Data::QRSPEC_VERSION_MAX)) {
             return 0;
         }
+
         return Data::VERSION_PATTERN[($version - 7)];
     }
 
@@ -332,18 +314,20 @@ abstract class SpecRs
         if ($version < 2) {
             return $frame;
         }
+
         $dval = Data::ALIGN_PATTERN[$version][1] - Data::ALIGN_PATTERN[$version][0];
         if ($dval < 0) {
             $wdt = 2;
         } else {
             $wdt = (int)(($width - Data::ALIGN_PATTERN[$version][0]) / $dval + 2);
         }
+
         if ($wdt * $wdt - 3 == 1) {
             $psx = Data::ALIGN_PATTERN[$version][0];
             $psy = Data::ALIGN_PATTERN[$version][0];
-            $frame = $this->putAlignmentMarker($frame, $psx, $psy);
-            return $frame;
+            return $this->putAlignmentMarker($frame, $psx, $psy);
         }
+
         $cpx = Data::ALIGN_PATTERN[$version][0];
         $wdo = $wdt - 1;
         for ($xpos = 1; $xpos < $wdo; ++$xpos) {
@@ -351,6 +335,7 @@ abstract class SpecRs
             $frame = $this->putAlignmentMarker($frame, $cpx, 6);
             $cpx += $dval;
         }
+
         $cpy = Data::ALIGN_PATTERN[$version][0];
         for ($y = 0; $y < $wdo; ++$y) {
             $cpx = Data::ALIGN_PATTERN[$version][0];
@@ -358,8 +343,10 @@ abstract class SpecRs
                 $frame = $this->putAlignmentMarker($frame, $cpx, $cpy);
                 $cpx += $dval;
             }
+
             $cpy += $dval;
         }
+
         return $frame;
     }
 }

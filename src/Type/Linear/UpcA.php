@@ -43,8 +43,6 @@ class UpcA extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
 
     /**
      * Fixed code length
-     *
-     * @var int
      */
     protected int $code_length = 12;
 

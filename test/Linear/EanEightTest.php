@@ -32,19 +32,19 @@ use Test\TestUtil;
  */
 class EanEightTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj(
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj(
             'EAN8',
             '1234567'
         );
-        $grid = $bobj->getGrid();
+        $grid = $type->getGrid();
         $expected = "1010011001001001101111010100011010101001110101000010001001110010101\n";
         $this->assertEquals($expected, $grid);
     }

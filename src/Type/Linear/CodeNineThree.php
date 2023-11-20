@@ -102,191 +102,14 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @var array<string>
      */
-    protected const EXTCODES = array(
-        "\x83U",
-        "\x80A",
-        "\x80B",
-        "\x80C",
-        "\x80D",
-        "\x80E",
-        "\x80F",
-        "\x80G",
-        "\x80H",
-        "\x80I",
-        "\x80J",
-        "\x80K",
-        "\x80L",
-        "\x80M",
-        "\x80N",
-        "\x80O",
-        "\x80P",
-        "\x80Q",
-        "\x80R",
-        "\x80S",
-        "\x80T",
-        "\x80U",
-        "\x80V",
-        "\x80W",
-        "\x80X",
-        "\x80Y",
-        "\x80Z",
-        "\x83A",
-        "\x83B",
-        "\x83C",
-        "\x83D",
-        "\x83E",
-        " ",
-        "\x81A",
-        "\x81B",
-        "\x81C",
-        "\x81D",
-        "\x81E",
-        "\x81F",
-        "\x81G",
-        "\x81H",
-        "\x81I",
-        "\x81J",
-        "\x81K",
-        "\x81L",
-        "-",
-        ".",
-        "\x81O",
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "\x81Z",
-        "\x83F",
-        "\x83G",
-        "\x83H",
-        "\x83I",
-        "\x83J",
-        "\x83V",
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
-        "\x83K",
-        "\x83L",
-        "\x83M",
-        "\x83N",
-        "\x83O",
-        "\x83W",
-        "\x82A",
-        "\x82B",
-        "\x82C",
-        "\x82D",
-        "\x82E",
-        "\x82F",
-        "\x82G",
-        "\x82H",
-        "\x82I",
-        "\x82J",
-        "\x82K",
-        "\x82L",
-        "\x82M",
-        "\x82N",
-        "\x82O",
-        "\x82P",
-        "\x82Q",
-        "\x82R",
-        "\x82S",
-        "\x82T",
-        "\x82U",
-        "\x82V",
-        "\x82W",
-        "\x82X",
-        "\x82Y",
-        "\x82Z",
-        "\x83P",
-        "\x83Q",
-        "\x83R",
-        "\x83S",
-        "\x83T"
-    );
+    protected const EXTCODES = ["\x83U", "\x80A", "\x80B", "\x80C", "\x80D", "\x80E", "\x80F", "\x80G", "\x80H", "\x80I", "\x80J", "\x80K", "\x80L", "\x80M", "\x80N", "\x80O", "\x80P", "\x80Q", "\x80R", "\x80S", "\x80T", "\x80U", "\x80V", "\x80W", "\x80X", "\x80Y", "\x80Z", "\x83A", "\x83B", "\x83C", "\x83D", "\x83E", " ", "\x81A", "\x81B", "\x81C", "\x81D", "\x81E", "\x81F", "\x81G", "\x81H", "\x81I", "\x81J", "\x81K", "\x81L", "-", ".", "\x81O", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "\x81Z", "\x83F", "\x83G", "\x83H", "\x83I", "\x83J", "\x83V", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "\x83K", "\x83L", "\x83M", "\x83N", "\x83O", "\x83W", "\x82A", "\x82B", "\x82C", "\x82D", "\x82E", "\x82F", "\x82G", "\x82H", "\x82I", "\x82J", "\x82K", "\x82L", "\x82M", "\x82N", "\x82O", "\x82P", "\x82Q", "\x82R", "\x82S", "\x82T", "\x82U", "\x82V", "\x82W", "\x82X", "\x82Y", "\x82Z", "\x83P", "\x83Q", "\x83R", "\x83S", "\x83T"];
 
     /**
      * Characters used for checksum
      *
      * @var array<string>
      */
-    protected const CHKSUM = array(
-        '0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-        'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-        'L',
-    'M',
-    'N',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
-        'W',
-    'X',
-    'Y',
-    'Z',
-    '-',
-    '.',
-    ' ',
-    '$',
-    '/',
-    '+',
-    '%',
-        '<',
-    '=',
-    '>',
-    '?'
-    );
+    protected const CHKSUM = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '-', '.', ' ', '$', '/', '+', '%', '<', '=', '>', '?'];
 
     /**
      * Calculate CODE 93 checksum (modulo 47).
@@ -311,6 +134,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
                 $pck = 1;
             }
         }
+
         $check %= 47;
         $chk = $this::CHKSUM[$check];
         $code .= $chk;
@@ -325,6 +149,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
                 $pck = 1;
             }
         }
+
         $check %= 47;
         $key = $this::CHKSUM[$check];
         $checksum = $chk . $key;
@@ -348,20 +173,22 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
     {
         $this->ncols = 0;
         $this->nrows = 1;
-        $this->bars = array();
+        $this->bars = [];
         $this::FORMATCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = ord($this->extcode[$chr]);
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = intval($this::CHBAR[$char][$pos]);
+                $bar_width = (int) $this::CHBAR[$char][$pos];
                 if (($pos % 2) == 0) {
-                    $this->bars[] = array($this->ncols, 0, $bar_width, 1);
+                    $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
+
                 $this->ncols += $bar_width;
             }
         }
-        $this->bars[] = array($this->ncols, 0, 1, 1);
-        $this->ncols += 1;
+
+        $this->bars[] = [$this->ncols, 0, 1, 1];
+        ++$this->ncols;
     }
 }

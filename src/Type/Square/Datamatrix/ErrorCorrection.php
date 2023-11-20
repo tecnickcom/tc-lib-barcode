@@ -53,6 +53,7 @@ class ErrorCorrection
         if (($numa == 0) || ($numb == 0)) {
             return 0;
         }
+
         return ($alog[($log[$numa] + $log[$numb]) % ($ngf - 1)]);
     }
 
@@ -78,8 +79,8 @@ class ErrorCorrection
     ): array
     {
         // generate the log ($log) and antilog ($alog) tables
-        $log = array(0);
-        $alog = array(1);
+        $log = [0];
+        $alog = [1];
         $this->genLogs($log, $alog, $ngf, $vpp);
 
         // generate the polynomial coefficients (c)
@@ -90,8 +91,10 @@ class ErrorCorrection
             for ($j = ($i - 1); $j >= 1; --$j) {
                 $plc[$j] = $plc[($j - 1)] ^ $this->getGFProduct($plc[$j], $alog[$i], $log, $alog, $ngf);
             }
+
             $plc[0] = $this->getGFProduct($plc[0], $alog[$i], $log, $alog, $ngf);
         }
+
         ksort($plc);
 
         // total number of data codewords
@@ -101,10 +104,11 @@ class ErrorCorrection
         // for each block
         for ($b = 0; $b < $nbk; ++$b) {
             // create interleaved data block
-            $block = array();
+            $block = [];
             for ($n = $b; $n < $num_wd; $n += $nbk) {
                 $block[] = $wdc[$n];
             }
+
             // initialize error codewords
             $wec = array_fill(0, ($ncc + 1), 0);
             // calculate error correction codewords for this block
@@ -114,6 +118,7 @@ class ErrorCorrection
                     $wec[$j] = ($wec[($j + 1)] ^ $this->getGFProduct($ker, $plc[($ncc - $j - 1)], $log, $alog, $ngf));
                 }
             }
+
             // add error codewords at the end of data codewords
             $j = 0;
             for ($i = $b; $i < $num_we; $i += $nbk) {
@@ -121,6 +126,7 @@ class ErrorCorrection
                 ++$j;
             }
         }
+
         // reorder codewords
         ksort($wdc);
         return $wdc;
@@ -146,8 +152,10 @@ class ErrorCorrection
             if ($alog[$i] >= $ngf) {
                 $alog[$i] ^= $vpp;
             }
+
             $log[$alog[$i]] = $i;
         }
+
         ksort($log);
     }
 }

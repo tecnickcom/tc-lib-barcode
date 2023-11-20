@@ -32,20 +32,21 @@ use Test\TestUtil;
  */
 class RawTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
         $testObj = $this->getTestObject();
         $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj(
+
+        $type = $testObj->getBarcodeObj(
             'LRAW',
             '01001100011100001111,10110011100011110000'
         );
-        $grid = $bobj->getGrid();
+        $grid = $type->getGrid();
         $expected = "01001100011100001111\n10110011100011110000\n";
         $this->assertEquals($expected, $grid);
     }

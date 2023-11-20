@@ -37,11 +37,6 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
 {
     /**
      * Encode TXTC40 shift
-     *
-     * @param int $chr
-     * @param int $enc
-     * @param array $temp_cw
-     * @param int $ptr
      */
     public function encodeTXTC40shift(
         int &$chr,
@@ -65,6 +60,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         } else {
             throw new BarcodeException('Error');
         }
+
         $temp_cw[] = $shiftset[$chr];
         $ptr += 2;
     }
@@ -72,12 +68,6 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
     /**
      * Encode TXTC40
      *
-     * @param string $data
-     * @param int    $enc
-     * @param array  $temp_cw
-     * @param int    $ptr
-     * @param int    $epos
-     * @param array  $charset
      *
      * @return int   Curent character code
      */
@@ -94,21 +84,24 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         $chr = ord($data[$epos]);
         ++$epos;
         // check for extended character
-        if ($chr & 0x80) {
+        if (($chr & 0x80) !== 0) {
             if ($enc == Data::ENC_X12) {
                 throw new BarcodeException('TXTC40 Error');
             }
-            $chr = ($chr & 0x7f);
+
+            $chr &= 0x7f;
             $temp_cw[] = 1; // shift 2
             $temp_cw[] = 30; // upper shift
             $ptr += 2;
         }
+
         if (isset($charset[$chr])) {
             $temp_cw[] = $charset[$chr];
             ++$ptr;
         } else {
             $this->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
         }
+
         return $chr;
     }
 
@@ -116,14 +109,6 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * Encode TXTC40 last
      * The following rules apply when only one or two symbol characters remain in the symbol
      * before the start of the error correction codewords.
-     *
-     * @param int    $chr
-     * @param array  $cdw
-     * @param int    $cdw_num
-     * @param int    $enc
-     * @param array  $temp_cw
-     * @param int    $ptr
-     * @param int    $epos
      */
     public function encodeTXTC40last(
         int $chr, 
@@ -163,27 +148,18 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
             $cdw_num += 2;
             $enc = Data::ENC_ASCII;
             $this->last_enc = $enc;
-        } else {
+        } elseif ($enc != Data::ENC_ASCII) {
             // switch to ASCII encoding
-            if ($enc != Data::ENC_ASCII) {
-                $enc = Data::ENC_ASCII;
-                $this->last_enc = $enc;
-                $cdw[] = $this->getSwitchEncodingCodeword($enc);
-                ++$cdw_num;
-                $epos -= $ptr;
-            }
+            $enc = Data::ENC_ASCII;
+            $this->last_enc = $enc;
+            $cdw[] = $this->getSwitchEncodingCodeword($enc);
+            ++$cdw_num;
+            $epos -= $ptr;
         }
     }
 
     /**
      * Encode TXT
-     *
-     * @param array   $cdw
-     * @param int    $cdw_num
-     * @param int    $pos
-     * @param int    $data_length
-     * @param string $data
-     * @param int    $enc
      */
     public function encodeTXT(
         array &$cdw, 
@@ -194,7 +170,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         int &$enc
     ): void
     {
-        $temp_cw = array();
+        $temp_cw = [];
         $ptr = 0;
         $epos = $pos;
         // get charset ID
@@ -224,6 +200,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
                         $cdw[] = $this->getSwitchEncodingCodeword(Data::ENC_ASCII);
                         ++$cdw_num;
                     }
+
                     $cdw[] = $this->getSwitchEncodingCodeword($enc);
                     ++$cdw_num;
                     $pos -= $ptr;
@@ -232,6 +209,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
                 }
             }
         } while (($ptr > 0) && ($epos < $data_length));
+
         // process last data (if any)
         if ($ptr > 0) {
             $this->encodeTXTC40last($chr, $cdw, $cdw_num, $enc, $temp_cw, $ptr, $epos);

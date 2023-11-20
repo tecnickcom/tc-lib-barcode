@@ -32,25 +32,25 @@ use Test\TestUtil;
  */
 class CodabarTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('CODABAR', '0123456789');
-        $grid = $bobj->getGrid();
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('CODABAR', '0123456789');
+        $grid = $type->getGrid();
         $expected = "10110010010101010011010101100101010010110110010101010110"
             . "10010110101001010010101101001011010100110101011010010101011001001\n";
         $this->assertEquals($expected, $grid);
     }
 
-    public function testInvalidInput()
+    public function testInvalidInput(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj('CODABAR', chr(218));
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('CODABAR', chr(218));
     }
 }

@@ -49,6 +49,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
         while (($maxecl > 0) && ($maxerrsize < (2 << $maxecl))) {
             --$maxecl;
         }
+
         if (($ecl < 0) || ($ecl > 8)) {
             if ($numcw < 41) {
                 $ecl = 2;
@@ -62,6 +63,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
                 $ecl = $maxecl;
             }
         }
+
         return min($maxecl, $ecl);
     }
 
@@ -84,22 +86,25 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
         // initialize array of error correction codewords
         $ecw = array_fill(0, $eclsize, 0);
         // for each data codeword
-        foreach ($codewords as $cdw) {
-            $tk1 = ($cdw + $ecw[$eclmaxid]) % 929;
+        foreach ($codewords as $codeword) {
+            $tk1 = ($codeword + $ecw[$eclmaxid]) % 929;
             for ($idx = $eclmaxid; $idx > 0; --$idx) {
                 $tk2 = ($tk1 * $ecc[$idx]) % 929;
                 $tk3 = 929 - $tk2;
                 $ecw[$idx] = ($ecw[($idx - 1)] + $tk3) % 929;
             }
+
             $tk2 = ($tk1 * $ecc[0]) % 929;
             $tk3 = 929 - $tk2;
             $ecw[0] = $tk3 % 929;
         }
+
         foreach ($ecw as $idx => $err) {
             if ($err != 0) {
                 $ecw[$idx] = 929 - $err;
             }
         }
+
         return array_reverse($ecw);
     }
 
@@ -115,10 +120,10 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
     {
         // extract text sequence before the number sequence
         $prevseq = substr($code, $offset, ($seq - $offset));
-        $textseq = array();
+        $textseq = [];
         // get text sequences
         preg_match_all('/([\x09\x0a\x0d\x20-\x7e]{5,})/', $prevseq, $textseq, PREG_OFFSET_CAPTURE);
-        $textseq[1][] = array('', strlen($prevseq));
+        $textseq[1][] = ['', strlen($prevseq)];
         $txtoffset = 0;
         foreach ($textseq[1] as $txtseq) {
             $txtseqlen = strlen($txtseq[0]);
@@ -129,21 +134,23 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
                     // add BYTE sequence
                     if (
                         (strlen($prevtxtseq) == 1)
-                        && ((count($sequence_array) > 0)
+                        && (($sequence_array !== [])
                         && ($sequence_array[(count($sequence_array) - 1)][0] == 900))
                     ) {
-                        $sequence_array[] = array(913, $prevtxtseq);
+                        $sequence_array[] = [913, $prevtxtseq];
                     } elseif ((strlen($prevtxtseq) % 6) == 0) {
-                        $sequence_array[] = array(924, $prevtxtseq);
+                        $sequence_array[] = [924, $prevtxtseq];
                     } else {
-                        $sequence_array[] = array(901, $prevtxtseq);
+                        $sequence_array[] = [901, $prevtxtseq];
                     }
                 }
             }
+
             if ($txtseqlen > 0) {
                 // add numeric sequence
-                $sequence_array[] = array(900, $txtseq[0]);
+                $sequence_array[] = [900, $txtseq[0]];
             }
+
             $txtoffset = ($txtseq[1] + $txtseqlen);
         }
     }
@@ -152,28 +159,29 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
      * Get an array of sequences from input
      *
      * @param string $code Data to process
-     *
-     * @return array
      */
     protected function getInputSequences(string $code): array
     {
-        $sequence_array = array(); // array to be returned
-        $numseq = array();
+        $sequence_array = []; // array to be returned
+        $numseq = [];
         // get numeric sequences
-        preg_match_all('/([0-9]{13,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
-        $numseq[1][] = array('', strlen($code));
+        preg_match_all('/(\d{13,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
+        $numseq[1][] = ['', strlen($code)];
         $offset = 0;
         foreach ($numseq[1] as $seq) {
             $seqlen = strlen($seq[0]);
             if ($seq[1] > 0) {
                 $this->processSequence($sequence_array, $code, $seq[1], $offset);
             }
+
             if ($seqlen > 0) {
                 // add numeric sequence
-                $sequence_array[] = array(902, $seq[0]);
+                $sequence_array[] = [902, $seq[0]];
             }
+
             $offset = ($seq[1] + $seqlen);
         }
+
         return $sequence_array;
     }
 }

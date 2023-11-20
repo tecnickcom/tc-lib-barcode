@@ -45,12 +45,15 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
         if (!isset($data[$pos])) {
             return Data::ENC_MODES['NL'];
         }
+
         if ($this->isDigitAt($data, $pos)) {
             return Data::ENC_MODES['NM'];
         }
+
         if ($this->isAlphanumericAt($data, $pos)) {
             return Data::ENC_MODES['AN'];
         }
+
         return $this->getEncodingModeKj($data, $pos);
     }
 
@@ -70,6 +73,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
                 return Data::ENC_MODES['KJ'];
             }
         }
+
         return Data::ENC_MODES['8B'];
     }
 
@@ -78,14 +82,13 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @param string $str Data
      * @param int    $pos Character position
-     *
-     * @return bool
      */
     public function isDigitAt(string $str, int $pos): bool
     {
         if (!isset($str[$pos])) {
             return false;
         }
+
         return ((ord($str[$pos]) >= ord('0')) && (ord($str[$pos]) <= ord('9')));
     }
 
@@ -94,14 +97,13 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @param string $str Data
      * @param int    $pos Character position
-     *
-     * @return bool
      */
     public function isAlphanumericAt(string $str, int $pos): bool
     {
         if (!isset($str[$pos])) {
             return false;
         }
+
         return ($this->lookAnTable(ord($str[$pos])) >= 0);
     }
 
@@ -118,9 +120,11 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
         if ((!is_array($append)) || (count($append) == 0)) {
             return $bitstream;
         }
+
         if (count($bitstream) == 0) {
             return $append;
         }
+
         return array_values(array_merge($bitstream, $append));
     }
 
@@ -136,8 +140,9 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     protected function appendNum(array $bitstream, int $bits, int $num): array
     {
         if ($bits == 0) {
-            return array();
+            return [];
         }
+
         return $this->appendBitstream($bitstream, $this->newFromNum($bits, $num));
     }
 
@@ -153,8 +158,9 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     protected function appendBytes(array $bitstream, int $size, array $data): array
     {
         if ($size == 0) {
-            return array();
+            return [];
         }
+
         return $this->appendBitstream($bitstream, $this->newFromBytes($size, $data));
     }
 
@@ -171,13 +177,11 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
         $bstream = $this->allocate($bits);
         $mask = 1 << ($bits - 1);
         for ($idx = 0; $idx < $bits; ++$idx) {
-            if ($num & $mask) {
-                $bstream[$idx] = 1;
-            } else {
-                $bstream[$idx] = 0;
-            }
-            $mask = $mask >> 1;
+            $bstream[$idx] = ($num & $mask) !== 0 ? 1 : 0;
+
+            $mask >>= 1;
         }
+
         return $bstream;
     }
 
@@ -196,15 +200,13 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
         for ($idx = 0; $idx < $size; ++$idx) {
             $mask = 0x80;
             for ($jdx = 0; $jdx < 8; ++$jdx) {
-                if ($data[$idx] & $mask) {
-                    $bstream[$pval] = 1;
-                } else {
-                    $bstream[$pval] = 0;
-                }
-                $pval++;
-                $mask = $mask >> 1;
+                $bstream[$pval] = ($data[$idx] & $mask) !== 0 ? 1 : 0;
+
+                ++$pval;
+                $mask >>= 1;
             }
         }
+
         return $bstream;
     }
 
@@ -212,8 +214,6 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      * Return an array with zeros
      *
      * @param int $setLength Array size
-     *
-     * @return array
      */
     protected function allocate(int $setLength): array
     {

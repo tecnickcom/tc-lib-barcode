@@ -32,16 +32,16 @@ use Test\TestUtil;
  */
 class PharmaTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('PHARMA', '0123456789');
-        $grid = $bobj->getGrid();
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('PHARMA', '0123456789');
+        $grid = $type->getGrid();
         $expected = "111001110010011100100111001110010011100111001110011100100"
             . "1001110011100100111001001001001110010011100111001\n";
         $this->assertEquals($expected, $grid);

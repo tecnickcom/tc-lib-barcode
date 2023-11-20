@@ -44,8 +44,6 @@ abstract class Placement
      * @param int   $col   Column number.
      * @param int   $chr   Char byte.
      * @param int   $bit   Bit.
-     *
-     * @return array
      */
     protected function placeModule(
         array $marr, 
@@ -61,10 +59,12 @@ abstract class Placement
             $row += $nrow;
             $col += (4 - (($nrow + 4) % 8));
         }
+
         if ($col < 0) {
             $col += $ncol;
             $row += (4 - (($ncol + 4) % 8));
         }
+
         $marr[(($row * $ncol) + $col)] = ((10 * $chr) + $bit);
         return $marr;
     }
@@ -79,8 +79,6 @@ abstract class Placement
      * @param int   $row   Row number.
      * @param int   $col   Column number.
      * @param int   $chr   Char byte.
-     *
-     * @return array
      */
     protected function placeUtah(
         array $marr, 
@@ -98,8 +96,7 @@ abstract class Placement
         $marr = $this->placeModule($marr, $nrow, $ncol, $row - 1, $col, $chr, 5);
         $marr = $this->placeModule($marr, $nrow, $ncol, $row, $col - 2, $chr, 6);
         $marr = $this->placeModule($marr, $nrow, $ncol, $row, $col - 1, $chr, 7);
-        $marr = $this->placeModule($marr, $nrow, $ncol, $row, $col, $chr, 8);
-        return $marr;
+        return $this->placeModule($marr, $nrow, $ncol, $row, $col, $chr, 8);
     }
 
     /**
@@ -112,8 +109,6 @@ abstract class Placement
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
-     *
-     * @return array
      */
     protected function placeCornerA(
         array $marr, 
@@ -124,9 +119,10 @@ abstract class Placement
         int $col
     ): array
     {
-        if (($row != $nrow) || ($col != 0)) {
+        if (($row !== $nrow) || ($col != 0)) {
             return $marr;
         }
+
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 0, $chr, 1);
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 1, $chr, 2);
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 2, $chr, 3);
@@ -149,8 +145,6 @@ abstract class Placement
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
-     *
-     * @return array
      */
     protected function placeCornerB(
         array $marr, 
@@ -161,9 +155,10 @@ abstract class Placement
         int $col
     ): array
     {
-        if (($row != ($nrow - 2)) || ($col != 0) || (($ncol % 4) == 0)) {
+        if (($row !== $nrow - 2) || ($col != 0) || (($ncol % 4) == 0)) {
             return $marr;
         }
+
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 3, 0, $chr, 1);
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 2, 0, $chr, 2);
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 0, $chr, 3);
@@ -186,8 +181,6 @@ abstract class Placement
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
-     *
-     * @return array
      */
     protected function placeCornerC(
         array $marr, 
@@ -198,9 +191,10 @@ abstract class Placement
         int $col
     ): array
     {
-        if (($row != ($nrow - 2)) || ($col != 0) || (($ncol % 8) != 4)) {
+        if (($row !== $nrow - 2) || ($col != 0) || ($ncol % 8 != 4)) {
             return $marr;
         }
+
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 3, 0, $chr, 1);
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 2, 0, $chr, 2);
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 0, $chr, 3);
@@ -223,8 +217,6 @@ abstract class Placement
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
-     *
-     * @return array
      */
     protected function placeCornerD(
         array $marr, 
@@ -235,9 +227,10 @@ abstract class Placement
         int $col
     ): array
     {
-        if (($row != ($nrow + 4)) || ($col != 2) || ($ncol % 8)) {
+        if (($row !== $nrow + 4) || ($col != 2) || ($ncol % 8)) {
             return $marr;
         }
+
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, 0, $chr, 1);
         $marr = $this->placeModule($marr, $nrow, $ncol, $nrow - 1, $ncol - 1, $chr, 2);
         $marr = $this->placeModule($marr, $nrow, $ncol, 0, $ncol - 3, $chr, 3);
@@ -262,8 +255,6 @@ abstract class Placement
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
-     *
-     * @return array
      */
     protected function placeSweepUpward(
         array $marr, 
@@ -279,9 +270,11 @@ abstract class Placement
                 $marr = $this->placeUtah($marr, $nrow, $ncol, $row, $col, $chr);
                 ++$chr;
             }
+
             $row -= 2;
             $col += 2;
         } while (($row >= 0) && ($col < $ncol));
+
         ++$row;
         $col += 3;
         return $marr;
@@ -297,8 +290,6 @@ abstract class Placement
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
-     *
-     * @return array
      */
     protected function placeSweepDownward(
         array $marr, 
@@ -314,9 +305,11 @@ abstract class Placement
                 $marr = $this->placeUtah($marr, $nrow, $ncol, $row, $col, $chr);
                 ++$chr;
             }
+
             $row += 2;
             $col -= 2;
         } while (($row < $nrow) && ($col >= 0));
+
         $row += 3;
         ++$col;
         return $marr;
@@ -328,8 +321,6 @@ abstract class Placement
      *
      * @param int $nrow  Number of rows.
      * @param int $ncol  Number of columns.
-     *
-     * @return array
      */
     public function getPlacementMap(
         int $nrow, 
@@ -354,11 +345,13 @@ abstract class Placement
             $marr = $this->placeSweepDownward($marr, $nrow, $ncol, $chr, $row, $col);
             // ... until the entire array is scanned
         } while (($row < $nrow) || ($col < $ncol));
+
         // lastly, if the lower righthand corner is untouched, fill in fixed pattern
         if (!$marr[(($nrow * $ncol) - 1)]) {
             $marr[(($nrow * $ncol) - 1)] = 1;
             $marr[(($nrow * $ncol) - $ncol - 2)] = 1;
         }
+
         return $marr;
     }
 }

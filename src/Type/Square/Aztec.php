@@ -45,15 +45,11 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
     /**
      * Error correction code percentage of error check words.
      * A minimum of 23% + 3 words is recommended by ISO/IEC 24778:2008a.
-     *
-     * @var int
      */
     protected int $ecc = 33;
 
     /**
      * Encoding mode
-     *
-     * @var string
      */
     protected string $hint = 'A';
 
@@ -61,8 +57,6 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *  Mode:
      *    - A = Automatic selection between Compact (priority) and Full Range.
      *    - F = Force Full Range mode.
-     *
-     * @var string
      */
     protected string $mode = 'A';
 
@@ -71,8 +65,6 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      * See Data:ECI for the list of supported codes.
      * NOTE: Even if special FNC1 or ECI flag characters could be inserted
      *       at any points in the stream, this will only be added at the beginning of the stream.
-     *
-     * @var int
      */
     protected int $eci = -1;
 
@@ -92,25 +84,29 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         if (!isset($this->params[0]) || !in_array($this->params[0], range(1, 100))) {
             $this->params[0] = 33;
         }
-        $this->ecc = intval($this->params[0]);
+
+        $this->ecc = (int) $this->params[0];
 
         // hint
         if (!isset($this->params[1]) || !in_array($this->params[1], ['A', 'B'])) {
             $this->params[1] = 'A';
         }
+
         $this->hint = $this->params[1];
 
         // mode
         if (!isset($this->params[2]) || !in_array($this->params[2], ['A', 'F'])) {
             $this->params[2] = 'A';
         }
+
         $this->mode = $this->params[2];
 
         // eci code. Used to set the charset encoding. See $this->eci.
         if (!isset($this->params[3]) || !array_key_exists($this->params[3], Data::ECI)) {
             $this->params[3] = -1;
         }
-        $this->eci = intval($this->params[3]);
+
+        $this->eci = (int) $this->params[3];
     }
 
     /**
@@ -123,12 +119,13 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         if (strlen((string)$this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
+
         try {
-            $enc = new Encode($this->code, $this->ecc, $this->eci, $this->hint, $this->mode);
-            $grid = $enc->getGrid();
+            $encode = new Encode($this->code, $this->ecc, $this->eci, $this->hint, $this->mode);
+            $grid = $encode->getGrid();
             $this->processBinarySequence($grid);
-        } catch (BarcodeException $e) {
-            throw new BarcodeException('AZTEC: ' . $e->getMessage());
+        } catch (BarcodeException $barcodeException) {
+            throw new BarcodeException('AZTEC: ' . $barcodeException->getMessage());
         }
     }
 }

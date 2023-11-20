@@ -36,35 +36,33 @@ class ErrorCorrection
     /**
      * Galois Field primitive by word size.
      */
-    protected const GF = array(
-         4 =>   19, //         10011  GF(16)   (x^4 + x + 1)                 Mode message
-         6 =>   67, //       1000011  GF(64)   (x^6 + x + 1)                 01–02 layers
-         8 =>  301, //     100101101  GF(256)  (x^8 + x^5 + x^3 + x^2 + 1)   03–08 layers
-        10 => 1033, //   10000001001  GF(1024) (x^10 + x^3 + 1)              09–22 layers
-        12 => 4201  // 1000001101001  GF(4096) (x^12 + x^6 + x^5 + x^3 + 1)  23–32 layers
-    );
+    protected const GF = [
+        4 =>   19,
+        //         10011  GF(16)   (x^4 + x + 1)                 Mode message
+        6 =>   67,
+        //       1000011  GF(64)   (x^6 + x + 1)                 01–02 layers
+        8 =>  301,
+        //     100101101  GF(256)  (x^8 + x^5 + x^3 + x^2 + 1)   03–08 layers
+        10 => 1033,
+        //   10000001001  GF(1024) (x^10 + x^3 + 1)              09–22 layers
+        12 => 4201,
+    ];
 
     /**
      * Map the log and exp (inverse log) tables by word size.
      * NOTE: It is equal to 2^word_size.
      */
-    protected const TSIZE = array(
-         4 =>   16,
-         6 =>   64,
-         8 =>  256,
-        10 => 1024,
-        12 => 4096
-    );
+    protected const TSIZE = [4 =>   16, 6 =>   64, 8 =>  256, 10 => 1024, 12 => 4096];
 
     /**
      * Log table.
      */
-    protected array $tlog = array();
+    protected array $tlog = [];
 
     /**
      * Exponential (inverse log) table.
      */
-    protected array $texp = array();
+    protected array $texp = [];
 
     /**
      * Size of the log and exp tables.
@@ -86,8 +84,6 @@ class ErrorCorrection
      *
      * @param array $data   Array of data codewords to process.
      * @param int   $necc   Number of error correction bytes.
-     *
-     * @return array
      */
     public function checkwords(array $data, int $necc): array
     {
@@ -108,7 +104,7 @@ class ErrorCorrection
         $primitive = self::GF[$wsize];
         $val = 1;
         $sizeminusone = ($this->tsize - 1);
-        for ($idx = 0; $idx < $this->tsize; $idx++) {
+        for ($idx = 0; $idx < $this->tsize; ++$idx) {
             $this->texp[$idx] = $val;
             $val <<= 1; // multiply by 2
             if ($val >= $this->tsize) {
@@ -116,7 +112,8 @@ class ErrorCorrection
                 $val &= $sizeminusone;
             }
         }
-        for ($idx = 0; $idx < $this->tsize - 1; $idx++) {
+
+        for ($idx = 0; $idx < $this->tsize - 1; ++$idx) {
             $this->tlog[$this->texp[$idx]] = $idx;
         }
     }
@@ -131,10 +128,11 @@ class ErrorCorrection
      */
     protected function getCoefficients(array $data, int $necc): array
     {
-        $gen = array(1);
-        for ($idx = 1; $idx <= $necc; $idx++) {
-            $gen = $this->multiplyCoeff(array(1, $this->texp[$idx]), $gen);
+        $gen = [1];
+        for ($idx = 1; $idx <= $necc; ++$idx) {
+            $gen = $this->multiplyCoeff([1, $this->texp[$idx]], $gen);
         }
+
         $deg = ($necc + 1);
         $coeff = $this->multiplyByMonomial($data, 1, $necc);
         $len = count($coeff);
@@ -144,6 +142,7 @@ class ErrorCorrection
             $coeff = $this->addOrSubtract($coeff, $largercoeffs);
             $len = count($coeff);
         }
+
         return $coeff;
     }
 
@@ -152,19 +151,18 @@ class ErrorCorrection
      *
      * @param array $acf First array of coefficients.
      * @param array $bcf Second array of coefficients.
-     *
-     * @return array
      */
     protected function multiplyCoeff(array $acf, array $bcf): array
     {
         $alen = count($acf);
         $blen = count($bcf);
         $coeff = array_fill(0, ($alen + $blen - 1), 0);
-        for ($aid = 0; $aid < $alen; $aid++) {
-            for ($bid = 0; $bid < $blen; $bid++) {
+        for ($aid = 0; $aid < $alen; ++$aid) {
+            for ($bid = 0; $bid < $blen; ++$bid) {
                 $coeff[$aid + $bid] ^= ($this->multiply($acf[$aid], $bcf[$bid]));
             }
         }
+
         return $this->trimCoefficients($coeff);
     }
 
@@ -173,14 +171,13 @@ class ErrorCorrection
      *
      * @param int $aval First value.
      * @param int $bval Second value.
-     *
-     * @return int
      */
     protected function multiply(int $aval, int $bval): int
     {
         if ($aval == 0 || $bval == 0) {
             return 0;
         }
+
         return $this->texp[($this->tlog[$aval] + $this->tlog[$bval]) % ($this->tsize - 1)];
     }
 
@@ -188,14 +185,13 @@ class ErrorCorrection
      * Left-trim coefficients array.
      *
      * @param array $coeff Array of coefficients.
-     *
-     * @return array
      */
     protected function trimCoefficients(array $coeff): array
     {
-        while (!empty($coeff) && $coeff[0] == 0) {
+        while ($coeff !== [] && $coeff[0] == 0) {
             array_shift($coeff);
         }
+
         return $coeff;
     }
 
@@ -205,8 +201,6 @@ class ErrorCorrection
      * @param array $coeff  Array of polynomial coefficients.
      * @param int   $mon    Monomial.
      * @param int   $deg    Degree of the monomial.
-     *
-     * @return array
      */
     protected function multiplyByMonomial(array $coeff, int $mon, int $deg): array
     {
@@ -215,9 +209,10 @@ class ErrorCorrection
         // }
         $ncf = count($coeff);
         $prod = array_fill(0, ($ncf + $deg), 0);
-        for ($idx = 0; $idx < $ncf; $idx++) {
+        for ($idx = 0; $idx < $ncf; ++$idx) {
             $prod[$idx] = $this->multiply($coeff[$idx], $mon);
         }
+
         return $this->trimCoefficients($prod);
     }
 
@@ -226,8 +221,6 @@ class ErrorCorrection
      *
      * @param array $smaller The smaller array of coefficients.
      * @param array $larger  The larger array of coefficients.
-     *
-     * @return array
      */
     protected function addOrSubtract(array $smaller, array $larger): array
     {
@@ -246,9 +239,10 @@ class ErrorCorrection
         // }
         $lendiff = ($llen - $slen);
         $coeff = array_slice($larger, 0, $lendiff);
-        for ($idx = $lendiff; $idx < $llen; $idx++) {
+        for ($idx = $lendiff; $idx < $llen; ++$idx) {
             $coeff[$idx] = ($smaller[($idx - $lendiff)] ^ $larger[$idx]);
         }
+
         return $this->trimCoefficients($coeff);
     }
 }

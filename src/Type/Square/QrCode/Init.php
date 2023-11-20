@@ -35,99 +35,70 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
 {
     /**
      * Data code
-     *
-     * @var array
      */
-    protected array $datacode = array();
+    protected array $datacode = [];
 
     /**
      * Error correction code
-     *
-     * @var array
      */
-    protected array $ecccode = array();
+    protected array $ecccode = [];
 
     /**
      * Blocks
-     *
-     * @var int
      */
     protected int $blocks;
 
     /**
      * Reed-Solomon blocks
-     *
-     * @var array
      */
-    protected array $rsblocks = array(); //of RSblock
-
+    protected array $rsblocks = []; //of RSblock
     /**
      * Counter
-     *
-     * @var int
      */
     protected int $count;
 
     /**
      * Data length
-     *
-     * @var int
      */
     protected int $dataLength;
 
     /**
      * Error correction length
-     *
-     * @var int
      */
     protected int $eccLength;
 
     /**
      * Value bv1
-     *
-     * @var int
      */
     protected int $bv1;
 
     /**
      * Width.
-     *
-     * @var int
      */
     protected int $width;
 
     /**
      * Frame
-     *
-     * @var array
      */
-    protected array $frame;
+    protected array $frame = [];
 
     /**
      * Horizontal bit position
-     *
-     * @var int
      */
     protected int $xpos;
 
     /**
      * Vertical bit position
-     *
-     * @var int
      */
     protected int $ypos;
 
     /**
      * Direction
-     *
-     * @var int
      */
     protected int $dir;
 
     /**
      * Single bit value
-     *
-     * @var int
      */
     protected int $bit;
 
@@ -136,7 +107,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *
      * @va array
      */
-    protected array $rsitems = array();
+    protected array $rsitems = [];
 
     /**
      * Initialize code
@@ -157,27 +128,20 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         if ($this->spc->rsBlockNum2($spec) == 0) {
             return;
         }
+
         $dlv = $this->spc->rsDataCodes2($spec);
         $elv = $this->spc->rsEccCodes2($spec);
         $rsv = $this->initRs(8, 0x11d, 0, 1, $elv, 255 - $dlv - $elv);
         if ($rsv == null) {
             throw new BarcodeException('Empty RS');
         }
+
         $endfor = $this->spc->rsBlockNum2($spec);
         $this->initLoop($endfor, $dlv, $elv, $rsv, $eccPos, $blockNo, $dataPos, $ecc);
     }
 
     /**
      * Internal loop for init
-     *
-     * @param int $endfor
-     * @param int $dlv
-     * @param int $elv
-     * @param array $rsv
-     * @param int $eccPos
-     * @param int $blockNo
-     * @param int $dataPos
-     * @param array $ecc
      */
     protected function initLoop(
         int $endfor, 
@@ -192,7 +156,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     {
         for ($idx = 0; $idx < $endfor; ++$idx) {
             $ecc = array_slice($this->ecccode, $eccPos);
-            $this->rsblocks[$blockNo] = array();
+            $this->rsblocks[$blockNo] = [];
             $this->rsblocks[$blockNo]['dataLength'] = $dlv;
             $this->rsblocks[$blockNo]['data'] = array_slice($this->datacode, $dataPos);
             $this->rsblocks[$blockNo]['eccLength'] = $elv;
@@ -201,7 +165,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
             $this->ecccode = array_merge(array_slice($this->ecccode, 0, $eccPos), $ecc);
             $dataPos += $dlv;
             $eccPos += $elv;
-            $blockNo++;
+            ++$blockNo;
         }
     }
 
@@ -239,18 +203,33 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     ): array
     {
         foreach ($this->rsitems as $rsv) {
-            if (
-                ($rsv['pad'] != $pad)
-                || ($rsv['nroots'] != $nroots)
-                || ($rsv['mm'] != $symsize)
-                || ($rsv['gfpoly'] != $gfpoly)
-                || ($rsv['fcr'] != $fcr)
-                || ($rsv['prim'] != $prim)
-            ) {
+            if ($rsv['pad'] != $pad) {
                 continue;
             }
+
+            if ($rsv['nroots'] != $nroots) {
+                continue;
+            }
+
+            if ($rsv['mm'] != $symsize) {
+                continue;
+            }
+
+            if ($rsv['gfpoly'] != $gfpoly) {
+                continue;
+            }
+
+            if ($rsv['fcr'] != $fcr) {
+                continue;
+            }
+
+            if ($rsv['prim'] != $prim) {
+                continue;
+            }
+
             return $rsv;
         }
+
         $rsv = $this->initRsChar($symsize, $gfpoly, $fcr, $prim, $nroots, $pad);
         array_unshift($this->rsitems, $rsv);
         return $rsv;
@@ -270,6 +249,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
             $xpos -= $rsv['nn'];
             $xpos = (($xpos >> $rsv['mm']) + ($xpos & $rsv['nn']));
         }
+
         return $xpos;
     }
 
@@ -354,7 +334,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     {
         $this->checkRsCharParamsA($symsize, $fcr, $prim);
         $this->checkRsCharParamsB($symsize, $nroots, $pad);
-        $rsv = array();
+        $rsv = [];
         $rsv['mm'] = $symsize;
         $rsv['nn'] = ((1 << $symsize) - 1);
         $rsv['pad'] = $pad;
@@ -371,14 +351,17 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
             $rsv['index_of'][$srv] = $idx;
             $rsv['alpha_to'][$idx] = $srv;
             $srv <<= 1;
-            if ($srv & (1 << $symsize)) {
+            if (($srv & (1 << $symsize)) !== 0) {
                 $srv ^= $gfpoly;
             }
+
             $srv &= $rsv['nn'];
         }
+
         if ($srv != 1) {
             throw new BarcodeException('field generator polynomial is not primitive!');
         }
+
         // form RS code generator polynomial from its roots
         $rsv['genpoly'] = array_fill(0, ($nroots + 1), 0);
         $rsv['fcr'] = $fcr;
@@ -386,9 +369,10 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         $rsv['nroots'] = $nroots;
         $rsv['gfpoly'] = $gfpoly;
         // find prim-th root of 1, used in decoding
-        for ($iprim = 1; ($iprim % $prim) != 0; $iprim += $rsv['nn']) {
+        for ($iprim = 1; $iprim % $prim != 0; $iprim += $rsv['nn']) {
             ; // intentional empty-body loop!
         }
+
         $rsv['iprim'] = (int)($iprim / $prim);
         $rsv['genpoly'][0] = 1;
         for ($idx = 0, $root = ($fcr * $prim); $idx < $nroots; ++$idx, $root += $prim) {
@@ -402,13 +386,16 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
                     $rsv['genpoly'][$jdx] = $rsv['genpoly'][($jdx - 1)];
                 }
             }
+
             // rs->genpoly[0] can never be zero
             $rsv['genpoly'][0] = $rsv['alpha_to'][$this->modnn($rsv, $rsv['index_of'][$rsv['genpoly'][0]] + $root)];
         }
+
         // convert rs->genpoly[] to index form for quicker encoding
         for ($idx = 0; $idx <= $nroots; ++$idx) {
             $rsv['genpoly'][$idx] = $rsv['index_of'][$rsv['genpoly'][$idx]];
         }
+
         return $rsv;
     }
 
@@ -455,14 +442,12 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
                     $parity[$jdx] ^= $alphato[$this->modnn($rsv, $feedback + $genpoly[($nroots - $jdx)])];
                 }
             }
+
             // Shift
             array_shift($parity);
-            if ($feedback != $azv) {
-                array_push($parity, $alphato[$this->modnn($rsv, $feedback + $genpoly[0])]);
-            } else {
-                array_push($parity, 0);
-            }
+            $parity[] = $feedback != $azv ? $alphato[$this->modnn($rsv, $feedback + $genpoly[0])] : 0;
         }
+
         return $parity;
     }
 }

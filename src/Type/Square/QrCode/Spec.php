@@ -95,6 +95,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
         if ($mode == Data::ENC_MODES['ST']) {
             return 3;
         }
+
         if ($version <= 9) {
             $lval = 0;
         } elseif ($version <= 26) {
@@ -102,11 +103,13 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
         } else {
             $lval = 2;
         }
+
         $bits = Data::LEN_TABLE_BITS[$mode][$lval];
         $words = (1 << $bits) - 1;
         if ($mode == Data::ENC_MODES['KJ']) {
             $words *= 2; // the number of bytes is required
         }
+
         return $words;
     }
 
@@ -123,8 +126,9 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
     public function getEccSpec(int $version, int $level, array $spec): array
     {
         if (count($spec) < 5) {
-            $spec = array(0, 0, 0, 0, 0);
+            $spec = [0, 0, 0, 0, 0];
         }
+
         $bv1 = Data::ECC_TABLE[$version][$level][0];
         $bv2 = Data::ECC_TABLE[$version][$level][1];
         $data = $this->getDataLength($version, $level);
@@ -142,6 +146,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
             $spec[3] = $bv2;
             $spec[4] = $spec[1] + 1;
         }
+
         return $spec;
     }
 
@@ -150,8 +155,6 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @param int $maskNo Mask number
      * @param int $level  Error correction level
-     *
-     * @return int
      */
     public function getFormatInfo(int $maskNo, int $level): int
     {
@@ -163,6 +166,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
         ) {
             return 0;
         }
+
         return Data::FORMAT_INFO[$level][$maskNo];
     }
 }

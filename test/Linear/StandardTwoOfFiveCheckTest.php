@@ -32,25 +32,25 @@ use Test\TestUtil;
  */
 class StandardTwoOfFiveCheckTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('S25+', '0123456789');
-        $grid = $bobj->getGrid();
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('S25+', '0123456789');
+        $grid = $type->getGrid();
         $expected = '111011101010101110111010101011101110101110101010111010111010101110111011101010101010111010'
         . '1110111010111010101011101110101010101011101110111010101110101011101011101011101011101010111010111' . "\n";
         $this->assertEquals($expected, $grid);
     }
 
-    public function testInvalidInput()
+    public function testInvalidInput(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj('S25+', '}{');
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('S25+', '}{');
     }
 }

@@ -46,24 +46,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected const CHBAR = array(
-        '0' => '100100100100',
-        '1' => '100100100110',
-        '2' => '100100110100',
-        '3' => '100100110110',
-        '4' => '100110100100',
-        '5' => '100110100110',
-        '6' => '100110110100',
-        '7' => '100110110110',
-        '8' => '110100100100',
-        '9' => '110100100110',
-        'A' => '110100110100',
-        'B' => '110100110110',
-        'C' => '110110100100',
-        'D' => '110110100110',
-        'E' => '110110110100',
-        'F' => '110110110110'
-    );
+    protected const CHBAR = ['0' => '100100100100', '1' => '100100100110', '2' => '100100110100', '3' => '100100110110', '4' => '100110100100', '5' => '100110100110', '6' => '100110110100', '7' => '100110110110', '8' => '110100100100', '9' => '110100100110', 'A' => '110100110100', 'B' => '110100110110', 'C' => '110110100100', 'D' => '110110100110', 'E' => '110110110100', 'F' => '110110110110'];
 
     /**
      * Calculate the checksum
@@ -82,16 +65,19 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
             if (!ctype_xdigit($hex)) {
                 continue;
             }
+
             $check += (hexdec($hex) * $pix);
             ++$pix;
             if ($pix > 7) {
                 $pix = 2;
             }
         }
+
         $check %= 11;
         if ($check > 0) {
-            $check = (11 - $check);
+            return 11 - $check;
         }
+
         return $check;
     }
 
@@ -118,8 +104,10 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
             if (!isset($this::CHBAR[$digit])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
+
             $seq .= $this::CHBAR[$digit];
         }
+
         $seq .= '1001'; // right guard
         $this->processBinarySequence($seq);
     }

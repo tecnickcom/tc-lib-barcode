@@ -52,30 +52,33 @@ class ImbPre extends \Com\Tecnick\Barcode\Type\Linear
         if (preg_match('/^[fadt]{65}$/', $code) != 1) {
             throw new BarcodeException('Invalid character sequence');
         }
+
         $this->ncols = 0;
         $this->nrows = 3;
-        $this->bars = array();
+        $this->bars = [];
         for ($pos = 0; $pos < 65; ++$pos) {
             switch ($code[$pos]) {
                 case 'f':
                     // full bar
-                    $this->bars[] = array($this->ncols, 0, 1, 3);
+                    $this->bars[] = [$this->ncols, 0, 1, 3];
                     break;
                 case 'a':
                     // ascender
-                    $this->bars[] = array($this->ncols, 0, 1, 2);
+                    $this->bars[] = [$this->ncols, 0, 1, 2];
                     break;
                 case 'd':
                     // descender
-                    $this->bars[] = array($this->ncols, 1, 1, 2);
+                    $this->bars[] = [$this->ncols, 1, 1, 2];
                     break;
                 case 't':
                     // tracker (short)
-                    $this->bars[] = array($this->ncols, 1, 1, 1);
+                    $this->bars[] = [$this->ncols, 1, 1, 1];
                     break;
             }
+
             $this->ncols += 2;
         }
+
         --$this->ncols;
     }
 }
