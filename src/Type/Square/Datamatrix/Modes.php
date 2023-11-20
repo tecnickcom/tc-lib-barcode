@@ -85,18 +85,19 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      */
     protected function isCharMode(int $chr, int $mode): bool
     {
-        $map = [
+        $ret = match ($mode) {
             //Data::ENC_ASCII     => 'isASCIIMode',
-            Data::ENC_C40 => 'isC40Mode',
-            Data::ENC_TXT => 'isTXTMode',
-            Data::ENC_X12 => 'isX12Mode',
-            Data::ENC_EDF => 'isEDFMode',
-            Data::ENC_BASE256 => 'isBASE256Mode',
-            Data::ENC_ASCII_EXT => 'isASCIIEXTMode',
-            Data::ENC_ASCII_NUM => 'isASCIINUMMode',
-        ];
-        $method = $map[$mode];
-        return $this->$method($chr);
+            Data::ENC_C40 => $this->isC40Mode($chr),
+            Data::ENC_TXT => $this->isTXTMode($chr),
+            Data::ENC_X12 => $this->isX12Mode($chr),
+            Data::ENC_EDF => $this->isEDFMode($chr),
+            Data::ENC_BASE256 => $this->isBASE256Mode($chr),
+            Data::ENC_ASCII_EXT => $this->isASCIIEXTMode($chr),
+            Data::ENC_ASCII_NUM => $this->isASCIINUMMode($chr),
+            default => false,
+        };
+
+        return $ret;
     }
 
     ///**
