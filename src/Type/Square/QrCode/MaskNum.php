@@ -81,116 +81,22 @@ abstract class MaskNum
                 if ((ord($frame[$ypos][$xpos]) & 0x80) !== 0) {
                     $bitMask[$ypos][$xpos] = 0;
                 } else {
-                    $maskFunc = call_user_func([$this, 'mask' . $maskNo], $xpos, $ypos);
+                    $maskFunc = match ($maskNo) {
+                        0 => (($xpos + $ypos) & 1),
+                        1 => ($ypos & 1),
+                        2 => ($xpos % 3),
+                        3 => (($xpos + $ypos) % 3),
+                        4 => ((((int) ($ypos / 2)) + ((int) ($xpos / 3))) & 1),
+                        5 => ((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3),
+                        6 => (((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3) & 1),
+                        7 => (((($xpos * $ypos) % 3) + (($xpos + $ypos) & 1)) & 1),
+                        default => 0,
+                    };
                     $bitMask[$ypos][$xpos] = (($maskFunc == 0) ? 1 : 0);
                 }
             }
         }
 
         return $bitMask;
-    }
-
-    /**
-     * Mask 0
-     *
-     * @param int $xpos X position
-     * @param int $ypos Y position
-     *
-     * @return int mask
-     */
-    protected function mask0(int $xpos, int $ypos): int
-    {
-        return (($xpos + $ypos) & 1);
-    }
-
-    /**
-     * Mask 1
-     *
-     * @param int $xpos X position
-     * @param int $ypos Y position
-     *
-     * @return int mask
-     */
-    protected function mask1(int $xpos, int $ypos): int
-    {
-        return ($ypos & 1);
-    }
-
-    /**
-     * Mask 2
-     *
-     * @param int $xpos X position
-     * @param int $ypos Y position
-     *
-     * @return int mask
-     */
-    protected function mask2(int $xpos, int $ypos): int
-    {
-        return ($xpos % 3);
-    }
-
-    /**
-     * Mask 3
-     *
-     * @param int $xpos X position
-     * @param int $ypos Y position
-     *
-     * @return int mask
-     */
-    protected function mask3(int $xpos, int $ypos): int
-    {
-        return (($xpos + $ypos) % 3);
-    }
-
-    /**
-     * Mask 4
-     *
-     * @param int $xpos X position
-     * @param int $ypos Y position
-     *
-     * @return int mask
-     */
-    protected function mask4(int $xpos, int $ypos): int
-    {
-        return ((((int) ($ypos / 2)) + ((int) ($xpos / 3))) & 1);
-    }
-
-    /**
-     * Mask 5
-     *
-     * @param int $xpos X position
-     * @param int $ypos Y position
-     *
-     * @return int mask
-     */
-    protected function mask5(int $xpos, int $ypos): int
-    {
-        return ((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3);
-    }
-
-    /**
-     * Mask 6
-     *
-     * @param int $xpos X position
-     * @param int $ypos Y position
-     *
-     * @return int mask
-     */
-    protected function mask6(int $xpos, int $ypos): int
-    {
-        return (((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3) & 1);
-    }
-
-    /**
-     * Mask 7
-     *
-     * @param int $xpos X position
-     * @param int $ypos Y position
-     *
-     * @return int mask
-     */
-    protected function mask7(int $xpos, int $ypos): int
-    {
-        return (((($xpos * $ypos) % 3) + (($xpos + $ypos) & 1)) & 1);
     }
 }
