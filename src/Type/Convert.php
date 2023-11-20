@@ -61,7 +61,7 @@ abstract class Convert
     /**
      * Resulting code after applying checksum etc.
      */
-    protected string|array $extcode = '';
+    protected string $extcode = '';
 
     /**
      * Total number of columns

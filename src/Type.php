@@ -241,7 +241,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the extended code (code + checksum)
      */
-    public function getExtendedCode(): string|array
+    public function getExtendedCode(): string
     {
         return $this->extcode;
     }
