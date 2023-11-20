@@ -37,7 +37,7 @@ abstract class Estimate
      *
      * @var int
      */
-    protected $hint = 2;
+    protected int $hint = 2;
 
     /**
      * QR code version.
@@ -47,14 +47,14 @@ abstract class Estimate
      *
      * @var int
      */
-    public $version = 0;
+    public int $version = 0;
 
     /**
      * Error correction level
      *
      * @var int
      */
-    protected $level = 0;
+    protected int $level = 0;
 
 
     /**
@@ -65,7 +65,7 @@ abstract class Estimate
      *
      * @return int the size of the appropriate length indicator (bits).
      */
-    public function getLengthIndicator($mode, $version)
+    public function getLengthIndicator(int $mode, int $version): int
     {
         if ($mode == Data::ENC_MODES['ST']) {
             return 0;
@@ -87,7 +87,7 @@ abstract class Estimate
      *
      * @return int number of bits
      */
-    public function estimateBitsModeNum($size)
+    public function estimateBitsModeNum(int $size): int
     {
         $wdt = (int)($size / 3);
         $bits = ($wdt * 10);
@@ -109,7 +109,7 @@ abstract class Estimate
      *
      * @return int number of bits
      */
-    public function estimateBitsModeAn($size)
+    public function estimateBitsModeAn(int $size): int
     {
         $bits = (int)($size * 5.5); // (size / 2 ) * 11
         if ($size & 1) {
@@ -125,7 +125,7 @@ abstract class Estimate
      *
      * @return int number of bits
      */
-    public function estimateBitsMode8($size)
+    public function estimateBitsMode8(int $size): int
     {
         return (int)($size * 8);
     }
@@ -137,7 +137,7 @@ abstract class Estimate
      *
      * @return int number of bits
      */
-    public function estimateBitsModeKanji($size)
+    public function estimateBitsModeKanji(int $size): int
     {
         return (int)($size * 6.5); // (size / 2 ) * 13
     }
@@ -150,7 +150,7 @@ abstract class Estimate
      *
      * @return int version
      */
-    public function estimateVersion($items, $level)
+    public function estimateVersion(array $items, int $level): int
     {
         $version = 0;
         $prev = 0;
@@ -175,7 +175,7 @@ abstract class Estimate
      *
      * @throws BarcodeException
      */
-    protected function getMinimumVersion($size, $level)
+    protected function getMinimumVersion(int $size, int $level): int
     {
         for ($idx = 1; $idx <= Data::QRSPEC_VERSION_MAX; ++$idx) {
             $words = (Data::CAPACITY[$idx][Data::QRCAP_WORDS] - Data::CAPACITY[$idx][Data::QRCAP_EC][$level]);
@@ -196,7 +196,7 @@ abstract class Estimate
      *
      * @return int bits
      */
-    protected function estimateBitStreamSize($items, $version)
+    protected function estimateBitStreamSize(array $items, int $version): int
     {
         $bits = 0;
         if ($version == 0) {
