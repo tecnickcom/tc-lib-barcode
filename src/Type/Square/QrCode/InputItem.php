@@ -39,7 +39,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      *
      * @return int
      */
-    public function lookAnTable($chr)
+    public function lookAnTable(int $chr): int
     {
         return (($chr > 127) ? -1 : Data::AN_TABLE[$chr]);
     }
@@ -55,7 +55,12 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      *
      * @return array items
      */
-    public function appendNewInputItem($items, $mode, $size, $data)
+    public function appendNewInputItem(
+        array $items, 
+        int $mode, 
+        int $size, 
+        array $data
+    ): array
     {
         $newitem = $this->newInputItem($mode, $size, $data);
         if (!empty($newitem)) {
@@ -74,7 +79,12 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      *
      * @return array input item
      */
-    protected function newInputItem($mode, $size, $data, $bstream = null)
+    protected function newInputItem(
+        int $mode, 
+        int $size, 
+        array $data, 
+        array $bstream = []
+    ): array
     {
         $setData = array_slice($data, 0, $size);
         if (count($setData) < $size) {
@@ -98,9 +108,13 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * @param int   $size Size of data (byte).
      * @param array $data Data to validate
      *
-     * @return boolean true in case of valid data, false otherwise
+     * @return bool true in case of valid data, false otherwise
      */
-    protected function check($mode, $size, $data)
+    protected function check(
+        int $mode, 
+        int $size, 
+        array $data
+    ): bool
     {
         if ($size <= 0) {
             return false;
@@ -126,9 +140,9 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * @param int $size
      * @param array $data
      *
-     * @return boolean true or false
+     * @return bool true or false
      */
-    protected function checkModeNum($size, $data)
+    protected function checkModeNum(int $size, array $data): bool
     {
         for ($idx = 0; $idx < $size; ++$idx) {
             if ((ord($data[$idx]) < ord('0')) || (ord($data[$idx]) > ord('9'))) {
@@ -144,9 +158,9 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * @param int $size
      * @param array $data
      *
-     * @return boolean true or false
+     * @return bool true or false
      */
-    protected function checkModeAn($size, $data)
+    protected function checkModeAn(int $size, array $data): bool
     {
         for ($idx = 0; $idx < $size; ++$idx) {
             if ($this->lookAnTable(ord($data[$idx])) == -1) {
@@ -162,9 +176,9 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * @param int $size
      * @param array $data
      *
-     * @return boolean true or false
+     * @return bool true or false
      */
-    protected function checkModeKanji($size, $data)
+    protected function checkModeKanji(int $size, array $data): bool
     {
         if ($size & 1) {
             return false;
