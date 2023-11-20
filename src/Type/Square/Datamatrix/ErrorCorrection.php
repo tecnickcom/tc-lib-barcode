@@ -43,13 +43,12 @@ class ErrorCorrection
      * @return int product
      */
     protected function getGFProduct(
-        int $numa, 
-        int $numb, 
-        array $log, 
-        array $alog, 
+        int $numa,
+        int $numb,
+        array $log,
+        array $alog,
         int $ngf
-    ): int
-    {
+    ): int {
         if (($numa == 0) || ($numb == 0)) {
             return 0;
         }
@@ -70,14 +69,13 @@ class ErrorCorrection
      * @return array data codewords + error codewords
      */
     public function getErrorCorrection(
-        array $wdc, 
-        int $nbk, 
-        int $ncw, 
-        int $ncc, 
-        int $ngf = 256, 
+        array $wdc,
+        int $nbk,
+        int $ncw,
+        int $ncc,
+        int $ngf = 256,
         int $vpp = 301
-    ): array
-    {
+    ): array {
         // generate the log ($log) and antilog ($alog) tables
         $log = [0];
         $alog = [1];
@@ -141,12 +139,11 @@ class ErrorCorrection
      * @param int   $vpp  The value of its prime modulus polynomial (301 for ECC200).
      */
     protected function genLogs(
-        array &$log, 
-        array &$alog, 
-        int $ngf, 
+        array &$log,
+        array &$alog,
+        int $ngf,
         int $vpp
-    ): void
-    {
+    ): void {
         for ($i = 1; $i < $ngf; ++$i) {
             $alog[$i] = ($alog[($i - 1)] * 2);
             if ($alog[$i] >= $ngf) {

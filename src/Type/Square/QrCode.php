@@ -17,10 +17,10 @@
 namespace Com\Tecnick\Barcode\Type\Square;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 use Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Split;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 use Com\Tecnick\Barcode\Type\Square\QrCode\Encoder;
+use Com\Tecnick\Barcode\Type\Square\QrCode\Split;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode
@@ -107,47 +107,47 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
         parent::setParameters();
 
         // level
-        if (!isset($this->params[0]) || !array_key_exists($this->params[0], Data::ECC_LEVELS)) {
+        if (! isset($this->params[0]) || ! array_key_exists($this->params[0], Data::ECC_LEVELS)) {
             $this->params[0] = 'L';
         }
 
         $this->level = Data::ECC_LEVELS[$this->params[0]];
 
         // hint
-        if (!isset($this->params[1]) || !array_key_exists($this->params[1], Data::ENC_MODES)) {
+        if (! isset($this->params[1]) || ! array_key_exists($this->params[1], Data::ENC_MODES)) {
             $this->params[1] = '8B';
         }
 
         $this->hint = Data::ENC_MODES[$this->params[1]];
 
         // version
-        if (!isset($this->params[2]) || ($this->params[2] < 0) || ($this->params[2] > Data::QRSPEC_VERSION_MAX)) {
+        if (! isset($this->params[2]) || ($this->params[2] < 0) || ($this->params[2] > Data::QRSPEC_VERSION_MAX)) {
             $this->params[2] = 0;
         }
 
         $this->version = (int) $this->params[2];
 
         // case sensitive
-        if (!isset($this->params[3])) {
+        if (! isset($this->params[3])) {
             $this->params[3] = 1;
         }
 
-        $this->case_sensitive = (bool)$this->params[3];
+        $this->case_sensitive = (bool) $this->params[3];
 
         // random mask mode - number of masks to be checked
-        if (!empty($this->params[4])) {
+        if (! empty($this->params[4])) {
             $this->random_mask = (int) $this->params[4];
         }
 
         // find best mask
-        if (!isset($this->params[5])) {
+        if (! isset($this->params[5])) {
             $this->params[5] = 1;
         }
 
-        $this->best_mask = (bool)$this->params[5];
+        $this->best_mask = (bool) $this->params[5];
 
         // default mask
-        if (!isset($this->params[6])) {
+        if (! isset($this->params[6])) {
             $this->params[6] = 2;
         }
 
@@ -161,7 +161,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function setBars(): void
     {
-        if (strlen((string)$this->code) == 0) {
+        if (strlen((string) $this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
 
@@ -201,7 +201,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function encodeString(string $data): array
     {
-        if (!$this->case_sensitive) {
+        if (! $this->case_sensitive) {
             $data = $this->toUpper($data);
         }
 

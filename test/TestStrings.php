@@ -1,4 +1,5 @@
 <?php
+
 // @codingStandardsIgnoreFile
 /**
  * TestStrings.php

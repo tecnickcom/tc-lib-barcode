@@ -46,7 +46,18 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected const CHBAR = ['0' => '10101110111010', '1' => '11101010101110', '2' => '10111010101110', '3' => '11101110101010', '4' => '10101110101110', '5' => '11101011101010', '6' => '10111011101010', '7' => '10101011101110', '8' => '11101010111010', '9' => '10111010111010'];
+    protected const CHBAR = [
+        '0' => '10101110111010',
+        '1' => '11101010101110',
+        '2' => '10111010101110',
+        '3' => '11101110101010',
+        '4' => '10101110101110',
+        '5' => '11101011101010',
+        '6' => '10111011101010',
+        '7' => '10101011101110',
+        '8' => '11101010111010',
+        '9' => '10111010111010',
+    ];
 
     /**
      * Calculate the checksum
@@ -101,7 +112,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($idx = 0; $idx < $clen; ++$idx) {
             $digit = $this->extcode[$idx];
-            if (!isset($this::CHBAR[$digit])) {
+            if (! isset($this::CHBAR[$digit])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
 

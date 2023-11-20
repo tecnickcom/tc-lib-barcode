@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Aztec;
 
-use Com\Tecnick\Barcode\Type\Square\Aztec\Data;
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
  *
@@ -140,12 +137,11 @@ abstract class Codeword
      * @param int   $value     The value of the codeword.
      */
     protected function appendWordToBitstream(
-        array &$bitstream, 
-        int &$totbits, 
-        int $wsize, 
+        array &$bitstream,
+        int &$totbits,
+        int $wsize,
         int $value
-    ): VOID
-    {
+    ): void {
         for ($idx = ($wsize - 1); $idx >= 0; --$idx) {
             $bitstream[] = (($value >> $idx) & 1);
         }
@@ -161,18 +157,17 @@ abstract class Codeword
      * @param int   $wsize     The word size.
      */
     protected function bitstreamToWords(
-        array $bitstream, 
-        int $totbits, 
+        array $bitstream,
+        int $totbits,
         int $wsize
-    ): array
-    {
+    ): array {
         $words = [];
         $numwords = (int) ceil($totbits / $wsize);
         for ($idx = 0; $idx < $numwords; ++$idx) {
             $wrd = 0;
             for ($bit = 0; $bit < $wsize; ++$bit) {
                 $pos = (($idx * $wsize) + $bit);
-                if (!empty($bitstream[$pos]) || !isset($bitstream[$pos])) {
+                if (! empty($bitstream[$pos]) || ! isset($bitstream[$pos])) {
                     $wrd |= (1 << ($wsize - $bit - 1)); // reverse order
                 }
             }
@@ -293,7 +288,7 @@ abstract class Codeword
             return;
         }
 
-        $seci = (string)$eci;
+        $seci = (string) $eci;
         $digits = strlen($seci);
         $this->addRawCwd(3, $digits); // 1–6 digits
         for ($idx = 0; $idx < $digits; ++$idx) {

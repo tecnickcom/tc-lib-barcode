@@ -16,7 +16,6 @@
 
 namespace Test\Linear\CodeOneTwoEight;
 
-use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**

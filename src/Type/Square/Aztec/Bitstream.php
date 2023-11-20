@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Aztec;
 
-use Com\Tecnick\Barcode\Type\Square\Aztec\Data;
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
  *
@@ -36,7 +33,7 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
 {
-     /**
+    /**
      * Performs the high-level encoding for the given code and ECI mode.
      *
      * @param string $code The code to encode.
@@ -44,11 +41,10 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param string $hint The mode to use.
      */
     protected function highLevelEncoding(
-        string $code, 
-        int $eci = 0, 
+        string $code,
+        int $eci = 0,
         string $hint = 'A'
-    ): void
-    {
+    ): void {
         $this->addFLG($eci);
         $chars = array_values(unpack('C*', $code));
         $chrlen = count($chars);
@@ -157,19 +153,18 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param int $mode The current mode.
      */
     protected function countModeChars(
-        array &$chars, 
-        int $idx, 
-        int $chrlen, 
+        array &$chars,
+        int $idx,
+        int $chrlen,
         int $mode
-    ): int
-    {
+    ): int {
         $this->tmpCdws = [];
         $nbits = Data::MODE_BITS[$mode];
         $count = 0;
         do {
             $ord = $chars[$idx];
             if (
-                (!$this->isSameMode($mode, $ord))
+                (! $this->isSameMode($mode, $ord))
                 || (($idx < ($chrlen - 1)) && ($this->punctPairMode($ord, $chars[($idx + 1)]) > 0))
             ) {
                 return $count;
@@ -193,11 +188,10 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @return bool True if binary characters have been found and processed.
      */
     protected function processBinaryChars(
-        array &$chars, 
-        int &$idx, 
+        array &$chars,
+        int &$idx,
         int $chrlen
-    ): bool
-    {
+    ): bool {
         $binchrs = $this->countBinaryChars($chars, $idx, $chrlen);
         if ($binchrs == 0) {
             return false;
@@ -246,15 +240,13 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function countBinaryChars(
-        array &$chars, 
-        int $idx, 
+        array &$chars,
+        int $idx,
         int $chrlen
-    ): int
-    {
+    ): int {
         $this->tmpCdws = [];
         $count = 0;
         $nbits = Data::MODE_BITS[Data::MODE_BINARY];
@@ -284,12 +276,10 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function processPunctPairs(
-        array &$chars, 
-        int &$idx, 
+        array &$chars,
+        int &$idx,
         int $chrlen
-    ): bool
-    {
-
+    ): bool {
         $ppairs = $this->countPunctPairs($chars, $idx, $chrlen);
         if ($ppairs == 0) {
             return false;
@@ -338,11 +328,10 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param int $chrlen The total number of characters to process.
      */
     protected function countPunctPairs(
-        array &$chars, 
-        int $idx, 
+        array &$chars,
+        int $idx,
         int $chrlen
-    ): int
-    {
+    ): int {
         $this->tmpCdws = [];
         $pairs = 0;
         $maxidx = $chrlen - 1;
@@ -372,12 +361,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         array &$chars,
         int $idx,
         int $chrlen
-    ): array
-    {
+    ): array {
         $words = [];
         while ($idx < $chrlen) {
             $ord = $chars[$idx];
-            if (!$this->isPunctAndDigitChar($ord)) {
+            if (! $this->isPunctAndDigitChar($ord)) {
                 return $words;
             }
 

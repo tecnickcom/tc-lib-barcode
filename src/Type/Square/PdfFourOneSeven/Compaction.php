@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Compaction
  *
@@ -38,19 +35,20 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      * Process Sub Text Compaction
      */
     protected function processTextCompactionSub(
-        array &$txtarr, 
-        int &$submode, 
-        int $sub, 
-        string $code, 
-        int $key, 
-        int $idx, 
+        array &$txtarr,
+        int &$submode,
+        int $sub,
+        string $code,
+        int $key,
+        int $idx,
         int $codelen
-        ): void
-    {
+    ): void {
         // $sub is the new submode
-        if ((($idx + 1 === $codelen) || ((($idx + 1) < $codelen)
-        && (in_array(ord($code[($idx + 1)]), Data::TEXT_SUB_MODES[$submode]))))
-        && (($sub == 3) || (($sub == 0) && ($submode == 1)))) {
+        if (
+            (($idx + 1 === $codelen) || ((($idx + 1) < $codelen)
+            && (in_array(ord($code[($idx + 1)]), Data::TEXT_SUB_MODES[$submode]))))
+            && (($sub == 3) || (($sub == 0) && ($submode == 1)))
+        ) {
             // shift (temporary change only for this char)
             $txtarr[] = $sub == 3 ? 29 : 27;
         } else {
@@ -187,11 +185,10 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      * @return array of codewords
      */
     protected function getCompaction(
-        int $mode, 
-        string $code, 
+        int $mode,
+        string $code,
         bool $addmode = true
-    ): array
-    {
+    ): array {
         $codewords = []; // array of codewords to return
         switch ($mode) {
             case 900:

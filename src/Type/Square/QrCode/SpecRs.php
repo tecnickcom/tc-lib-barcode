@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
  *
@@ -37,7 +34,6 @@ abstract class SpecRs
     /**
      * Return block number 0
      *
-     *
      * @return int value
      */
     public function rsBlockNum(array $spec): int
@@ -47,7 +43,6 @@ abstract class SpecRs
 
     /**
      * Return block number 1
-     *
      *
      * @return int value
      */
@@ -59,7 +54,6 @@ abstract class SpecRs
     /**
      * Return data codes 1
      *
-     *
      * @return int value
      */
     public function rsDataCodes1(array $spec): int
@@ -69,7 +63,6 @@ abstract class SpecRs
 
     /**
      * Return ecc codes 1
-     *
      *
      * @return int value
      */
@@ -81,7 +74,6 @@ abstract class SpecRs
     /**
      * Return block number 2
      *
-     *
      * @return int value
      */
     public function rsBlockNum2(array $spec): int
@@ -91,7 +83,6 @@ abstract class SpecRs
 
     /**
      * Return data codes 2
-     *
      *
      * @return int value
      */
@@ -103,7 +94,6 @@ abstract class SpecRs
     /**
      * Return ecc codes 2
      *
-     *
      * @return int value
      */
     public function rsEccCodes2(array $spec): int
@@ -114,7 +104,6 @@ abstract class SpecRs
     /**
      * Return data length
      *
-     *
      * @return int value
      */
     public function rsDataLength(array $spec): int
@@ -124,7 +113,6 @@ abstract class SpecRs
 
     /**
      * Return ecc length
-     *
      *
      * @return int value
      */
@@ -217,13 +205,12 @@ abstract class SpecRs
      * @return array srctab
      */
     public function qrstrset(
-        array $srctab, 
-        int $xpos, 
-        int $ypos, 
-        string $repl, 
+        array $srctab,
+        int $xpos,
+        int $ypos,
+        string $repl,
         int $replLen = null
-    ): array
-    {
+    ): array {
         $srctab[$ypos] = substr_replace(
             $srctab[$ypos],
             ($replLen !== null) ? substr($repl, 0, $replLen) : $repl,
@@ -243,11 +230,10 @@ abstract class SpecRs
      * @return array frame
      */
     public function putAlignmentMarker(
-        array $frame, 
-        int $pox, 
+        array $frame,
+        int $pox,
         int $poy
-    ): array
-    {
+    ): array {
         $finder = ["\xa1\xa1\xa1\xa1\xa1", "\xa1\xa0\xa0\xa0\xa1", "\xa1\xa0\xa1\xa0\xa1", "\xa1\xa0\xa0\xa0\xa1", "\xa1\xa1\xa1\xa1\xa1"];
         $yStart = $poy - 2;
         $xStart = $pox - 2;
@@ -268,11 +254,10 @@ abstract class SpecRs
      * @return array frame
      */
     public function putFinderPattern(
-        array $frame, 
-        int $pox, 
+        array $frame,
+        int $pox,
         int $poy
-    ): array
-    {
+    ): array {
         $finder = ["\xc1\xc1\xc1\xc1\xc1\xc1\xc1", "\xc1\xc0\xc0\xc0\xc0\xc0\xc1", "\xc1\xc0\xc1\xc1\xc1\xc0\xc1", "\xc1\xc0\xc1\xc1\xc1\xc0\xc1", "\xc1\xc0\xc1\xc1\xc1\xc0\xc1", "\xc1\xc0\xc0\xc0\xc0\xc0\xc1", "\xc1\xc1\xc1\xc1\xc1\xc1\xc1"];
         for ($ypos = 0; $ypos < 7; ++$ypos) {
             $frame = $this->qrstrset($frame, $pox, ($poy + $ypos), $finder[$ypos]);
@@ -306,11 +291,10 @@ abstract class SpecRs
      * @return array frame
      */
     public function putAlignmentPattern(
-        int $version, 
-        array $frame, 
+        int $version,
+        array $frame,
         int $width
-    ): array
-    {
+    ): array {
         if ($version < 2) {
             return $frame;
         }
@@ -319,7 +303,7 @@ abstract class SpecRs
         if ($dval < 0) {
             $wdt = 2;
         } else {
-            $wdt = (int)(($width - Data::ALIGN_PATTERN[$version][0]) / $dval + 2);
+            $wdt = (int) (($width - Data::ALIGN_PATTERN[$version][0]) / $dval + 2);
         }
 
         if ($wdt * $wdt - 3 == 1) {

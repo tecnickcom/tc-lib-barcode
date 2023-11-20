@@ -16,10 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Mask
  *
@@ -60,16 +56,15 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
          * Version 1 is 21*21 matrix. And 4 modules increases whenever 1 version increases.
          * So version 40 is 177*177 matrix.
          */
-        public int $version, 
+        public int $version,
         /**
          * Error correction level
          */
-        protected int $level, 
-        protected bool $qr_find_from_random = false, 
-        protected bool $qr_find_best_mask = true, 
+        protected int $level,
+        protected bool $qr_find_from_random = false,
+        protected bool $qr_find_best_mask = true,
         protected int $qr_default_mask = 2
-        )
-    {
+    ) {
         $this->spc = new Spec();
     }
 
@@ -83,17 +78,16 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * @return array best mask
      */
     protected function mask(
-        int $width, 
-        array $frame, 
+        int $width,
+        array $frame,
         int $level
-    ): array
-    {
+    ): array {
         $minDemerit = PHP_INT_MAX;
         $bestMask = [];
         $checked_masks = [0, 1, 2, 3, 4, 5, 6, 7];
         if ($this->qr_find_from_random) {
             $howManuOut = (8 - ($this->qr_find_from_random % 9));
-            for ($idx = 0; $idx <  $howManuOut; ++$idx) {
+            for ($idx = 0; $idx < $howManuOut; ++$idx) {
                 $remPos = random_int(0, (count($checked_masks) - 1));
                 unset($checked_masks[$remPos]);
                 $checked_masks = array_values($checked_masks);
@@ -104,10 +98,10 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
         foreach ($checked_masks as $checked_mask) {
             $mask = array_fill(0, $width, str_repeat("\0", $width));
             $demerit = 0;
-            $blacks  = $this->makeMaskNo($checked_mask, $width, $frame, $mask);
+            $blacks = $this->makeMaskNo($checked_mask, $width, $frame, $mask);
             $blacks += $this->writeFormatInformation($width, $mask, $checked_mask, $level);
-            $blacks  = (int)(100 * $blacks / ($width * $width));
-            $demerit = (int)(abs($blacks - 50) / 5) * Data::N4;
+            $blacks = (int) (100 * $blacks / ($width * $width));
+            $demerit = (int) (abs($blacks - 50) / 5) * Data::N4;
             $demerit += $this->evaluateSymbol($width, $mask);
             if ($demerit < $minDemerit) {
                 $minDemerit = $demerit;
@@ -129,12 +123,11 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * @return array mask
      */
     protected function makeMask(
-        int $width, 
-        array $frame, 
-        int $maskNo, 
+        int $width,
+        array $frame,
+        int $maskNo,
         int $level
-    ): array
-    {
+    ): array {
         $this->makeMaskNo($maskNo, $width, $frame, $mask);
         $this->writeFormatInformation($width, $mask, $maskNo, $level);
         return $mask;
@@ -151,15 +144,14 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * @return int blacks
      */
     protected function writeFormatInformation(
-        int $width, 
-        array &$frame, 
-        int $maskNo, 
+        int $width,
+        array &$frame,
+        int $maskNo,
         int $level
-    ): int
-    {
+    ): int {
         $blacks = 0;
         $spec = new Spec();
-        $format =  $spec->getFormatInfo($maskNo, $level);
+        $format = $spec->getFormatInfo($maskNo, $level);
         for ($idx = 0; $idx < 8; ++$idx) {
             if (($format & 1) !== 0) {
                 $blacks += 2;
@@ -248,12 +240,11 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * @return int demerit
      */
     protected function evaluateSymbolB(
-        int $ypos, 
-        int $width, 
-        string $frameY, 
+        int $ypos,
+        int $width,
+        string $frameY,
         string $frameYM
-    ): int
-    {
+    ): int {
         $head = 0;
         $demerit = 0;
         $this->runLength[0] = 1;
@@ -292,7 +283,6 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
     /**
      * Calc N1 N3
      *
-     *
      * @return int demerit
      */
     protected function calcN1N3(int $length): int
@@ -314,12 +304,11 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
     /**
      * Calc N1 N3 delta
      *
-     *
      * @return int demerit delta
      */
     protected function calcN1N3delta(int $length, int $idx): int
     {
-        $fact = (int)($this->runLength[$idx] / 3);
+        $fact = (int) ($this->runLength[$idx] / 3);
         if (
             ($this->runLength[($idx - 2)] == $fact)
             && ($this->runLength[($idx - 1)] == $fact)

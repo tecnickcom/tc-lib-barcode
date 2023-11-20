@@ -16,7 +16,6 @@
 
 namespace Test\Square;
 
-use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**
@@ -124,26 +123,26 @@ class DatamatrixTest extends TestUtil
             . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
             . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\', '0b2921466e097ff9cc1ad63719430540'],
             ['DATAMATRIX', chr(128)
-        . chr(138)
-        . chr(148)
-        . chr(158), '9300000cee5a5f7b3b48145d44aa7fff'],
+            . chr(138)
+            . chr(148)
+            . chr(158), '9300000cee5a5f7b3b48145d44aa7fff'],
             ['DATAMATRIX', '!"£$%^&*()-+_={}[]\'#@~;:/?,.<>|', '4993e149fd20569c8a4f0d758b6dfa76'],
             ['DATAMATRIX', '!"£$', '792181edb48c6722217dc7e2e4cd4095'],
             ['DATAMATRIX', 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\1234567890', '7360a5a6c25476711139ae1244f56c29'],
             ['DATAMATRIX', chr(254)
-    . chr(253)
+            . chr(253)
             . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
             . chr(252)
-    . chr(251), '0f078e5e5735396312245740484fa6d1'],
+            . chr(251), '0f078e5e5735396312245740484fa6d1'],
             ['DATAMATRIX', 'aABCDEFG', 'f074dee3f0f386d9b2f30b1ce4ad08a8'],
             ['DATAMATRIX', '123 45678', '6c2e6503625e408fe9a4e392743f31a8'],
             ['DATAMATRIX', 'DATA MATRIX', '3ba4f4ef8449d795813b353ddcce4d23'],
             ['DATAMATRIX', '123ABCD89', '7ce2f8433b82c16e80f4a4c59cad5d10'],
             ['DATAMATRIX', 'AB/C123-X', '703318e1964c63d5d500d14a821827cd'],
             ['DATAMATRIX', str_pad('', 300, chr(254)
-    . chr(253)
-    . chr(252)
-    . chr(251)), 'e524bb17821d0461f3db6f313d35018f'],
+            . chr(253)
+            . chr(252)
+            . chr(251)), 'e524bb17821d0461f3db6f313d35018f'],
             ['DATAMATRIX', 'ec:b47' . chr(127) . '4#P d*b}gI2#DB|hl{!~[EYH*=cmR{lf'
                 . chr(127) . '=gcGIa.st286. #*"!eG[.Ryr?Kn,1mIyQqC3 6\'3N>', '57fbb9bfb7d542e2e5eadb615e6be549'],
             ['DATAMATRIX', 'eA211101A2raJTGL/r9o93CVk4gtpEvWd2A2Qz8jvPc7l8ybD3m'

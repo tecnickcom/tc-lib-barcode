@@ -17,9 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream;
-use Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMode;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Split
@@ -62,8 +59,7 @@ class Split
          * So version 40 is 177*177 matrix.
          */
         protected int $version
-    )
-    {
+    ) {
     }
 
     /**
@@ -139,7 +135,7 @@ class Split
         if ($mode == Data::ENC_MODES['AN']) {
             $dif = $this->encodingMode->estimateBitsModeNum($pos) + 4 + $lng
                 + $this->encodingMode->estimateBitsModeAn(1)        // + 4 + la
-                - $this->encodingMode->estimateBitsModeAn($pos + 1);// - 4 - la
+                - $this->encodingMode->estimateBitsModeAn($pos + 1); // - 4 - la
             if ($dif > 0) {
                 return $this->eatAn($data);
             }
@@ -158,14 +154,14 @@ class Split
      * eatAn
      *
      * @param string $data Data
-     * 
+     *
      * @return int run
      */
     protected function eatAn(string $data): int
     {
         $lag = $this->encodingMode->getLengthIndicator(Data::ENC_MODES['AN'], $this->version);
         $lng = $this->encodingMode->getLengthIndicator(Data::ENC_MODES['NM'], $this->version);
-        $pos = 1 ;
+        $pos = 1;
         while ($this->encodingMode->isAlphanumericAt($data, $pos)) {
             if ($this->encodingMode->isDigitAt($data, $pos)) {
                 $qix = $pos;
@@ -186,7 +182,7 @@ class Split
             }
         }
 
-        if (!$this->encodingMode->isAlphanumericAt($data, $pos)) {
+        if (! $this->encodingMode->isAlphanumericAt($data, $pos)) {
             $dif = $this->encodingMode->estimateBitsModeAn($pos) + 4 + $lag
                 + $this->encodingMode->estimateBitsMode8(1) // + 4 + l8
                 - $this->encodingMode->estimateBitsMode8($pos + 1); // - 4 - l8
@@ -208,7 +204,7 @@ class Split
      * eatKanji
      *
      * @param string $data Data
-     * 
+     *
      * @return int run
      */
     protected function eatKanji(string $data): int
@@ -231,7 +227,7 @@ class Split
      * eat8
      *
      * @param string $data Data
-     * 
+     *
      * @return int run
      */
     protected function eat8(string $data): int

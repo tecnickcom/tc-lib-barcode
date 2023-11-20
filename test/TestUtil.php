@@ -47,5 +47,4 @@ class TestUtil extends TestCase
     {
         parent::expectException($exception);
     }
-
 }

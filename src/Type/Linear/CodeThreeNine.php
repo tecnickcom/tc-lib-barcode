@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\CodeThreeNine
  *

@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMode
  *
@@ -42,7 +39,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      */
     public function getEncodingMode(string $data, int $pos): int
     {
-        if (!isset($data[$pos])) {
+        if (! isset($data[$pos])) {
             return Data::ENC_MODES['NL'];
         }
 
@@ -85,7 +82,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      */
     public function isDigitAt(string $str, int $pos): bool
     {
-        if (!isset($str[$pos])) {
+        if (! isset($str[$pos])) {
             return false;
         }
 
@@ -100,7 +97,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      */
     public function isAlphanumericAt(string $str, int $pos): bool
     {
-        if (!isset($str[$pos])) {
+        if (! isset($str[$pos])) {
             return false;
         }
 
@@ -117,7 +114,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      */
     protected function appendBitstream(array $bitstream, array $append): array
     {
-        if ((!is_array($append)) || (count($append) == 0)) {
+        if ((! is_array($append)) || (count($append) == 0)) {
             return $bitstream;
         }
 

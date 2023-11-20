@@ -46,7 +46,20 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected const CHBAR = ['0' => '111121', '1' => '211121', '2' => '121121', '3' => '221111', '4' => '112121', '5' => '212111', '6' => '122111', '7' => '111221', '8' => '211211', '9' => '211111', '-' => '112111', 'S' => '112211'];
+    protected const CHBAR = [
+        '0' => '111121',
+        '1' => '211121',
+        '2' => '121121',
+        '3' => '221111',
+        '4' => '112121',
+        '5' => '212111',
+        '6' => '122111',
+        '7' => '111221',
+        '8' => '211211',
+        '9' => '211111',
+        '-' => '112111',
+        'S' => '112211',
+    ];
 
     /**
      * Calculate the checksum.
@@ -122,7 +135,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset($this::CHBAR[$char])) {
+            if (! isset($this::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
 

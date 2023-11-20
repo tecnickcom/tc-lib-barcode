@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Linear\EanFive;
  *
@@ -51,7 +49,18 @@ class EanFive extends \Com\Tecnick\Barcode\Type\Linear\EanTwo
      *
      * @var array<string, array<string>>
      */
-    protected const PARITIES = ['0' => ['B', 'B', 'A', 'A', 'A'], '1' => ['B', 'A', 'B', 'A', 'A'], '2' => ['B', 'A', 'A', 'B', 'A'], '3' => ['B', 'A', 'A', 'A', 'B'], '4' => ['A', 'B', 'B', 'A', 'A'], '5' => ['A', 'A', 'B', 'B', 'A'], '6' => ['A', 'A', 'A', 'B', 'B'], '7' => ['A', 'B', 'A', 'B', 'A'], '8' => ['A', 'B', 'A', 'A', 'B'], '9' => ['A', 'A', 'B', 'A', 'B']];
+    protected const PARITIES = [
+        '0' => ['B', 'B', 'A', 'A', 'A'],
+        '1' => ['B', 'A', 'B', 'A', 'A'],
+        '2' => ['B', 'A', 'A', 'B', 'A'],
+        '3' => ['B', 'A', 'A', 'A', 'B'],
+        '4' => ['A', 'B', 'B', 'A', 'A'],
+        '5' => ['A', 'A', 'B', 'B', 'A'],
+        '6' => ['A', 'A', 'A', 'B', 'B'],
+        '7' => ['A', 'B', 'A', 'B', 'A'],
+        '8' => ['A', 'B', 'A', 'A', 'B'],
+        '9' => ['A', 'A', 'B', 'A', 'B'],
+    ];
 
     /**
      * Calculate checksum

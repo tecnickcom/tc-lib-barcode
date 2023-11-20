@@ -16,7 +16,6 @@
 
 namespace Test\Linear;
 
-use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**
@@ -45,7 +44,6 @@ class CodeNineThreeTest extends TestUtil
         $expected = "101011110100010100101001000101000100101000010100101000100"
             . "1001001001000101010100001000100101000010101001011001001100101010111101\n";
         $this->assertEquals($expected, $grid);
-
 
         $bobj = $barcode->getBarcodeObj('C93', '012345678901234567890123456789');
         $grid = $bobj->getGrid();

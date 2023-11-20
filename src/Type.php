@@ -16,10 +16,10 @@
 
 namespace Com\Tecnick\Barcode;
 
-use Com\Tecnick\Color\Pdf;
-use Com\Tecnick\Color\Model\Rgb;
-use Com\Tecnick\Color\Exception as ColorException;
 use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Color\Exception as ColorException;
+use Com\Tecnick\Color\Model\Rgb;
+use Com\Tecnick\Color\Pdf;
 
 /**
  * Com\Tecnick\Barcode\Type
@@ -94,11 +94,10 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *                        A negative value indicates the number or rows or columns.
      */
     public function setSize(
-        int $width, 
-        int $height, 
+        int $width,
+        int $height,
         array $padding = [0, 0, 0, 0]
-        ): static
-    {
+    ): static {
         $this->width = $width;
         if ($this->width <= 0) {
             $this->width = (abs(min(-1, $this->width)) * $this->ncols);
@@ -127,7 +126,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      */
     protected function setPadding(array $padding): static
     {
-        if (!is_array($padding) || (count($padding) != 4)) {
+        if (! is_array($padding) || (count($padding) != 4)) {
             throw new BarcodeException('Invalid padding, expecting an array of 4 numbers (top, right, bottom, left)');
         }
 
@@ -156,7 +155,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     public function setColor(string $color): static
     {
         $this->color_obj = $this->getRgbColorObject($color);
-        if (!$this->color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
+        if (! $this->color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
             throw new BarcodeException('The foreground color cannot be empty or transparent');
         }
 
@@ -181,7 +180,6 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @param string $color Color in Web notation (color name, or hexadecimal code, or CSS syntax)
      *
-     *
      * @throws ColorException in case of color error
      */
     protected function getRgbColorObject(string $color): ?Rgb
@@ -200,7 +198,25 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      */
     public function getArray(): array
     {
-        return ['type'         => $this::TYPE, 'format'       => $this::FORMAT, 'params'       => $this->params, 'code'         => $this->code, 'extcode'      => $this->extcode, 'ncols'        => $this->ncols, 'nrows'        => $this->nrows, 'width'        => $this->width, 'height'       => $this->height, 'width_ratio'  => $this->width_ratio, 'height_ratio' => $this->height_ratio, 'padding'      => $this->padding, 'full_width'   => ($this->width + $this->padding['L'] + $this->padding['R']), 'full_height'  => ($this->height + $this->padding['T'] + $this->padding['B']), 'color_obj'    => $this->color_obj, 'bg_color_obj' => $this->bg_color_obj, 'bars'         => $this->bars];
+        return [
+            'type' => $this::TYPE,
+            'format' => $this::FORMAT,
+            'params' => $this->params,
+            'code' => $this->code,
+            'extcode' => $this->extcode,
+            'ncols' => $this->ncols,
+            'nrows' => $this->nrows,
+            'width' => $this->width,
+            'height' => $this->height,
+            'width_ratio' => $this->width_ratio,
+            'height_ratio' => $this->height_ratio,
+            'padding' => $this->padding,
+            'full_width' => ($this->width + $this->padding['L'] + $this->padding['R']),
+            'full_height' => ($this->height + $this->padding['T'] + $this->padding['B']),
+            'color_obj' => $this->color_obj,
+            'bg_color_obj' => $this->bg_color_obj,
+            'bars' => $this->bars,
+        ];
     }
 
     /**
@@ -363,14 +379,13 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the barcode as PNG image (requires Imagick library)
      *
-     *
      * @throws BarcodeException if the Imagick library is not installed
      */
     public function getPngDataImagick(): string
     {
         $imagick = new \Imagick();
-        $width = (int)ceil($this->width + $this->padding['L'] + $this->padding['R']);
-        $height = (int)ceil($this->height + $this->padding['T'] + $this->padding['B']);
+        $width = (int) ceil($this->width + $this->padding['L'] + $this->padding['R']);
+        $height = (int) ceil($this->height + $this->padding['T'] + $this->padding['B']);
         $imagick->newImage($width, $height, 'none', 'png');
         $imagickdraw = new \imagickdraw();
         if ($this->bg_color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
@@ -395,15 +410,14 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the barcode as GD image object (requires GD library)
      *
-     *
      * @throws BarcodeException if the GD library is not installed
      */
     public function getGd(): \GdImage
     {
-        $width = (int)ceil($this->width + $this->padding['L'] + $this->padding['R']);
-        $height = (int)ceil($this->height + $this->padding['T'] + $this->padding['B']);
+        $width = (int) ceil($this->width + $this->padding['L'] + $this->padding['R']);
+        $height = (int) ceil($this->height + $this->padding['T'] + $this->padding['B']);
         $img = imagecreate($width, $height);
-        if (!$this->bg_color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
+        if (! $this->bg_color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
             $bgobj = clone $this->color_obj;
             $rgbcolor = $bgobj->invertColor()->getNormalizedArray(255);
             $background_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
@@ -420,10 +434,10 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         foreach ($bars as $bar) {
             imagefilledrectangle(
                 $img,
-                (int)floor($bar[0]),
-                (int)floor($bar[1]),
-                (int)floor($bar[2]),
-                (int)floor($bar[3]),
+                (int) floor($bar[0]),
+                (int) floor($bar[1]),
+                (int) floor($bar[2]),
+                (int) floor($bar[3]),
                 $bar_color
             );
         }
@@ -438,10 +452,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @param string $bar_char   Character or string to use for filling bars
      */
     public function getGrid(
-        string $space_char = '0', 
+        string $space_char = '0',
         string $bar_char = '1'
-    ): string
-    {
+    ): string {
         $raw = $this->getGridArray($space_char, $bar_char);
         $grid = '';
         foreach ($raw as $row) {
@@ -458,8 +471,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      */
     public function getBarsArray(
         string $type = 'XYXY'
-    ): array
-    {
+    ): array {
         $mtd = match ($type) {
             'XYXY' => 'getBarRectXYXY',
             'XYWH' => 'getBarRectXYWH',

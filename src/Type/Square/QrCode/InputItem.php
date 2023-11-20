@@ -17,7 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\InputItem
@@ -54,12 +53,11 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * @return array items
      */
     public function appendNewInputItem(
-        array $items, 
-        int $mode, 
-        int $size, 
+        array $items,
+        int $mode,
+        int $size,
         array $data
-    ): array
-    {
+    ): array {
         $newitem = $this->newInputItem($mode, $size, $data);
         if ($newitem !== []) {
             $items[] = $newitem;
@@ -79,22 +77,26 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * @return array input item
      */
     protected function newInputItem(
-        int $mode, 
-        int $size, 
-        array $data, 
+        int $mode,
+        int $size,
+        array $data,
         array $bstream = []
-    ): array
-    {
+    ): array {
         $setData = array_slice($data, 0, $size);
         if (count($setData) < $size) {
             $setData = array_merge($setData, array_fill(0, ($size - count($setData)), 0));
         }
 
-        if (!$this->check($mode, $size, $setData)) {
+        if (! $this->check($mode, $size, $setData)) {
             throw new BarcodeException('Invalid input item');
         }
 
-        return ['mode'    => $mode, 'size'    => $size, 'data'    => $setData, 'bstream' => $bstream];
+        return [
+            'mode' => $mode,
+            'size' => $size,
+            'data' => $setData,
+            'bstream' => $bstream,
+        ];
     }
 
     /**
@@ -107,11 +109,10 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * @return bool true in case of valid data, false otherwise
      */
     protected function check(
-        int $mode, 
-        int $size, 
+        int $mode,
+        int $size,
         array $data
-    ): bool
-    {
+    ): bool {
         if ($size <= 0) {
             return false;
         }
@@ -129,7 +130,6 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
     /**
      * checkModeNum
      *
-     *
      * @return bool true or false
      */
     protected function checkModeNum(int $size, array $data): bool
@@ -146,7 +146,6 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
     /**
      * checkModeAn
      *
-     *
      * @return bool true or false
      */
     protected function checkModeAn(int $size, array $data): bool
@@ -162,7 +161,6 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
 
     /**
      * checkModeKanji
-     *
      *
      * @return bool true or false
      */

@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode
  *
@@ -49,18 +46,18 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      * Encode ASCII
      */
     public function encodeASCII(
-        array &$cdw, 
-        int &$cdw_num, 
-        int &$pos, 
-        int &$data_length, 
-        string &$data, 
+        array &$cdw,
+        int &$cdw_num,
+        int &$pos,
+        int &$data_length,
+        string &$data,
         int &$enc
-    ): void
-    {
+    ): void {
         if (
             ($data_length > 1)
             && ($pos < ($data_length - 1))
-            && ($this->isCharMode(ord($data[$pos]), Data::ENC_ASCII_NUM)
+            && (
+                $this->isCharMode(ord($data[$pos]), Data::ENC_ASCII_NUM)
                 && $this->isCharMode(ord($data[$pos + 1]), Data::ENC_ASCII_NUM)
             )
         ) {
@@ -99,20 +96,18 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
     /**
      * Encode EDF4
      *
-     *
      * @return bool true to break the loop
      */
     public function encodeEDFfour(
-        int $epos, 
-        array &$cdw, 
-        int &$cdw_num, 
-        int &$pos, 
-        int &$data_length, 
-        int &$field_length, 
-        int &$enc, 
+        int $epos,
+        array &$cdw,
+        int &$cdw_num,
+        int &$pos,
+        int &$data_length,
+        int &$field_length,
+        int &$enc,
         array &$temp_cw
-    ): bool
-    {
+    ): bool {
         if (($epos === $data_length)) {
             $enc = Data::ENC_ASCII;
             $params = Data::getPaddingSize($this->shape, ($cdw_num + $field_length));
@@ -168,15 +163,14 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      * Encode EDF
      */
     public function encodeEDF(
-        array &$cdw, 
-        int &$cdw_num, 
-        int &$pos, 
-        int &$data_length, 
-        int &$field_length, 
-        string &$data, 
+        array &$cdw,
+        int &$cdw_num,
+        int &$pos,
+        int &$data_length,
+        int &$field_length,
+        string &$data,
         int &$enc
-    ): void
-    {
+    ): void {
         // initialize temporary array with 0 length
         $temp_cw = [];
         $epos = $pos;
@@ -192,7 +186,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
 
             if (
                 (($field_length == 4)
-                || ($epos == $data_length) || !$this->isCharMode($chr, Data::ENC_EDF)) && $this->encodeEDFfour($epos, $cdw, $cdw_num, $pos, $data_length, $field_length, $enc, $temp_cw)
+                || ($epos == $data_length) || ! $this->isCharMode($chr, Data::ENC_EDF)) && $this->encodeEDFfour($epos, $cdw, $cdw_num, $pos, $data_length, $field_length, $enc, $temp_cw)
             ) {
                 break;
             }
@@ -203,15 +197,14 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
      * Encode Base256
      */
     public function encodeBase256(
-        array &$cdw, 
-        int &$cdw_num, 
-        int &$pos, 
-        int &$data_length, 
-        int &$field_length, 
-        string &$data, 
+        array &$cdw,
+        int &$cdw_num,
+        int &$pos,
+        int &$data_length,
+        int &$field_length,
+        string &$data,
         int &$enc
-    ): void
-    {
+    ): void {
         // initialize temporary array with 0 length
         $temp_cw = [];
         $field_length = 0;
@@ -236,7 +229,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
             $cdw[] = $this->get255StateCodeword($field_length, ($cdw_num + 1));
             ++$cdw_num;
         } else {
-            $cdw[] = $this->get255StateCodeword(((int)floor($field_length / 250) + 249), ($cdw_num + 1));
+            $cdw[] = $this->get255StateCodeword(((int) floor($field_length / 250) + 249), ($cdw_num + 1));
             $cdw[] = $this->get255StateCodeword(($field_length % 250), ($cdw_num + 2));
             $cdw_num += 2;
         }

@@ -16,7 +16,6 @@
 
 namespace Test\Square;
 
-use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**

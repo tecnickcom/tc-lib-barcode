@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Raw
  *

@@ -191,7 +191,6 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @param string $routing_code the routing code
      *
-     *
      * @throws BarcodeException in case of error
      */
     protected function getRoutingCode(string $routing_code): string
@@ -208,7 +207,6 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
 
     /**
      * Get the processed array of characters
-     *
      *
      * @throws BarcodeException in case of error
      */
@@ -268,7 +266,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
 
             if (($fcs & $bitmask) > 0) {
                 // bitwise invert
-                $chrcode = ((~(int)$chrcode) & 8191);
+                $chrcode = ((~(int) $chrcode) & 8191);
             }
 
             $characters[] = $chrcode;

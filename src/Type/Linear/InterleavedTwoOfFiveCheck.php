@@ -46,7 +46,20 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
      *
      * @var array<string, string>
      */
-    protected const CHBAR= ['0' => '11221', '1' => '21112', '2' => '12112', '3' => '22111', '4' => '11212', '5' => '21211', '6' => '12211', '7' => '11122', '8' => '21121', '9' => '12121', 'A' => '11', 'Z' => '21'];
+    protected const CHBAR = [
+        '0' => '11221',
+        '1' => '21112',
+        '2' => '12112',
+        '3' => '22111',
+        '4' => '11212',
+        '5' => '21211',
+        '6' => '12211',
+        '7' => '11122',
+        '8' => '21121',
+        '9' => '12121',
+        'A' => '11',
+        'Z' => '21',
+    ];
 
     /**
      * Format code
@@ -78,7 +91,7 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
         for ($idx = 0; $idx < $clen; $idx += 2) {
             $char_bar = $this->extcode[$idx];
             $char_space = $this->extcode[($idx + 1)];
-            if ((!isset($this::CHBAR[$char_bar])) || (!isset($this::CHBAR[$char_space]))) {
+            if ((! isset($this::CHBAR[$char_bar])) || (! isset($this::CHBAR[$char_space]))) {
                 throw new BarcodeException('Invalid character sequence: ' . $char_bar . $char_space);
             }
 

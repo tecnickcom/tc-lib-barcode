@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
  *
@@ -89,11 +87,11 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
     {
         $map = [
             //Data::ENC_ASCII     => 'isASCIIMode',
-            Data::ENC_C40       => 'isC40Mode',
-            Data::ENC_TXT       => 'isTXTMode',
-            Data::ENC_X12       => 'isX12Mode',
-            Data::ENC_EDF       => 'isEDFMode',
-            Data::ENC_BASE256   => 'isBASE256Mode',
+            Data::ENC_C40 => 'isC40Mode',
+            Data::ENC_TXT => 'isTXTMode',
+            Data::ENC_X12 => 'isX12Mode',
+            Data::ENC_EDF => 'isEDFMode',
+            Data::ENC_BASE256 => 'isBASE256Mode',
             Data::ENC_ASCII_EXT => 'isASCIIEXTMode',
             Data::ENC_ASCII_NUM => 'isASCIINUMMode',
         ];
@@ -210,7 +208,14 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      */
     protected function getSwitchEncodingCodeword(int $mode): int
     {
-        $map = [Data::ENC_ASCII   => 254, Data::ENC_C40     => 230, Data::ENC_TXT     => 239, Data::ENC_X12     => 238, Data::ENC_EDF     => 240, Data::ENC_BASE256 => 231];
+        $map = [
+            Data::ENC_ASCII => 254,
+            Data::ENC_C40 => 230,
+            Data::ENC_TXT => 239,
+            Data::ENC_X12 => 238,
+            Data::ENC_EDF => 240,
+            Data::ENC_BASE256 => 231,
+        ];
         $cdw = $map[$mode];
         if ($cdw != 254) {
             return $cdw;

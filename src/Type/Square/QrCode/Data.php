@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Data
  *
@@ -114,7 +112,14 @@ class Data
      * KJ : Encoding mode KANJI. A KANJI character (multibyte character) is encoded to 13bit length.
      * ST : Encoding mode STRUCTURED
      */
-    public const ENC_MODES = ['NL' => -1, 'NM' => 0, 'AN' => 1, '8B' => 2, 'KJ' => 3, 'ST' => 4];
+    public const ENC_MODES = [
+        'NL' => -1,
+        'NM' => 0,
+        'AN' => 1,
+        '8B' => 2,
+        'KJ' => 3,
+        'ST' => 4,
+    ];
 
     /**
      * Array of valid error correction levels
@@ -125,7 +130,12 @@ class Data
      * Q : About 25% or less errors can be corrected.
      * H : About 30% or less errors can be corrected.
      */
-    public const ECC_LEVELS = ['L' => 0, 'M' => 1, 'Q' => 2, 'H' => 3];
+    public const ECC_LEVELS = [
+        'L' => 0,
+        'M' => 1,
+        'Q' => 2,
+        'H' => 3,
+    ];
 
     /**
      * Alphabet-numeric conversion table.

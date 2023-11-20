@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Encode
  *
@@ -35,12 +32,11 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     /**
      * encode Mode Num
      *
-     *
      * @return array input item
      */
     protected function encodeModeNum(array $inputitem, int $version): array
     {
-        $words = (int)($inputitem['size'] / 3);
+        $words = (int) ($inputitem['size'] / 3);
         $inputitem['bstream'] = [];
         $val = 0x1;
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $val);
@@ -50,7 +46,7 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $inputitem['size']
         );
         for ($i = 0; $i < $words; ++$i) {
-            $val  = (ord($inputitem['data'][$i * 3  ]) - ord('0')) * 100;
+            $val = (ord($inputitem['data'][$i * 3]) - ord('0')) * 100;
             $val += (ord($inputitem['data'][$i * 3 + 1]) - ord('0')) * 10;
             $val += (ord($inputitem['data'][$i * 3 + 2]) - ord('0'));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 10, $val);
@@ -60,7 +56,7 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $val = ord($inputitem['data'][$words * 3]) - ord('0');
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $val);
         } elseif (($inputitem['size'] - ($words * 3)) == 2) {
-            $val  = (ord($inputitem['data'][$words * 3  ]) - ord('0')) * 10;
+            $val = (ord($inputitem['data'][$words * 3]) - ord('0')) * 10;
             $val += (ord($inputitem['data'][$words * 3 + 1]) - ord('0'));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 7, $val);
         }
@@ -71,12 +67,11 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     /**
      * encode Mode An
      *
-     *
      * @return array input item
      */
     protected function encodeModeAn(array $inputitem, int $version): array
     {
-        $words = (int)($inputitem['size'] / 2);
+        $words = (int) ($inputitem['size'] / 2);
         $inputitem['bstream'] = [];
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x02);
         $inputitem['bstream'] = $this->appendNum(
@@ -85,7 +80,7 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $inputitem['size']
         );
         for ($idx = 0; $idx < $words; ++$idx) {
-            $val  = $this->lookAnTable(ord($inputitem['data'][($idx * 2)])) * 45;
+            $val = $this->lookAnTable(ord($inputitem['data'][($idx * 2)])) * 45;
             $val += $this->lookAnTable(ord($inputitem['data'][($idx * 2) + 1]));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 11, $val);
         }
@@ -100,7 +95,6 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
 
     /**
      * encode Mode 8
-     *
      *
      * @return array input item
      */
@@ -123,7 +117,6 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     /**
      * encode Mode Kanji
      *
-     *
      * @return array input item
      */
     protected function encodeModeKanji(array $inputitem, int $version): array
@@ -133,7 +126,7 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
         $inputitem['bstream'] = $this->appendNum(
             $inputitem['bstream'],
             $this->getLengthIndicator(Data::ENC_MODES['KJ'], $version),
-            (int)($inputitem['size'] / 2)
+            (int) ($inputitem['size'] / 2)
         );
         for ($idx = 0; $idx < $inputitem['size']; $idx += 2) {
             $val = (ord($inputitem['data'][$idx]) << 8) | ord($inputitem['data'][($idx + 1)]);
@@ -152,7 +145,6 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
 
     /**
      * encode Mode Structure
-     *
      *
      * @return array input item
      */

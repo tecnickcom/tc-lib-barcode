@@ -16,7 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type;
 
-use Com\Tecnick\Barcode\Type\Raw;
 use Com\Tecnick\Color\Model\Rgb as Color;
 
 /**
@@ -95,7 +94,12 @@ abstract class Convert
      *
      * @var array{'T': int, 'R': int, 'B': int, 'L': int}
      */
-    protected array $padding = ['T' => 0, 'R' => 0, 'B' => 0, 'L' => 0];
+    protected array $padding = [
+        'T' => 0,
+        'R' => 0,
+        'B' => 0,
+        'L' => 0,
+    ];
 
     /**
      * Ratio between the barcode width and the number of rows
@@ -105,7 +109,7 @@ abstract class Convert
     /**
      * Ratio between the barcode height and the number of columns
      */
-    protected float $height_ratio =  0;
+    protected float $height_ratio = 0;
 
     /**
      * Foreground Color object
@@ -146,7 +150,7 @@ abstract class Convert
 
         $hex = [];
         while ($number > 0) {
-            $hex[] = strtoupper(dechex((int)bcmod($number, '16')));
+            $hex[] = strtoupper(dechex((int) bcmod($number, '16')));
             $number = bcdiv($number, '16', 0);
         }
 
@@ -161,13 +165,13 @@ abstract class Convert
      *
      * @return string hexadecimal representation
      */
-    protected function convertHexToDec(string  $hex): string
+    protected function convertHexToDec(string $hex): string
     {
         $dec = '0';
         $bitval = '1';
         $len = strlen($hex);
         for ($pos = ($len - 1); $pos >= 0; --$pos) {
-            $dec = bcadd($dec, bcmul((string)hexdec($hex[$pos]), $bitval));
+            $dec = bcadd($dec, bcmul((string) hexdec($hex[$pos]), $bitval));
             $bitval = bcmul($bitval, '16');
         }
 
@@ -181,10 +185,9 @@ abstract class Convert
      * @param string $bar_char   Character or string to use for filling bars
      */
     public function getGridArray(
-        string $space_char = '0', 
+        string $space_char = '0',
         string $bar_char = '1'
-    ): array
-    {
+    ): array {
         $raw = array_fill(0, $this->nrows, array_fill(0, $this->ncols, $space_char));
         foreach ($this->bars as $bar) {
             if ($bar[2] <= 0) {
@@ -211,7 +214,9 @@ abstract class Convert
     protected function getRotatedBarArray(): array
     {
         $grid = $this->getGridArray();
-        $cols = array_map(...[-1 => null] + $grid);
+        $cols = array_map(...[
+            -1 => null,
+        ] + $grid);
         $bars = [];
         foreach ($cols as $posx => $col) {
             $prevrow = '';

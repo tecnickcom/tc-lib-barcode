@@ -46,7 +46,18 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected const CHBAR = ['0' => '22111', '1' => '11122', '2' => '11212', '3' => '11221', '4' => '12112', '5' => '12121', '6' => '12211', '7' => '21112', '8' => '21121', '9' => '21211'];
+    protected const CHBAR = [
+        '0' => '22111',
+        '1' => '11122',
+        '2' => '11212',
+        '3' => '11221',
+        '4' => '12112',
+        '5' => '12121',
+        '6' => '12211',
+        '7' => '21112',
+        '8' => '21121',
+        '9' => '21211',
+    ];
 
     /**
      * Calculate the checksum.
@@ -97,7 +108,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols += 2;
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset($this::CHBAR[$char])) {
+            if (! isset($this::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
 

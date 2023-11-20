@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Aztec;
 
-use Com\Tecnick\Barcode\Type\Square\Aztec\Data;
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Aztec\Layers
  *
@@ -110,7 +107,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
         $nsbits = 0;
         $eccbits = (11 + (int) (($this->totbits * $ecc) / 100));
         do {
-            if (!$this->setLayerByBits(($this->totbits + $nsbits + $eccbits), $mode)) {
+            if (! $this->setLayerByBits(($this->totbits + $nsbits + $eccbits), $mode)) {
                 return false;
             }
 

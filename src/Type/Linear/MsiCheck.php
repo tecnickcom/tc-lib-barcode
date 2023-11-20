@@ -46,7 +46,24 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var array<string, string>
      */
-    protected const CHBAR = ['0' => '100100100100', '1' => '100100100110', '2' => '100100110100', '3' => '100100110110', '4' => '100110100100', '5' => '100110100110', '6' => '100110110100', '7' => '100110110110', '8' => '110100100100', '9' => '110100100110', 'A' => '110100110100', 'B' => '110100110110', 'C' => '110110100100', 'D' => '110110100110', 'E' => '110110110100', 'F' => '110110110110'];
+    protected const CHBAR = [
+        '0' => '100100100100',
+        '1' => '100100100110',
+        '2' => '100100110100',
+        '3' => '100100110110',
+        '4' => '100110100100',
+        '5' => '100110100110',
+        '6' => '100110110100',
+        '7' => '100110110110',
+        '8' => '110100100100',
+        '9' => '110100100110',
+        'A' => '110100110100',
+        'B' => '110100110110',
+        'C' => '110110100100',
+        'D' => '110110100110',
+        'E' => '110110110100',
+        'F' => '110110110110',
+    ];
 
     /**
      * Calculate the checksum
@@ -62,7 +79,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         $check = 0;
         for ($pos = ($clen - 1); $pos >= 0; --$pos) {
             $hex = $code[$pos];
-            if (!ctype_xdigit($hex)) {
+            if (! ctype_xdigit($hex)) {
                 continue;
             }
 
@@ -101,7 +118,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = strlen($this->extcode);
         for ($pos = 0; $pos < $clen; ++$pos) {
             $digit = $this->extcode[$pos];
-            if (!isset($this::CHBAR[$digit])) {
+            if (! isset($this::CHBAR[$digit])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
 

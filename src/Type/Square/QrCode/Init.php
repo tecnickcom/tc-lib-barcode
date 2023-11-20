@@ -17,8 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Init
@@ -52,6 +50,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      * Reed-Solomon blocks
      */
     protected array $rsblocks = []; //of RSblock
+
     /**
      * Counter
      */
@@ -144,16 +143,15 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      * Internal loop for init
      */
     protected function initLoop(
-        int $endfor, 
-        int $dlv, 
-        int $elv, 
-        array $rsv, 
-        int &$eccPos, 
-        int &$blockNo, 
-        int &$dataPos, 
+        int $endfor,
+        int $dlv,
+        int $elv,
+        array $rsv,
+        int &$eccPos,
+        int &$blockNo,
+        int &$dataPos,
         array &$ecc
-    ): void
-    {
+    ): void {
         for ($idx = 0; $idx < $endfor; ++$idx) {
             $ecc = array_slice($this->ecccode, $eccPos);
             $this->rsblocks[$blockNo] = [];
@@ -194,14 +192,13 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *          gfpoly.
      */
     protected function initRs(
-        int $symsize, 
-        int $gfpoly, 
-        int $fcr, 
-        int $prim, 
-        int $nroots, 
+        int $symsize,
+        int $gfpoly,
+        int $fcr,
+        int $prim,
+        int $nroots,
         int $pad
-    ): array
-    {
+    ): array {
         foreach ($this->rsitems as $rsv) {
             if ($rsv['pad'] != $pad) {
                 continue;
@@ -324,14 +321,13 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *          gfpoly.
      */
     protected function initRsChar(
-        int $symsize, 
-        int $gfpoly, 
-        int $fcr, 
-        int $prim, 
-        int $nroots, 
+        int $symsize,
+        int $gfpoly,
+        int $fcr,
+        int $prim,
+        int $nroots,
         int $pad
-    ): array
-    {
+    ): array {
         $this->checkRsCharParamsA($symsize, $fcr, $prim);
         $this->checkRsCharParamsB($symsize, $nroots, $pad);
         $rsv = [];
@@ -341,8 +337,8 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         $rsv['alpha_to'] = array_fill(0, ($rsv['nn'] + 1), 0);
         $rsv['index_of'] = array_fill(0, ($rsv['nn'] + 1), 0);
         // PHP style macro replacement
-        $nnv =& $rsv['nn'];
-        $azv =& $nnv;
+        $nnv = &$rsv['nn'];
+        $azv = &$nnv;
         // Generate Galois field lookup tables
         $rsv['index_of'][0] = $azv; // log(zero) = -inf
         $rsv['alpha_to'][$azv] = 0; // alpha**-inf = 0
@@ -373,7 +369,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
             ; // intentional empty-body loop!
         }
 
-        $rsv['iprim'] = (int)($iprim / $prim);
+        $rsv['iprim'] = (int) ($iprim / $prim);
         $rsv['genpoly'][0] = 1;
         for ($idx = 0, $root = ($fcr * $prim); $idx < $nroots; ++$idx, $root += $prim) {
             $rsv['genpoly'][($idx + 1)] = 1;
@@ -409,27 +405,26 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      * @return array Parity array
      */
     protected function encodeRsChar(
-        array $rsv, 
-        array $data, 
+        array $rsv,
+        array $data,
         array $parity
-    ): array
-    {
+    ): array {
         // the total number of symbols in a RS block
-        $nnv =& $rsv['nn'];
+        $nnv = &$rsv['nn'];
         // the address of an array of NN elements to convert Galois field elements
         // in index (log) form to polynomial form
-        $alphato =& $rsv['alpha_to'];
+        $alphato = &$rsv['alpha_to'];
         // the address of an array of NN elements to convert Galois field elements
         // in polynomial form to index (log) form
-        $indexof =& $rsv['index_of'];
+        $indexof = &$rsv['index_of'];
         // an array of NROOTS+1 elements containing the generator polynomial in index form
-        $genpoly =& $rsv['genpoly'];
+        $genpoly = &$rsv['genpoly'];
         // the number of roots in the RS code generator polynomial,
         // which is the same as the number of parity symbols in a block
-        $nroots =& $rsv['nroots'];
+        $nroots = &$rsv['nroots'];
         // the number of pad symbols in a block
-        $pad =& $rsv['pad'];
-        $azv =& $nnv;
+        $pad = &$rsv['pad'];
+        $azv = &$nnv;
         $parity = array_fill(0, $nroots, 0);
         for ($idx = 0; $idx < ($nnv - $nroots - $pad); ++$idx) {
             $feedback = $indexof[$data[$idx] ^ $parity[0]];

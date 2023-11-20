@@ -93,7 +93,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         parent::setParameters();
 
         // aspect ratio
-        if (!empty($this->params[0]) && (($aspectratio = (float) $this->params[0]) >= 1)) {
+        if (! empty($this->params[0]) && (($aspectratio = (float) $this->params[0]) >= 1)) {
             $this->aspectratio = $aspectratio;
         }
 
@@ -136,7 +136,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      */
     protected function setBars(): void
     {
-        if (strlen((string)$this->code) == 0) {
+        if (strlen((string) $this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
 
@@ -199,15 +199,13 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      * @param int $cols number of columns
      * @param int $ecl eroor correction level
      *
-     *
      * @throws BarcodeException in case of error
      */
     public function getCodewords(
-        int &$rows, 
-        int &$cols, 
+        int &$rows,
+        int &$cols,
         int &$ecl
-    ): array
-    {
+    ): array {
         $codewords = []; // array of code-words
         // get the input sequence array
         $sequence = $this->getInputSequences($this->code);

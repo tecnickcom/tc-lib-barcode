@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Sequence
  *

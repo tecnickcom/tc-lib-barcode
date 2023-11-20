@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
  *
@@ -83,8 +80,6 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
 
     /**
      * Step K
-     *
-     *
      */
     protected function stepK(array $numch): int
     {
@@ -238,17 +233,15 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step R-f
      *
-     *
      * @return int   Encoding mode
      */
     protected function stepRf(
-        array $numch, 
-        int $pos, 
-        int $data_length, 
-        int $charscount, 
+        array $numch,
+        int $pos,
+        int $data_length,
+        int $charscount,
         string $data
-    ): int
-    {
+    ): int {
         if (
             ($numch[Data::ENC_C40] + 1) < min(
                 $numch[Data::ENC_ASCII],
@@ -287,13 +280,12 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      * Step R
      */
     protected function stepR(
-        array $numch, 
-        int $pos, 
-        int $data_length, 
-        int $charscount, 
+        array $numch,
+        int $pos,
+        int $data_length,
+        int $charscount,
         string $data
-    ): int
-    {
+    ): int {
         if (
             ($numch[Data::ENC_ASCII] + 1) <= min(
                 $numch[Data::ENC_C40],

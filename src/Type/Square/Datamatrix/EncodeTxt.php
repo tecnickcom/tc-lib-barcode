@@ -17,7 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Encodetxt
@@ -40,11 +39,10 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      */
     public function encodeTXTC40shift(
         int &$chr,
-        int &$enc, 
-        array &$temp_cw, 
+        int &$enc,
+        array &$temp_cw,
         int &$ptr
-    ): void
-    {
+    ): void {
         if (array_key_exists($chr, Data::CHSET['SH1'])) {
             $temp_cw[] = 0; // shift 1
             $shiftset = Data::CHSET['SH1'];
@@ -68,18 +66,16 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
     /**
      * Encode TXTC40
      *
-     *
      * @return int   Curent character code
      */
     public function encodeTXTC40(
-        string &$data, 
-        int &$enc, 
-        array  &$temp_cw, 
-        int &$ptr, 
-        int &$epos, 
-        array  &$charset
-    ): int
-    {
+        string &$data,
+        int &$enc,
+        array &$temp_cw,
+        int &$ptr,
+        int &$epos,
+        array &$charset
+    ): int {
         // 2. process the next character in C40 encodation.
         $chr = ord($data[$epos]);
         ++$epos;
@@ -111,15 +107,14 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * before the start of the error correction codewords.
      */
     public function encodeTXTC40last(
-        int $chr, 
-        array &$cdw, 
-        int &$cdw_num, 
-        int &$enc, 
-        array &$temp_cw, 
-        int &$ptr, 
+        int $chr,
+        array &$cdw,
+        int &$cdw_num,
+        int &$enc,
+        array &$temp_cw,
+        int &$ptr,
         int &$epos
-    ): void
-    {
+    ): void {
         // get remaining number of data symbols
         $cdwr = ($this->getMaxDataCodewords($cdw_num + $ptr) - $cdw_num);
         if (($cdwr == 1) && ($ptr == 1)) {
@@ -162,14 +157,13 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * Encode TXT
      */
     public function encodeTXT(
-        array &$cdw, 
-        int &$cdw_num, 
-        int &$pos, 
-        int &$data_length, 
-        string &$data, 
+        array &$cdw,
+        int &$cdw_num,
+        int &$pos,
+        int &$data_length,
+        string &$data,
         int &$enc
-    ): void
-    {
+    ): void {
         $temp_cw = [];
         $ptr = 0;
         $epos = $pos;

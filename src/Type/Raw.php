@@ -74,7 +74,7 @@ class Raw extends \Com\Tecnick\Barcode\Type
 
         $this->bars = [];
         foreach ($rows as $posy => $row) {
-            if (!is_array($row)) {
+            if (! is_array($row)) {
                 $row = str_split($row, 1);
             }
 

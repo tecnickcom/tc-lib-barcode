@@ -17,8 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Encoder
@@ -145,7 +143,10 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
         do {
             if ($this->bit == -1) {
                 $this->bit = 0;
-                return ['x' => $this->xpos, 'y' => $this->ypos];
+                return [
+                    'x' => $this->xpos,
+                    'y' => $this->ypos,
+                ];
             }
 
             $xpos = $this->xpos;
@@ -160,7 +161,10 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
             $this->ypos = $ypos;
         } while (ord($this->frame[$ypos][$xpos]) & 0x80);
 
-        return ['x' => $xpos, 'y' => $ypos];
+        return [
+            'x' => $xpos,
+            'y' => $ypos,
+        ];
     }
 
     /**

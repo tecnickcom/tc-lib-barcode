@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Aztec;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Aztec\ErrorCorrection
  *
@@ -37,11 +35,11 @@ class ErrorCorrection
      * Galois Field primitive by word size.
      */
     protected const GF = [
-        4 =>   19,
+        4 => 19,
         //         10011  GF(16)   (x^4 + x + 1)                 Mode message
-        6 =>   67,
+        6 => 67,
         //       1000011  GF(64)   (x^6 + x + 1)                 01–02 layers
-        8 =>  301,
+        8 => 301,
         //     100101101  GF(256)  (x^8 + x^5 + x^3 + x^2 + 1)   03–08 layers
         10 => 1033,
         //   10000001001  GF(1024) (x^10 + x^3 + 1)              09–22 layers
@@ -52,7 +50,13 @@ class ErrorCorrection
      * Map the log and exp (inverse log) tables by word size.
      * NOTE: It is equal to 2^word_size.
      */
-    protected const TSIZE = [4 =>   16, 6 =>   64, 8 =>  256, 10 => 1024, 12 => 4096];
+    protected const TSIZE = [
+        4 => 16,
+        6 => 64,
+        8 => 256,
+        10 => 1024,
+        12 => 4096,
+    ];
 
     /**
      * Log table.

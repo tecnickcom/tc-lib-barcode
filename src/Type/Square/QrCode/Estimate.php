@@ -17,7 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Estimate
@@ -50,7 +49,6 @@ abstract class Estimate
      */
     protected int $level = 0;
 
-
     /**
      * Return the size of length indicator for the mode and version
      *
@@ -79,12 +77,11 @@ abstract class Estimate
     /**
      * estimateBitsModeNum
      *
-     *
      * @return int number of bits
      */
     public function estimateBitsModeNum(int $size): int
     {
-        $wdt = (int)($size / 3);
+        $wdt = (int) ($size / 3);
         $bits = ($wdt * 10);
         match ($size - ($wdt * 3)) {
             1 => $bits += 4,
@@ -97,12 +94,11 @@ abstract class Estimate
     /**
      * estimateBitsModeAn
      *
-     *
      * @return int number of bits
      */
     public function estimateBitsModeAn(int $size): int
     {
-        $bits = (int)($size * 5.5); // (size / 2 ) * 11
+        $bits = (int) ($size * 5.5); // (size / 2 ) * 11
         if (($size & 1) !== 0) {
             $bits += 6;
         }
@@ -112,7 +108,6 @@ abstract class Estimate
 
     /**
      * estimateBitsMode8
-     *
      *
      * @return int number of bits
      */
@@ -124,17 +119,15 @@ abstract class Estimate
     /**
      * estimateBitsModeKanji
      *
-     *
      * @return int number of bits
      */
     public function estimateBitsModeKanji(int $size): int
     {
-        return (int)($size * 6.5); // (size / 2 ) * 13
+        return (int) ($size * 6.5); // (size / 2 ) * 13
     }
 
     /**
      * Estimate version
-     *
      *
      * @return int version
      */
@@ -145,7 +138,7 @@ abstract class Estimate
         do {
             $prev = $version;
             $bits = $this->estimateBitStreamSize($items, $prev);
-            $version = $this->getMinimumVersion((int)(($bits + 7) / 8), $level);
+            $version = $this->getMinimumVersion((int) (($bits + 7) / 8), $level);
             if ($version < 0) {
                 return -1;
             }
@@ -181,7 +174,6 @@ abstract class Estimate
     /**
      * estimateBitStreamSize
      *
-     *
      * @return int bits
      */
     protected function estimateBitStreamSize(array $items, int $version): int
@@ -213,7 +205,7 @@ abstract class Estimate
 
             $len = $this->getLengthIndicator($item['mode'], $version);
             $mod = 1 << $len;
-            $num = (int)(($item['size'] + $mod - 1) / $mod);
+            $num = (int) (($item['size'] + $mod - 1) / $mod);
             $bits += $num * (4 + $len);
         }
 

@@ -83,7 +83,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
 
         // mode
-        if (!isset($this->params[1])) {
+        if (! isset($this->params[1])) {
             return;
         }
 
@@ -135,7 +135,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function getCodewords(): array
     {
-        if (strlen((string)$this->code) == 0) {
+        if (strlen((string) $this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
 
@@ -164,16 +164,15 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      * Set the grid
      */
     protected function setGrid(
-        int &$idx, 
-        array &$places, 
-        int &$row, 
-        int &$col, 
-        int &$rdx, 
-        int &$cdx, 
-        int &$rdri, 
+        int &$idx,
+        array &$places,
+        int &$row,
+        int &$col,
+        int &$rdx,
+        int &$cdx,
+        int &$rdri,
         int &$rdci
-        ): void
-    {
+    ): void {
         // braw bits by case
         if ($rdx == 0) {
             // top finder pattern
@@ -284,13 +283,11 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         for ($hr = 0; $hr < $params[8]; ++$hr) {
             // for each row on region
             for ($rdx = 0; $rdx < $params[4]; ++$rdx) {
-                // get row
                 $row = (($hr * $params[4]) + $rdx);
                 // for each vertical region
                 for ($vr = 0; $vr < $params[9]; ++$vr) {
                     // for each column on region
                     for ($cdx = 0; $cdx < $params[5]; ++$cdx) {
-                        // get column
                         $col = (($vr * $params[5]) + $cdx);
                         $this->setGrid($idx, $places, $row, $col, $rdx, $cdx, $rdri, $rdci);
                     }

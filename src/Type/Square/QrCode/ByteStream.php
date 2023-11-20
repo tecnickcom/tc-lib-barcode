@@ -17,9 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Estimate;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream
@@ -78,8 +75,8 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
             return [];
         }
 
-        $data = array_fill(0, (int)(($size + 7) / 8), 0);
-        $bytes = (int)($size / 8);
+        $data = array_fill(0, (int) (($size + 7) / 8), 0);
+        $bytes = (int) ($size / 8);
         $pos = 0;
         for ($idx = 0; $idx < $bytes; ++$idx) {
             $val = 0;
@@ -146,7 +143,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
                 throw new BarcodeException('Negative Bits value');
             }
 
-            $ver = $this->getMinimumVersion((int)(($bits + 7) / 8), $this->level);
+            $ver = $this->getMinimumVersion((int) (($bits + 7) / 8), $this->level);
             if ($ver > $this->version) {
                 $this->version = $ver;
             } else {
@@ -159,7 +156,6 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
 
     /**
      * Create BitStream
-     *
      *
      * @return array of items and total bits
      */
@@ -177,7 +173,6 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
 
     /**
      * Encode BitStream
-     *
      *
      * @return array input item
      */
@@ -247,7 +242,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
         }
 
         $bits += 4;
-        $words = (int)(($bits + 7) / 8);
+        $words = (int) (($bits + 7) / 8);
         $padding = [];
         $padding = $this->appendNum($padding, $words * 8 - $bits + 4, 0);
 

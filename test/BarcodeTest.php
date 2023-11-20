@@ -16,8 +16,6 @@
 
 namespace Test;
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Barcode class test
  *
@@ -148,7 +146,12 @@ class BarcodeTest extends TestUtil
         $this->assertEquals(4, $barr['height']);
         $this->assertEquals(2, $barr['width_ratio']);
         $this->assertEquals(2, $barr['height_ratio']);
-        $this->assertEquals(['T' => 4, 'R' => 3, 'B' => 0, 'L' => 1], $barr['padding']);
+        $this->assertEquals([
+            'T' => 4,
+            'R' => 3,
+            'B' => 0,
+            'L' => 1,
+        ], $barr['padding']);
         $this->assertEquals(44, $barr['full_width']);
         $this->assertEquals(8, $barr['full_height']);
 

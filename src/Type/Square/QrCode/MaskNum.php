@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
  *
@@ -43,19 +40,18 @@ abstract class MaskNum
      * @return int mask number
      */
     protected function makeMaskNo(
-        int $maskNo, 
-        int $width, 
-        array $frame, 
+        int $maskNo,
+        int $width,
+        array $frame,
         array &$mask
-    ): int
-    {
+    ): int {
         $bnum = 0;
         $bitMask = $this->generateMaskNo($maskNo, $width, $frame);
         $mask = $frame;
         for ($ypos = 0; $ypos < $width; ++$ypos) {
             for ($xpos = 0; $xpos < $width; ++$xpos) {
                 if ($bitMask[$ypos][$xpos] == 1) {
-                    $mask[$ypos][$xpos] = chr(ord($frame[$ypos][$xpos]) ^ ((int)($bitMask[$ypos][$xpos])));
+                    $mask[$ypos][$xpos] = chr(ord($frame[$ypos][$xpos]) ^ ((int) ($bitMask[$ypos][$xpos])));
                 }
 
                 $bnum += ord($mask[$ypos][$xpos]) & 1;
@@ -76,10 +72,9 @@ abstract class MaskNum
      */
     protected function generateMaskNo(
         int $maskNo,
-        int $width, 
+        int $width,
         array $frame
-    ): array
-    {
+    ): array {
         $bitMask = array_fill(0, $width, array_fill(0, $width, 0));
         for ($ypos = 0; $ypos < $width; ++$ypos) {
             for ($xpos = 0; $xpos < $width; ++$xpos) {
@@ -157,7 +152,7 @@ abstract class MaskNum
      */
     protected function mask4(int $xpos, int $ypos): int
     {
-        return ((((int)($ypos / 2)) + ((int)($xpos / 3))) & 1);
+        return ((((int) ($ypos / 2)) + ((int) ($xpos / 3))) & 1);
     }
 
     /**

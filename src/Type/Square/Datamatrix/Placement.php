@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Placement
  *
@@ -46,15 +44,14 @@ abstract class Placement
      * @param int   $bit   Bit.
      */
     protected function placeModule(
-        array $marr, 
-        int $nrow, 
-        int $ncol, 
-        int $row, 
-        int $col, 
-        int $chr, 
+        array $marr,
+        int $nrow,
+        int $ncol,
+        int $row,
+        int $col,
+        int $chr,
         int $bit
-    ): array
-    {
+    ): array {
         if ($row < 0) {
             $row += $nrow;
             $col += (4 - (($nrow + 4) % 8));
@@ -81,14 +78,13 @@ abstract class Placement
      * @param int   $chr   Char byte.
      */
     protected function placeUtah(
-        array $marr, 
-        int $nrow, 
-        int $ncol, 
-        int $row, 
-        int $col, 
+        array $marr,
+        int $nrow,
+        int $ncol,
+        int $row,
+        int $col,
         int $chr
-    ): array
-    {
+    ): array {
         $marr = $this->placeModule($marr, $nrow, $ncol, $row - 2, $col - 2, $chr, 1);
         $marr = $this->placeModule($marr, $nrow, $ncol, $row - 2, $col - 1, $chr, 2);
         $marr = $this->placeModule($marr, $nrow, $ncol, $row - 1, $col - 2, $chr, 3);
@@ -111,14 +107,13 @@ abstract class Placement
      * @param int   $col   Current column
      */
     protected function placeCornerA(
-        array $marr, 
-        int $nrow, 
-        int $ncol, 
-        int &$chr, 
-        int $row, 
+        array $marr,
+        int $nrow,
+        int $ncol,
+        int &$chr,
+        int $row,
         int $col
-    ): array
-    {
+    ): array {
         if (($row !== $nrow) || ($col != 0)) {
             return $marr;
         }
@@ -147,14 +142,13 @@ abstract class Placement
      * @param int   $col   Current column
      */
     protected function placeCornerB(
-        array $marr, 
-        int $nrow, 
-        int $ncol, 
-        int &$chr, 
-        int $row, 
+        array $marr,
+        int $nrow,
+        int $ncol,
+        int &$chr,
+        int $row,
         int $col
-    ): array
-    {
+    ): array {
         if (($row !== $nrow - 2) || ($col != 0) || (($ncol % 4) == 0)) {
             return $marr;
         }
@@ -183,14 +177,13 @@ abstract class Placement
      * @param int   $col   Current column
      */
     protected function placeCornerC(
-        array $marr, 
-        int $nrow, 
-        int $ncol, 
-        int &$chr, 
-        int $row, 
+        array $marr,
+        int $nrow,
+        int $ncol,
+        int &$chr,
+        int $row,
         int $col
-    ): array
-    {
+    ): array {
         if (($row !== $nrow - 2) || ($col != 0) || ($ncol % 8 != 4)) {
             return $marr;
         }
@@ -219,14 +212,13 @@ abstract class Placement
      * @param int   $col   Current column
      */
     protected function placeCornerD(
-        array $marr, 
-        int $nrow, 
-        int $ncol, 
-        int &$chr, 
-        int $row, 
+        array $marr,
+        int $nrow,
+        int $ncol,
+        int &$chr,
+        int $row,
         int $col
-    ): array
-    {
+    ): array {
         if (($row !== $nrow + 4) || ($col != 2) || ($ncol % 8)) {
             return $marr;
         }
@@ -243,8 +235,6 @@ abstract class Placement
         return $marr;
     }
 
-
-
     /**
      * Sweep upward diagonally, inserting successive characters,
      * (Annex F - ECC 200 symbol character placement)
@@ -257,16 +247,15 @@ abstract class Placement
      * @param int   $col   Current column
      */
     protected function placeSweepUpward(
-        array $marr, 
-        int $nrow, 
-        int $ncol, 
-        int &$chr, 
-        int &$row, 
+        array $marr,
+        int $nrow,
+        int $ncol,
+        int &$chr,
+        int &$row,
         int &$col
-    ): array
-    {
+    ): array {
         do {
-            if (($row < $nrow) && ($col >= 0) && (!$marr[(($row * $ncol) + $col)])) {
+            if (($row < $nrow) && ($col >= 0) && (! $marr[(($row * $ncol) + $col)])) {
                 $marr = $this->placeUtah($marr, $nrow, $ncol, $row, $col, $chr);
                 ++$chr;
             }
@@ -292,16 +281,15 @@ abstract class Placement
      * @param int   $col   Current column
      */
     protected function placeSweepDownward(
-        array $marr, 
-        int $nrow, 
-        int $ncol, 
-        int &$chr, 
-        int &$row, 
+        array $marr,
+        int $nrow,
+        int $ncol,
+        int &$chr,
+        int &$row,
         int &$col
-    ): array
-    {
+    ): array {
         do {
-            if (($row >= 0) && ($col < $ncol) && (!$marr[(($row * $ncol) + $col)])) {
+            if (($row >= 0) && ($col < $ncol) && (! $marr[(($row * $ncol) + $col)])) {
                 $marr = $this->placeUtah($marr, $nrow, $ncol, $row, $col, $chr);
                 ++$chr;
             }
@@ -323,10 +311,9 @@ abstract class Placement
      * @param int $ncol  Number of columns.
      */
     public function getPlacementMap(
-        int $nrow, 
+        int $nrow,
         int $ncol
-    ): array
-    {
+    ): array {
         // initialize array with zeros
         $marr = array_fill(0, ($nrow * $ncol), 0);
         // set starting values
@@ -347,7 +334,7 @@ abstract class Placement
         } while (($row < $nrow) || ($col < $ncol));
 
         // lastly, if the lower righthand corner is untouched, fill in fixed pattern
-        if (!$marr[(($nrow * $ncol) - 1)]) {
+        if (! $marr[(($nrow * $ncol) - 1)]) {
             $marr[(($nrow * $ncol) - 1)] = 1;
             $marr[(($nrow * $ncol) - $ncol - 2)] = 1;
         }

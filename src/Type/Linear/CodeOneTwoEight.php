@@ -68,13 +68,12 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @throws BarcodeException in case of error
      */
     protected function processSequenceA(
-        array &$sequence, 
-        array  &$code_data, 
-        int &$startid, 
-        int $key, 
+        array &$sequence,
+        array &$code_data,
+        int &$startid,
+        int $key,
         array $seq
-        ): void
-    {
+    ): void {
         if ($key == 0) {
             $startid = 103;
         } elseif ($sequence[($key - 1)][0] != 'A') {
@@ -82,18 +81,18 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
                 ($seq[2] == 1)
                 && ($key > 0)
                 && ($sequence[($key - 1)][0] == 'B')
-                && (!isset($sequence[($key - 1)][3]))
+                && (! isset($sequence[($key - 1)][3]))
             ) {
                 // single character shift
                 $code_data[] = 98;
                 // mark shift
                 $sequence[$key][3] = true;
-            } elseif (!isset($sequence[($key - 1)][3])) {
+            } elseif (! isset($sequence[($key - 1)][3])) {
                 $code_data[] = 101;
             }
         }
 
-        $this->getCodeDataA($code_data, $seq[1], (int)$seq[2]);
+        $this->getCodeDataA($code_data, $seq[1], (int) $seq[2]);
     }
 
     /**
@@ -108,20 +107,19 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @throws BarcodeException in case of error
      */
     protected function processSequenceB(
-        array &$sequence, 
-        array &$code_data, 
-        int &$startid, 
-        int $key, 
+        array &$sequence,
+        array &$code_data,
+        int &$startid,
+        int $key,
         array $seq
-        ): void
-    {
+    ): void {
         if ($key == 0) {
             $this->processSequenceBA($sequence, $code_data, $startid, $key, $seq);
         } elseif ($sequence[($key - 1)][0] != 'B') {
             $this->processSequenceBB($sequence, $code_data, $key, $seq);
         }
 
-        $this->getCodeDataB($code_data, $seq[1], (int)$seq[2]);
+        $this->getCodeDataB($code_data, $seq[1], (int) $seq[2]);
     }
 
     /**
@@ -136,13 +134,12 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @throws BarcodeException in case of error
      */
     protected function processSequenceBA(
-        array &$sequence, 
-        array &$code_data, 
-        int &$startid, 
-        int $key, 
+        array &$sequence,
+        array &$code_data,
+        int &$startid,
+        int $key,
         array $seq
-        ): void
-    {
+    ): void {
         $tmpchr = ord($seq[1][0]);
         if (
             ($seq[2] == 1)
@@ -179,23 +176,22 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @throws BarcodeException in case of error
      */
     protected function processSequenceBB(
-        array &$sequence, 
-        array &$code_data, 
-        int $key, 
+        array &$sequence,
+        array &$code_data,
+        int $key,
         array $seq
-        ): void
-    {
+    ): void {
         if (
             ($seq[2] == 1)
             && ($key > 0)
             && ($sequence[($key - 1)][0] == 'A')
-            && (!isset($sequence[($key - 1)][3]))
+            && (! isset($sequence[($key - 1)][3]))
         ) {
             // single character shift
             $code_data[] = 98;
             // mark shift
             $sequence[$key][3] = true;
-        } elseif (!isset($sequence[($key - 1)][3])) {
+        } elseif (! isset($sequence[($key - 1)][3])) {
             $code_data[] = 100;
         }
     }
@@ -212,13 +208,12 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @throws BarcodeException in case of error
      */
     protected function processSequenceC(
-        array  &$sequence, 
-        array &$code_data, 
-        int &$startid, 
-        int $key, 
+        array &$sequence,
+        array &$code_data,
+        int &$startid,
+        int $key,
         array $seq
-        ): void
-    {
+    ): void {
         if ($key == 0) {
             $startid = 105;
         } elseif ($sequence[($key - 1)][0] != 'C') {

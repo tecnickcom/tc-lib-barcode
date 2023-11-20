@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Spec
  *
@@ -135,14 +132,14 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
         $ecc = $this->getECCLength($version, $level);
         if ($bv2 == 0) {
             $spec[0] = $bv1;
-            $spec[1] = (int)($data / $bv1); /* @phpstan-ignore-line */
-            $spec[2] = (int)($ecc / $bv1); /* @phpstan-ignore-line */
+            $spec[1] = (int) ($data / $bv1); /* @phpstan-ignore-line */
+            $spec[2] = (int) ($ecc / $bv1); /* @phpstan-ignore-line */
             $spec[3] = 0;
             $spec[4] = 0;
         } else {
             $spec[0] = $bv1;
-            $spec[1] = (int)($data / ($bv1 + $bv2));
-            $spec[2] = (int)($ecc  / ($bv1 + $bv2));
+            $spec[1] = (int) ($data / ($bv1 + $bv2));
+            $spec[2] = (int) ($ecc / ($bv1 + $bv2));
             $spec[3] = $bv2;
             $spec[4] = $spec[1] + 1;
         }

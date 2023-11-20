@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Aztec;
 
-use Com\Tecnick\Barcode\Type\Square\Aztec\Data;
-use Com\Tecnick\Barcode\Type\Square\Aztec\ErrorCorrection;
 use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
@@ -45,7 +43,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected int $gridcenter = 0;
 
-     /**
+    /**
      * Aztec main encoder.
      *
      * @param string $code The code to encode.
@@ -55,16 +53,15 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      * @param string $mode The mode to use (A = Automatic; F = Full Range mode).
      */
     public function __construct(
-        string $code, 
-        int $ecc = 33, 
-        int $eci = 0, 
-        string $hint = 'A', 
+        string $code,
+        int $ecc = 33,
+        int $eci = 0,
+        string $hint = 'A',
         string $mode = 'A'
-    )
-    {
+    ) {
         $this->highLevelEncoding($code, $eci, $hint);
-        if (!$this->sizeAndBitStuffing($ecc, $mode)) {
-                throw new BarcodeException('Data too long');
+        if (! $this->sizeAndBitStuffing($ecc, $mode)) {
+            throw new BarcodeException('Data too long');
         }
 
         $wsize = $this->layer[2];
@@ -94,12 +91,11 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      * @return int The number of data codewords.
      */
     protected function addCheckWords(
-        array &$bitstream, 
-        int &$totbits, 
-        int $nbits, 
+        array &$bitstream,
+        int &$totbits,
+        int $nbits,
         int $wsize
-    ): int
-    {
+    ): int {
         $cdw = $this->bitstreamToWords($bitstream, $totbits, $wsize);
         $numcdw = count($cdw);
         $totwords = (int) ($nbits / $wsize);
@@ -108,7 +104,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $checkwords = $errorCorrection->checkwords($cdw, $eccwords);
         // append check codewords
         foreach ($checkwords as $checkword) {
-                $this->appendWordToBitstream($bitstream, $totbits, $wsize, $checkword);
+            $this->appendWordToBitstream($bitstream, $totbits, $wsize, $checkword);
         }
 
         return $numcdw;
@@ -275,7 +271,6 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         return (empty($this->bitstream[$bit--]) ? 0 : 1);
     }
 
-
     /**
      * Returns 1 if the current position must be skipped in Full mode.
      *
@@ -283,9 +278,8 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected function skipModeRefGrid(int $pos): int
     {
-        return (int) ((!$this->compact) && ($pos == 5));
+        return (int) ((! $this->compact) && ($pos == 5));
     }
-
 
     /**
      * Returns the offset for the specified position to skip the reference grid.
@@ -294,7 +288,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected function skipRefGrid(int $pos): int
     {
-        return (int) ((!$this->compact) && (($pos % 16) == 0));
+        return (int) ((! $this->compact) && (($pos % 16) == 0));
     }
 
     /**
