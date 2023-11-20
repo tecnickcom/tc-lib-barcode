@@ -19,6 +19,7 @@ namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 use Com\Tecnick\Barcode\Exception as BarcodeException;
 use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 use Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream;
+use Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMode;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Split
@@ -36,16 +37,16 @@ class Split
     /**
      * EncodingMode class object
      *
-     * @var \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMode
+     * @var EncodingMode
      */
-    protected $bsObj;
+    protected EncodingMode $bsObj;
 
     /**
      * Input items
      *
      * @var array
      */
-    protected $items = array();
+    protected array $items = array();
 
     /**
      * QR code version.
@@ -55,14 +56,14 @@ class Split
      *
      * @var int
      */
-    protected $version = 0;
+    protected int $version = 0;
 
     /**
      * Encoding mode
      *
      * @var int
      */
-    protected $hint = 2;
+    protected int $hint = 2;
 
     /**
      * Initialize
@@ -71,7 +72,11 @@ class Split
      * @param int          $hint    Encoding mode
      * @param int          $version Code version
      */
-    public function __construct($bsObj, $hint, $version)
+    public function __construct(
+        ByteStream $bsObj, 
+        int $hint, 
+        int $version
+    )
     {
         $this->bsObj = $bsObj;
         $this->items = array();
@@ -86,7 +91,7 @@ class Split
      *
      * @return array items
      */
-    public function getSplittedString($data)
+    public function getSplittedString(string $data): array
     {
         while (strlen($data) > 0) {
             $mode = $this->bsObj->getEncodingMode($data, 0);
@@ -126,7 +131,7 @@ class Split
      *
      * @return int run
      */
-    protected function eatNum($data)
+    protected function eatNum(string $data): int
     {
         $lng = $this->bsObj->getLengthIndicator(Data::ENC_MODES['NM'], $this->version);
         $pos = 0;
@@ -163,9 +168,10 @@ class Split
      * eatAn
      *
      * @param string $data Data
+     * 
      * @return int run
      */
-    protected function eatAn($data)
+    protected function eatAn(string $data): int
     {
         $lag = $this->bsObj->getLengthIndicator(Data::ENC_MODES['AN'], $this->version);
         $lng = $this->bsObj->getLengthIndicator(Data::ENC_MODES['NM'], $this->version);
@@ -209,9 +215,10 @@ class Split
      * eatKanji
      *
      * @param string $data Data
+     * 
      * @return int run
      */
-    protected function eatKanji($data)
+    protected function eatKanji(string $data): int
     {
         $pos = 0;
         while ($this->bsObj->getEncodingMode($data, $pos) == Data::ENC_MODES['KJ']) {
@@ -230,9 +237,10 @@ class Split
      * eat8
      *
      * @param string $data Data
+     * 
      * @return int run
      */
-    protected function eat8($data)
+    protected function eat8(string $data): int
     {
         $lag = $this->bsObj->getLengthIndicator(Data::ENC_MODES['AN'], $this->version);
         $lng = $this->bsObj->getLengthIndicator(Data::ENC_MODES['NM'], $this->version);
