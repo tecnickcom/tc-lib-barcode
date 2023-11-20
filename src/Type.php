@@ -33,6 +33,8 @@ use Com\Tecnick\Color\Pdf;
  * @copyright 2015-2023 Nicola Asuni - Tecnick.com LTD
  * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link      https://github.com/tecnickcom/tc-lib-barcode
+ * 
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
 {
@@ -305,7 +307,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
             . ' stroke-width="0"'
             . ' stroke-linecap="square"'
             . '>' . "\n";
-        $bars = $this->getBarsArray('XYWH');
+        $bars = $this->getBarsArrayXYWH();
         foreach ($bars as $bar) {
             $svg .= '		<rect x="' . sprintf('%F', $bar[0]) . '"'
                 . ' y="' . sprintf('%F', $bar[1]) . '"'
@@ -337,7 +339,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         }
 
         $html .= '">' . "\n";
-        $bars = $this->getBarsArray('XYWH');
+        $bars = $this->getBarsArrayXYWH();
         foreach ($bars as $bar) {
             $html .= '	<div style="background-color:' . $this->color_obj->getCssColor() . ';'
                 . 'left:' . sprintf('%F', $bar[0]) . 'px;'
@@ -415,7 +417,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
         $bar_color = new \imagickpixel('rgb(' . $rgbcolor['R'] . ',' . $rgbcolor['G'] . ',' . $rgbcolor['B'] . ')');
         $imagickdraw->setfillcolor($bar_color);
-        $bars = $this->getBarsArray('XYXY');
+        $bars = $this->getBarsArrayXYXY();
         foreach ($bars as $bar) {
             $imagickdraw->rectangle($bar[0], $bar[1], $bar[2], $bar[3]);
         }
@@ -447,7 +449,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
 
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
         $bar_color = imagecolorallocate($img, $rgbcolor['R'], $rgbcolor['G'], $rgbcolor['B']);
-        $bars = $this->getBarsArray('XYXY');
+        $bars = $this->getBarsArrayXYXY();
         foreach ($bars as $bar) {
             imagefilledrectangle(
                 $img,
@@ -483,17 +485,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
 
     /**
      * Get the array containing all the formatted bars coordinates
-     *
-     * @param string $type Type of coordinates to return: 'XYXY' or 'XYWH'
      */
-    public function getBarsArray(
-        string $type = 'XYXY'
-    ): array {
-        $mtd = match ($type) {
-            'XYXY' => 'getBarRectXYXY',
-            'XYWH' => 'getBarRectXYWH',
-        };
-
+    public function getBarsArrayXYXY(): array
+    {
         $rect = [];
         foreach ($this->bars as $bar) {
             if ($bar[2] <= 0) {
@@ -504,7 +498,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
                 continue;
             }
 
-            $rect[] = $this->$mtd($bar);
+            $rect[] = $this->getBarRectXYXY($bar);
         }
 
         if ($this->nrows > 1) {
@@ -519,7 +513,44 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
                     continue;
                 }
 
-                $rect[] = $this->$mtd($bar);
+                $rect[] = $this->getBarRectXYXY($bar);
+            }
+        }
+
+        return $rect;
+    }
+
+    /**
+     * Get the array containing all the formatted bars coordinates
+     */
+    public function getBarsArrayXYWH(): array
+    {
+        $rect = [];
+        foreach ($this->bars as $bar) {
+            if ($bar[2] <= 0) {
+                continue;
+            }
+
+            if ($bar[3] <= 0) {
+                continue;
+            }
+
+            $rect[] = $this->getBarRectXYWH($bar);
+        }
+
+        if ($this->nrows > 1) {
+            // reprint rotated to cancel row gaps
+            $rot = $this->getRotatedBarArray();
+            foreach ($rot as $bar) {
+                if ($bar[2] <= 0) {
+                    continue;
+                }
+
+                if ($bar[3] <= 0) {
+                    continue;
+                }
+
+                $rect[] = $this->getBarRectXYWH($bar);
             }
         }
 
