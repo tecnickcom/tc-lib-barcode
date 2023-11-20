@@ -3,13 +3,13 @@
 /**
  * Barcode.php
  *
- * @since       2015-02-21
- * @category    Library
- * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2023 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
- * @link        https://github.com/tecnickcom/tc-lib-barcode
+ * @since     2015-02-21
+ * @category  Library
+ * @package   Barcode
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2015-2023 Nicola Asuni - Tecnick.com LTD
+ * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-barcode
  *
  * This file is part of tc-lib-barcode software library.
  */
@@ -23,13 +23,13 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  *
  * Barcode Barcode class
  *
- * @since       2015-02-21
- * @category    Library
- * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
- * @link        https://github.com/tecnickcom/tc-lib-barcode
+ * @since     2015-02-21
+ * @category  Library
+ * @package   Barcode
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2010-2023 Nicola Asuni - Tecnick.com LTD
+ * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-barcode
  */
 class Barcode
 {
@@ -81,15 +81,20 @@ class Barcode
     /**
      * Get the barcode object
      *
-     * @param string $type    Barcode type
-     * @param string|array $code    Barcode content
-     * @param int    $width   Barcode width in user units (excluding padding).
-     *                        A negative value indicates the multiplication factor for each column.
-     * @param int    $height  Barcode height in user units (excluding padding).
-     *                        A negative value indicates the multiplication factor for each row.
-     * @param string $color   Foreground color in Web notation (color name, or hexadecimal code, or CSS syntax)
-     * @param array{int, int, int, int}  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
-     *                        A negative value indicates the multiplication factor for each row or column.
+     * @param string                    $type    Barcode type
+     * @param string|array              $code    Barcode content
+     * @param int                       $width   Barcode width in user units (excluding padding).
+     *                                           A negative value indicates the multiplication
+     *                                           factor for each column.
+     * @param int                       $height  Barcode height in user units (excluding padding).
+     *                                           A negative value indicates the multiplication
+     *                                           factor for each row.
+     * @param string                    $color   Foreground color in Web notation
+     *                                           (color name, or hexadecimal code, or CSS syntax)
+     * @param array{int, int, int, int} $padding Additional padding to add around the barcode
+     *                                           (top, right, bottom, left) in user units. A
+     *                                           negative value indicates the multiplication
+     *                                           factor for each row or column.
      *
      * @throws BarcodeException in case of error
      */

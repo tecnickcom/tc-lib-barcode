@@ -133,7 +133,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
 
         $nchr = $this->countModeChars($chars, $idx, $chrlen, $mode);
         if ($this->encmode !== $mode) {
-            if (($nchr == 1) && (isset(Data::SHIFT_MAP[$this->encmode][$mode]) && Data::SHIFT_MAP[$this->encmode][$mode] !== [])) {
+            if (
+                ($nchr == 1)
+                && (isset(Data::SHIFT_MAP[$this->encmode][$mode])
+                && Data::SHIFT_MAP[$this->encmode][$mode] !== [])
+            ) {
                 $this->addShift($mode);
             } else {
                 $this->addLatch($mode);

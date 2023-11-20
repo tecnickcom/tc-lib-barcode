@@ -155,7 +155,16 @@ class BarcodeTest extends TestUtil
         $this->assertEquals(44, $barr['full_width']);
         $this->assertEquals(8, $barr['full_height']);
 
-        $expected = [[1, 0, 1, 1], [4, 0, 2, 1], [9, 0, 3, 1], [16, 0, 4, 1], [0, 1, 1, 1], [2, 1, 2, 1], [6, 1, 3, 1], [12, 1, 4, 1]];
+        $expected = [
+            [1, 0, 1, 1],
+            [4, 0, 2, 1],
+            [9, 0, 3, 1],
+            [16, 0, 4, 1],
+            [0, 1, 1, 1],
+            [2, 1, 2, 1],
+            [6, 1, 3, 1],
+            [12, 1, 4, 1],
+        ];
         $this->assertEquals($expected, $barr['bars']);
         $this->assertEquals('#800080ff', $barr['color_obj']->getRgbaHexColor());
 

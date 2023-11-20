@@ -248,7 +248,12 @@ abstract class Convert
      */
     protected function getBarRectXYXY(array $bar): array
     {
-        return [($this->padding['L'] + ($bar[0] * $this->width_ratio)), ($this->padding['T'] + ($bar[1] * $this->height_ratio)), ($this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1), ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1)];
+        return [
+            ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
+            ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
+            ($this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1),
+            ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1),
+        ];
     }
 
     /**
@@ -260,6 +265,11 @@ abstract class Convert
      */
     protected function getBarRectXYWH(array $bar): array
     {
-        return [($this->padding['L'] + ($bar[0] * $this->width_ratio)), ($this->padding['T'] + ($bar[1] * $this->height_ratio)), ($bar[2] * $this->width_ratio), ($bar[3] * $this->height_ratio)];
+        return [
+            ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
+            ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
+            ($bar[2] * $this->width_ratio),
+            ($bar[3] * $this->height_ratio),
+        ];
     }
 }

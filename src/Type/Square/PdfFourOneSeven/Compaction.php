@@ -82,7 +82,10 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
                 // the sub-mode is changed
                 for ($sub = 0; $sub < 4; ++$sub) {
                     // search new sub-mode
-                    if (($sub != $submode) && (($key = array_search($chval, Data::TEXT_SUB_MODES[$sub], true)) !== false)) {
+                    if (
+                        ($sub != $submode)
+                        && (($key = array_search($chval, Data::TEXT_SUB_MODES[$sub], true)) !== false)
+                    ) {
                         $this->processTextCompactionSub($txtarr, $submode, $sub, $code, $key, $idx, $codelen);
                         break;
                     }

@@ -3,13 +3,13 @@
 /**
  * Type.php
  *
- * @since       2015-02-21
- * @category    Library
- * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2023 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
- * @link        https://github.com/tecnickcom/tc-lib-barcode
+ * @since     2015-02-21
+ * @category  Library
+ * @package   Barcode
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2015-2023 Nicola Asuni - Tecnick.com LTD
+ * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-barcode
  *
  * This file is part of tc-lib-barcode software library.
  */
@@ -26,28 +26,33 @@ use Com\Tecnick\Color\Pdf;
  *
  * Barcode Type class
  *
- * @since       2015-02-21
- * @category    Library
- * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2015-2023 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
- * @link        https://github.com/tecnickcom/tc-lib-barcode
+ * @since     2015-02-21
+ * @category  Library
+ * @package   Barcode
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2015-2023 Nicola Asuni - Tecnick.com LTD
+ * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-barcode
  */
 abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
 {
     /**
      * Initialize a new barcode object
      *
-     * @param string|array $code    Barcode content
-     * @param int    $width   Barcode width in user units (excluding padding).
-     *                        A negative value indicates the multiplication factor for each column.
-     * @param int    $height  Barcode height in user units (excluding padding).
-     *                        A negative value indicates the multiplication factor for each row.
-     * @param string $color   Foreground color in Web notation (color name, or hexadecimal code, or CSS syntax)
-     * @param array  $params  Array containing extra parameters for the specified barcode type
-     * @param array{int, int, int, int}  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
-     *                        A negative value indicates the number or rows or columns.
+     * @param string|array              $code    Barcode content
+     * @param int                       $width   Barcode width in user units (excluding padding).
+     *                                           A negative value indicates the multiplication
+     *                                           factor for each column.
+     * @param int                       $height  Barcode height in user units (excluding padding).
+     *                                           A negative value indicates the multiplication
+     *                                           factor for each row.
+     * @param string                    $color   Foreground color in Web notation
+     *                                           (color name, or hexadecimal code, or CSS syntax)
+     * @param array                     $params  Array containing extra parameters for the specified barcode type
+     * @param array{int, int, int, int} $padding Additional padding to add around the barcode
+     *                                           (top, right, bottom, left) in user units. A
+     *                                           negative value indicates the number or rows
+     *                                           or columns.
      *
      * @throws BarcodeException in case of error
      * @throws ColorException in case of color error
@@ -86,12 +91,16 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Set the size of the barcode to be exported
      *
-     * @param int    $width   Barcode width in user units (excluding padding).
-     *                        A negative value indicates the multiplication factor for each column.
-     * @param int    $height  Barcode height in user units (excluding padding).
-     *                        A negative value indicates the multiplication factor for each row.
-     * @param array{int, int, int, int}  $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
-     *                        A negative value indicates the number or rows or columns.
+     * @param int                       $width   Barcode width in user units (excluding padding).
+     *                                           A negative value indicates the multiplication
+     *                                           factor for each column.
+     * @param int                       $height  Barcode height in user units (excluding padding).
+     *                                           A negative value indicates the multiplication
+     *                                           factor for each row.
+     * @param array{int, int, int, int} $padding Additional padding to add around the barcode
+     *                                           (top, right, bottom, left) in user units. A
+     *                                           negative value indicates the number or rows
+     *                                           or columns.
      */
     public function setSize(
         int $width,
@@ -119,18 +128,26 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Set the barcode padding
      *
-     * @param array{int, int, int, int} $padding Additional padding to add around the barcode (top, right, bottom, left) in user units.
-     *                        A negative value indicates the number or rows or columns.
+     * @param array{int, int, int, int} $padding Additional padding to add around the barcode
+     *                                           (top, right, bottom, left) in user units.
+     *                                           A negative value indicates the number or rows or columns.
      *
      * @throws BarcodeException in case of error
      */
     protected function setPadding(array $padding): static
     {
         if (! is_array($padding) || (count($padding) != 4)) {
-            throw new BarcodeException('Invalid padding, expecting an array of 4 numbers (top, right, bottom, left)');
+            throw new BarcodeException(
+                'Invalid padding, expecting an array of 4 numbers (top, right, bottom, left)'
+            );
         }
 
-        $map = [['T', $this->height_ratio], ['R', $this->width_ratio], ['B', $this->height_ratio], ['L', $this->width_ratio]];
+        $map = [
+            ['T', $this->height_ratio],
+            ['R', $this->width_ratio],
+            ['B', $this->height_ratio],
+            ['L', $this->width_ratio],
+        ];
         foreach ($padding as $key => $val) {
             $val = (int) $val;
             if ($val < 0) {

@@ -186,7 +186,18 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
 
             if (
                 (($field_length == 4)
-                || ($epos == $data_length) || ! $this->isCharMode($chr, Data::ENC_EDF)) && $this->encodeEDFfour($epos, $cdw, $cdw_num, $pos, $data_length, $field_length, $enc, $temp_cw)
+                || ($epos == $data_length)
+                || ! $this->isCharMode($chr, Data::ENC_EDF))
+                && $this->encodeEDFfour(
+                    $epos,
+                    $cdw,
+                    $cdw_num,
+                    $pos,
+                    $data_length,
+                    $field_length,
+                    $enc,
+                    $temp_cw
+                )
             ) {
                 break;
             }
