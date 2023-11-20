@@ -40,7 +40,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return int mode
      */
-    public function getEncodingMode($data, $pos)
+    public function getEncodingMode(string $data, int $pos): int
     {
         if (!isset($data[$pos])) {
             return Data::ENC_MODES['NL'];
@@ -62,7 +62,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return int mode
      */
-    protected function getEncodingModeKj($data, $pos)
+    protected function getEncodingModeKj(string $data, int $pos): int
     {
         if (($this->hint == Data::ENC_MODES['KJ']) && isset($data[($pos + 1)])) {
             $word = ((ord($data[$pos]) << 8) | ord($data[($pos + 1)]));
@@ -79,9 +79,9 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      * @param string $str Data
      * @param int    $pos Character position
      *
-     * @return boolean
+     * @return bool
      */
-    public function isDigitAt($str, $pos)
+    public function isDigitAt(string $str, int $pos): bool
     {
         if (!isset($str[$pos])) {
             return false;
@@ -95,9 +95,9 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      * @param string $str Data
      * @param int    $pos Character position
      *
-     * @return boolean
+     * @return bool
      */
-    public function isAlphanumericAt($str, $pos)
+    public function isAlphanumericAt(string $str, int $pos): bool
     {
         if (!isset($str[$pos])) {
             return false;
@@ -113,7 +113,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return array bitstream
      */
-    protected function appendBitstream($bitstream, $append)
+    protected function appendBitstream(array $bitstream, array $append): array
     {
         if ((!is_array($append)) || (count($append) == 0)) {
             return $bitstream;
@@ -133,7 +133,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return array bitstream
      */
-    protected function appendNum($bitstream, $bits, $num)
+    protected function appendNum(array $bitstream, int $bits, int $num): array
     {
         if ($bits == 0) {
             return array();
@@ -150,7 +150,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return array bitstream
      */
-    protected function appendBytes($bitstream, $size, $data)
+    protected function appendBytes(array $bitstream, int $size, array $data): array
     {
         if ($size == 0) {
             return array();
@@ -166,7 +166,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return array bitstream
      */
-    protected function newFromNum($bits, $num)
+    protected function newFromNum(int $bits, int $num): array
     {
         $bstream = $this->allocate($bits);
         $mask = 1 << ($bits - 1);
@@ -189,7 +189,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return array bitstream
      */
-    protected function newFromBytes($size, $data)
+    protected function newFromBytes(int $size, array $data): array
     {
         $bstream = $this->allocate($size * 8);
         $pval = 0;
@@ -215,7 +215,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return array
      */
-    protected function allocate($setLength)
+    protected function allocate(int $setLength): array
     {
         return array_fill(0, $setLength, 0);
     }
