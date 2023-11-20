@@ -28,7 +28,7 @@ namespace Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
- * 
+ *
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  */
 abstract class Data

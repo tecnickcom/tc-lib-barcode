@@ -80,20 +80,20 @@ abstract class MaskNum
             for ($xpos = 0; $xpos < $width; ++$xpos) {
                 if ((ord($frame[$ypos][$xpos]) & 0x80) !== 0) {
                     $bitMask[$ypos][$xpos] = 0;
-                } else {
-                    $maskFunc = match ($maskNo) {
-                        0 => (($xpos + $ypos) & 1),
-                        1 => ($ypos & 1),
-                        2 => ($xpos % 3),
-                        3 => (($xpos + $ypos) % 3),
-                        4 => ((((int) ($ypos / 2)) + ((int) ($xpos / 3))) & 1),
-                        5 => ((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3),
-                        6 => (((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3) & 1),
-                        7 => (((($xpos * $ypos) % 3) + (($xpos + $ypos) & 1)) & 1),
-                        default => 0,
-                    };
-                    $bitMask[$ypos][$xpos] = (($maskFunc == 0) ? 1 : 0);
+                    continue;
                 }
+                $maskFunc = match ($maskNo) {
+                    0 => (($xpos + $ypos) & 1),
+                    1 => ($ypos & 1),
+                    2 => ($xpos % 3),
+                    3 => (($xpos + $ypos) % 3),
+                    4 => ((((int) ($ypos / 2)) + ((int) ($xpos / 3))) & 1),
+                    5 => ((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3),
+                    6 => (((($xpos * $ypos) & 1) + ($xpos * $ypos) % 3) & 1),
+                    7 => (((($xpos * $ypos) % 3) + (($xpos + $ypos) & 1)) & 1),
+                    default => 1,
+                };
+                $bitMask[$ypos][$xpos] = (($maskFunc == 0) ? 1 : 0);
             }
         }
 
