@@ -108,11 +108,14 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
 
     /**
      * Set macro block parameter
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function setMacroBlockParam(): void
     {
         if (
             isset($this->params[4])
+            && (is_string($this->params[4]))
             && ($this->params[2] !== '')
             && ($this->params[3] !== '')
             && ($this->params[4] !== '')
@@ -122,7 +125,11 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
             $this->macro['file_id'] = strtr($this->params[4], "\xff", ',');
             for ($idx = 0; $idx < 7; ++$idx) {
                 $opt = $idx + 5;
-                if (isset($this->params[$opt]) && ($this->params[$opt] !== '')) {
+                if (
+                    isset($this->params[$opt])
+                    && (is_string($this->params[$opt]))
+                    && ($this->params[$opt] !== '')
+                ) {
                     $this->macro['option_' . $idx] = strtr($this->params[$opt], "\xff", ',');
                 }
             }

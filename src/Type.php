@@ -50,7 +50,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
      *                                           factor for each row.
      * @param string                    $color   Foreground color in Web notation
      *                                           (color name, or hexadecimal code, or CSS syntax)
-     * @param array                     $params  Array containing extra parameters for the specified barcode type
+     * @param array<int|float|string>   $params  Array containing extra parameters for the specified barcode type
      * @param array{int, int, int, int} $padding Additional padding to add around the barcode
      *                                           (top, right, bottom, left) in user units. A
      *                                           negative value indicates the number or rows
@@ -234,7 +234,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
      *             'full_height': int,
      *             'color_obj': Rgb,
      *             'bg_color_obj': ?Rgb,
-     *             'bars': array<array<int>>,
+     *             'bars': array<array{int, int, int, int}>,
      *         }
      */
     public function getArray(): array
@@ -539,6 +539,8 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 
     /**
      * Get the array containing all the formatted bars coordinates
+     *
+     * @return array<int, array{float, float, float, float}>
      */
     protected function getBarsArrayXYXY(): array
     {
@@ -576,6 +578,8 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 
     /**
      * Get the array containing all the formatted bars coordinates
+     *
+     * @return array<int, array{float, float, float, float}>
      */
     protected function getBarsArrayXYWH(): array
     {

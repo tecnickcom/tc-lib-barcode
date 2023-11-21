@@ -75,34 +75,53 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *     2: HINT    : Encoding mode: A=Automatic, B=Binary.
      *     3: LAYERS  : Custom number of layers (0 = auto).
      *     4: ECI     : Extended Channel Interpretation (ECI) code. Use -1 for FNC1. See $this->eci.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function setParameters(): void
     {
         parent::setParameters();
 
         // ecc percentage
-        if (! isset($this->params[0]) || ! in_array($this->params[0], range(1, 100))) {
+        if (
+            ! isset($this->params[0])
+            || ! is_numeric($this->params[0])
+            || ! in_array($this->params[0], range(1, 100))
+        ) {
             $this->params[0] = 33;
         }
 
         $this->ecc = (int) $this->params[0];
 
         // hint
-        if (! isset($this->params[1]) || ! in_array($this->params[1], ['A', 'B'])) {
+        if (
+            ! isset($this->params[1])
+            || ! is_string($this->params[1])
+            || ! in_array($this->params[1], ['A', 'B'])
+        ) {
             $this->params[1] = 'A';
         }
 
         $this->hint = $this->params[1];
 
         // mode
-        if (! isset($this->params[2]) || ! in_array($this->params[2], ['A', 'F'])) {
+        if (
+            ! isset($this->params[2])
+            || ! is_string($this->params[2])
+            || ! in_array($this->params[2], ['A', 'F'])
+        ) {
             $this->params[2] = 'A';
         }
 
         $this->mode = $this->params[2];
 
         // eci code. Used to set the charset encoding. See $this->eci.
-        if (! isset($this->params[3]) || ! array_key_exists($this->params[3], Data::ECI)) {
+        if (
+            ! isset($this->params[3])
+            || ! is_numeric($this->params[3])
+            || ! isset(Data::ECI[(int) $this->params[3]])
+        ) {
             $this->params[3] = -1;
         }
 

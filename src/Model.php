@@ -91,7 +91,7 @@ interface Model
      *             'full_height': int,
      *             'color_obj': Rgb,
      *             'bg_color_obj': ?Rgb,
-     *             'bars': array<array<int>>,
+     *             'bars': array<array{int, int, int, int}>,
      *         }
      */
     public function getArray(): array;

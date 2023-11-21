@@ -78,6 +78,8 @@ abstract class Convert
     /**
      * Array containing the position and dimensions of each barcode bar
      * (x, y, width, height)
+     *
+     * @var array<array{int, int, int, int}>,
      */
     protected array $bars = [];
 
@@ -127,7 +129,7 @@ abstract class Convert
     /**
      * Process binary sequence rows.
      *
-     * @param array $rows Binary sequence data to process
+     * @param array<int, string|array<int>> $rows Binary sequence data to process
      *
      * @throws BarcodeException in case of error
      */
@@ -170,6 +172,8 @@ abstract class Convert
 
     /**
      * Extract rows from a binary sequence of comma-separated 01 strings.
+     *
+     * @return array<int, string>
      */
     protected function getRawCodeRows(string $data): array
     {
@@ -267,6 +271,8 @@ abstract class Convert
 
     /**
      * Returns the bars array ordered by columns
+     *
+     * @return array<int, array{int, int, int, int}>
      */
     protected function getRotatedBarArray(): array
     {
@@ -299,9 +305,9 @@ abstract class Convert
     /**
      * Get the adjusted rectangular coordinates (x1,y1,x2,y2) for the specified bar
      *
-     * @param array $bar Raw bar coordinates
+     * @param array{int, int, int, int} $bar Raw bar coordinates
      *
-     * @return array Bar coordinates
+     * @return array{float, float, float, float} Bar coordinates
      */
     protected function getBarRectXYXY(array $bar): array
     {
@@ -316,9 +322,9 @@ abstract class Convert
     /**
      * Get the adjusted rectangular coordinates (x,y,w,h) for the specified bar
      *
-     * @param array $bar Raw bar coordinates
+     * @param array{int, int, int, int} $bar Raw bar coordinates
      *
-     * @return array Bar coordinates
+     * @return array{float, float, float, float} Bar coordinates
      */
     protected function getBarRectXYWH(array $bar): array
     {
