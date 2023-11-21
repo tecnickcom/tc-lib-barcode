@@ -151,12 +151,11 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
             ['L', $this->width_ratio],
         ];
         foreach ($padding as $key => $val) {
-            $val = (int) $val;
             if ($val < 0) {
                 $val = (abs(min(-1, $val)) * $map[$key][1]);
             }
 
-            $this->padding[$map[$key][0]] = $val;
+            $this->padding[$map[$key][0]] = (int) $val;
         }
 
         return $this;
