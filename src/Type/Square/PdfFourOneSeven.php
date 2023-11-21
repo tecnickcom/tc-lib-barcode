@@ -281,7 +281,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         }
 
         // calculate padding
-        $pad = ($size - $nce);
+        $pad = (int) ($size - $nce);
         if ($pad > 0) {
             // add padding
             $codewords = array_merge($codewords, array_fill(0, $pad, 900));
@@ -293,7 +293,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         }
 
         // Symbol Length Descriptor (number of data codewords including Symbol Length Descriptor and pad codewords)
-        $sld = ($size - $errsize);
+        $sld = (int) ($size - $errsize);
         // add symbol length description
         array_unshift($codewords, $sld);
         // calculate error correction

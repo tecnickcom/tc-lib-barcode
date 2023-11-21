@@ -61,16 +61,16 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
             }
         }
 
-        return min($maxecl, $ecl);
+        return (int) min($maxecl, $ecl);
     }
 
     /**
      * Get the error correction codewords
      *
-     * @param array $codewords  Array of codewords including Symbol Length Descriptor and pad
+     * @param array<int, int> $codewords  Array of codewords including Symbol Length Descriptor and pad
      * @param int   $ecl        Error correction level 0-8
      *
-     * @return array of error correction codewords
+     * @return array<int, int> of error correction codewords
      */
     protected function getErrorCorrection(array $codewords, int $ecl): array
     {
@@ -86,19 +86,19 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
         foreach ($codewords as $codeword) {
             $tk1 = ($codeword + $ecw[$eclmaxid]) % 929;
             for ($idx = $eclmaxid; $idx > 0; --$idx) {
-                $tk2 = ($tk1 * $ecc[$idx]) % 929;
-                $tk3 = 929 - $tk2;
-                $ecw[$idx] = ($ecw[($idx - 1)] + $tk3) % 929;
+                $tk2 = (($tk1 * $ecc[$idx]) % 929);
+                $tk3 = (929 - $tk2);
+                $ecw[$idx] = (int) (($ecw[($idx - 1)] + $tk3) % 929);
             }
 
-            $tk2 = ($tk1 * $ecc[0]) % 929;
-            $tk3 = 929 - $tk2;
-            $ecw[0] = $tk3 % 929;
+            $tk2 = (($tk1 * $ecc[0]) % 929);
+            $tk3 = (929 - $tk2);
+            $ecw[0] = (int) ($tk3 % 929);
         }
 
         foreach ($ecw as $idx => $err) {
             if ($err != 0) {
-                $ecw[$idx] = 929 - $err;
+                $ecw[$idx] = (int) (929 - $err);
             }
         }
 
@@ -108,7 +108,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
     /**
      * Process a single sequence
      *
-     * @param array  $sequence_array  Sequence to process
+     * @param array<int, array{int, string}>  $sequence_array  Sequence to process
      * @param string $code            Data to process
      * @param int    $seq             Current sequence
      * @param int    $offset          Current code offset
@@ -156,6 +156,8 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
      * Get an array of sequences from input
      *
      * @param string $code Data to process
+     *
+     * @return array<int, array{int, string}>
      */
     protected function getInputSequences(string $code): array
     {
