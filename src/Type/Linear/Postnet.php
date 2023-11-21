@@ -117,7 +117,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
 
             for ($pos = 0; $pos < 5; ++$pos) {
                 $bar_height = (int) $this::CHBAR[$char][$pos];
-                $this->bars[] = [$this->ncols, floor(1 / $bar_height), 1, $bar_height];
+                $this->bars[] = [$this->ncols, (int) floor(1 / $bar_height), 1, $bar_height];
                 $this->ncols += 2;
             }
         }
