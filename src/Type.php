@@ -88,7 +88,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      *
      * @throws BarcodeException in case of error
      */
-    abstract protected function setBars(): void;
+    protected function setBars(): void
+    {
+    }
 
     /**
      * Set the size of the barcode to be exported
