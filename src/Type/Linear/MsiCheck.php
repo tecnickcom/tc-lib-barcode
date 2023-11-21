@@ -126,6 +126,6 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         }
 
         $seq .= '1001'; // right guard
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

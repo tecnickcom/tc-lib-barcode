@@ -66,6 +66,6 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
         }
 
         $seq .= '101'; // right guard bar
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

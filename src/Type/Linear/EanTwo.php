@@ -130,6 +130,6 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
             $seq .= $this::CHBAR[$parity[$pos]][$this->extcode[$pos]];
         }
 
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

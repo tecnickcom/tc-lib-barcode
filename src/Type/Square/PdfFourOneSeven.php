@@ -140,8 +140,8 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
             throw new BarcodeException('Empty input');
         }
 
-        $binSequence = $this->getBinSequence();
-        $this->processBinarySequence($binSequence);
+        $seq = $this->getBinSequence();
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 
     /**

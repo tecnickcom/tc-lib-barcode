@@ -37,6 +37,6 @@ class Raw extends \Com\Tecnick\Barcode\Type
      */
     protected function setBars(): void
     {
-        $this->getRawBars($this->code);
+        $this->processBinarySequence($this->getRawCodeRows($this->code));
     }
 }

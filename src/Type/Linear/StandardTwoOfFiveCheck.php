@@ -120,6 +120,6 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
         }
 
         $seq .= '111010111';
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

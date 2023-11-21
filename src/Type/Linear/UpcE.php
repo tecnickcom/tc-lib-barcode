@@ -165,6 +165,6 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
         }
 
         $seq .= '010101'; // right guard bar
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

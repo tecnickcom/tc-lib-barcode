@@ -64,6 +64,6 @@ class Pharma extends \Com\Tecnick\Barcode\Type\Linear
 
         $seq = substr($seq, 0, -2);
         $seq = strrev($seq);
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }
