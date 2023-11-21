@@ -33,36 +33,50 @@ class Data
 {
     /**
      * Code character encoding mode for uppercase letters.
+     *
+     * @var int
      */
     public const MODE_UPPER = 0;
 
     /**
      * Code character encoding mode for lowercase letters.
+     *
+     * @var int
      */
     public const MODE_LOWER = 1;
 
     /**
      * Code character encoding mode for digits.
+     *
+     * @var int
      */
     public const MODE_DIGIT = 2;
 
     /**
      * Code character encoding mode for mixed cases.
+     *
+     * @var int
      */
     public const MODE_MIXED = 3;
 
     /**
      * Code character encoding mode for punctuation.
+     *
+     * @var int
      */
     public const MODE_PUNCT = 4;
 
     /**
      * Code character encoding mode for binary.
+     *
+     * @var int
      */
     public const MODE_BINARY = 5;
 
     /**
      * Number of bits for each character encoding mode.
+     *
+     * @var array<int>
      */
     public const MODE_BITS = [
         5, // 0 = MODE_UPPER
@@ -75,6 +89,8 @@ class Data
 
     /**
      * Code character encoding for each mode.
+     *
+     * @var array<int, array<int, int>>
      */
     public const CHAR_ENC = [
         // MODE_UPPER (initial mode)
@@ -221,6 +237,8 @@ class Data
      *   - the space ' ' character (32) that maps for modes 0,1,2.
      *   - the carriage return '\r' character (13) that maps for modes 3,4.
      *   - the comma ',' and dot '.' characters (44,46) that map for modes 2,4.
+     *
+     * @var array<int, int>
      */
     public const CHAR_MODES = [
         1 => 3, // '^A' (SOH)
@@ -342,6 +360,8 @@ class Data
     /**
      * Latch map for changing character encoding mode.
      * Numbers represent: [number of bits to change, latch code value].
+     *
+     * @var array<int, array<int, array<array{int, int}>>>
      */
     public const LATCH_MAP = [
         // MODE_UPPER
@@ -384,6 +404,8 @@ class Data
     /**
      * Shift map for changing character encoding mode.
      * Numbers represent: [number of bits to change, shift code value].
+     *
+     * @var array<int, array<int, array<array{int, int}>>>
      */
     public const SHIFT_MAP = [
         // MODE_UPPER
@@ -430,6 +452,8 @@ class Data
 
     /**
      * Extended Channel Interpretation (ECI) codes.
+     *
+     * @var array<int, string>
      */
     public const ECI = [
         0 => 'FNC1',        // Function 1 character
@@ -472,6 +496,8 @@ class Data
      *   - 4: symbol data digits capacity;
      *   - 5: symbol data text capacity;
      *   - 6: symbol data bytes capacity.
+     *
+     * @var array<int, array{int, int, int, int, int, int, int}>
      */
     public const SIZE_COMPACT = [
         1 => [15, 17, 6, 102, 13, 12, 6],
@@ -490,6 +516,8 @@ class Data
      *   - 4: symbol data digits capacity;
      *   - 5: symbol data text capacity;
      *   - 6: symbol data bytes capacity.
+     *
+     * @var array<int, array{int, int, int, int, int, int, int}>
      */
     public const SIZE_FULL = [
         1 => [19, 21, 6, 126, 18, 15, 8],

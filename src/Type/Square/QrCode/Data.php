@@ -33,11 +33,15 @@ class Data
 {
     /**
      * Maximum QR Code version.
+     *
+     * @var int
      */
     public const QRSPEC_VERSION_MAX = 40;
 
     /**
      * Maximum matrix size for maximum version (version 40 is 177*177 matrix).
+     *
+     * @var int
      */
     public const QRSPEC_WIDTH_MAX = 177;
 
@@ -45,21 +49,29 @@ class Data
 
     /**
      * Matrix index to get width from CAPACITY array.
+     *
+     * @var int
      */
     public const QRCAP_WIDTH = 0;
 
     /**
      * Matrix index to get number of words from CAPACITY array.
+     *
+     * @var int
      */
     public const QRCAP_WORDS = 1;
 
     /**
      * Matrix index to get remainder from CAPACITY array.
+     *
+     * @var int
      */
     public const QRCAP_REMINDER = 2;
 
     /**
      * Matrix index to get error correction level from CAPACITY array.
+     *
+     * @var int
      */
     public const QRCAP_EC = 3;
 
@@ -69,11 +81,15 @@ class Data
 
     /**
      * Number of header bits for structured mode
+     *
+     * @var int
      */
     public const STRUCTURE_HEADER_BITS = 20;
 
     /**
      * Max number of symbols for structured mode
+     *
+     * @var int
      */
     public const MAX_STRUCTURED_SYMBOLS = 16;
 
@@ -83,22 +99,30 @@ class Data
 
     /**
      * Down point base value for case 1 mask pattern (concatenation of same color in a line or a column)
+     *
+     * @var int
      */
     public const N1 = 3;
 
     /**
      * Down point base value for case 2 mask pattern (module block of same color)
+     *
+     * @var int
      */
     public const N2 = 3;
 
     /**
      * Down point base value for case 3 mask pattern
-     * (1:1:3:1:1(dark:bright:dark:bright:dark)pattern in a line or a column)
+     * (1:1:3:1:1 (dark:bright:dark:bright:dark) pattern in a line or a column)
+     *
+     * @var int
      */
     public const N3 = 40;
 
     /**
      * Down point base value for case 4 mask pattern (ration of dark modules in whole)
+     *
+     * @var int
      */
     public const N4 = 10;
 
@@ -111,6 +135,8 @@ class Data
      * 8B : Encoding mode 8bit byte data. In theory, 2953 characters or less can be stored in a QRcode.
      * KJ : Encoding mode KANJI. A KANJI character (multibyte character) is encoded to 13bit length.
      * ST : Encoding mode STRUCTURED
+     *
+     * @var array<string, int>
      */
     public const ENC_MODES = [
         'NL' => -1,
@@ -129,6 +155,8 @@ class Data
      * M : About 15% or less errors can be corrected.
      * Q : About 25% or less errors can be corrected.
      * H : About 30% or less errors can be corrected.
+     *
+     * @var array<string, int>
      */
     public const ECC_LEVELS = [
         'L' => 0,
@@ -139,6 +167,8 @@ class Data
 
     /**
      * Alphabet-numeric conversion table.
+     *
+     * @var array<int>
      */
     public const AN_TABLE = [
         -1,
@@ -281,6 +311,8 @@ class Data
     /**
      * Array Table of the capacity of symbols.
      * See Table 1 (pp.13) and Table 12-16 (pp.30-36), JIS X0510:2004.
+     *
+     * @var array<array{int, int, int, array{int, int, int, int}}>
      */
     public const CAPACITY = [
         [0, 0, 0, [0, 0, 0, 0]],
@@ -328,6 +360,8 @@ class Data
 
     /**
      * Array Length indicator.
+     *
+     * @var array<array{int, int, int}>
      */
     public const LEN_TABLE_BITS = [
         [10, 12, 14],
@@ -339,6 +373,8 @@ class Data
     /**
      * Array Table of the error correction code (Reed-Solomon block).
      * See Table 12-16 (pp.30-36), JIS X0510:2004.
+     *
+     * @var array<array{array{int, int}, array{int, int}, array{int, int}, array{int, int}}>
      */
     public const ECC_TABLE = [
         [[0, 0], [0, 0], [0, 0], [0, 0]],
@@ -389,6 +425,8 @@ class Data
      * This array includes only the second and the third position of the alignment patterns.
      * Rest of them can be calculated from the distance between them.
      * See Table 1 in Appendix E (pp.71) of JIS X0510:2004.
+     *
+     * @var array<array{int, int}>
      */
     public const ALIGN_PATTERN = [
         [0, 0],
@@ -438,6 +476,8 @@ class Data
      * Array Version information pattern (BCH coded).
      * See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
      * size: [QRSPEC_VERSION_MAX - 6]
+     *
+     * @var array<int>
      */
     public const VERSION_PATTERN = [
         0x07c94,
@@ -478,6 +518,8 @@ class Data
 
     /**
      * Array Format information
+     *
+     * @var array<array{int, int, int, int, int, int, int, int}>
      */
     public const FORMAT_INFO = [
         [0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976],

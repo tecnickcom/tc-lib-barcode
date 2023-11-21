@@ -35,41 +35,57 @@ class Data
 {
     /**
      * ASCII encoding: ASCII character 0 to 127 (1 byte per CW)
+     *
+     * @var int
      */
     public const ENC_ASCII = 0;
 
     /**
      * C40 encoding: Upper-case alphanumeric (3/2 bytes per CW)
+     *
+     * @var int
      */
     public const ENC_C40 = 1;
 
     /**
      * TEXT encoding: Lower-case alphanumeric (3/2 bytes per CW)
+     *
+     * @var int
      */
     public const ENC_TXT = 2;
 
     /**
      * X12 encoding: ANSI X12 (3/2 byte per CW)
+     *
+     * @var int
      */
     public const ENC_X12 = 3;
 
     /**
      * EDIFACT encoding: ASCII character 32 to 94 (4/3 bytes per CW)
+     *
+     * @var int
      */
     public const ENC_EDF = 4;
 
     /**
      * BASE 256 encoding: ASCII character 0 to 255 (1 byte per CW)
+     *
+     * @var int
      */
     public const ENC_BASE256 = 5;
 
     /**
      * ASCII extended encoding: ASCII character 128 to 255 (1/2 byte per CW)
+     *
+     * @var int
      */
     public const ENC_ASCII_EXT = 6;
 
     /**
      * ASCII number encoding: ASCII digits (2 bytes per CW)
+     *
+     * @var int
      */
     public const ENC_ASCII_NUM = 7;
 
@@ -93,6 +109,8 @@ class Data
      * <li>data codewords per block</li>
      * <li>error codewords per block</li>
      * </ul></li></ul>
+     *
+     * @var array<string, array<array{int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int}>>
      */
     public const SYMBATTR = [
         'S' => [
@@ -675,6 +693,8 @@ class Data
 
     /**
      * Map encodation modes whit character sets.
+     *
+     * @var array<int, string>
      */
     public const CHSET_ID = [
         self::ENC_C40 => 'C40',
@@ -684,6 +704,8 @@ class Data
 
     /**
      * Basic set of characters for each encodation mode.
+     *
+     * @var array<string, array<int|string, int>>
      */
     public const CHSET = [
         'C40' => [
@@ -960,11 +982,11 @@ class Data
      * @param string $shape Shape.
      * @param int    $ncw   Number of codewords.
      *
-     * @return array params
+     * @return array{int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int}
      *
      * @throws BarcodeException in case of error
      */
-    public static function getPaddingSize($shape, $ncw)
+    public static function getPaddingSize(string $shape, int $ncw): array
     {
         foreach (Data::SYMBATTR[$shape] as $params) {
             if ($params[11] >= $ncw) {
