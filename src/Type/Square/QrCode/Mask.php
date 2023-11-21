@@ -44,8 +44,9 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      *
      * @param int  $version       Code version
      * @param int  $level         Error Correction Level
-     * @param bool $qr_find_from_random If false, checks all masks available,
-     *                            otherwise the value indicates the number of masks to be checked, mask id are random
+     * @param int $qr_find_from_random If negative, checks all masks available,
+     *                            otherwise the value indicates the number of masks to be checked, 
+     *                            mask ids are random
      * @param bool $qr_find_best_mask If true, estimates best mask (slow)
      * @param int $qr_default_mask Default mask used when $fbm is false
      */
@@ -61,7 +62,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
          * Error correction level
          */
         protected int $level,
-        protected bool $qr_find_from_random = false,
+        protected int $qr_find_from_random = -1,
         protected bool $qr_find_best_mask = true,
         protected int $qr_default_mask = 2
     ) {
@@ -85,7 +86,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
         $minDemerit = PHP_INT_MAX;
         $bestMask = [];
         $checked_masks = [0, 1, 2, 3, 4, 5, 6, 7];
-        if ($this->qr_find_from_random) {
+        if ($this->qr_find_from_random >= 0) {
             $howManuOut = (8 - ($this->qr_find_from_random % 9));
             for ($idx = 0; $idx < $howManuOut; ++$idx) {
                 $remPos = random_int(0, (count($checked_masks) - 1));

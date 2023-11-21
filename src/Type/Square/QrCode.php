@@ -68,14 +68,15 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
     protected bool $case_sensitive = true;
 
     /**
-     * If false, checks all masks available,
-     * otherwise the value indicates the number of masks to be checked, mask id are random
+     * If negative, checks all masks available,
+     * otherwise the value indicates the number of masks to be checked, 
+     * mask ids are random.
      */
-    protected int|bool $random_mask = false;
+    protected int $random_mask = -1;
 
     /**
      * If true, estimates best mask (spec. default, but extremally slow;
-     * set to false to significant performance boost but (propably) worst quality code
+     * set to false to significant performance boost but (propably) worst quality code.
      */
     protected bool $best_mask = true;
 
