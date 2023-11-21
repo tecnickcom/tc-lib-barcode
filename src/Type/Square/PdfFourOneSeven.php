@@ -82,6 +82,19 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
 
     /**
      * Information for macro block
+     *
+     * @var array{
+     *          'file_id'?: string,
+     *          'option_0'?: string,
+     *          'option_1'?: string,
+     *          'option_2'?: string,
+     *          'option_3'?: string,
+     *          'option_4'?: string,
+     *          'option_5'?: string,
+     *          'option_6'?: string,
+     *          'segment_index'?: int,
+     *          'segment_total'?: int,
+     *      }
      */
     protected array $macro = [];
 
@@ -93,12 +106,19 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         parent::setParameters();
 
         // aspect ratio
-        if (! empty($this->params[0]) && (($aspectratio = (float) $this->params[0]) >= 1)) {
+        if (
+            ! empty($this->params[0])
+            && (($aspectratio = (float) $this->params[0]) >= 1)
+        ) {
             $this->aspectratio = $aspectratio;
         }
 
         // error correction level (auto)
-        if (isset($this->params[1]) && (($ecl = (int) $this->params[1]) >= 0) && ($ecl <= 8)) {
+        if (
+            isset($this->params[1])
+            && (($ecl = (int) $this->params[1]) >= 0)
+            && ($ecl <= 8)
+        ) {
             $this->ecl = $ecl;
         }
 
@@ -130,6 +150,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
                     && (is_string($this->params[$opt]))
                     && ($this->params[$opt] !== '')
                 ) {
+                    /* @phpstan-ignore-next-line */
                     $this->macro['option_' . $idx] = strtr($this->params[$opt], "\xff", ',');
                 }
             }
@@ -155,6 +176,8 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      * Get macro control block codewords
      *
      * @param int $numcw Number of codewords
+     *
+     * @return array<int, int>
      */
     protected function getMacroBlock(int &$numcw): array
     {
@@ -205,6 +228,8 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      * @param int $rows number of rows
      * @param int $cols number of columns
      * @param int $ecl eroor correction level
+     *
+     * @return array<int, int>
      *
      * @throws BarcodeException in case of error
      */
