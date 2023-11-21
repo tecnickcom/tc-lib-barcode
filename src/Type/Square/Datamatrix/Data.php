@@ -957,6 +957,9 @@ class Data
     /**
      * Get the required codewords padding size
      *
+     * @param string $shape Shape.
+     * @param int    $ncw   Number of codewords.
+     *
      * @return array params
      *
      * @throws BarcodeException in case of error

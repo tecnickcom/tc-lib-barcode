@@ -91,7 +91,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         }
 
         if ($len <= 10) {
-            return $ccheck;
+            return ((string) $ccheck);
         }
 
         // calculate check digit K
@@ -110,7 +110,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         }
 
         $kcheck %= 11;
-        return $ccheck . $kcheck;
+        return ((string) $ccheck . $kcheck);
     }
 
     /**

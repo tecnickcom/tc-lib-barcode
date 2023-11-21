@@ -481,7 +481,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $this->bars = [];
         $code_arr = explode('-', $this->code);
         $tracking_number = $code_arr[0];
-        $binary_code = 0;
+        $binary_code = '0';
         if (isset($code_arr[1])) {
             $binary_code = $this->getRoutingCode($code_arr[1]);
         }
