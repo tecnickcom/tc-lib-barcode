@@ -105,7 +105,7 @@ class Barcode
         int $height = -1,
         string $color = 'black',
         array $padding = [0, 0, 0, 0]
-    ): Type {
+    ): Model {
         // extract extra parameters (if any)
         $params = explode(',', $type);
         $type = array_shift($params);
@@ -152,6 +152,7 @@ class Barcode
         };
 
         $class = '\\Com\\Tecnick\\Barcode\\Type\\' . $bclass;
+        /* @phpstan-ignore-next-line */
         return new $class($code, $width, $height, $color, $params, $padding);
     }
 }

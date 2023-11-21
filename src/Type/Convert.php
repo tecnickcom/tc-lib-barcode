@@ -50,6 +50,8 @@ abstract class Convert
 
     /**
      * Array containing extra parameters for the specified barcode type
+     *
+     * @var array<int|float|string>
      */
     protected array $params = [];
 
@@ -236,6 +238,8 @@ abstract class Convert
      *
      * @param string $space_char Character or string to use for filling empty spaces
      * @param string $bar_char   Character or string to use for filling bars
+     *
+     * @return array<int, array<int, string>>
      */
     public function getGridArray(
         string $space_char = '0',

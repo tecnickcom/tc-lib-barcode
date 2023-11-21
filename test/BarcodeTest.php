@@ -103,6 +103,7 @@ class BarcodeTest extends TestUtil
             [-2, 3, 0, 1]
         )->setBackgroundColor('mediumaquamarine');
         $bobjarr = $type->getArray();
+        $this->assertNotNull($bobjarr['bg_color_obj']);
         $this->assertEquals('#66cdaaff', $bobjarr['bg_color_obj']->getRgbaHexColor());
     }
 

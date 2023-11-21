@@ -36,7 +36,7 @@ use Com\Tecnick\Color\Pdf;
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
+abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 {
     /**
      * Initialize a new barcode object
@@ -216,6 +216,26 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
 
     /**
      * Get the barcode raw array
+     *
+     * @return array{
+     *             'type': string,
+     *             'format': string,
+     *             'params': array<int|float|string>,
+     *             'code': string,
+     *             'extcode': string,
+     *             'ncols': int,
+     *             'nrows': int,
+     *             'width': int,
+     *             'height': int,
+     *             'width_ratio': float,
+     *             'height_ratio': float,
+     *             'padding': array{'T': int, 'R': int, 'B': int, 'L': int},
+     *             'full_width': int,
+     *             'full_height': int,
+     *             'color_obj': Rgb,
+     *             'bg_color_obj': ?Rgb,
+     *             'bars': array<array<int>>,
+     *         }
      */
     public function getArray(): array
     {
@@ -520,7 +540,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the array containing all the formatted bars coordinates
      */
-    public function getBarsArrayXYXY(): array
+    protected function getBarsArrayXYXY(): array
     {
         $rect = [];
         foreach ($this->bars as $bar) {
@@ -557,7 +577,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     /**
      * Get the array containing all the formatted bars coordinates
      */
-    public function getBarsArrayXYWH(): array
+    protected function getBarsArrayXYWH(): array
     {
         $rect = [];
         foreach ($this->bars as $bar) {
