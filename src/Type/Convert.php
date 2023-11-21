@@ -171,13 +171,20 @@ abstract class Convert
      */
     protected function getRawCodeRows(string $data): array
     {
-        // remove spaces and newlines
-        $code = preg_replace('/[\s]*/s', '', $data);
-        // remove trailing brackets or commas
-        $code = preg_replace('/^[\[,]+/', '', $code);
-        $code = preg_replace('/[\],]+$/', '', $code);
-        // convert bracket -separated to comma-separated
-        $code = preg_replace('/[\]][\[]$/', ',', $code);
+        $search = [
+            '/[\s]*/s',    // remove spaces and newlines
+            '/^[\[,]+/',   // remove trailing brackets or commas
+            '/[\],]+$/',   // remove trailing brackets or commas
+            '/[\]][\[]$/', // convert bracket -separated to comma-separated
+        ];
+
+        $replace = ['', '', '', ''];
+
+        $code = preg_replace($search, $replace, $data);
+        if ($code === null) {
+            throw new BarcodeException('Invalid input string');
+        }
+
         return explode(',', $code);
     }
 
