@@ -43,16 +43,16 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         array &$temp_cw,
         int &$ptr
     ): void {
-        if (array_key_exists($chr, Data::CHSET['SH1'])) {
+        if (isset(Data::CHSET['SH1'][$chr])) {
             $temp_cw[] = 0; // shift 1
             $shiftset = Data::CHSET['SH1'];
-        } elseif (array_key_exists($chr, Data::CHSET['SH2'])) {
+        } elseif (isset(Data::CHSET['SH2'][$chr])) {
             $temp_cw[] = 1; // shift 2
             $shiftset = Data::CHSET['SH2'];
-        } elseif (($enc == Data::ENC_C40) && array_key_exists($chr, Data::CHSET['S3C'])) {
+        } elseif (($enc == Data::ENC_C40) && isset(Data::CHSET['S3C'][$chr])) {
             $temp_cw[] = 2; // shift 3
             $shiftset = Data::CHSET['S3C'];
-        } elseif (($enc == Data::ENC_TXT) && array_key_exists($chr, Data::CHSET['S3T'])) {
+        } elseif (($enc == Data::ENC_TXT) && isset(Data::CHSET['S3T'][$chr])) {
             $temp_cw[] = 2; // shift 3
             $shiftset = Data::CHSET['S3T'];
         } else {

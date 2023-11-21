@@ -108,21 +108,31 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
         parent::setParameters();
 
         // level
-        if (! isset($this->params[0]) || ! array_key_exists($this->params[0], Data::ECC_LEVELS)) {
+        if (
+            ! isset($this->params[0]) 
+            || ! isset(Data::ECC_LEVELS[$this->params[0]])
+        ) {
             $this->params[0] = 'L';
         }
 
         $this->level = Data::ECC_LEVELS[$this->params[0]];
 
         // hint
-        if (! isset($this->params[1]) || ! array_key_exists($this->params[1], Data::ENC_MODES)) {
+        if (
+            ! isset($this->params[1]) 
+            || ! isset(Data::ENC_MODES[$this->params[1]])
+        ) {
             $this->params[1] = '8B';
         }
 
         $this->hint = Data::ENC_MODES[$this->params[1]];
 
         // version
-        if (! isset($this->params[2]) || ($this->params[2] < 0) || ($this->params[2] > Data::QRSPEC_VERSION_MAX)) {
+        if (
+            ! isset($this->params[2]) 
+            || ($this->params[2] < 0) 
+            || ($this->params[2] > Data::QRSPEC_VERSION_MAX)
+        ) {
             $this->params[2] = 0;
         }
 
