@@ -16,6 +16,8 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Aztec;
 
+use Com\Tecnick\Barcode\Exception as BarcodeException;
+
 /**
  * Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
  *
@@ -46,7 +48,12 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         string $hint = 'A'
     ): void {
         $this->addFLG($eci);
-        $chars = array_values(unpack('C*', $code));
+        $chrarr = unpack('C*', $code);
+        if ($chrarr === false) {
+            throw new BarcodeException('Unable to unpack the code');
+        }
+
+        $chars = array_values($chrarr);
         $chrlen = count($chars);
         if ($hint == 'B') {
             $this->binaryEncode($chars, $chrlen);
@@ -59,7 +66,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Forced binary encoding for the given characters.
      *
-     * @param array $chars  Integer ASCII values of the characters to encode.
+     * @param array<int, int> $chars  Integer ASCII values of the characters to encode.
      * @param int   $chrlen Lenght of the $chars array.
      */
     protected function binaryEncode(array $chars, int $chrlen): void
@@ -100,7 +107,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Automatic encoding for the given characters.
      *
-     * @param array $chars  Integer ASCII values of the characters to encode.
+     * @param array<int, int> $chars  Integer ASCII values of the characters to encode.
      * @param int   $chrlen Lenght of the $chars array.
      */
     protected function autoEncode(array $chars, int $chrlen): void
@@ -122,7 +129,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Process mode characters.
      *
-     * @param array $chars The array of characters.
+     * @param array<int, int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      */
@@ -151,7 +158,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Count consecutive characters in the same mode.
      *
-     * @param array $chars The array of characters.
+     * @param array<int, int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      * @param int $mode The current mode.
@@ -185,7 +192,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Process consecutive binary characters.
      *
-     * @param array $chars The array of characters.
+     * @param array<int, int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
@@ -240,7 +247,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Count consecutive binary characters.
      *
-     * @param array $chars The array of characters.
+     * @param array<int, int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
@@ -271,7 +278,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Process consecutive special Punctuation Pairs.
      *
-     * @param array $chars The array of characters.
+     * @param array<int, int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
@@ -327,7 +334,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Count consecutive special Punctuation Pairs.
      *
-     * @param array $chars The array of characters.
+     * @param array<int, int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      */
@@ -357,9 +364,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * Counts the number of consecutive charcters that are in both PUNCT or DIGIT modes.
      * Returns the array with the codewords.
      *
-     * @param array &$chars The string to count the characters in.
+     * @param array<int, int> &$chars The string to count the characters in.
      * @param int   $idx    The starting index to count from.
      * @param int   $chrlen The length of the string to count.
+     *
+     * @return array<int, array{int, int}> The array of codewords.
      */
     protected function countPunctAndDigitChars(
         array &$chars,

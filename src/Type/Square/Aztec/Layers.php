@@ -43,13 +43,16 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
 
     /**
      * Size data for the selected layer.
+     *
+     * @var array{int, int, int, int, int, int, int}
      */
-    protected array $layer = [];
+    protected array $layer = [0, 0, 0, 0, 0, 0, 0];
 
     /**
      * Returns the minimum number of layers required.
      *
-     * @param array $data Either the Data::SIZE_COMPACT or Data::SIZE_FULL array.
+     * @param array<int, array{int, int, int, int, int, int, int}> $data
+     *        Either the Data::SIZE_COMPACT or Data::SIZE_FULL array.
      * @param int   $numbits The number of bits to encode.
      */
     protected function getMinLayers(array $data, int $numbits): int

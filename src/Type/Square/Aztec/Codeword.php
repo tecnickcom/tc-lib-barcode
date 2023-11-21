@@ -38,18 +38,17 @@ abstract class Codeword
 
     /**
      * Array containing the high-level encoding bitstream.
+     *
+     * @var array<int>
      */
     protected array $bitstream = [];
 
     /**
      * Temporary array of codewords.
+     *
+     * @var array<int, array{int, int}>
      */
     protected array $tmpCdws = [];
-
-    /**
-     * Array of data words.
-     */
-    protected array $words = [];
 
     /**
      * Count the total number of bits in the bitstream.
@@ -131,7 +130,7 @@ abstract class Codeword
     /**
      * Append a new Codeword as a big-endian bit sequence.
      *
-     * @param array $bitstream Array of bits to append to.
+     * @param array<int> $bitstream Array of bits to append to.
      * @param int   $totbits   Number of bits in the bitstream.
      * @param int   $wsize     The number of bits in the codeword.
      * @param int   $value     The value of the codeword.
@@ -152,9 +151,11 @@ abstract class Codeword
     /**
      * Convert the bitstream to words.
      *
-     * @param array $bitstream Array of bits to convert.
+     * @param array<int> $bitstream Array of bits to convert.
      * @param int   $totbits   Number of bits in the bitstream.
      * @param int   $wsize     The word size.
+     *
+     * @return array<int> Array of words.
      */
     protected function bitstreamToWords(
         array $bitstream,
