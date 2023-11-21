@@ -44,6 +44,8 @@ class CodeOneTwoEightC extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
     /**
      * Get the code point array
      *
+     * @return array<int, int>
+     *
      * @throws BarcodeException in case of error
      */
     protected function getCodeData(): array

@@ -37,6 +37,8 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     /**
      * Get the coe point array
      *
+     * @return array<int, int>
+     *
      * @throws BarcodeException in case of error
      */
     protected function getCodeData(): array
@@ -59,11 +61,11 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     /**
      * Process the A sequence
      *
-     * @param array  $sequence   Sequence to process
-     * @param array  $code_data  Array of codepoints to alter
+     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
-     * @param array $seq        Sequence current value
+     * @param array{string, string, int} $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */
@@ -98,11 +100,11 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     /**
      * Process the B sequence
      *
-     * @param array  $sequence   Sequence to process
-     * @param array  $code_data  Array of codepoints to alter
+     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
-     * @param array $seq        Sequence current value
+     * @param array{string, string, int} $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */
@@ -125,11 +127,11 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     /**
      * Process the B-A sequence
      *
-     * @param array  $sequence   Sequence to process
-     * @param array  $code_data  Array of codepoints to alter
+     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
-     * @param array $seq        Sequence current value
+     * @param array{string, string, int} $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */
@@ -168,10 +170,10 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     /**
      * Process the B-B sequence
      *
-     * @param array  $sequence   Sequence to process
-     * @param array  $code_data  Array of codepoints to alter
+     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $key        Sequence current key
-     * @param array $seq        Sequence current value
+     * @param array{string, string, int} $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */
@@ -199,11 +201,11 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     /**
      * Process the C sequence
      *
-     * @param array  $sequence   Sequence to process
-     * @param array  $code_data  Array of codepoints to alter
+     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
-     * @param array $seq        Sequence current value
+     * @param array{string, string, int} $seq        Sequence current value
      *
      * @throws BarcodeException in case of error
      */

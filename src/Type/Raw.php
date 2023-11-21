@@ -33,7 +33,7 @@ namespace Com\Tecnick\Barcode\Type;
 class Raw extends \Com\Tecnick\Barcode\Type
 {
     /**
-     * Get the bars array
+     * Generate the bars array
      */
     protected function setBars(): void
     {

@@ -215,6 +215,8 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @param string $code Code to parse
      *
+     * @return array<int, array{string, string, int}>
+     *
      * @throws BarcodeException in case of error
      */
     protected function getNumericSequence(string $code): array
@@ -267,7 +269,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @param string $code Code to split
      *
-     * @return array sequence
+     * @return array<int, array{string, string, int}>
      */
     protected function get128ABsequence(string $code): array
     {
@@ -307,7 +309,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Get the A code point array
      *
-     * @param array  $code_data  Array of codepoints to alter
+     * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param string $code       Code to process
      * @param int    $len        Number of characters to process
      *
@@ -334,7 +336,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Get the B code point array
      *
-     * @param array  $code_data  Array of codepoints to alter
+     * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param string $code       Code to process
      * @param int    $len        Number of characters to process
      *
@@ -361,7 +363,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Get the C code point array
      *
-     * @param array  $code_data  Array of codepoints to alter
+     * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param string $code       Code to process
      *
      * @throws BarcodeException in case of error
@@ -399,8 +401,10 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Finalize code data
      *
-     * @param array  $code_data  Array of codepoints to alter
+     * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID code
+     *
+     * @return array<int, int> Array of codepoints
      */
     protected function finalizeCodeData(
         array $code_data,
