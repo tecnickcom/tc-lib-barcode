@@ -392,7 +392,11 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         $gdImage = $this->getGd();
         ob_start();
         imagepng($gdImage);
-        return ob_get_clean();
+        $data = ob_get_clean();
+        if ($data === false) {
+            throw new BarcodeException('Unable to get PNG data');
+        }
+        return $data;
     }
 
     /**
