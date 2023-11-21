@@ -376,7 +376,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Get the Frame Check Sequence
      *
-     * @param array $code_arr Array of hexadecimal values (13 bytes holding 102 bits right justified).
+     * @param array<int, string> $code_arr Array of hexadecimal values (13 bytes holding 102 bits right justified).
      *
      * @return int 11 bit Frame Check Sequence as integer (decimal base)
      */
@@ -413,7 +413,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      * @param int $type  Table type: 2 for 2of13 table, 5 for 5of13table
      * @param int $size Table size (78 for n=2 and 1287 for n=5)
      *
-     * @return array requested table
+     * @return array<int, int> requested table
      */
     protected function getTables(int $type, int $size): array
     {
@@ -471,6 +471,8 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
 
     /**
      * Get the processed array of characters
+     *
+     * @return array<int, int>
      *
      * @throws BarcodeException in case of error
      */
