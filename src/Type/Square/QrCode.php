@@ -69,7 +69,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
 
     /**
      * If negative, checks all masks available,
-     * otherwise the value indicates the number of masks to be checked, 
+     * otherwise the value indicates the number of masks to be checked,
      * mask ids are random.
      */
     protected int $random_mask = -1;

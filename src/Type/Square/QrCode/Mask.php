@@ -45,7 +45,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * @param int  $version       Code version
      * @param int  $level         Error Correction Level
      * @param int $qr_find_from_random If negative, checks all masks available,
-     *                            otherwise the value indicates the number of masks to be checked, 
+     *                            otherwise the value indicates the number of masks to be checked,
      *                            mask ids are random
      * @param bool $qr_find_best_mask If true, estimates best mask (slow)
      * @param int $qr_default_mask Default mask used when $fbm is false
@@ -89,7 +89,8 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
         if ($this->qr_find_from_random >= 0) {
             $howManuOut = (8 - ($this->qr_find_from_random % 9));
             for ($idx = 0; $idx < $howManuOut; ++$idx) {
-                $remPos = random_int(0, (count($checked_masks) - 1));
+                $maxpos = (count($checked_masks) - 1);
+                $remPos = ($maxpos > 0) ? random_int(0, $maxpos) : 0;
                 unset($checked_masks[$remPos]);
                 $checked_masks = array_values($checked_masks);
             }
