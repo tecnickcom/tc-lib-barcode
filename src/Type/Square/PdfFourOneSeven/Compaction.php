@@ -3,13 +3,13 @@
 /**
  * Process.php
  *
- * @since       2015-02-21
- * @category    Library
- * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
- * @link        https://github.com/tecnickcom/tc-lib-barcode
+ * @since     2015-02-21
+ * @category  Library
+ * @package   Barcode
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2010-2023 Nicola Asuni - Tecnick.com LTD
+ * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-barcode
  *
  * This file is part of tc-lib-barcode software library.
  */
@@ -21,18 +21,26 @@ namespace Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven;
  *
  * Process for PdfFourOneSeven Barcode type class
  *
- * @since       2015-02-21
- * @category    Library
- * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
- * @link        https://github.com/tecnickcom/tc-lib-barcode
+ * @since     2015-02-21
+ * @category  Library
+ * @package   Barcode
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2010-2023 Nicola Asuni - Tecnick.com LTD
+ * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-barcode
  */
 abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Sequence
 {
     /**
      * Process Sub Text Compaction
+     *
+     * @param array<int, int> $txtarr  Array of characters and sub-mode switching characters
+     * @param int             $submode Current submode
+     * @param int             $sub     New submode
+     * @param string          $code    Data to compact
+     * @param int             $key     Character code
+     * @param int             $idx     Current index
+     * @param int             $codelen Code length
      */
     protected function processTextCompactionSub(
         array &$txtarr,
@@ -58,15 +66,15 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
             $submode = $sub;
         }
 
-        // add characted code to array
+        // add character code to array
         $txtarr[] = $key;
     }
 
     /**
      * Process Text Compaction
      *
-     * @param string  $code      Data to compact
-     * @param array  $codewords Codewords
+     * @param string          $code      Data to compact
+     * @param array<int, int> $codewords Codewords
      */
     protected function processTextCompaction(string $code, array &$codewords): void
     {
@@ -109,8 +117,8 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
     /**
      * Process Byte Compaction
      *
-     * @param string  $code      Data to compact
-     * @param array  $codewords Codewords
+     * @param string          $code      Data to compact
+     * @param array<int, int> $codewords Codewords
      */
     protected function processByteCompaction(string $code, array &$codewords): void
     {
@@ -155,8 +163,8 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
     /**
      * Process Numeric Compaction
      *
-     * @param string  $code      Data to compact
-     * @param array  $codewords Codewords
+     * @param string          $code      Data to compact
+     * @param array<int, int> $codewords Codewords
      */
     protected function processNumericCompaction(string $code, array &$codewords): void
     {
@@ -181,11 +189,11 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
     /**
      * Compact data by mode
      *
-     * @param int     $mode    Compaction mode number
-     * @param string  $code    Data to compact
-     * @param bool $addmode If true add the mode codeword in the first position
+     * @param int    $mode    Compaction mode number
+     * @param string $code    Data to compact
+     * @param bool   $addmode If true add the mode codeword in the first position
      *
-     * @return array of codewords
+     * @return array<int, int> of codewords
      */
     protected function getCompaction(
         int $mode,
