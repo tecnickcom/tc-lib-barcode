@@ -277,9 +277,7 @@ abstract class Convert
     protected function getRotatedBarArray(): array
     {
         $grid = $this->getGridArray();
-        $cols = array_map(...[
-            -1 => null,
-        ] + $grid);
+        $cols = array_map(null, ...$grid);
         $bars = [];
         foreach ($cols as $posx => $col) {
             $prevrow = '';
