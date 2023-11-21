@@ -440,6 +440,10 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
         $width = (int) ceil($this->width + $this->padding['L'] + $this->padding['R']);
         $height = (int) ceil($this->height + $this->padding['T'] + $this->padding['B']);
         $img = imagecreate($width, $height);
+        if ($img === false) {
+            throw new BarcodeException('Unable to create GD image');
+        }
+
         if (! $this->bg_color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
             $bgobj = clone $this->color_obj;
             $rgbcolor = $bgobj->invertColor()->getNormalizedArray(255);
@@ -449,6 +453,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
                 (int) round($rgbcolor['G']),
                 (int) round($rgbcolor['B']),
             );
+            if ($background_color === false) {
+                throw new BarcodeException('Unable to allocate default GD background color');
+            }
             imagecolortransparent($img, $background_color);
         } else {
             $rgbcolor = $this->bg_color_obj->getNormalizedArray(255);
@@ -458,6 +465,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
                 (int) round($rgbcolor['G']),
                 (int) round($rgbcolor['B']),
             );
+            if ($bg_color === false) {
+                throw new BarcodeException('Unable to allocate GD background color');
+            }
             imagefilledrectangle($img, 0, 0, $width, $height, $bg_color);
         }
 
@@ -468,6 +478,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
             (int) round($rgbcolor['G']),
             (int) round($rgbcolor['B']),
         );
+        if ($bar_color === false) {
+            throw new BarcodeException('Unable to allocate GD foreground color');
+        }
         $bars = $this->getBarsArrayXYXY();
         foreach ($bars as $bar) {
             imagefilledrectangle(
