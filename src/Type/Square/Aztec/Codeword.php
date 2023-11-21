@@ -78,7 +78,7 @@ abstract class Codeword
      */
     protected function charMode(int $ord): int
     {
-        return isset($ord, Data::CHAR_MODES[$ord]) ? Data::CHAR_MODES[$ord] : Data::MODE_BINARY;
+        return isset(Data::CHAR_MODES[$ord]) ? Data::CHAR_MODES[$ord] : Data::MODE_BINARY;
     }
 
     /**
