@@ -172,11 +172,12 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      */
     public function setColor(string $color): static
     {
-        $this->color_obj = $this->getRgbColorObject($color);
-        if (! $this->color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
+        $colobj = $this->getRgbColorObject($color);
+        if (! $colobj instanceof \Com\Tecnick\Color\Model\Rgb) {
             throw new BarcodeException('The foreground color cannot be empty or transparent');
         }
 
+        $this->color_obj = $colobj;
         return $this;
     }
 

@@ -115,7 +115,7 @@ abstract class Convert
     /**
      * Foreground Color object
      */
-    protected ?Color $color_obj = null;
+    protected Color $color_obj;
 
     /**
      * Backgorund Color object
