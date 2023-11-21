@@ -395,7 +395,7 @@ class DatamatrixTest extends TestUtil
     /**
      * @dataProvider getStringDataProvider
      */
-    public function testStrings(string|array $code): void
+    public function testStrings(string $code): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('DATAMATRIX', $code);

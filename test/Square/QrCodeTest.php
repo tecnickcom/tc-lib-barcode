@@ -62,6 +62,9 @@ class QrCodeTest extends TestUtil
         $this->assertEquals($expected, md5($grid));
     }
 
+    /**
+     * @return array<array{string, string, string}>
+     */
     public static function getGridDataProvider(): array
     {
         return [
@@ -300,47 +303,47 @@ class QrCodeTest extends TestUtil
             [
                 '',
                 'w(fa`nC]e=}OY(K^ 3xN1Vz1g<F=P%!H-h*nWNL>kKnFS;&TN '
-                    . '$`W~r?;9\\l?]5MF@<~oh>\\4-#hH*=w*AYaAL!]f^J&<`Tc!'
-                    . 'pcpZ"Nn0RWY\\uQf8+HZXJ8?*bFGDz+Eln7Gqe6"8n[te.\\}'
-                    . ':&YrQq3[UY#yU.@B}Xio>!rWoNMV]*Uw0/kb!~>WYAR0PrROK'
-                    . '=?j>3B/boe@z;8,K$nM$-%]OWm KAOv^oa}#%-ets&p/?|[Dk'
-                    . ')Hy.\'IfuI27y*viktmq#Tfv[X\'zUb?Bkh=zofbe1t|+~tuk'
-                    . 'id]l9Edt}kpTO0w<x57h|yO.oM:oB1[-u:z/`_%_Lu4{\',9 '
-                    . 'BPi?K:M;gh,+yh8p#3!ds&D@|X=$eV%((oGS*uor^{}Ye6JhJ'
-                    . 'LM>Sr^PK|T2SZ:[Jb0UX!I8}Grc^>L)jzG>n\'n:%DMX g5KK'
-                    . 'F!$GJ=Er0*QOVZ:R#YA+H\\0m*inr :>G;Cof`5Yq@,Avg\\J'
-                    . 'j6lv_J(MUq<IrWg:s,*Zl@5_`B"X*^$utqlT<t#rg@<[w%uk1'
-                    . '!G~A]^# `\\*?` 5RmiocmcL. (&&~r7 :6BwuFwW##wc#-7q'
-                    . 'w(Uek#sl+zr*m*+)AN!8tyow|h\\!vssn|IUiMJVXEJc4To>v'
-                    . '>?03:!+8ig9`\\-PZW\'D%Qz^wEC,z3JrQj#d&$p>nYXP6f!p'
-                    . '?)5EZ1$RWH_S[+F-vIr|Nc<==tmT\\oF{x\\ASnF\'FnfyKr@'
-                    . 'YijLg91$VOyD%V4KS-(tav;h>+P8VCY0.D]u^nz6?tZDLoo }'
-                    . 'xt_p1I0=zIs?#%MHbD(R?>q4y7ai(ah"WIrir$\'nM{.P![yd'
-                    . ' "7@@*T:A7%IxmKP7?:+CAyp>)B?e<$e><\'_F\\yhs~2ll^>'
-                    . '%~X1Bz+494VYys^`2zhrBEl+9l>&Y}D_|}p@y|T32,m- Ln3H'
-                    . 'W&j|sv6`6=;5bz2alS[i(o{5]*6*xIRPP>NE6d&L#Abe=tG+H'
-                    . '$tQsqgQ{}\\tH0FyNt?eZE2]gtD&jl14p\'fdxO7uMskv$2pS'
-                    . '(19bWLA@BeF-RXBD_*)YY@O\'5;~9NolV!\':YS[yuA@$tyF9'
-                    . 'YPC3*cc2y~13N"!%$(@][{WR>xV4r|MMNp`YUDkPD|cr~ex#m'
-                    . '9`J69}T2Th&R7S")4[_YG0~EtqDZkHI&*t<CrpVHZ\\zr0|{E'
-                    . 'X[ !l~Faqk<]4fd?[!bNr:vMvr@(p=MJyMKfMrH?^e}sLb3)c'
-                    . 'uWV0O%(CF04c]_],,EY~ny^TwR"[e+@[cwl3|uWD&l(dLfqY,'
-                    . 'LXzF7P?iRzO^<,B4yV2o.Vvz^[HFM"Ry[NAr~`]R\\.1x;S.5'
-                    . '*@%9v|4VX]|\'_P";~C/~%mQa{c[77iMB+R["PpY)NV1/(3K('
-                    . 'W[\'\\IY?E={]Uf+wq^Ts/EM9t%J$-]P65,=rUw2{6.Zktedg'
-                    . 'E:\\U`+nU09Z>w+T.8r!mk4j"CEn9+S!Qn]\'Ohu%y0`9)lm7'
-                    . '%a9sMN^Oq$?,0r.ablh2U_8PoxixeX1k;K_hy>9lBXxRL\'5/'
-                    . 's~BJ^Z{OSfI:?[&[\'eD!$^mG8gzen1uc08/or+@Fria2FgnM'
-                    . 'N3NRr=z+%uqt\'gY8 h(rtI:g4{zZdi(3}Wfpta|zXoo`WIxX'
-                    . '3"L)Kgp_cl:IVB\\UyCGo&Ej^5[?m&8F::rCfZ4F?"`hX$F/~'
-                    . 'iVoo{[O17n~>(FXC9{*t1P532}l7E{7/R\' ObO`y?`9G(qjB'
-                    . 'mu7 GM3ZK!qp|)!P1" sRanqC(:Ky&mh{&hDS|~ }qqzzrL,u'
-                    . 'L!H/o:RwU}r[l\\XrE|FB{FAm9=i-iv#7wKFgfx`<wTxd1QWV'
-                    . 'N~yKF<9_Y$lDzo[r<#[${=Atq:Y#k2Z;1UfXq!8K%&p vMs3P'
-                    . 'O7MlYB^s{b`/=|@rcxde21j9#k0P`C!0[N}5p]*m@k|^h>RM8'
-                    . '83KI~dMkt}L9 ]uN[,@:6/[",:jKl8c%L/OKs}7i{c#{BxK}%'
-                    . 'k9<zt>(0*S}C7#oGS;<QS&N8)KZ"vY(crD_hchxm<v1Tz!{N='
-                    . '9!p?P*H{dKs>TW2x8z]!sK=k]rf',
+                . '$`W~r?;9\\l?]5MF@<~oh>\\4-#hH*=w*AYaAL!]f^J&<`Tc!'
+                . 'pcpZ"Nn0RWY\\uQf8+HZXJ8?*bFGDz+Eln7Gqe6"8n[te.\\}'
+                . ':&YrQq3[UY#yU.@B}Xio>!rWoNMV]*Uw0/kb!~>WYAR0PrROK'
+                . '=?j>3B/boe@z;8,K$nM$-%]OWm KAOv^oa}#%-ets&p/?|[Dk'
+                . ')Hy.\'IfuI27y*viktmq#Tfv[X\'zUb?Bkh=zofbe1t|+~tuk'
+                . 'id]l9Edt}kpTO0w<x57h|yO.oM:oB1[-u:z/`_%_Lu4{\',9 '
+                . 'BPi?K:M;gh,+yh8p#3!ds&D@|X=$eV%((oGS*uor^{}Ye6JhJ'
+                . 'LM>Sr^PK|T2SZ:[Jb0UX!I8}Grc^>L)jzG>n\'n:%DMX g5KK'
+                . 'F!$GJ=Er0*QOVZ:R#YA+H\\0m*inr :>G;Cof`5Yq@,Avg\\J'
+                . 'j6lv_J(MUq<IrWg:s,*Zl@5_`B"X*^$utqlT<t#rg@<[w%uk1'
+                . '!G~A]^# `\\*?` 5RmiocmcL. (&&~r7 :6BwuFwW##wc#-7q'
+                . 'w(Uek#sl+zr*m*+)AN!8tyow|h\\!vssn|IUiMJVXEJc4To>v'
+                . '>?03:!+8ig9`\\-PZW\'D%Qz^wEC,z3JrQj#d&$p>nYXP6f!p'
+                . '?)5EZ1$RWH_S[+F-vIr|Nc<==tmT\\oF{x\\ASnF\'FnfyKr@'
+                . 'YijLg91$VOyD%V4KS-(tav;h>+P8VCY0.D]u^nz6?tZDLoo }'
+                . 'xt_p1I0=zIs?#%MHbD(R?>q4y7ai(ah"WIrir$\'nM{.P![yd'
+                . ' "7@@*T:A7%IxmKP7?:+CAyp>)B?e<$e><\'_F\\yhs~2ll^>'
+                . '%~X1Bz+494VYys^`2zhrBEl+9l>&Y}D_|}p@y|T32,m- Ln3H'
+                . 'W&j|sv6`6=;5bz2alS[i(o{5]*6*xIRPP>NE6d&L#Abe=tG+H'
+                . '$tQsqgQ{}\\tH0FyNt?eZE2]gtD&jl14p\'fdxO7uMskv$2pS'
+                . '(19bWLA@BeF-RXBD_*)YY@O\'5;~9NolV!\':YS[yuA@$tyF9'
+                . 'YPC3*cc2y~13N"!%$(@][{WR>xV4r|MMNp`YUDkPD|cr~ex#m'
+                . '9`J69}T2Th&R7S")4[_YG0~EtqDZkHI&*t<CrpVHZ\\zr0|{E'
+                . 'X[ !l~Faqk<]4fd?[!bNr:vMvr@(p=MJyMKfMrH?^e}sLb3)c'
+                . 'uWV0O%(CF04c]_],,EY~ny^TwR"[e+@[cwl3|uWD&l(dLfqY,'
+                . 'LXzF7P?iRzO^<,B4yV2o.Vvz^[HFM"Ry[NAr~`]R\\.1x;S.5'
+                . '*@%9v|4VX]|\'_P";~C/~%mQa{c[77iMB+R["PpY)NV1/(3K('
+                . 'W[\'\\IY?E={]Uf+wq^Ts/EM9t%J$-]P65,=rUw2{6.Zktedg'
+                . 'E:\\U`+nU09Z>w+T.8r!mk4j"CEn9+S!Qn]\'Ohu%y0`9)lm7'
+                . '%a9sMN^Oq$?,0r.ablh2U_8PoxixeX1k;K_hy>9lBXxRL\'5/'
+                . 's~BJ^Z{OSfI:?[&[\'eD!$^mG8gzen1uc08/or+@Fria2FgnM'
+                . 'N3NRr=z+%uqt\'gY8 h(rtI:g4{zZdi(3}Wfpta|zXoo`WIxX'
+                . '3"L)Kgp_cl:IVB\\UyCGo&Ej^5[?m&8F::rCfZ4F?"`hX$F/~'
+                . 'iVoo{[O17n~>(FXC9{*t1P532}l7E{7/R\' ObO`y?`9G(qjB'
+                . 'mu7 GM3ZK!qp|)!P1" sRanqC(:Ky&mh{&hDS|~ }qqzzrL,u'
+                . 'L!H/o:RwU}r[l\\XrE|FB{FAm9=i-iv#7wKFgfx`<wTxd1QWV'
+                . 'N~yKF<9_Y$lDzo[r<#[${=Atq:Y#k2Z;1UfXq!8K%&p vMs3P'
+                . 'O7MlYB^s{b`/=|@rcxde21j9#k0P`C!0[N}5p]*m@k|^h>RM8'
+                . '83KI~dMkt}L9 ]uN[,@:6/[",:jKl8c%L/OKs}7i{c#{BxK}%'
+                . 'k9<zt>(0*S}C7#oGS;<QS&N8)KZ"vY(crD_hchxm<v1Tz!{N='
+                . '9!p?P*H{dKs>TW2x8z]!sK=k]rf',
                 '83747986cf0df320b915587609232076',
             ],
         ];
@@ -349,7 +352,7 @@ class QrCodeTest extends TestUtil
     /**
      * @dataProvider getStringDataProvider
      */
-    public function testStrings(string|array $code): void
+    public function testStrings(string $code): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('QRCODE,H,NL,0,1,3,1', $code);
