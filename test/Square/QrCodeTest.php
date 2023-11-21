@@ -359,6 +359,9 @@ class QrCodeTest extends TestUtil
         $this->assertNotNull($type);
     }
 
+    /**
+     * @return array<array{string}>
+     */
     public static function getStringDataProvider()
     {
         return \Test\TestStrings::$data;

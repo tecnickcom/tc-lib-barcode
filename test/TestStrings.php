@@ -33,7 +33,7 @@ class TestStrings
     /**
      * Array containing testing strings.
      *
-     * @var array
+     * @var array<array{string}>
      */
     public static $data = [
         // Reserved keywords

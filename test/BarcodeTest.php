@@ -302,6 +302,7 @@ class BarcodeTest extends TestUtil
         ob_start();
         $type->getSvg();
         $svg = ob_get_clean();
+        $this->assertNotFalse($svg);
         $this->assertEquals('86e0362768e8b1b26032381232c0367f', md5($svg));
     }
 
@@ -318,6 +319,7 @@ class BarcodeTest extends TestUtil
         ob_start();
         $type->getPng();
         $png = ob_get_clean();
+        $this->assertNotFalse($png);
         $this->assertEquals('PNG', substr($png, 1, 3));
     }
 }

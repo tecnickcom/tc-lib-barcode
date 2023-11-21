@@ -62,6 +62,9 @@ class AztecTest extends TestUtil
         $this->assertEquals($expected, md5($grid));
     }
 
+    /**
+     * @return array<array{string, string, string}>
+     */
     public static function getGridDataProvider(): array
     {
         return [
@@ -227,6 +230,9 @@ class AztecTest extends TestUtil
         $this->assertNotNull($type);
     }
 
+    /**
+     * @return array<array{string}>
+     */
     public static function getStringDataProvider()
     {
         return \Test\TestStrings::$data;
