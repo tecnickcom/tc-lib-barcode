@@ -39,125 +39,255 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @var string
      */
-    protected $format = 'C93';
+    protected const FORMAT = 'C93';
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $chbar = array(
-        32  => '311211', // space
-        36  => '321111', // $
-        37  => '211131', // %
-        42  => '111141', // start-stop
-        43  => '113121', // +
-        45  => '121131', // -
-        46  => '311112', // .
-        47  => '112131', // /
-        48  => '131112', // 0
-        49  => '111213', // 1
-        50  => '111312', // 2
-        51  => '111411', // 3
-        52  => '121113', // 4
-        53  => '121212', // 5
-        54  => '121311', // 6
-        55  => '111114', // 7
-        56  => '131211', // 8
-        57  => '141111', // 9
-        65  => '211113', // A
-        66  => '211212', // B
-        67  => '211311', // C
-        68  => '221112', // D
-        69  => '221211', // E
-        70  => '231111', // F
-        71  => '112113', // G
-        72  => '112212', // H
-        73  => '112311', // I
-        74  => '122112', // J
-        75  => '132111', // K
-        76  => '111123', // L
-        77  => '111222', // M
-        78  => '111321', // N
-        79  => '121122', // O
-        80  => '131121', // P
-        81  => '212112', // Q
-        82  => '212211', // R
-        83  => '211122', // S
-        84  => '211221', // T
-        85  => '221121', // U
-        86  => '222111', // V
-        87  => '112122', // W
-        88  => '112221', // X
-        89  => '122121', // Y
-        90  => '123111', // Z
+    protected const CHBAR = [
+        32 => '311211', // space
+        36 => '321111', // $
+        37 => '211131', // %
+        42 => '111141', // start-stop
+        43 => '113121', // +
+        45 => '121131', // -
+        46 => '311112', // .
+        47 => '112131', // /
+        48 => '131112', // 0
+        49 => '111213', // 1
+        50 => '111312', // 2
+        51 => '111411', // 3
+        52 => '121113', // 4
+        53 => '121212', // 5
+        54 => '121311', // 6
+        55 => '111114', // 7
+        56 => '131211', // 8
+        57 => '141111', // 9
+        65 => '211113', // A
+        66 => '211212', // B
+        67 => '211311', // C
+        68 => '221112', // D
+        69 => '221211', // E
+        70 => '231111', // F
+        71 => '112113', // G
+        72 => '112212', // H
+        73 => '112311', // I
+        74 => '122112', // J
+        75 => '132111', // K
+        76 => '111123', // L
+        77 => '111222', // M
+        78 => '111321', // N
+        79 => '121122', // O
+        80 => '131121', // P
+        81 => '212112', // Q
+        82 => '212211', // R
+        83 => '211122', // S
+        84 => '211221', // T
+        85 => '221121', // U
+        86 => '222111', // V
+        87 => '112122', // W
+        88 => '112221', // X
+        89 => '122121', // Y
+        90 => '123111', // Z
         128 => '121221', // ($)
         129 => '311121', // (/)
         130 => '122211', // (+)
-        131 => '312111'  // (%)
-    );
+        131 => '312111',  // (%)
+    ];
 
     /**
      * Map for extended characters
      *
-     * @var array
+     * @var array<string>
      */
-    protected $extcodes = array();
+    protected const EXTCODES = [
+        "\x83U",
+        "\x80A",
+        "\x80B",
+        "\x80C",
+        "\x80D",
+        "\x80E",
+        "\x80F",
+        "\x80G",
+        "\x80H",
+        "\x80I",
+        "\x80J",
+        "\x80K",
+        "\x80L",
+        "\x80M",
+        "\x80N",
+        "\x80O",
+        "\x80P",
+        "\x80Q",
+        "\x80R",
+        "\x80S",
+        "\x80T",
+        "\x80U",
+        "\x80V",
+        "\x80W",
+        "\x80X",
+        "\x80Y",
+        "\x80Z",
+        "\x83A",
+        "\x83B",
+        "\x83C",
+        "\x83D",
+        "\x83E",
+        " ",
+        "\x81A",
+        "\x81B",
+        "\x81C",
+        "\x81D",
+        "\x81E",
+
+        "\x81F",
+        "\x81G",
+        "\x81H",
+        "\x81I",
+        "\x81J",
+        "\x81K",
+        "\x81L",
+        "-",
+        ".",
+        "\x81O",
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "\x81Z",
+        "\x83F",
+        "\x83G",
+        "\x83H",
+        "\x83I",
+        "\x83J",
+        "\x83V",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        "\x83K",
+        "\x83L",
+        "\x83M",
+        "\x83N",
+        "\x83O",
+        "\x83W",
+        "\x82A",
+        "\x82B",
+        "\x82C",
+        "\x82D",
+        "\x82E",
+        "\x82F",
+        "\x82G",
+        "\x82H",
+        "\x82I",
+        "\x82J",
+        "\x82K",
+        "\x82L",
+        "\x82M",
+        "\x82N",
+        "\x82O",
+        "\x82P",
+        "\x82Q",
+        "\x82R",
+        "\x82S",
+        "\x82T",
+        "\x82U",
+        "\x82V",
+        "\x82W",
+        "\x82X",
+        "\x82Y",
+        "\x82Z",
+        "\x83P",
+        "\x83Q",
+        "\x83R",
+        "\x83S",
+        "\x83T",
+    ];
 
     /**
      * Characters used for checksum
      *
-     * @var array
+     * @var array<string>
      */
-    protected $chksum = array(
+    protected const CHKSUM = [
         '0',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
         'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
+        'B',
+        'C',
+        'D',
+        'E',
+        'F',
+        'G',
+        'H',
+        'I',
+        'J',
+        'K',
         'L',
-    'M',
-    'N',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
+        'M',
+        'N',
+        'O',
+        'P',
+        'Q',
+        'R',
+        'S',
+        'T',
+        'U',
+        'V',
         'W',
-    'X',
-    'Y',
-    'Z',
-    '-',
-    '.',
-    ' ',
-    '$',
-    '/',
-    '+',
-    '%',
+        'X',
+        'Y',
+        'Z',
+        '-',
+        '.',
+        ' ',
+        '$',
+        '/',
+        '+',
+        '%',
         '<',
-    '=',
-    '>',
-    '?'
-    );
+        '=',
+        '>',
+        '?',
+    ];
 
     /**
      * Calculate CODE 93 checksum (modulo 47).
@@ -166,7 +296,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @return string char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): string
     {
         // translate special characters
         $code = strtr($code, chr(128) . chr(131) . chr(129) . chr(130), '<=>?');
@@ -175,29 +305,31 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         $pck = 1;
         $check = 0;
         for ($idx = ($clen - 1); $idx >= 0; --$idx) {
-            $key = array_keys($this->chksum, $code[$idx]);
+            $key = array_keys($this::CHKSUM, $code[$idx]);
             $check += ($key[0] * $pck);
             ++$pck;
             if ($pck > 20) {
                 $pck = 1;
             }
         }
+
         $check %= 47;
-        $chk = $this->chksum[$check];
+        $chk = $this::CHKSUM[$check];
         $code .= $chk;
         // calculate check digit K
         $pck = 1;
         $check = 0;
         for ($idx = $clen; $idx >= 0; --$idx) {
-            $key = array_keys($this->chksum, $code[$idx]);
+            $key = array_keys($this::CHKSUM, $code[$idx]);
             $check += ($key[0] * $pck);
             ++$pck;
             if ($pck > 15) {
                 $pck = 1;
             }
         }
+
         $check %= 47;
-        $key = $this->chksum[$check];
+        $key = $this::CHKSUM[$check];
         $checksum = $chk . $key;
         // restore special characters
         $checksum = strtr(
@@ -215,154 +347,26 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function setBars()
+    protected function setBars(): void
     {
-        $this->extcodes = array(
-            chr(131) . 'U',
-            chr(128) . 'A',
-            chr(128) . 'B',
-            chr(128) . 'C',
-            chr(128) . 'D',
-            chr(128) . 'E',
-            chr(128) . 'F',
-            chr(128) . 'G',
-            chr(128) . 'H',
-            chr(128) . 'I',
-            chr(128) . 'J',
-            chr(128) . 'K',
-            chr(128) . 'L',
-            chr(128) . 'M',
-            chr(128) . 'N',
-            chr(128) . 'O',
-            chr(128) . 'P',
-            chr(128) . 'Q',
-            chr(128) . 'R',
-            chr(128) . 'S',
-            chr(128) . 'T',
-            chr(128) . 'U',
-            chr(128) . 'V',
-            chr(128) . 'W',
-            chr(128) . 'X',
-            chr(128) . 'Y',
-            chr(128) . 'Z',
-            chr(131) . 'A',
-            chr(131) . 'B',
-            chr(131) . 'C',
-            chr(131) . 'D',
-            chr(131) . 'E',
-            ' ',
-            chr(129) . 'A',
-            chr(129) . 'B',
-            chr(129) . 'C',
-            chr(129) . 'D',
-            chr(129) . 'E',
-            chr(129) . 'F',
-            chr(129) . 'G',
-            chr(129) . 'H',
-            chr(129) . 'I',
-            chr(129) . 'J',
-            chr(129) . 'K',
-            chr(129) . 'L',
-            '-',
-            '.',
-            chr(129) . 'O',
-            '0',
-            '1',
-            '2',
-            '3',
-            '4',
-            '5',
-            '6',
-            '7',
-            '8',
-            '9',
-            chr(129) . 'Z',
-            chr(131) . 'F',
-            chr(131) . 'G',
-            chr(131) . 'H',
-            chr(131) . 'I',
-            chr(131) . 'J',
-            chr(131) . 'V',
-            'A',
-            'B',
-            'C',
-            'D',
-            'E',
-            'F',
-            'G',
-            'H',
-            'I',
-            'J',
-            'K',
-            'L',
-            'M',
-            'N',
-            'O',
-            'P',
-            'Q',
-            'R',
-            'S',
-            'T',
-            'U',
-            'V',
-            'W',
-            'X',
-            'Y',
-            'Z',
-            chr(131) . 'K',
-            chr(131) . 'L',
-            chr(131) . 'M',
-            chr(131) . 'N',
-            chr(131) . 'O',
-            chr(131) . 'W',
-            chr(130) . 'A',
-            chr(130) . 'B',
-            chr(130) . 'C',
-            chr(130) . 'D',
-            chr(130) . 'E',
-            chr(130) . 'F',
-            chr(130) . 'G',
-            chr(130) . 'H',
-            chr(130) . 'I',
-            chr(130) . 'J',
-            chr(130) . 'K',
-            chr(130) . 'L',
-            chr(130) . 'M',
-            chr(130) . 'N',
-            chr(130) . 'O',
-            chr(130) . 'P',
-            chr(130) . 'Q',
-            chr(130) . 'R',
-            chr(130) . 'S',
-            chr(130) . 'T',
-            chr(130) . 'U',
-            chr(130) . 'V',
-            chr(130) . 'W',
-            chr(130) . 'X',
-            chr(130) . 'Y',
-            chr(130) . 'Z',
-            chr(131) . 'P',
-            chr(131) . 'Q',
-            chr(131) . 'R',
-            chr(131) . 'S',
-            chr(131) . 'T'
-        );
         $this->ncols = 0;
         $this->nrows = 1;
-        $this->bars = array();
-        $this->formatCode();
+        $this->bars = [];
+        $this::FORMATCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = ord($this->extcode[$chr]);
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = intval($this->chbar[$char][$pos]);
+                $bar_width = (int) $this::CHBAR[$char][$pos];
                 if (($pos % 2) == 0) {
-                    $this->bars[] = array($this->ncols, 0, $bar_width, 1);
+                    $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
+
                 $this->ncols += $bar_width;
             }
         }
-        $this->bars[] = array($this->ncols, 0, 1, 1);
-        $this->ncols += 1;
+
+        $this->bars[] = [$this->ncols, 0, 1, 1];
+        ++$this->ncols;
     }
 }

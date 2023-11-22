@@ -8,11 +8,13 @@
 **/auth.json
 **/nbproject
 **/temp.php
+**/test.php
 .phpdoc
 .phpunit.cache
 .phpunit.result.cache
 composer.lock
-example/test.php
+ecs.php
 phpunit.xml
+rector.php
 target
 vendor

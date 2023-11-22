@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Linear\Raw
  *
@@ -39,12 +37,12 @@ class Raw extends \Com\Tecnick\Barcode\Type\Raw
      *
      * @var string
      */
-    protected $type = 'linear';
+    protected const TYPE = 'linear';
 
     /**
      * Barcode format
      *
      * @var string
      */
-    protected $format = 'LRAW';
+    protected const FORMAT = 'LRAW';
 }

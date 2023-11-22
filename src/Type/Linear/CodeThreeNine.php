@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\CodeThreeNine
  *
@@ -39,12 +37,12 @@ class CodeThreeNine extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @var string
      */
-    protected $format = 'C39';
+    protected const FORMAT = 'C39';
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = '*' . strtoupper($this->code) . '*';
     }

@@ -39,14 +39,14 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'S25+';
+    protected const FORMAT = 'S25+';
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $chbar = array(
+    protected const CHBAR = [
         '0' => '10101110111010',
         '1' => '11101010101110',
         '2' => '10111010101110',
@@ -56,8 +56,8 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
         '6' => '10111011101010',
         '7' => '10101011101110',
         '8' => '11101010111010',
-        '9' => '10111010111010'
-    );
+        '9' => '10111010111010',
+    ];
 
     /**
      * Calculate the checksum
@@ -66,28 +66,31 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $clen = strlen($code);
         $sum = 0;
         for ($idx = 0; $idx < $clen; $idx += 2) {
-            $sum += intval($code[$idx]);
+            $sum += (int) $code[$idx];
         }
+
         $sum *= 3;
         for ($idx = 1; $idx < $clen; $idx += 2) {
-            $sum += intval($code[$idx]);
+            $sum += (int) $code[$idx];
         }
+
         $check = $sum % 10;
         if ($check > 0) {
-            $check = (10 - $check);
+            return 10 - $check;
         }
+
         return $check;
     }
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code . $this->getChecksum($this->code);
     }
@@ -97,23 +100,26 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
-        $this->formatCode();
-        if ((strlen($this->extcode) % 2) != 0) {
+        $this::FORMATCode();
+        if (strlen($this->extcode) % 2 != 0) {
             // add leading zero if code-length is odd
             $this->extcode = '0' . $this->extcode;
         }
+
         $seq = '1110111010';
         $clen = strlen($this->extcode);
         for ($idx = 0; $idx < $clen; ++$idx) {
             $digit = $this->extcode[$idx];
-            if (!isset($this->chbar[$digit])) {
+            if (! isset($this::CHBAR[$digit])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
-            $seq .= $this->chbar[$digit];
+
+            $seq .= $this::CHBAR[$digit];
         }
+
         $seq .= '111010111';
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

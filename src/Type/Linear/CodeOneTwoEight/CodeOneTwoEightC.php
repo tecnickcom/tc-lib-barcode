@@ -39,21 +39,24 @@ class CodeOneTwoEightC extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
      *
      * @var string
      */
-    protected $format = 'C128C';
+    protected const FORMAT = 'C128C';
 
     /**
      * Get the code point array
      *
+     * @return array<int, int>
+     *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeData()
+    protected function getCodeData(): array
     {
         $code = $this->code;
-        $code_data = array();
+        $code_data = [];
         if (ord($code[0]) == 241) {
             $code_data[] = 102;
             $code = substr($code, 1);
         }
+
         $this->getCodeDataC($code_data, $code);
         return $this->finalizeCodeData($code_data, 105);
     }

@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Raw
  *
@@ -39,12 +37,12 @@ class Raw extends \Com\Tecnick\Barcode\Type\Raw
      *
      * @var string
      */
-    protected $type = 'square';
+    protected const TYPE = 'square';
 
     /**
      * Barcode format
      *
      * @var string
      */
-    protected $format = 'SRAW';
+    protected const FORMAT = 'SRAW';
 }

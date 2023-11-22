@@ -17,7 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\InputItem
@@ -29,6 +28,8 @@ use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @phpstan-import-type Item from \Com\Tecnick\Barcode\Type\Square\QrCode\Estimate
  */
 abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimate
 {
@@ -36,10 +37,8 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * Look up the alphabet-numeric conversion table (see JIS X0510:2004, pp.19)
      *
      * @param int $chr Character value
-     *
-     * @return int
      */
-    public function lookAnTable($chr)
+    public function lookAnTable(int $chr): int
     {
         return (($chr > 127) ? -1 : Data::AN_TABLE[$chr]);
     }
@@ -48,19 +47,24 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * Append data to an input object.
      * The data is copied and appended to the input object.
      *
-     * @param array $items Input items
+     * @param array<int, Item> $items Input items
      * @param int   $mode  Encoding mode.
      * @param int   $size  Size of data (byte).
-     * @param array $data  Array of input data.
+     * @param array<int, string> $data  Array of input data.
      *
-     * @return array items
+     * @return array<int, Item> items
      */
-    public function appendNewInputItem($items, $mode, $size, $data)
-    {
+    public function appendNewInputItem(
+        array $items,
+        int $mode,
+        int $size,
+        array $data
+    ): array {
         $newitem = $this->newInputItem($mode, $size, $data);
-        if (!empty($newitem)) {
+        if ($newitem !== []) {
             $items[] = $newitem;
         }
+
         return $items;
     }
 
@@ -69,26 +73,32 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      *
      * @param int   $mode    Encoding mode.
      * @param int   $size    Size of data (byte).
-     * @param array $data    Array of input data.
-     * @param array $bstream Binary stream
+     * @param array<int, string> $data    Array of input data.
+     * @param array<int, int> $bstream Binary stream
      *
-     * @return array input item
+     * @return Item input item
      */
-    protected function newInputItem($mode, $size, $data, $bstream = null)
-    {
+    protected function newInputItem(
+        int $mode,
+        int $size,
+        array $data,
+        array $bstream = []
+    ): array {
         $setData = array_slice($data, 0, $size);
         if (count($setData) < $size) {
-            $setData = array_merge($setData, array_fill(0, ($size - count($setData)), 0));
+            $setData = array_merge($setData, array_fill(0, ($size - count($setData)), '0'));
         }
-        if (!$this->check($mode, $size, $setData)) {
+
+        if (! $this->check($mode, $size, $setData)) {
             throw new BarcodeException('Invalid input item');
         }
-        return array(
-            'mode'    => $mode,
-            'size'    => $size,
-            'data'    => $setData,
+
+        return [
+            'mode' => $mode,
+            'size' => $size,
+            'data' => $setData,
             'bstream' => $bstream,
-        );
+        ];
     }
 
     /**
@@ -96,85 +106,88 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      *
      * @param int   $mode Encoding mode.
      * @param int   $size Size of data (byte).
-     * @param array $data Data to validate
+     * @param array<int, string> $data Data to validate
      *
-     * @return boolean true in case of valid data, false otherwise
+     * @return bool true in case of valid data, false otherwise
      */
-    protected function check($mode, $size, $data)
-    {
+    protected function check(
+        int $mode,
+        int $size,
+        array $data
+    ): bool {
         if ($size <= 0) {
             return false;
         }
-        switch ($mode) {
-            case Data::ENC_MODES['NM']:
-                return $this->checkModeNum($size, $data);
-            case Data::ENC_MODES['AN']:
-                return $this->checkModeAn($size, $data);
-            case Data::ENC_MODES['KJ']:
-                return $this->checkModeKanji($size, $data);
-            case Data::ENC_MODES['8B']:
-                return true;
-            case Data::ENC_MODES['ST']:
-                return true;
-        }
-        return false;
+
+        return match ($mode) {
+            Data::ENC_MODES['NM'] => $this->checkModeNum($size, $data),
+            Data::ENC_MODES['AN'] => $this->checkModeAn($size, $data),
+            Data::ENC_MODES['KJ'] => $this->checkModeKanji($size, $data),
+            Data::ENC_MODES['8B'] => true,
+            Data::ENC_MODES['ST'] => true,
+            default => false,
+        };
     }
 
     /**
      * checkModeNum
      *
-     * @param int $size
-     * @param array $data
+     * @param int   $size Size of data (byte).
+     * @param array<int, string> $data Data to validate
      *
-     * @return boolean true or false
+     * @return bool true or false
      */
-    protected function checkModeNum($size, $data)
+    protected function checkModeNum(int $size, array $data): bool
     {
         for ($idx = 0; $idx < $size; ++$idx) {
             if ((ord($data[$idx]) < ord('0')) || (ord($data[$idx]) > ord('9'))) {
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * checkModeAn
      *
-     * @param int $size
-     * @param array $data
+     * @param int   $size Size of data (byte).
+     * @param array<int, string> $data Data to validate
      *
-     * @return boolean true or false
+     * @return bool true or false
      */
-    protected function checkModeAn($size, $data)
+    protected function checkModeAn(int $size, array $data): bool
     {
         for ($idx = 0; $idx < $size; ++$idx) {
             if ($this->lookAnTable(ord($data[$idx])) == -1) {
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * checkModeKanji
      *
-     * @param int $size
-     * @param array $data
+     * @param int   $size Size of data (byte).
+     * @param array<int, string> $data Data to validate
      *
-     * @return boolean true or false
+     * @return bool true or false
      */
-    protected function checkModeKanji($size, $data)
+    protected function checkModeKanji(int $size, array $data): bool
     {
-        if ($size & 1) {
+        if (($size & 1) !== 0) {
             return false;
         }
+
         for ($idx = 0; $idx < $size; $idx += 2) {
             $val = (ord($data[$idx]) << 8) | ord($data[($idx + 1)]);
             if (($val < 0x8140) || (($val > 0x9ffc) && ($val < 0xe040)) || ($val > 0xebbf)) {
                 return false;
             }
         }
+
         return true;
     }
 }

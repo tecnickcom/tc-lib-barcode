@@ -39,22 +39,21 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'EAN2';
+    protected const FORMAT = 'EAN2';
 
     /**
      * Fixed code length
-     *
-     * @var int
      */
-    protected $code_length = 2;
+    protected int $code_length = 2;
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<string, array<int|string, string>>
      */
-    protected $chbar = array(
-        'A' => array( // left odd parity
+    protected const CHBAR = [
+        'A' => [
+            // left odd parity
             '0' => '0001101',
             '1' => '0011001',
             '2' => '0010011',
@@ -64,9 +63,10 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
             '6' => '0101111',
             '7' => '0111011',
             '8' => '0110111',
-            '9' => '0001011'
-        ),
-        'B' => array( // left even parity
+            '9' => '0001011',
+        ],
+        'B' => [
+            // left even parity
             '0' => '0100111',
             '1' => '0110011',
             '2' => '0011011',
@@ -76,21 +76,21 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
             '6' => '0000101',
             '7' => '0010001',
             '8' => '0001001',
-            '9' => '0010111'
-        )
-    );
+            '9' => '0010111',
+        ],
+    ];
 
     /**
      * Map parities
      *
-     * @var array
+     * @var array<int|string, array<string>>
      */
-    protected $parities = array(
-        '0' => array('A','A'),
-        '1' => array('A','B'),
-        '2' => array('B','A'),
-        '3' => array('B','B')
-    );
+    protected const PARITIES = [
+        '0' => ['A', 'A'],
+        '1' => ['A', 'B'],
+        '2' => ['B', 'A'],
+        '3' => ['B', 'B'],
+    ];
 
     /**
      * Calculate checksum
@@ -99,15 +99,15 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
-        return (intval($code) % 4);
+        return ((int) $code % 4);
     }
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = str_pad($this->code, $this->code_length, '0', STR_PAD_LEFT);
     }
@@ -117,18 +117,19 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         $chk = $this->getChecksum($this->extcode);
-        $parity = $this->parities[$chk];
+        $parity = $this::PARITIES[$chk];
         $seq = '1011'; // left guard bar
-        $seq .= $this->chbar[$parity[0]][$this->extcode[0]];
+        $seq .= $this::CHBAR[$parity[0]][$this->extcode[0]];
         $len = strlen($this->extcode);
         for ($pos = 1; $pos < $len; ++$pos) {
             $seq .= '01'; // separator
-            $seq .= $this->chbar[$parity[$pos]][$this->extcode[$pos]];
+            $seq .= $this::CHBAR[$parity[$pos]][$this->extcode[$pos]];
         }
-        $this->processBinarySequence($seq);
+
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

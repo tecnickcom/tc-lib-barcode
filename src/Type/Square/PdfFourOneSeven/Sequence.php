@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Sequence
  *
@@ -42,13 +39,14 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
      *
      * @return int error correction level
      */
-    protected function getErrorCorrectionLevel($ecl, $numcw)
+    protected function getErrorCorrectionLevel(int $ecl, int $numcw): int
     {
         $maxecl = 8; // maximum error level
         $maxerrsize = (928 - $numcw); // available codewords for error
         while (($maxecl > 0) && ($maxerrsize < (2 << $maxecl))) {
             --$maxecl;
         }
+
         if (($ecl < 0) || ($ecl > 8)) {
             if ($numcw < 41) {
                 $ecl = 2;
@@ -62,18 +60,19 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
                 $ecl = $maxecl;
             }
         }
-        return min($maxecl, $ecl);
+
+        return (int) min($maxecl, $ecl);
     }
 
     /**
      * Get the error correction codewords
      *
-     * @param array $codewords  Array of codewords including Symbol Length Descriptor and pad
+     * @param array<int, int> $codewords  Array of codewords including Symbol Length Descriptor and pad
      * @param int   $ecl        Error correction level 0-8
      *
-     * @return array of error correction codewords
+     * @return array<int, int> of error correction codewords
      */
-    protected function getErrorCorrection($codewords, $ecl)
+    protected function getErrorCorrection(array $codewords, int $ecl): array
     {
         // get error correction coefficients
         $ecc = Data::RS_FACTORS[$ecl];
@@ -84,41 +83,44 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
         // initialize array of error correction codewords
         $ecw = array_fill(0, $eclsize, 0);
         // for each data codeword
-        foreach ($codewords as $cdw) {
-            $tk1 = ($cdw + $ecw[$eclmaxid]) % 929;
+        foreach ($codewords as $codeword) {
+            $tk1 = ($codeword + $ecw[$eclmaxid]) % 929;
             for ($idx = $eclmaxid; $idx > 0; --$idx) {
-                $tk2 = ($tk1 * $ecc[$idx]) % 929;
-                $tk3 = 929 - $tk2;
-                $ecw[$idx] = ($ecw[($idx - 1)] + $tk3) % 929;
+                $tk2 = (($tk1 * $ecc[$idx]) % 929);
+                $tk3 = (929 - $tk2);
+                $ecw[$idx] = (int) (($ecw[($idx - 1)] + $tk3) % 929);
             }
-            $tk2 = ($tk1 * $ecc[0]) % 929;
-            $tk3 = 929 - $tk2;
-            $ecw[0] = $tk3 % 929;
+
+            $tk2 = (($tk1 * $ecc[0]) % 929);
+            $tk3 = (929 - $tk2);
+            $ecw[0] = (int) ($tk3 % 929);
         }
+
         foreach ($ecw as $idx => $err) {
             if ($err != 0) {
-                $ecw[$idx] = 929 - $err;
+                $ecw[$idx] = (int) (929 - $err);
             }
         }
+
         return array_reverse($ecw);
     }
 
     /**
      * Process a single sequence
      *
-     * @param array  $sequence_array  Sequence to process
+     * @param array<int, array{int, string}>  $sequence_array  Sequence to process
      * @param string $code            Data to process
      * @param int    $seq             Current sequence
      * @param int    $offset          Current code offset
      */
-    protected function processSequence(&$sequence_array, $code, $seq, $offset)
+    protected function processSequence(array &$sequence_array, string $code, int $seq, int $offset): void
     {
         // extract text sequence before the number sequence
         $prevseq = substr($code, $offset, ($seq - $offset));
-        $textseq = array();
+        $textseq = [];
         // get text sequences
         preg_match_all('/([\x09\x0a\x0d\x20-\x7e]{5,})/', $prevseq, $textseq, PREG_OFFSET_CAPTURE);
-        $textseq[1][] = array('', strlen($prevseq));
+        $textseq[1][] = ['', strlen($prevseq)];
         $txtoffset = 0;
         foreach ($textseq[1] as $txtseq) {
             $txtseqlen = strlen($txtseq[0]);
@@ -129,21 +131,23 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
                     // add BYTE sequence
                     if (
                         (strlen($prevtxtseq) == 1)
-                        && ((count($sequence_array) > 0)
+                        && (($sequence_array !== [])
                         && ($sequence_array[(count($sequence_array) - 1)][0] == 900))
                     ) {
-                        $sequence_array[] = array(913, $prevtxtseq);
+                        $sequence_array[] = [913, $prevtxtseq];
                     } elseif ((strlen($prevtxtseq) % 6) == 0) {
-                        $sequence_array[] = array(924, $prevtxtseq);
+                        $sequence_array[] = [924, $prevtxtseq];
                     } else {
-                        $sequence_array[] = array(901, $prevtxtseq);
+                        $sequence_array[] = [901, $prevtxtseq];
                     }
                 }
             }
+
             if ($txtseqlen > 0) {
                 // add numeric sequence
-                $sequence_array[] = array(900, $txtseq[0]);
+                $sequence_array[] = [900, $txtseq[0]];
             }
+
             $txtoffset = ($txtseq[1] + $txtseqlen);
         }
     }
@@ -153,27 +157,30 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
      *
      * @param string $code Data to process
      *
-     * @return array
+     * @return array<int, array{int, string}>
      */
-    protected function getInputSequences($code)
+    protected function getInputSequences(string $code): array
     {
-        $sequence_array = array(); // array to be returned
-        $numseq = array();
+        $sequence_array = []; // array to be returned
+        $numseq = [];
         // get numeric sequences
-        preg_match_all('/([0-9]{13,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
-        $numseq[1][] = array('', strlen($code));
+        preg_match_all('/(\d{13,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
+        $numseq[1][] = ['', strlen($code)];
         $offset = 0;
         foreach ($numseq[1] as $seq) {
             $seqlen = strlen($seq[0]);
             if ($seq[1] > 0) {
                 $this->processSequence($sequence_array, $code, $seq[1], $offset);
             }
+
             if ($seqlen > 0) {
                 // add numeric sequence
-                $sequence_array[] = array(902, $seq[0]);
+                $sequence_array[] = [902, $seq[0]];
             }
+
             $offset = ($seq[1] + $seqlen);
         }
+
         return $sequence_array;
     }
 }

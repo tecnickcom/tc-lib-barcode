@@ -39,14 +39,14 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'RMS4CC';
+    protected const FORMAT = 'RMS4CC';
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $chbar = array(
+    protected const CHBAR = [
         '0' => '3322',
         '1' => '3412',
         '2' => '3421',
@@ -82,15 +82,15 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         'W' => '1243',
         'X' => '2134',
         'Y' => '2143',
-        'Z' => '2233'
-    );
+        'Z' => '2233',
+    ];
 
     /**
      * Characters used for checksum
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $chksum = array(
+    protected const CHKSUM = [
         '0' => '11',
         '1' => '12',
         '2' => '13',
@@ -126,8 +126,8 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         'W' => '03',
         'X' => '04',
         'Y' => '05',
-        'Z' => '00'
-    );
+        'Z' => '00',
+    ];
 
     /**
      * Calculate the checksum.
@@ -138,29 +138,31 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $row = 0;
         $col = 0;
         $len = strlen($code);
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
-            if (!isset($this->chksum[$char])) {
+            if (! isset($this::CHKSUM[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
-            $row += intval($this->chksum[$char][0]);
-            $col += intval($this->chksum[$char][1]);
+
+            $row += (int) $this::CHKSUM[$char][0];
+            $col += (int) $this::CHKSUM[$char][1];
         }
+
         $row %= 6;
         $col %= 6;
-        $check = array_keys($this->chksum, $row . $col);
+        $check = array_keys($this::CHKSUM, $row . $col);
         return $check[0];
     }
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = strtoupper($this->code);
         $this->extcode = $code . $this->getChecksum($code);
@@ -171,27 +173,28 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCoreBars()
+    protected function getCoreBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             for ($pos = 0; $pos < 4; ++$pos) {
-                switch ($this->chbar[$char][$pos]) {
+                switch ($this::CHBAR[$char][$pos]) {
                     case '1':
-                        $this->bars[] = array($this->ncols, 0, 1, 2);
+                        $this->bars[] = [$this->ncols, 0, 1, 2];
                         break;
                     case '2':
-                        $this->bars[] = array($this->ncols, 0, 1, 3);
+                        $this->bars[] = [$this->ncols, 0, 1, 3];
                         break;
                     case '3':
-                        $this->bars[] = array($this->ncols, 1, 1, 1);
+                        $this->bars[] = [$this->ncols, 1, 1, 1];
                         break;
                     case '4':
-                        $this->bars[] = array($this->ncols, 1, 1, 2);
+                        $this->bars[] = [$this->ncols, 1, 1, 2];
                         break;
                 }
+
                 $this->ncols += 2;
             }
         }
@@ -202,20 +205,20 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->ncols = 0;
         $this->nrows = 3;
-        $this->bars = array();
+        $this->bars = [];
 
         // start bar
-        $this->bars[] = array($this->ncols, 0, 1, 2);
+        $this->bars[] = [$this->ncols, 0, 1, 2];
         $this->ncols += 2;
 
         $this->getCoreBars();
 
         // stop bar
-        $this->bars[] = array($this->ncols, 0, 1, 3);
+        $this->bars[] = [$this->ncols, 0, 1, 3];
         ++$this->ncols;
     }
 }

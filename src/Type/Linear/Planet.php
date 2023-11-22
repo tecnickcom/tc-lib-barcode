@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Linear\Planet;
  *
@@ -39,14 +37,14 @@ class Planet extends \Com\Tecnick\Barcode\Type\Linear\Postnet
      *
      * @var string
      */
-    protected $format = 'PLANET';
+    protected const FORMAT = 'PLANET';
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $chbar = array(
+    protected const CHBAR = [
         '0' => '11222',
         '1' => '22211',
         '2' => '22121',
@@ -56,6 +54,6 @@ class Planet extends \Com\Tecnick\Barcode\Type\Linear\Postnet
         '6' => '21122',
         '7' => '12221',
         '8' => '12212',
-        '9' => '12122'
-    );
+        '9' => '12122',
+    ];
 }

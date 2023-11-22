@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Linear\UpcA;
  *
@@ -39,19 +37,17 @@ class UpcA extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      *
      * @var string
      */
-    protected $format = 'UPCA';
+    protected const FORMAT = 'UPCA';
 
     /**
      * Fixed code length
-     *
-     * @var int
      */
-    protected $code_length = 12;
+    protected int $code_length = 12;
 
     /**
      * Format the code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = str_pad($this->code, ($this->code_length - 1), '0', STR_PAD_LEFT);
         $code .= $this->getChecksum($code);

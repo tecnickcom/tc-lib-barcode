@@ -16,6 +16,7 @@
 
 namespace Com\Tecnick\Barcode\Type;
 
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 use Com\Tecnick\Color\Model\Rgb as Color;
 
 /**
@@ -38,120 +39,159 @@ abstract class Convert
      *
      * @var string
      */
-    protected $type = '';
+    protected const TYPE = '';
 
     /**
      * Barcode format
      *
      * @var string
      */
-    protected $format = '';
+    protected const FORMAT = '';
 
     /**
      * Array containing extra parameters for the specified barcode type
      *
-     * @var array
+     * @var array<int|float|string>
      */
-    protected $params;
+    protected array $params = [];
 
     /**
      * Code to convert (barcode content)
-     *
-     * @var string
      */
-    protected $code = '';
+    protected string $code = '';
 
     /**
      * Resulting code after applying checksum etc.
-     *
-     * @var string
      */
-    protected $extcode = '';
+    protected string $extcode = '';
 
     /**
      * Total number of columns
-     *
-     * @var int
      */
-    protected $ncols = 0;
+    protected int $ncols = 0;
 
     /**
      * Total number of rows
-     *
-     * @var int
      */
-    protected $nrows = 1;
+    protected int $nrows = 1;
 
     /**
      * Array containing the position and dimensions of each barcode bar
      * (x, y, width, height)
      *
-     * @var array
+     * @var array<array{int, int, int, int}>,
      */
-    protected $bars = array();
+    protected array $bars = [];
 
     /**
      * Barcode width
-     *
-     * @var int
      */
-    protected $width;
+    protected int $width = 0;
 
     /**
      * Barcode height
-     *
-     * @var int
      */
-    protected $height;
+    protected int $height = 0;
 
     /**
      * Additional padding to add around the barcode (top, right, bottom, left) in user units.
      * A negative value indicates the multiplication factor for each row or column.
      *
-     * @var array
+     * @var array{'T': int, 'R': int, 'B': int, 'L': int}
      */
-    protected $padding = array('T' => 0, 'R' => 0, 'B' => 0, 'L' => 0);
+    protected array $padding = [
+        'T' => 0,
+        'R' => 0,
+        'B' => 0,
+        'L' => 0,
+    ];
 
     /**
      * Ratio between the barcode width and the number of rows
-     *
-     * @var float
      */
-    protected $width_ratio;
+    protected float $width_ratio = 0;
 
     /**
      * Ratio between the barcode height and the number of columns
-     *
-     * @var float
      */
-    protected $height_ratio;
+    protected float $height_ratio = 0;
 
     /**
      * Foreground Color object
-     *
-     * @var Color
      */
-    protected $color_obj;
+    protected Color $color_obj;
 
     /**
      * Backgorund Color object
-     *
-     * @var Color
      */
-    protected $bg_color_obj;
+    protected ?Color $bg_color_obj = null;
 
     /**
-     * Import a binary sequence of comma-separated 01 strings
+     * Process binary sequence rows.
      *
-     * @param array|string $code Code to process
+     * @param array<int, string|array<int>> $rows Binary sequence data to process
+     *
+     * @throws BarcodeException in case of error
      */
-    protected function processBinarySequence($code)
+    protected function processBinarySequence(array $rows): void
     {
-        $raw = new \Com\Tecnick\Barcode\Type\Raw($code, $this->width, $this->height);
-        $data = $raw->getArray();
-        $this->ncols = $data['ncols'];
-        $this->nrows = $data['nrows'];
-        $this->bars = $data['bars'];
+        if ($rows === []) {
+            throw new BarcodeException('Empty input string');
+        }
+
+        $this->nrows = count($rows);
+        $this->ncols = is_array($rows[0]) ? count($rows[0]) : strlen($rows[0]);
+
+        if ($this->ncols === 0) {
+            throw new BarcodeException('Empty columns');
+        }
+
+        $this->bars = [];
+        foreach ($rows as $posy => $row) {
+            if (! is_array($row)) {
+                $row = str_split($row, 1);
+            }
+
+            $prevcol = '';
+            $bar_width = 0;
+            $row[] = '0';
+            for ($posx = 0; $posx <= $this->ncols; ++$posx) {
+                if ($row[$posx] != $prevcol) {
+                    if ($prevcol == '1') {
+                        $this->bars[] = [($posx - $bar_width), $posy, $bar_width, 1];
+                    }
+
+                    $bar_width = 0;
+                }
+
+                ++$bar_width;
+                $prevcol = $row[$posx];
+            }
+        }
+    }
+
+    /**
+     * Extract rows from a binary sequence of comma-separated 01 strings.
+     *
+     * @return array<int, string>
+     */
+    protected function getRawCodeRows(string $data): array
+    {
+        $search = [
+            '/[\s]*/s',    // remove spaces and newlines
+            '/^[\[,]+/',   // remove trailing brackets or commas
+            '/[\],]+$/',   // remove trailing brackets or commas
+            '/[\]][\[]$/', // convert bracket -separated to comma-separated
+        ];
+
+        $replace = ['', '', '', ''];
+
+        $code = preg_replace($search, $replace, $data);
+        if ($code === null) {
+            throw new BarcodeException('Invalid input string');
+        }
+
+        return explode(',', $code);
     }
 
     /**
@@ -161,18 +201,20 @@ abstract class Convert
      *
      * @return string hexadecimal representation
      */
-    protected function convertDecToHex($number)
+    protected function convertDecToHex(string $number): string
     {
         if ($number == 0) {
             return '00';
         }
-        $hex = array();
+
+        $hex = [];
         while ($number > 0) {
-            array_push($hex, strtoupper((string)dechex((int)bcmod($number, '16'))));
+            $hex[] = strtoupper(dechex((int) bcmod($number, '16')));
             $number = bcdiv($number, '16', 0);
         }
+
         $hex = array_reverse($hex);
-        return implode($hex);
+        return implode('', $hex);
     }
 
     /**
@@ -182,15 +224,16 @@ abstract class Convert
      *
      * @return string hexadecimal representation
      */
-    protected function convertHexToDec($hex)
+    protected function convertHexToDec(string $hex): string
     {
         $dec = '0';
         $bitval = '1';
         $len = strlen($hex);
         for ($pos = ($len - 1); $pos >= 0; --$pos) {
-            $dec = bcadd($dec, bcmul((string)hexdec($hex[$pos]), $bitval));
+            $dec = bcadd($dec, bcmul((string) hexdec($hex[$pos]), $bitval));
             $bitval = bcmul($bitval, '16');
         }
+
         return $dec;
     }
 
@@ -200,33 +243,42 @@ abstract class Convert
      * @param string $space_char Character or string to use for filling empty spaces
      * @param string $bar_char   Character or string to use for filling bars
      *
-     * @return array
+     * @return array<int, array<int, string>>
      */
-    public function getGridArray($space_char = '0', $bar_char = '1')
-    {
+    public function getGridArray(
+        string $space_char = '0',
+        string $bar_char = '1'
+    ): array {
         $raw = array_fill(0, $this->nrows, array_fill(0, $this->ncols, $space_char));
         foreach ($this->bars as $bar) {
-            if (($bar[2] > 0) && ($bar[3] > 0)) {
-                for ($vert = 0; $vert < $bar[3]; ++$vert) {
-                    for ($horiz = 0; $horiz < $bar[2]; ++$horiz) {
-                        $raw[($bar[1] + $vert)][($bar[0] + $horiz)] = $bar_char;
-                    }
+            if ($bar[2] <= 0) {
+                continue;
+            }
+
+            if ($bar[3] <= 0) {
+                continue;
+            }
+
+            for ($vert = 0; $vert < $bar[3]; ++$vert) {
+                for ($horiz = 0; $horiz < $bar[2]; ++$horiz) {
+                    $raw[($bar[1] + $vert)][($bar[0] + $horiz)] = $bar_char;
                 }
             }
         }
+
         return $raw;
     }
 
     /**
      * Returns the bars array ordered by columns
      *
-     * @return array
+     * @return array<int, array{int, int, int, int}>
      */
-    protected function getRotatedBarArray()
+    protected function getRotatedBarArray(): array
     {
         $grid = $this->getGridArray();
-        $cols = call_user_func_array('array_map', array(-1 => null) + $grid);
-        $bars = array();
+        $cols = array_map(null, ...$grid);
+        $bars = [];
         foreach ($cols as $posx => $col) {
             $prevrow = '';
             $bar_height = 0;
@@ -234,48 +286,51 @@ abstract class Convert
             for ($posy = 0; $posy <= $this->nrows; ++$posy) {
                 if ($col[$posy] != $prevrow) {
                     if ($prevrow == '1') {
-                        $bars[] = array($posx, ($posy - $bar_height), 1, $bar_height);
+                        $bars[] = [$posx, ($posy - $bar_height), 1, $bar_height];
                     }
+
                     $bar_height = 0;
                 }
+
                 ++$bar_height;
                 $prevrow = $col[$posy];
             }
         }
+
         return $bars;
     }
 
     /**
      * Get the adjusted rectangular coordinates (x1,y1,x2,y2) for the specified bar
      *
-     * @param array $bar Raw bar coordinates
+     * @param array{int, int, int, int} $bar Raw bar coordinates
      *
-     * @return array Bar coordinates
+     * @return array{float, float, float, float} Bar coordinates
      */
-    protected function getBarRectXYXY($bar)
+    protected function getBarRectXYXY(array $bar): array
     {
-        return array(
+        return [
             ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
             ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
             ($this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1),
-            ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1)
-        );
+            ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1),
+        ];
     }
 
     /**
      * Get the adjusted rectangular coordinates (x,y,w,h) for the specified bar
      *
-     * @param array $bar Raw bar coordinates
+     * @param array{int, int, int, int} $bar Raw bar coordinates
      *
-     * @return array Bar coordinates
+     * @return array{float, float, float, float} Bar coordinates
      */
-    protected function getBarRectXYWH($bar)
+    protected function getBarRectXYWH(array $bar): array
     {
-        return array(
+        return [
             ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
             ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
             ($bar[2] * $this->width_ratio),
-            ($bar[3] * $this->height_ratio)
-        );
+            ($bar[3] * $this->height_ratio),
+        ];
     }
 }

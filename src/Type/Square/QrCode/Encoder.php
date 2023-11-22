@@ -17,8 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Spec;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Encoder
@@ -37,15 +35,15 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
      * Encode mask
      *
      * @param int   $maskNo   Mask number (masking mode)
-     * @param array $datacode Data code to encode
+     * @param array<int, int> $datacode Data code to encode
      *
-     * @return array Encoded Mask
+     * @return array<int, string> Encoded Mask
      */
-    public function encodeMask($maskNo, $datacode)
+    public function encodeMask(int $maskNo, array $datacode): array
     {
         // initialize values
         $this->datacode = $datacode;
-        $spec = $this->spc->getEccSpec($this->version, $this->level, array(0, 0, 0, 0, 0));
+        $spec = $this->spc->getEccSpec($this->version, $this->level, [0, 0, 0, 0, 0]);
         $this->bv1 = $this->spc->rsBlockNum1($spec);
         $this->dataLength = $this->spc->rsDataLength($spec);
         $this->eccLength = $this->spc->rsEccLength($spec);
@@ -61,19 +59,19 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
         $this->bit = -1;
 
         // interleaved data and ecc codes
-        for ($idx = 0; $idx < ($this->dataLength + $this->eccLength); $idx++) {
+        for ($idx = 0; $idx < ($this->dataLength + $this->eccLength); ++$idx) {
             $code = $this->getCode();
             $bit = 0x80;
-            for ($jdx = 0; $jdx < 8; $jdx++) {
+            for ($jdx = 0; $jdx < 8; ++$jdx) {
                 $addr = $this->getNextPosition();
                 $this->setFrameAt($addr, 0x02 | (($bit & $code) != 0));
-                $bit = $bit >> 1;
+                $bit >>= 1;
             }
         }
 
         // remainder bits
         $rbits = $this->spc->getRemainder($this->version);
-        for ($idx = 0; $idx < $rbits; $idx++) {
+        for ($idx = 0; $idx < $rbits; ++$idx) {
             $addr = $this->getNextPosition();
             $this->setFrameAt($addr, 0x02);
         }
@@ -84,14 +82,16 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
             if ($this->qr_find_best_mask) {
                 $mask = $this->mask($this->width, $this->frame, $this->level);
             } else {
-                $mask = $this->makeMask($this->width, $this->frame, (intval($this->qr_default_mask) % 8), $this->level);
+                $mask = $this->makeMask($this->width, $this->frame, ($this->qr_default_mask % 8), $this->level);
             }
         } else {
             $mask = $this->makeMask($this->width, $this->frame, $maskNo, $this->level);
         }
+
         if ($mask == null) {
             throw new BarcodeException('Null Mask');
         }
+
         return $mask;
     }
 
@@ -100,7 +100,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
      *
      * @return int rsblocks
      */
-    protected function getCode()
+    protected function getCode(): int
     {
         if ($this->count < $this->dataLength) {
             $row = ($this->count % $this->blocks);
@@ -108,6 +108,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
             if ($col >= $this->rsblocks[0]['dataLength']) {
                 $row += $this->bv1;
             }
+
             $ret = $this->rsblocks[$row]['data'][$col];
         } elseif ($this->count < ($this->dataLength + $this->eccLength)) {
             $row = (($this->count - $this->dataLength) % $this->blocks);
@@ -116,6 +117,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
         } else {
             return 0;
         }
+
         ++$this->count;
         return $ret;
     }
@@ -123,10 +125,10 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
     /**
      * Set frame value at specified position
      *
-     * @param array $pos X,Y position
+     * @param array{'x': int, 'y': int} $pos X,Y position
      * @param int   $val Value of the character to set
      */
-    protected function setFrameAt($pos, $val)
+    protected function setFrameAt(array $pos, int $val): void
     {
         $this->frame[$pos['y']][$pos['x']] = chr($val);
     }
@@ -134,15 +136,19 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
     /**
      * Return the next frame position
      *
-     * @return array of x,y coordinates
+     * @return array{'x': int, 'y': int} of x,y coordinates
      */
-    protected function getNextPosition()
+    protected function getNextPosition(): array
     {
         do {
             if ($this->bit == -1) {
                 $this->bit = 0;
-                return array('x' => $this->xpos, 'y' => $this->ypos);
+                return [
+                    'x' => $this->xpos,
+                    'y' => $this->ypos,
+                ];
             }
+
             $xpos = $this->xpos;
             $ypos = $this->ypos;
             $wdt = $this->width;
@@ -150,21 +156,25 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
             if (($xpos < 0) || ($ypos < 0)) {
                 throw new BarcodeException('Error getting next position');
             }
+
             $this->xpos = $xpos;
             $this->ypos = $ypos;
         } while (ord($this->frame[$ypos][$xpos]) & 0x80);
 
-        return array('x' => $xpos, 'y' => $ypos);
+        return [
+            'x' => $xpos,
+            'y' => $ypos,
+        ];
     }
 
     /**
      * Internal cycle for getNextPosition
      *
-     * @param int $xpos
-     * @param int $ypos
-     * @param int $wdt
+     * @param int $xpos X position
+     * @param int $ypos Y position
+     * @param int $wdt  Width
      */
-    protected function getNextPositionB(&$xpos, &$ypos, $wdt)
+    protected function getNextPositionB(int &$xpos, int &$ypos, int $wdt): void
     {
         if ($this->bit == 0) {
             --$xpos;
@@ -174,6 +184,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
             $ypos += $this->dir;
             --$this->bit;
         }
+
         if ($this->dir < 0) {
             if ($ypos < 0) {
                 $ypos = 0;
@@ -184,15 +195,13 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
                     $ypos = 9;
                 }
             }
-        } else {
-            if ($ypos == $wdt) {
-                $ypos = $wdt - 1;
-                $xpos -= 2;
-                $this->dir = -1;
-                if ($xpos == 6) {
-                    --$xpos;
-                    $ypos -= 8;
-                }
+        } elseif ($ypos === $wdt) {
+            $ypos = $wdt - 1;
+            $xpos -= 2;
+            $this->dir = -1;
+            if ($xpos == 6) {
+                --$xpos;
+                $ypos -= 8;
             }
         }
     }

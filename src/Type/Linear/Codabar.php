@@ -38,14 +38,14 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'CODABAR';
+    protected const FORMAT = 'CODABAR';
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $chbar = array(
+    protected const CHBAR = [
         '0' => '11111221',
         '1' => '11112211',
         '2' => '11121121',
@@ -65,13 +65,13 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
         'A' => '11221211',
         'B' => '12121121',
         'C' => '11121221',
-        'D' => '11122211'
-    );
+        'D' => '11122211',
+    ];
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = 'A' . strtoupper($this->code) . 'A';
     }
@@ -81,26 +81,29 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->ncols = 0;
         $this->nrows = 1;
-        $this->bars = array();
-        $this->formatCode();
+        $this->bars = [];
+        $this::FORMATCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset($this->chbar[$char])) {
+            if (! isset($this::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
+
             for ($pos = 0; $pos < 8; ++$pos) {
-                $bar_width = intval($this->chbar[$char][$pos]);
+                $bar_width = (int) $this::CHBAR[$char][$pos];
                 if (($pos % 2) == 0) {
-                    $this->bars[] = array($this->ncols, 0, $bar_width, 1);
+                    $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
+
                 $this->ncols += $bar_width;
             }
         }
+
         --$this->ncols;
     }
 }

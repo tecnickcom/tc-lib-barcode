@@ -53,18 +53,18 @@
     }
   ],
   "require": {
-    "php": ">=5.6",
+    "php": ">=8.0",
     "ext-bcmath": "*",
     "ext-date": "*",
     "ext-gd": "*",
     "ext-pcre": "*",
-    "tecnickcom/tc-lib-color": "^1.14"
+    "tecnickcom/tc-lib-color": "^2.0"
   },
   "require-dev": {
     "pdepend/pdepend": "2.13.0",
     "phpmd/phpmd": "2.13.0",
-    "phpunit/phpunit": "10.1.2 || 9.6.7 || 8.5.31 || 7.5.20 || 6.5.14 || 5.7.27 || 4.8.36",
-    "squizlabs/php_codesniffer": "3.7.2 || 2.9.2"
+    "phpunit/phpunit": "10.1.2 || 9.6.13",
+    "squizlabs/php_codesniffer": "3.7.2"
   },
   "autoload": {
     "psr-4": {

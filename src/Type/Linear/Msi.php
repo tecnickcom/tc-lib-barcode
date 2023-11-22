@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Linear\Msi;
  *
@@ -39,12 +37,12 @@ class Msi extends \Com\Tecnick\Barcode\Type\Linear\MsiCheck
      *
      * @var string
      */
-    protected $format = 'MSI';
+    protected const FORMAT = 'MSI';
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code;
     }

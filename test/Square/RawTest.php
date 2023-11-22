@@ -31,16 +31,16 @@ use PHPUnit\Framework\TestCase;
  */
 class RawTest extends TestCase
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('SRAW', '0101,1010,1100,0011');
-        $grid = $bobj->getGrid();
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('SRAW', '0101,1010,1100,0011');
+        $grid = $type->getGrid();
         $expected = "0101\n1010\n1100\n0011\n";
         $this->assertEquals($expected, $grid);
     }

@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMode
  *
@@ -40,17 +37,20 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return int mode
      */
-    public function getEncodingMode($data, $pos)
+    public function getEncodingMode(string $data, int $pos): int
     {
-        if (!isset($data[$pos])) {
+        if (! isset($data[$pos])) {
             return Data::ENC_MODES['NL'];
         }
+
         if ($this->isDigitAt($data, $pos)) {
             return Data::ENC_MODES['NM'];
         }
+
         if ($this->isAlphanumericAt($data, $pos)) {
             return Data::ENC_MODES['AN'];
         }
+
         return $this->getEncodingModeKj($data, $pos);
     }
 
@@ -62,7 +62,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @return int mode
      */
-    protected function getEncodingModeKj($data, $pos)
+    protected function getEncodingModeKj(string $data, int $pos): int
     {
         if (($this->hint == Data::ENC_MODES['KJ']) && isset($data[($pos + 1)])) {
             $word = ((ord($data[$pos]) << 8) | ord($data[($pos + 1)]));
@@ -70,6 +70,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
                 return Data::ENC_MODES['KJ'];
             }
         }
+
         return Data::ENC_MODES['8B'];
     }
 
@@ -78,14 +79,13 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @param string $str Data
      * @param int    $pos Character position
-     *
-     * @return boolean
      */
-    public function isDigitAt($str, $pos)
+    public function isDigitAt(string $str, int $pos): bool
     {
-        if (!isset($str[$pos])) {
+        if (! isset($str[$pos])) {
             return false;
         }
+
         return ((ord($str[$pos]) >= ord('0')) && (ord($str[$pos]) <= ord('9')));
     }
 
@@ -94,67 +94,70 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @param string $str Data
      * @param int    $pos Character position
-     *
-     * @return boolean
      */
-    public function isAlphanumericAt($str, $pos)
+    public function isAlphanumericAt(string $str, int $pos): bool
     {
-        if (!isset($str[$pos])) {
+        if (! isset($str[$pos])) {
             return false;
         }
+
         return ($this->lookAnTable(ord($str[$pos])) >= 0);
     }
 
     /**
      * Append one bitstream to another
      *
-     * @param array $bitstream Original bitstream
-     * @param array $append    Bitstream to append
+     * @param array<int, int> $bitstream Original bitstream
+     * @param array<int, int> $append    Bitstream to append
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
-    protected function appendBitstream($bitstream, $append)
+    protected function appendBitstream(array $bitstream, array $append): array
     {
-        if ((!is_array($append)) || (count($append) == 0)) {
+        if ((! is_array($append)) || (count($append) == 0)) {
             return $bitstream;
         }
+
         if (count($bitstream) == 0) {
             return $append;
         }
+
         return array_values(array_merge($bitstream, $append));
     }
 
     /**
      * Append one bitstream created from number to another
      *
-     * @param array $bitstream Original bitstream
+     * @param array<int, int> $bitstream Original bitstream
      * @param int   $bits      Number of bits
      * @param int   $num       Number
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
-    protected function appendNum($bitstream, $bits, $num)
+    protected function appendNum(array $bitstream, int $bits, int $num): array
     {
         if ($bits == 0) {
-            return array();
+            return [];
         }
+
         return $this->appendBitstream($bitstream, $this->newFromNum($bits, $num));
     }
 
     /**
      * Append one bitstream created from bytes to another
      *
-     * @param array $bitstream Original bitstream
+     * @param array<int, int> $bitstream Original bitstream
      * @param int   $size      Size
-     * @param array $data      Bytes
+     * @param array<int, int> $data      Bytes
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
-    protected function appendBytes($bitstream, $size, $data)
+    protected function appendBytes(array $bitstream, int $size, array $data): array
     {
         if ($size == 0) {
-            return array();
+            return [];
         }
+
         return $this->appendBitstream($bitstream, $this->newFromBytes($size, $data));
     }
 
@@ -164,20 +167,18 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      * @param int $bits Number of bits
      * @param int $num  Number
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
-    protected function newFromNum($bits, $num)
+    protected function newFromNum(int $bits, int $num): array
     {
         $bstream = $this->allocate($bits);
         $mask = 1 << ($bits - 1);
         for ($idx = 0; $idx < $bits; ++$idx) {
-            if ($num & $mask) {
-                $bstream[$idx] = 1;
-            } else {
-                $bstream[$idx] = 0;
-            }
-            $mask = $mask >> 1;
+            $bstream[$idx] = ($num & $mask) !== 0 ? 1 : 0;
+
+            $mask >>= 1;
         }
+
         return $bstream;
     }
 
@@ -185,26 +186,24 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      * Return new bitstream from bytes
      *
      * @param int   $size Size
-     * @param array $data Bytes
+     * @param array<int, int> $data Bytes
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
-    protected function newFromBytes($size, $data)
+    protected function newFromBytes(int $size, array $data): array
     {
         $bstream = $this->allocate($size * 8);
         $pval = 0;
         for ($idx = 0; $idx < $size; ++$idx) {
             $mask = 0x80;
             for ($jdx = 0; $jdx < 8; ++$jdx) {
-                if ($data[$idx] & $mask) {
-                    $bstream[$pval] = 1;
-                } else {
-                    $bstream[$pval] = 0;
-                }
-                $pval++;
-                $mask = $mask >> 1;
+                $bstream[$pval] = ($data[$idx] & $mask) !== 0 ? 1 : 0;
+
+                ++$pval;
+                $mask >>= 1;
             }
         }
+
         return $bstream;
     }
 
@@ -213,9 +212,9 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      *
      * @param int $setLength Array size
      *
-     * @return array
+     * @return array<int, int> array
      */
-    protected function allocate($setLength)
+    protected function allocate(int $setLength): array
     {
         return array_fill(0, $setLength, 0);
     }

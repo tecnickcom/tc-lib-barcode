@@ -16,9 +16,9 @@
 
 namespace Com\Tecnick\Barcode\Type\Square;
 
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 use Com\Tecnick\Barcode\Type\Square\Aztec\Data;
 use Com\Tecnick\Barcode\Type\Square\Aztec\Encode;
-use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\Aztec
@@ -40,41 +40,33 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *
      * @var string
      */
-    protected $format = 'AZTEC';
+    protected const FORMAT = 'AZTEC';
 
     /**
      * Error correction code percentage of error check words.
      * A minimum of 23% + 3 words is recommended by ISO/IEC 24778:2008a.
-     *
-     * @var int
      */
-    protected $ecc = 33;
+    protected int $ecc = 33;
 
     /**
      * Encoding mode
-     *
-     * @var string
      */
-    protected $hint = 'A';
+    protected string $hint = 'A';
 
     /**
      *  Mode:
      *    - A = Automatic selection between Compact (priority) and Full Range.
      *    - F = Force Full Range mode.
-     *
-     * @var string
      */
-    protected $mode = 'A';
+    protected string $mode = 'A';
 
     /**
      * Extended Channel Interpretation (ECI) code to be added at the beginning of the stream.
      * See Data:ECI for the list of supported codes.
      * NOTE: Even if special FNC1 or ECI flag characters could be inserted
      *       at any points in the stream, this will only be added at the beginning of the stream.
-     *
-     * @var int
      */
-    protected $eci = -1;
+    protected int $eci = -1;
 
     /**
      * Set extra (optional) parameters:
@@ -83,34 +75,57 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *     2: HINT    : Encoding mode: A=Automatic, B=Binary.
      *     3: LAYERS  : Custom number of layers (0 = auto).
      *     4: ECI     : Extended Channel Interpretation (ECI) code. Use -1 for FNC1. See $this->eci.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function setParameters()
+    protected function setParameters(): void
     {
         parent::setParameters();
 
         // ecc percentage
-        if (!isset($this->params[0]) || !in_array($this->params[0], range(1, 100))) {
+        if (
+            ! isset($this->params[0])
+            || ! is_numeric($this->params[0])
+            || ! in_array($this->params[0], range(1, 100))
+        ) {
             $this->params[0] = 33;
         }
-        $this->ecc = intval($this->params[0]);
+
+        $this->ecc = (int) $this->params[0];
 
         // hint
-        if (!isset($this->params[1]) || !in_array($this->params[1], ['A', 'B'])) {
+        if (
+            ! isset($this->params[1])
+            || ! is_string($this->params[1])
+            || ! in_array($this->params[1], ['A', 'B'])
+        ) {
             $this->params[1] = 'A';
         }
+
         $this->hint = $this->params[1];
 
         // mode
-        if (!isset($this->params[2]) || !in_array($this->params[2], ['A', 'F'])) {
+        if (
+            ! isset($this->params[2])
+            || ! is_string($this->params[2])
+            || ! in_array($this->params[2], ['A', 'F'])
+        ) {
             $this->params[2] = 'A';
         }
+
         $this->mode = $this->params[2];
 
         // eci code. Used to set the charset encoding. See $this->eci.
-        if (!isset($this->params[3]) || !array_key_exists($this->params[3], Data::ECI)) {
+        if (
+            ! isset($this->params[3])
+            || ! is_numeric($this->params[3])
+            || ! isset(Data::ECI[(int) $this->params[3]])
+        ) {
             $this->params[3] = -1;
         }
-        $this->eci = intval($this->params[3]);
+
+        $this->eci = (int) $this->params[3];
     }
 
     /**
@@ -118,17 +133,18 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
-        if (strlen((string)$this->code) == 0) {
+        if (strlen((string) $this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
+
         try {
-            $enc = new Encode($this->code, $this->ecc, $this->eci, $this->hint, $this->mode);
-            $grid = $enc->getGrid();
+            $encode = new Encode($this->code, $this->ecc, $this->eci, $this->hint, $this->mode);
+            $grid = $encode->getGrid();
             $this->processBinarySequence($grid);
-        } catch (BarcodeException $e) {
-            throw new BarcodeException('AZTEC: ' . $e->getMessage());
+        } catch (BarcodeException $barcodeException) {
+            throw new BarcodeException('AZTEC: ' . $barcodeException->getMessage());
         }
     }
 }

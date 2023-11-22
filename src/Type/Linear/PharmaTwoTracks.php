@@ -39,17 +39,17 @@ class PharmaTwoTracks extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'PHARMA2T';
+    protected const FORMAT = 'PHARMA2T';
 
     /**
      * Set the bars array.
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $seq = '';
-        $code = intval($this->code);
+        $code = (int) $this->code;
 
         do {
             switch ($code % 3) {
@@ -70,22 +70,24 @@ class PharmaTwoTracks extends \Com\Tecnick\Barcode\Type\Linear
         $seq = strrev($seq);
         $this->ncols = 0;
         $this->nrows = 2;
-        $this->bars = array();
+        $this->bars = [];
         $len = strlen($seq);
         for ($pos = 0; $pos < $len; ++$pos) {
             switch ($seq[$pos]) {
                 case '1':
-                    $this->bars[] = array($this->ncols, 1, 1, 1);
+                    $this->bars[] = [$this->ncols, 1, 1, 1];
                     break;
                 case '2':
-                    $this->bars[] = array($this->ncols, 0, 1, 1);
+                    $this->bars[] = [$this->ncols, 0, 1, 1];
                     break;
                 case '3':
-                    $this->bars[] = array($this->ncols, 0, 1, 2);
+                    $this->bars[] = [$this->ncols, 0, 1, 2];
                     break;
             }
+
             $this->ncols += 2;
         }
+
         --$this->ncols;
     }
 }

@@ -39,12 +39,12 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
      *
      * @var string
      */
-    protected $format = 'KIX';
+    protected const FORMAT = 'KIX';
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = strtoupper($this->code);
     }
@@ -54,11 +54,11 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->ncols = 0;
         $this->nrows = 3;
-        $this->bars = array();
+        $this->bars = [];
         $this->getCoreBars();
     }
 }

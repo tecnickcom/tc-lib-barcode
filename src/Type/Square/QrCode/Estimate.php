@@ -17,7 +17,6 @@
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
 
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Estimate
@@ -29,33 +28,33 @@ use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @phpstan-type Item array{
+ *            'mode': int,
+ *            'size': int,
+ *            'data': array<int, string>,
+ *            'bstream': array<int, int>,
+ *        }
  */
 abstract class Estimate
 {
     /**
      * Encoding mode
-     *
-     * @var int
      */
-    protected $hint = 2;
+    protected int $hint = 2;
 
     /**
      * QR code version.
      * The Size of QRcode is defined as version. Version is an integer value from 1 to 40.
      * Version 1 is 21*21 matrix. And 4 modules increases whenever 1 version increases.
      * So version 40 is 177*177 matrix.
-     *
-     * @var int
      */
-    public $version = 0;
+    public int $version = 0;
 
     /**
      * Error correction level
-     *
-     * @var int
      */
-    protected $level = 0;
-
+    protected int $level = 0;
 
     /**
      * Return the size of length indicator for the mode and version
@@ -65,11 +64,12 @@ abstract class Estimate
      *
      * @return int the size of the appropriate length indicator (bits).
      */
-    public function getLengthIndicator($mode, $version)
+    public function getLengthIndicator(int $mode, int $version): int
     {
         if ($mode == Data::ENC_MODES['ST']) {
             return 0;
         }
+
         if ($version <= 9) {
             $len = 0;
         } elseif ($version <= 26) {
@@ -77,91 +77,83 @@ abstract class Estimate
         } else {
             $len = 2;
         }
+
         return Data::LEN_TABLE_BITS[$mode][$len];
     }
 
     /**
      * estimateBitsModeNum
      *
-     * @param int $size
-     *
      * @return int number of bits
      */
-    public function estimateBitsModeNum($size)
+    public function estimateBitsModeNum(int $size): int
     {
-        $wdt = (int)($size / 3);
+        $wdt = (int) ($size / 3);
         $bits = ($wdt * 10);
-        switch ($size - ($wdt * 3)) {
-            case 1:
-                $bits += 4;
-                break;
-            case 2:
-                $bits += 7;
-                break;
-        }
+        match ($size - ($wdt * 3)) {
+            1 => $bits += 4,
+            2 => $bits += 7,
+            default => $bits,
+        };
         return $bits;
     }
 
     /**
      * estimateBitsModeAn
      *
-     * @param int $size
-     *
      * @return int number of bits
      */
-    public function estimateBitsModeAn($size)
+    public function estimateBitsModeAn(int $size): int
     {
-        $bits = (int)($size * 5.5); // (size / 2 ) * 11
-        if ($size & 1) {
+        $bits = (int) ($size * 5.5); // (size / 2 ) * 11
+        if (($size & 1) !== 0) {
             $bits += 6;
         }
+
         return $bits;
     }
 
     /**
      * estimateBitsMode8
      *
-     * @param int $size
-     *
      * @return int number of bits
      */
-    public function estimateBitsMode8($size)
+    public function estimateBitsMode8(int $size): int
     {
-        return (int)($size * 8);
+        return $size * 8;
     }
 
     /**
      * estimateBitsModeKanji
      *
-     * @param int $size
-     *
      * @return int number of bits
      */
-    public function estimateBitsModeKanji($size)
+    public function estimateBitsModeKanji(int $size): int
     {
-        return (int)($size * 6.5); // (size / 2 ) * 13
+        return (int) ($size * 6.5); // (size / 2 ) * 13
     }
 
     /**
      * Estimate version
      *
-     * @param array $items
-     * @param int   $level
+     * @param array<int, Item> $items Items
+     * @param int $level Error correction level
      *
      * @return int version
      */
-    public function estimateVersion($items, $level)
+    public function estimateVersion(array $items, int $level): int
     {
         $version = 0;
         $prev = 0;
         do {
             $prev = $version;
             $bits = $this->estimateBitStreamSize($items, $prev);
-            $version = $this->getMinimumVersion((int)(($bits + 7) / 8), $level);
+            $version = $this->getMinimumVersion((int) (($bits + 7) / 8), $level);
             if ($version < 0) {
                 return -1;
             }
         } while ($version > $prev);
+
         return $version;
     }
 
@@ -175,7 +167,7 @@ abstract class Estimate
      *
      * @throws BarcodeException
      */
-    protected function getMinimumVersion($size, $level)
+    protected function getMinimumVersion(int $size, int $level): int
     {
         for ($idx = 1; $idx <= Data::QRSPEC_VERSION_MAX; ++$idx) {
             $words = (Data::CAPACITY[$idx][Data::QRCAP_WORDS] - Data::CAPACITY[$idx][Data::QRCAP_EC][$level]);
@@ -183,6 +175,7 @@ abstract class Estimate
                 return $idx;
             }
         }
+
         throw new BarcodeException(
             'The size of input data is greater than Data::QR capacity, try to lower the error correction mode'
         );
@@ -191,17 +184,18 @@ abstract class Estimate
     /**
      * estimateBitStreamSize
      *
-     * @param array $items
-     * @param int   $version
+     * @param array<int, Item> $items Items
+     * @param int $version Code version
      *
      * @return int bits
      */
-    protected function estimateBitStreamSize($items, $version)
+    protected function estimateBitStreamSize(array $items, int $version): int
     {
         $bits = 0;
         if ($version == 0) {
             $version = 1;
         }
+
         foreach ($items as $item) {
             switch ($item['mode']) {
                 case Data::ENC_MODES['NM']:
@@ -221,11 +215,13 @@ abstract class Estimate
                 default:
                     return 0;
             }
+
             $len = $this->getLengthIndicator($item['mode'], $version);
             $mod = 1 << $len;
-            $num = (int)(($item['size'] + $mod - 1) / $mod);
+            $num = (int) (($item['size'] + $mod - 1) / $mod);
             $bits += $num * (4 + $len);
         }
+
         return $bits;
     }
 }

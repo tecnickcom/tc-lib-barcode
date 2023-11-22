@@ -39,29 +39,26 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'EAN13';
+    protected const FORMAT = 'EAN13';
 
     /**
      * Fixed code length
-     *
-     * @var int
      */
-    protected $code_length = 13;
+    protected int $code_length = 13;
 
     /**
      * Check digit
-     *
-     * @var int
      */
-    protected $check = 0;
+    protected int $check = 0;
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int|string, array<int|string, string>>
      */
-    protected $chbar = array(
-        'A' => array( // left odd parity
+    protected const CHBAR = [
+        'A' => [
+            // left odd parity
             '0' => '0001101',
             '1' => '0011001',
             '2' => '0010011',
@@ -71,9 +68,10 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
             '6' => '0101111',
             '7' => '0111011',
             '8' => '0110111',
-            '9' => '0001011'
-        ),
-        'B' => array( // left even parity
+            '9' => '0001011',
+        ],
+        'B' => [
+            // left even parity
             '0' => '0100111',
             '1' => '0110011',
             '2' => '0011011',
@@ -83,9 +81,10 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
             '6' => '0000101',
             '7' => '0010001',
             '8' => '0001001',
-            '9' => '0010111'
-        ),
-        'C' => array( // right
+            '9' => '0010111',
+        ],
+        'C' => [
+            // right
             '0' => '1110010',
             '1' => '1100110',
             '2' => '1101100',
@@ -95,16 +94,16 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
             '6' => '1010000',
             '7' => '1000100',
             '8' => '1001000',
-            '9' => '1110100'
-        )
-    );
+            '9' => '1110100',
+        ],
+    ];
 
     /**
      * Map parities
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $parities = array(
+    protected const PARITIES = [
         '0' => 'AAAAAA',
         '1' => 'AABABB',
         '2' => 'AABBAB',
@@ -114,8 +113,8 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
         '6' => 'ABBBAA',
         '7' => 'ABABAB',
         '8' => 'ABABBA',
-        '9' => 'ABBABA'
-    );
+        '9' => 'ABBABA',
+    ];
 
     /**
      * Calculate checksum
@@ -126,7 +125,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $data_len = ($this->code_length - 1);
         $code_len = strlen($code);
@@ -134,34 +133,42 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
         for ($pos = 1; $pos < $data_len; $pos += 2) {
             $sum_a += $code[$pos];
         }
+
         if ($this->code_length > 12) {
             $sum_a *= 3;
         }
+
         $sum_b = 0;
         for ($pos = 0; $pos < $data_len; $pos += 2) {
             $sum_b += ($code[$pos]);
         }
+
         if ($this->code_length < 13) {
             $sum_b *= 3;
         }
+
         $this->check = ($sum_a + $sum_b) % 10;
         if ($this->check > 0) {
             $this->check = (10 - $this->check);
         }
+
         if ($code_len == $data_len) {
             // add check digit
             return $this->check;
-        } elseif ($this->check !== intval($code[$data_len])) {
+        }
+
+        if ($this->check !== (int) $code[$data_len]) {
             // wrong check digit
             throw new BarcodeException('Invalid check digit: ' . $this->check);
         }
+
         return 0;
     }
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = str_pad($this->code, ($this->code_length - 1), '0', STR_PAD_LEFT);
         $this->extcode = $code . $this->getChecksum($code);
@@ -172,23 +179,26 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
-        if (!is_numeric($this->code)) {
+        if (! is_numeric($this->code)) {
             throw new BarcodeException('Input code must be a number');
         }
-        $this->formatCode();
+
+        $this::FORMATCode();
         $seq = '101'; // left guard bar
-        $half_len = intval(ceil($this->code_length / 2));
-        $parity = $this->parities[$this->extcode[0]];
+        $half_len = (int) ceil($this->code_length / 2);
+        $parity = $this::PARITIES[$this->extcode[0]];
         for ($pos = 1; $pos < $half_len; ++$pos) {
-            $seq .= $this->chbar[$parity[($pos - 1)]][$this->extcode[$pos]];
+            $seq .= $this::CHBAR[$parity[($pos - 1)]][$this->extcode[$pos]];
         }
+
         $seq .= '01010'; // center guard bar
         for ($pos = $half_len; $pos < $this->code_length; ++$pos) {
-            $seq .= $this->chbar['C'][$this->extcode[$pos]];
+            $seq .= $this::CHBAR['C'][$this->extcode[$pos]];
         }
+
         $seq .= '101'; // right guard bar
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

@@ -16,7 +16,6 @@
 
 namespace Test\Linear;
 
-use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**
@@ -32,36 +31,36 @@ use Test\TestUtil;
  */
 class CodeOneOneTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('CODE11', '0123456789');
+        $barcode = $this->getTestObject();
+        $bobj = $barcode->getBarcodeObj('CODE11', '0123456789');
         $grid = $bobj->getGrid();
         $expected = "10110010101011011010110100101101100101010110110110"
             . "11010100110101010011011010010110101010101101011001\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $testObj->getBarcodeObj('CODE11', '123-456-789');
+        $bobj = $barcode->getBarcodeObj('CODE11', '123-456-789');
         $grid = $bobj->getGrid();
         $expected = "10110010110101101001011011001010101101010110110110110"
             . "10100110101011010101001101101001011010101101101011010101011001\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $testObj->getBarcodeObj('CODE11', '-');
+        $bobj = $barcode->getBarcodeObj('CODE11', '-');
         $grid = $bobj->getGrid();
         $expected = "10110010101101010110101011001\n";
         $this->assertEquals($expected, $grid);
     }
 
-    public function testInvalidInput()
+    public function testInvalidInput(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj('CODE11', chr(255));
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('CODE11', chr(255));
     }
 }

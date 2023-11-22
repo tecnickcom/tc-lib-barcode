@@ -16,7 +16,6 @@
 
 namespace Test\Linear;
 
-use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**
@@ -32,19 +31,19 @@ use Test\TestUtil;
  */
 class EanTwoTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj(
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj(
             'EAN2',
             '12'
         );
-        $grid = $bobj->getGrid();
+        $grid = $type->getGrid();
         $expected = "10110011001010010011\n";
         $this->assertEquals($expected, $grid);
     }

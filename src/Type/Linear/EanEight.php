@@ -39,33 +39,33 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      *
      * @var string
      */
-    protected $format = 'EAN8';
+    protected const FORMAT = 'EAN8';
 
     /**
      * Fixed code length
-     *
-     * @var int
      */
-    protected $code_length = 8;
+    protected int $code_length = 8;
 
     /**
      * Set the bars array.
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         $seq = '101'; // left guard bar
-        $half_len = intval(ceil($this->code_length / 2));
+        $half_len = (int) ceil($this->code_length / 2);
         for ($pos = 0; $pos < $half_len; ++$pos) {
-            $seq .= $this->chbar['A'][$this->extcode[$pos]];
+            $seq .= $this::CHBAR['A'][$this->extcode[$pos]];
         }
+
         $seq .= '01010'; // center guard bar
         for ($pos = $half_len; $pos < $this->code_length; ++$pos) {
-            $seq .= $this->chbar['C'][$this->extcode[$pos]];
+            $seq .= $this::CHBAR['C'][$this->extcode[$pos]];
         }
+
         $seq .= '101'; // right guard bar
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

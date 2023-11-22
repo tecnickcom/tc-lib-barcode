@@ -16,7 +16,6 @@
 
 namespace Test\Linear;
 
-use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**
@@ -32,16 +31,16 @@ use Test\TestUtil;
  */
 class PharmaTwoTracksTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('PHARMA2T', '0123456789');
-        $grid = $bobj->getGrid();
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('PHARMA2T', '0123456789');
+        $grid = $type->getGrid();
         $expected = "101000001010100010001010001000101\n000010101010001010101000100010001\n";
         $this->assertEquals($expected, $grid);
     }

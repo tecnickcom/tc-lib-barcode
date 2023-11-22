@@ -39,14 +39,14 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'MSI+';
+    protected const FORMAT = 'MSI+';
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $chbar = array(
+    protected const CHBAR = [
         '0' => '100100100100',
         '1' => '100100100110',
         '2' => '100100110100',
@@ -62,8 +62,8 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         'C' => '110110100100',
         'D' => '110110100110',
         'E' => '110110110100',
-        'F' => '110110110110'
-    );
+        'F' => '110110110110',
+    ];
 
     /**
      * Calculate the checksum
@@ -72,33 +72,36 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $clen = strlen($code);
         $pix = 2;
         $check = 0;
         for ($pos = ($clen - 1); $pos >= 0; --$pos) {
             $hex = $code[$pos];
-            if (!ctype_xdigit($hex)) {
+            if (! ctype_xdigit($hex)) {
                 continue;
             }
+
             $check += (hexdec($hex) * $pix);
             ++$pix;
             if ($pix > 7) {
                 $pix = 2;
             }
         }
+
         $check %= 11;
         if ($check > 0) {
-            $check = (11 - $check);
+            return 11 - $check;
         }
+
         return $check;
     }
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code . $this->getChecksum($this->code);
     }
@@ -108,19 +111,21 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
-        $this->formatCode();
+        $this::FORMATCode();
         $seq = '110'; // left guard
         $clen = strlen($this->extcode);
         for ($pos = 0; $pos < $clen; ++$pos) {
             $digit = $this->extcode[$pos];
-            if (!isset($this->chbar[$digit])) {
+            if (! isset($this::CHBAR[$digit])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
             }
-            $seq .= $this->chbar[$digit];
+
+            $seq .= $this::CHBAR[$digit];
         }
+
         $seq .= '1001'; // right guard
-        $this->processBinarySequence($seq);
+        $this->processBinarySequence($this->getRawCodeRows($seq));
     }
 }

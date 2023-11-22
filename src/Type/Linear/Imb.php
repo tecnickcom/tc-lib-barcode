@@ -60,54 +60,299 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'IMB';
+    protected const FORMAT = 'IMB';
 
     /**
      * ASC characters
      *
-     * @var array
+     * @var array<int>
      */
-    const ASC_CHR = array(
-        4,0,2,6,3,5,1,9,8,7,
-        1,2,0,6,4,8,2,9,5,3,
-        0,1,3,7,4,6,8,9,2,0,
-        5,1,9,4,3,8,6,7,1,2,
-        4,3,9,5,7,8,3,0,2,1,
-        4,0,9,1,7,0,2,4,6,3,
-        7,1,9,5,8
-    );
+    protected const ASC_CHR = [
+        4,
+        0,
+        2,
+        6,
+        3,
+        5,
+        1,
+        9,
+        8,
+        7,
+        1,
+        2,
+        0,
+        6,
+        4,
+        8,
+        2,
+        9,
+        5,
+        3,
+        0,
+        1,
+        3,
+        7,
+        4,
+        6,
+        8,
+        9,
+        2,
+        0,
+        5,
+        1,
+        9,
+        4,
+        3,
+        8,
+        6,
+        7,
+        1,
+        2,
+        4,
+        3,
+        9,
+        5,
+        7,
+        8,
+        3,
+        0,
+        2,
+        1,
+        4,
+        0,
+        9,
+        1,
+        7,
+        0,
+        2,
+        4,
+        6,
+        3,
+        7,
+        1,
+        9,
+        5,
+        8,
+    ];
 
     /**
      * DSC characters
      *
-     * @var array
+     * @var array<int>
      */
-    const DSC_CHR = array(
-        7,1,9,5,8,0,2,4,6,3,
-        5,8,9,7,3,0,6,1,7,4,
-        6,8,9,2,5,1,7,5,4,3,
-        8,7,6,0,2,5,4,9,3,0,
-        1,6,8,2,0,4,5,9,6,7,
-        5,2,6,3,8,5,1,9,8,7,
-        4,0,2,6,3);
+    protected const DSC_CHR = [
+        7,
+        1,
+        9,
+        5,
+        8,
+        0,
+        2,
+        4,
+        6,
+        3,
+        5,
+        8,
+        9,
+        7,
+        3,
+        0,
+        6,
+        1,
+        7,
+        4,
+        6,
+        8,
+        9,
+        2,
+        5,
+        1,
+        7,
+        5,
+        4,
+        3,
+        8,
+        7,
+        6,
+        0,
+        2,
+        5,
+        4,
+        9,
+        3,
+        0,
+        1,
+        6,
+        8,
+        2,
+        0,
+        4,
+        5,
+        9,
+        6,
+        7,
+        5,
+        2,
+        6,
+        3,
+        8,
+        5,
+        1,
+        9,
+        8,
+        7,
+        4,
+        0,
+        2,
+        6,
+        3,
+    ];
 
     /**
      * ASC positions
      *
-     * @var array
+     * @var array<int>
      */
-    const ASC_POS = array(
-        3,0,8,11,1,12,8,11,10,6,4,12,2,7,9,6,7,9,2,8,4,0,12,7,10,9,0,7,10,5,7,9,
-        6,8,2,12,1,4,2,0,1,5,4,6,12,1,0,9,4,7,5,10,2,6,9,11,2,12,6,7,5,11,0,3,2);
+    protected const ASC_POS = [
+        3,
+        0,
+        8,
+        11,
+        1,
+        12,
+        8,
+        11,
+        10,
+        6,
+        4,
+        12,
+        2,
+        7,
+        9,
+        6,
+        7,
+        9,
+        2,
+        8,
+        4,
+        0,
+        12,
+        7,
+        10,
+        9,
+        0,
+        7,
+        10,
+        5,
+        7,
+        9,
+        6,
+        8,
+        2,
+        12,
+        1,
+        4,
+        2,
+        0,
+        1,
+        5,
+        4,
+        6,
+        12,
+        1,
+        0,
+        9,
+        4,
+        7,
+        5,
+        10,
+        2,
+        6,
+        9,
+        11,
+        2,
+        12,
+        6,
+        7,
+        5,
+        11,
+        0,
+        3,
+        2,
+    ];
 
     /**
      * DSC positions
      *
-     * @var array
+     * @var array<int>
      */
-    const DSC_POS = array(
-        2,10,12,5,9,1,5,4,3,9,11,5,10,1,6,3,4,1,10,0,2,11,8,6,1,12,3,8,6,4,4,11,
-        0,6,1,9,11,5,3,7,3,10,7,11,8,2,10,3,5,8,0,3,12,11,8,4,5,1,3,0,7,12,9,8,10);
+    protected const DSC_POS = [
+        2,
+        10,
+        12,
+        5,
+        9,
+        1,
+        5,
+        4,
+        3,
+        9,
+        11,
+        5,
+        10,
+        1,
+        6,
+        3,
+        4,
+        1,
+        10,
+        0,
+        2,
+        11,
+        8,
+        6,
+        1,
+        12,
+        3,
+        8,
+        6,
+        4,
+        4,
+        11,
+        0,
+        6,
+        1,
+        9,
+        11,
+        5,
+        3,
+        7,
+        3,
+        10,
+        7,
+        11,
+        8,
+        2,
+        10,
+        3,
+        5,
+        8,
+        0,
+        3,
+        12,
+        11,
+        8,
+        4,
+        5,
+        1,
+        3,
+        0,
+        7,
+        12,
+        9,
+        8,
+        10,
+    ];
 
     /**
      * Reverse unsigned short value
@@ -116,7 +361,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int reversed value
      */
-    protected function getReversedUnsignedShort($num)
+    protected function getReversedUnsignedShort(int $num): int
     {
         $rev = 0;
         for ($pos = 0; $pos < 16; ++$pos) {
@@ -124,44 +369,41 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
             $rev |= ($num & 1);
             $num >>= 1;
         }
+
         return $rev;
     }
 
     /**
      * Get the Frame Check Sequence
      *
-     * @param array $code_arr Array of hexadecimal values (13 bytes holding 102 bits right justified).
+     * @param array<int, string> $code_arr Array of hexadecimal values (13 bytes holding 102 bits right justified).
      *
      * @return int 11 bit Frame Check Sequence as integer (decimal base)
      */
-    protected function getFrameCheckSequence($code_arr)
+    protected function getFrameCheckSequence(array $code_arr): int
     {
         $genpoly = 0x0F35; // generator polynomial
         $fcs = 0x07FF; // Frame Check Sequence
         // do most significant byte skipping the 2 most significant bits
         $data = hexdec($code_arr[0]) << 5;
         for ($bit = 2; $bit < 8; ++$bit) {
-            if (($fcs ^ $data) & 0x400) {
-                $fcs = ($fcs << 1) ^ $genpoly;
-            } else {
-                $fcs = ($fcs << 1);
-            }
+            $fcs = (($fcs ^ $data) & 0x400) !== 0 ? ($fcs << 1) ^ $genpoly : $fcs << 1;
+
             $fcs &= 0x7FF;
             $data <<= 1;
         }
+
         // do rest of bytes
         for ($byte = 1; $byte < 13; ++$byte) {
             $data = hexdec($code_arr[$byte]) << 3;
             for ($bit = 0; $bit < 8; ++$bit) {
-                if (($fcs ^ $data) & 0x400) {
-                    $fcs = ($fcs << 1) ^ $genpoly;
-                } else {
-                    $fcs = ($fcs << 1);
-                }
+                $fcs = (($fcs ^ $data) & 0x400) !== 0 ? ($fcs << 1) ^ $genpoly : $fcs << 1;
+
                 $fcs &= 0x7FF;
                 $data <<= 1;
             }
         }
+
         return $fcs;
     }
 
@@ -171,20 +413,21 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      * @param int $type  Table type: 2 for 2of13 table, 5 for 5of13table
      * @param int $size Table size (78 for n=2 and 1287 for n=5)
      *
-     * @return array requested table
+     * @return array<int, int> requested table
      */
-    protected function getTables($type, $size)
+    protected function getTables(int $type, int $size): array
     {
-        $table = array();
+        $table = [];
         $lli = 0; // LUT lower index
         $lui = $size - 1; // LUT upper index
         for ($count = 0; $count < 8192; ++$count) {
             $bit_count = 0;
             for ($bit_index = 0; $bit_index < 13; ++$bit_index) {
-                $bit_count += intval(($count & (1 << $bit_index)) != 0);
+                $bit_count += (int) (($count & (1 << $bit_index)) != 0);
             }
+
             // if we don't have the right number of bits on, go on to the next value
-            if ($bit_count == $type) {
+            if ($bit_count === $type) {
                 $reverse = ($this->getReversedUnsignedShort($count) >> 3);
                 // if the reverse is less than count, we have already visited this pair before
                 if ($reverse >= $count) {
@@ -203,6 +446,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
                 }
             }
         }
+
         return $table;
     }
 
@@ -211,44 +455,39 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @param string $routing_code the routing code
      *
-     * @return string
-     *
      * @throws BarcodeException in case of error
      */
-    protected function getRoutingCode($routing_code)
+    protected function getRoutingCode(string $routing_code): string
     {
         // Conversion of Routing Code
-        switch (strlen($routing_code)) {
-            case 0:
-                return '0';
-            case 5:
-                return bcadd($routing_code, '1');
-            case 9:
-                return bcadd($routing_code, '100001');
-            case 11:
-                return bcadd($routing_code, '1000100001');
-        }
-        throw new BarcodeException('Invalid routing code');
+        return match (strlen($routing_code)) {
+            0 => '0',
+            5 => bcadd($routing_code, '1'),
+            9 => bcadd($routing_code, '100001'),
+            11 => bcadd($routing_code, '1000100001'),
+            default => throw new BarcodeException('Invalid routing code'),
+        };
     }
 
     /**
      * Get the processed array of characters
      *
-     * @return array
+     * @return array<int, int>
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCharsArray()
+    protected function getCharsArray(): array
     {
         $this->ncols = 0;
         $this->nrows = 3;
-        $this->bars = array();
+        $this->bars = [];
         $code_arr = explode('-', $this->code);
         $tracking_number = $code_arr[0];
-        $binary_code = 0;
+        $binary_code = '0';
         if (isset($code_arr[1])) {
             $binary_code = $this->getRoutingCode($code_arr[1]);
         }
+
         $binary_code = bcmul($binary_code, '10');
         $binary_code = bcadd($binary_code, $tracking_number[0]);
         $binary_code = bcmul($binary_code, '5');
@@ -268,7 +507,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $first_byte = sprintf('%2s', dechex((hexdec($binary_code_arr[0]) << 2) >> 2));
         $binary_code_102bit = $first_byte . substr($binary_code, 2);
         // convert binary data to codewords
-        $codewords = array();
+        $codewords = [];
         $data = $this->convertHexToDec($binary_code_102bit);
         $codewords[0] = bcmod($data, '636') * 2;
         $data = bcdiv($data, '636');
@@ -276,26 +515,26 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
             $codewords[$pos] = bcmod($data, '1365');
             $data = bcdiv($data, '1365');
         }
+
         $codewords[9] = $data;
         if (($fcs >> 10) == 1) {
             $codewords[9] += 659;
         }
+
         // generate lookup tables
         $table2of13 = $this->getTables(2, 78);
         $table5of13 = $this->getTables(5, 1287);
         // convert codewords to characters
-        $characters = array();
+        $characters = [];
         $bitmask = 512;
-        foreach ($codewords as $val) {
-            if ($val <= 1286) {
-                $chrcode = $table5of13[$val];
-            } else {
-                $chrcode = $table2of13[($val - 1287)];
-            }
+        foreach ($codewords as $codeword) {
+            $chrcode = $codeword <= 1286 ? $table5of13[$codeword] : $table2of13[($codeword - 1287)];
+
             if (($fcs & $bitmask) > 0) {
                 // bitwise invert
-                $chrcode = ((~(int)$chrcode) & 8191);
+                $chrcode = ((~(int) $chrcode) & 8191);
             }
+
             $characters[] = $chrcode;
             $bitmask /= 2;
         }
@@ -308,27 +547,29 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $chars = $this->getCharsArray();
         for ($pos = 0; $pos < 65; ++$pos) {
-            $asc = (($chars[self::ASC_CHR[$pos]] & pow(2, self::ASC_POS[$pos])) > 0);
-            $dsc = (($chars[self::DSC_CHR[$pos]] & pow(2, self::DSC_POS[$pos])) > 0);
-            if ($asc and $dsc) {
+            $asc = (($chars[self::ASC_CHR[$pos]] & 2 ** self::ASC_POS[$pos]) > 0);
+            $dsc = (($chars[self::DSC_CHR[$pos]] & 2 ** self::DSC_POS[$pos]) > 0);
+            if ($asc && $dsc) {
                 // full bar (F)
-                $this->bars[] = array($this->ncols, 0, 1, 3);
+                $this->bars[] = [$this->ncols, 0, 1, 3];
             } elseif ($asc) {
                 // ascender (A)
-                $this->bars[] = array($this->ncols, 0, 1, 2);
+                $this->bars[] = [$this->ncols, 0, 1, 2];
             } elseif ($dsc) {
                 // descender (D)
-                $this->bars[] = array($this->ncols, 1, 1, 2);
+                $this->bars[] = [$this->ncols, 1, 1, 2];
             } else {
                 // tracker (T)
-                $this->bars[] = array($this->ncols, 1, 1, 1);
+                $this->bars[] = [$this->ncols, 1, 1, 1];
             }
+
             $this->ncols += 2;
         }
+
         --$this->ncols;
     }
 }

@@ -39,18 +39,20 @@ class CodeOneTwoEightA extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
      *
      * @var string
      */
-    protected $format = 'C128A';
+    protected const FORMAT = 'C128A';
 
     /**
      * Get the code point array
      *
+     * @return array<int, int>
+     *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeData()
+    protected function getCodeData(): array
     {
         $code = $this->code;
         $len = strlen($code);
-        $code_data = array();
+        $code_data = [];
         $this->getCodeDataA($code_data, $code, $len);
         return $this->finalizeCodeData($code_data, 103);
     }

@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\Datamatrix;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
  *
@@ -43,26 +40,29 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      *
      * @return int encoding mode
      */
-    public function lookAheadTest($data, $pos, $mode)
+    public function lookAheadTest(string $data, int $pos, int $mode): int
     {
         $data_length = strlen($data);
         if ($pos >= $data_length) {
             return $mode;
         }
+
         $charscount = 0; // count processed chars
         // STEP J
         if ($mode == Data::ENC_ASCII) {
-            $numch = array(0, 1, 1, 1, 1, 1.25);
+            $numch = [0, 1, 1, 1, 1, 1.25];
         } else {
-            $numch = array(1, 2, 2, 2, 2, 2.25);
+            $numch = [1, 2, 2, 2, 2, 2.25];
             $numch[$mode] = 0;
         }
+
         while (true) {
             if (($pos + $charscount) == $data_length) {
                 return $this->stepK($numch);
             }
+
             $chr = ord($data[$pos + $charscount]);
-            $charscount++;
+            ++$charscount;
             $this->stepL($chr, $numch);
             $this->stepM($chr, $numch);
             $this->stepN($chr, $numch);
@@ -71,7 +71,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
             $this->stepQ($chr, $numch);
             if ($charscount >= 4) {
                 $ret = $this->stepR($numch, $pos, $data_length, $charscount, $data);
-                if ($ret !== null) {
+                if ($ret >= 0) {
                     return $ret;
                 }
             }
@@ -81,11 +81,11 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step K
      *
-     * @param array $numch
+     * @param array<int, int> $numch   Number of characters
      *
-     * @return int
+     * @return int encoding mode
      */
-    protected function stepK($numch)
+    protected function stepK(array $numch): int
     {
         if (
             $numch[Data::ENC_ASCII] <= ceil(min(
@@ -98,6 +98,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_ASCII;
         }
+
         if (
             $numch[Data::ENC_BASE256] < ceil(min(
                 $numch[Data::ENC_ASCII],
@@ -109,6 +110,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_BASE256;
         }
+
         if (
             $numch[Data::ENC_EDF] < ceil(min(
                 $numch[Data::ENC_ASCII],
@@ -120,6 +122,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_EDF;
         }
+
         if (
             $numch[Data::ENC_TXT] < ceil(min(
                 $numch[Data::ENC_ASCII],
@@ -131,6 +134,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_TXT;
         }
+
         if (
             $numch[Data::ENC_X12] < ceil(min(
                 $numch[Data::ENC_ASCII],
@@ -142,16 +146,17 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_X12;
         }
+
         return Data::ENC_C40;
     }
 
     /**
      * Step L
      *
-     * @param int   $chr
-     * @param array $numch
+     * @param int $chr    Character code
+     * @param array<int, int> $numch   Number of characters
      */
-    protected function stepL($chr, &$numch)
+    protected function stepL(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_ASCII_NUM)) {
             $numch[Data::ENC_ASCII] += (1 / 2);
@@ -160,17 +165,17 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
             $numch[Data::ENC_ASCII] += 2;
         } else {
             $numch[Data::ENC_ASCII] = ceil($numch[Data::ENC_ASCII]);
-            $numch[Data::ENC_ASCII] += 1;
+            ++$numch[Data::ENC_ASCII];
         }
     }
 
     /**
      * Step M
      *
-     * @param int   $chr
-     * @param array $numch
+     * @param int $chr    Character code
+     * @param array<int, int> $numch   Number of characters
      */
-    protected function stepM($chr, &$numch)
+    protected function stepM(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_C40)) {
             $numch[Data::ENC_C40] += (2 / 3);
@@ -184,10 +189,10 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step N
      *
-     * @param int   $chr
-     * @param array $numch
+     * @param int $chr    Character code
+     * @param array<int, int> $numch   Number of characters
      */
-    protected function stepN($chr, &$numch)
+    protected function stepN(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_TXT)) {
             $numch[Data::ENC_TXT] += (2 / 3);
@@ -201,10 +206,10 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step O
      *
-     * @param int   $chr
-     * @param array $numch
+     * @param int $chr    Character code
+     * @param array<int, int> $numch   Number of characters
      */
-    protected function stepO($chr, &$numch)
+    protected function stepO(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_X12) || $this->isCharMode($chr, Data::ENC_C40)) {
             $numch[Data::ENC_X12] += (2 / 3);
@@ -218,10 +223,10 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step P
      *
-     * @param int   $chr
-     * @param array $numch
+     * @param int $chr    Character code
+     * @param array<int, int> $numch   Number of characters
      */
-    protected function stepP($chr, &$numch)
+    protected function stepP(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_EDF)) {
             $numch[Data::ENC_EDF] += (3 / 4);
@@ -235,31 +240,36 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step Q
      *
-     * @param int   $chr
-     * @param array $numch
+     * @param int $chr    Character code
+     * @param array<int, int> $numch   Number of characters
      */
-    protected function stepQ($chr, &$numch)
+    protected function stepQ(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_BASE256)) {
             $numch[Data::ENC_BASE256] += 4;
         } else {
-            $numch[Data::ENC_BASE256] += 1;
+            ++$numch[Data::ENC_BASE256];
         }
     }
 
     /**
      * Step R-f
      *
-     * @param array  $numch
-     * @param int    $pos
-     * @param int    $data_length
-     * @param int    $charscount
-     * @param string $data
+     * @param array<int, int> $numch   Number of characters
+     * @param int    $pos  Current position
+     * @param int    $data_length  Data length
+     * @param int    $charscount   Number of processed characters
+     * @param string $data Data to encode
      *
-     * @return int|null   Encoding mode
+     * @return int   Encoding mode
      */
-    protected function stepRf($numch, $pos, $data_length, $charscount, $data)
-    {
+    protected function stepRf(
+        array $numch,
+        int $pos,
+        int $data_length,
+        int $charscount,
+        string $data
+    ): int {
         if (
             ($numch[Data::ENC_C40] + 1) < min(
                 $numch[Data::ENC_ASCII],
@@ -271,34 +281,47 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
             if ($numch[Data::ENC_C40] < $numch[Data::ENC_X12]) {
                 return Data::ENC_C40;
             }
+
             if ($numch[Data::ENC_C40] == $numch[Data::ENC_X12]) {
                 $ker = ($pos + $charscount + 1);
                 while ($ker < $data_length) {
                     $tmpchr = ord($data[$ker]);
                     if ($this->isCharMode($tmpchr, Data::ENC_X12)) {
                         return Data::ENC_X12;
-                    } elseif ($this->isCharMode($tmpchr, Data::ENC_C40)) {
+                    }
+
+                    if ($this->isCharMode($tmpchr, Data::ENC_C40)) {
                         break;
                     }
+
                     ++$ker;
                 }
+
                 return Data::ENC_C40;
             }
         }
-        return null;
+
+        return -1;
     }
 
     /**
      * Step R
      *
-     * @param array  $numch
-     * @param int    $pos
-     * @param int    $data_length
-     * @param int    $charscount
-     * @param string $data
+     * @param array<int, int> $numch   Number of characters
+     * @param int    $pos  Current position
+     * @param int    $data_length  Data length
+     * @param int    $charscount   Number of processed characters
+     * @param string $data Data to encode
+     *
+     * @return int   Encoding mode
      */
-    protected function stepR($numch, $pos, $data_length, $charscount, $data)
-    {
+    protected function stepR(
+        array $numch,
+        int $pos,
+        int $data_length,
+        int $charscount,
+        string $data
+    ): int {
         if (
             ($numch[Data::ENC_ASCII] + 1) <= min(
                 $numch[Data::ENC_C40],
@@ -310,6 +333,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_ASCII;
         }
+
         if (
             (($numch[Data::ENC_BASE256] + 1) <= $numch[Data::ENC_ASCII])
             || (($numch[Data::ENC_BASE256] + 1) < min(
@@ -321,6 +345,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_BASE256;
         }
+
         if (
             ($numch[Data::ENC_EDF] + 1) < min(
                 $numch[Data::ENC_ASCII],
@@ -332,6 +357,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_EDF;
         }
+
         if (
             ($numch[Data::ENC_TXT] + 1) < min(
                 $numch[Data::ENC_ASCII],
@@ -343,6 +369,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_TXT;
         }
+
         if (
             ($numch[Data::ENC_X12] + 1) < min(
                 $numch[Data::ENC_ASCII],
@@ -354,6 +381,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
         ) {
             return Data::ENC_X12;
         }
+
         return $this->stepRf($numch, $pos, $data_length, $charscount, $data);
     }
 }

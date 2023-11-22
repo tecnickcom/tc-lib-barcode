@@ -35,43 +35,73 @@ class Data
 {
     /**
      * ASCII encoding: ASCII character 0 to 127 (1 byte per CW)
+     *
+     * @var int
      */
-    const ENC_ASCII = 0;
+    public const ENC_ASCII = 0;
 
     /**
      * C40 encoding: Upper-case alphanumeric (3/2 bytes per CW)
+     *
+     * @var int
      */
-    const ENC_C40 = 1;
+    public const ENC_C40 = 1;
 
     /**
      * TEXT encoding: Lower-case alphanumeric (3/2 bytes per CW)
+     *
+     * @var int
      */
-    const ENC_TXT = 2;
+    public const ENC_TXT = 2;
 
     /**
      * X12 encoding: ANSI X12 (3/2 byte per CW)
+     *
+     * @var int
      */
-    const ENC_X12 = 3;
+    public const ENC_X12 = 3;
 
     /**
      * EDIFACT encoding: ASCII character 32 to 94 (4/3 bytes per CW)
+     *
+     * @var int
      */
-    const ENC_EDF = 4;
+    public const ENC_EDF = 4;
 
     /**
      * BASE 256 encoding: ASCII character 0 to 255 (1 byte per CW)
+     *
+     * @var int
      */
-    const ENC_BASE256 = 5;
+    public const ENC_BASE256 = 5;
 
     /**
      * ASCII extended encoding: ASCII character 128 to 255 (1/2 byte per CW)
+     *
+     * @var int
      */
-    const ENC_ASCII_EXT = 6;
+    public const ENC_ASCII_EXT = 6;
 
     /**
      * ASCII number encoding: ASCII digits (2 bytes per CW)
+     *
+     * @var int
      */
-    const ENC_ASCII_NUM = 7;
+    public const ENC_ASCII_NUM = 7;
+
+    /**
+     * Switch codewords.
+     *
+     * @var array<int, int>
+     */
+    public const SWITCHCDW = [
+        Data::ENC_ASCII => 254,
+        Data::ENC_C40 => 230,
+        Data::ENC_TXT => 239,
+        Data::ENC_X12 => 238,
+        Data::ENC_EDF => 240,
+        Data::ENC_BASE256 => 231,
+    ];
 
     /**
      * Table of Data Matrix ECC 200 Symbol Attributes:
@@ -93,11 +123,14 @@ class Data
      * <li>data codewords per block</li>
      * <li>error codewords per block</li>
      * </ul></li></ul>
+     *
+     * @var array<string, array<array{int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int}>>
      */
-    const SYMBATTR = array(
-        'S' => array( // square form
+    public const SYMBATTR = [
+        'S' => [
+            // square form
             // 10x10
-            array(
+            [
                 0x00a,
                 0x00a,
                 0x008,
@@ -113,10 +146,10 @@ class Data
                 0x005,
                 0x001,
                 0x003,
-                0x005
-            ),
+                0x005,
+            ],
             // 12x12
-            array(
+            [
                 0x00c,
                 0x00c,
                 0x00a,
@@ -132,10 +165,10 @@ class Data
                 0x007,
                 0x001,
                 0x005,
-                0x007
-            ),
+                0x007,
+            ],
             // 14x14
-            array(
+            [
                 0x00e,
                 0x00e,
                 0x00c,
@@ -151,10 +184,10 @@ class Data
                 0x00a,
                 0x001,
                 0x008,
-                0x00a
-            ),
+                0x00a,
+            ],
             // 16x16
-            array(
+            [
                 0x010,
                 0x010,
                 0x00e,
@@ -170,10 +203,10 @@ class Data
                 0x00c,
                 0x001,
                 0x00c,
-                0x00c
-            ),
+                0x00c,
+            ],
             // 18x18
-            array(
+            [
                 0x012,
                 0x012,
                 0x010,
@@ -189,10 +222,10 @@ class Data
                 0x00e,
                 0x001,
                 0x012,
-                0x00e
-            ),
+                0x00e,
+            ],
             // 20x20
-            array(
+            [
                 0x014,
                 0x014,
                 0x012,
@@ -208,10 +241,10 @@ class Data
                 0x012,
                 0x001,
                 0x016,
-                0x012
-            ),
+                0x012,
+            ],
             // 22x22
-            array(
+            [
                 0x016,
                 0x016,
                 0x014,
@@ -227,10 +260,10 @@ class Data
                 0x014,
                 0x001,
                 0x01e,
-                0x014
-            ),
+                0x014,
+            ],
             // 24x24
-            array(
+            [
                 0x018,
                 0x018,
                 0x016,
@@ -246,10 +279,10 @@ class Data
                 0x018,
                 0x001,
                 0x024,
-                0x018
-            ),
+                0x018,
+            ],
             // 26x26
-            array(
+            [
                 0x01a,
                 0x01a,
                 0x018,
@@ -265,10 +298,10 @@ class Data
                 0x01c,
                 0x001,
                 0x02c,
-                0x01c
-            ),
+                0x01c,
+            ],
             // 32x32
-            array(
+            [
                 0x020,
                 0x020,
                 0x01c,
@@ -284,10 +317,10 @@ class Data
                 0x024,
                 0x001,
                 0x03e,
-                0x024
-            ),
+                0x024,
+            ],
             // 36x36
-            array(
+            [
                 0x024,
                 0x024,
                 0x020,
@@ -303,10 +336,10 @@ class Data
                 0x02a,
                 0x001,
                 0x056,
-                0x02a
-            ),
+                0x02a,
+            ],
             // 40x40
-            array(
+            [
                 0x028,
                 0x028,
                 0x024,
@@ -322,10 +355,10 @@ class Data
                 0x030,
                 0x001,
                 0x072,
-                0x030
-            ),
+                0x030,
+            ],
             // 44x44
-            array(
+            [
                 0x02c,
                 0x02c,
                 0x028,
@@ -341,10 +374,10 @@ class Data
                 0x038,
                 0x001,
                 0x090,
-                0x038
-            ),
+                0x038,
+            ],
             // 48x48
-            array(
+            [
                 0x030,
                 0x030,
                 0x02c,
@@ -360,10 +393,10 @@ class Data
                 0x044,
                 0x001,
                 0x0ae,
-                0x044
-            ),
+                0x044,
+            ],
             // 52x52
-            array(
+            [
                 0x034,
                 0x034,
                 0x030,
@@ -379,10 +412,10 @@ class Data
                 0x054,
                 0x002,
                 0x066,
-                0x02a
-            ),
+                0x02a,
+            ],
             // 64x64
-            array(
+            [
                 0x040,
                 0x040,
                 0x038,
@@ -398,10 +431,10 @@ class Data
                 0x070,
                 0x002,
                 0x08c,
-                0x038
-            ),
+                0x038,
+            ],
             // 72x72
-            array(
+            [
                 0x048,
                 0x048,
                 0x040,
@@ -417,10 +450,10 @@ class Data
                 0x090,
                 0x004,
                 0x05c,
-                0x024
-            ),
+                0x024,
+            ],
             // 80x80
-            array(
+            [
                 0x050,
                 0x050,
                 0x048,
@@ -436,10 +469,10 @@ class Data
                 0x0c0,
                 0x004,
                 0x072,
-                0x030
-            ),
+                0x030,
+            ],
             // 88x88
-            array(
+            [
                 0x058,
                 0x058,
                 0x050,
@@ -455,10 +488,10 @@ class Data
                 0x0e0,
                 0x004,
                 0x090,
-                0x038
-            ),
+                0x038,
+            ],
             // 96x96
-            array(
+            [
                 0x060,
                 0x060,
                 0x058,
@@ -474,10 +507,10 @@ class Data
                 0x110,
                 0x004,
                 0x0ae,
-                0x044
-            ),
+                0x044,
+            ],
             // 104x104
-            array(
+            [
                 0x068,
                 0x068,
                 0x060,
@@ -493,10 +526,10 @@ class Data
                 0x150,
                 0x006,
                 0x088,
-                0x038
-            ),
+                0x038,
+            ],
             // 120x120
-            array(
+            [
                 0x078,
                 0x078,
                 0x06c,
@@ -512,10 +545,10 @@ class Data
                 0x198,
                 0x006,
                 0x0af,
-                0x044
-            ),
+                0x044,
+            ],
             // 132x132
-            array(
+            [
                 0x084,
                 0x084,
                 0x078,
@@ -531,10 +564,10 @@ class Data
                 0x1f0,
                 0x008,
                 0x0a3,
-                0x03e
-            ),
+                0x03e,
+            ],
             // 144x144
-            array(
+            [
                 0x090,
                 0x090,
                 0x084,
@@ -550,12 +583,13 @@ class Data
                 0x26c,
                 0x00a,
                 0x09c,
-                0x03e
-            )
-        ),
-        'R' => array( // rectangular form
+                0x03e,
+            ],
+        ],
+        'R' => [
+            // rectangular form
             // 8x18
-            array(
+            [
                 0x008,
                 0x012,
                 0x006,
@@ -571,10 +605,10 @@ class Data
                 0x007,
                 0x001,
                 0x005,
-                0x007
-            ),
+                0x007,
+            ],
             // 8x32
-            array(
+            [
                 0x008,
                 0x020,
                 0x006,
@@ -590,10 +624,10 @@ class Data
                 0x00b,
                 0x001,
                 0x00a,
-                0x00b
-            ),
+                0x00b,
+            ],
             // 12x26
-            array(
+            [
                 0x00c,
                 0x01a,
                 0x00a,
@@ -609,10 +643,10 @@ class Data
                 0x00e,
                 0x001,
                 0x010,
-                0x00e
-            ),
+                0x00e,
+            ],
             // 12x36
-            array(
+            [
                 0x00c,
                 0x024,
                 0x00a,
@@ -628,10 +662,10 @@ class Data
                 0x012,
                 0x001,
                 0x00c,
-                0x012
-            ),
+                0x012,
+            ],
             // 16x36
-            array(
+            [
                 0x010,
                 0x024,
                 0x00e,
@@ -647,10 +681,10 @@ class Data
                 0x018,
                 0x001,
                 0x020,
-                0x018
-            ),
+                0x018,
+            ],
             // 16x48
-            array(
+            [
                 0x010,
                 0x030,
                 0x00e,
@@ -666,25 +700,30 @@ class Data
                 0x01c,
                 0x001,
                 0x031,
-                0x01c
-            )
-        )
-    );
+                0x01c,
+            ],
+        ],
+    ];
 
-        /**
-        * Map encodation modes whit character sets.
-        */
-    const CHSET_ID = array(
-            self::ENC_C40 => 'C40',
-            self::ENC_TXT => 'TXT',
-            self::ENC_X12 => 'X12'
-        );
+    /**
+     * Map encodation modes whit character sets.
+     *
+     * @var array<int, string>
+     */
+    public const CHSET_ID = [
+        self::ENC_C40 => 'C40',
+        self::ENC_TXT => 'TXT',
+        self::ENC_X12 => 'X12',
+    ];
 
-        /**
-        * Basic set of characters for each encodation mode.
-        */
-    const CHSET = array(
-        'C40' => array( // Basic set for C40
+    /**
+     * Basic set of characters for each encodation mode.
+     *
+     * @var array<string, array<int|string, int>>
+     */
+    public const CHSET = [
+        'C40' => [
+            // Basic set for C40
             'S1' => 0x00,
             'S2' => 0x01,
             'S3' => 0x02,
@@ -724,9 +763,10 @@ class Data
             0x57 => 0x24,
             0x58 => 0x25,
             0x59 => 0x26,
-            0x5a => 0x27
-        ),
-        'TXT' => array( // Basic set for TEXT
+            0x5a => 0x27,
+        ],
+        'TXT' => [
+            // Basic set for TEXT
             'S1' => 0x00,
             'S2' => 0x01,
             'S3' => 0x02,
@@ -766,9 +806,10 @@ class Data
             0x77 => 0x24,
             0x78 => 0x25,
             0x79 => 0x26,
-            0x7a => 0x27
-        ),
-        'SH1' => array( // Shift 1 set
+            0x7a => 0x27,
+        ],
+        'SH1' => [
+            // Shift 1 set
             0x00 => 0x00,
             0x01 => 0x01,
             0x02 => 0x02,
@@ -800,9 +841,10 @@ class Data
             0x1c => 0x1c,
             0x1d => 0x1d,
             0x1e => 0x1e,
-            0x1f => 0x1f
-        ),
-        'SH2' => array( // Shift 2 set
+            0x1f => 0x1f,
+        ],
+        'SH2' => [
+            // Shift 2 set
             0x21 => 0x00,
             0x22 => 0x01,
             0x23 => 0x02,
@@ -831,9 +873,10 @@ class Data
             0x5e => 0x19,
             0x5f => 0x1a,
             'F1' => 0x1b,
-            'US' => 0x1e
-        ),
-        'S3C' => array( // Shift 3 set for C40
+            'US' => 0x1e,
+        ],
+        'S3C' => [
+            // Shift 3 set for C40
             0x60 => 0x00,
             0x61 => 0x01,
             0x62 => 0x02,
@@ -865,9 +908,10 @@ class Data
             0x7c => 0x1c,
             0x7d => 0x1d,
             0x7e => 0x1e,
-            0x7f => 0x1f
-        ),
-        'S3T' => array( // Shift 3 set for TEXT
+            0x7f => 0x1f,
+        ],
+        'S3T' => [
+            // Shift 3 set for TEXT
             0x60 => 0x00,
             0x41 => 0x01,
             0x42 => 0x02,
@@ -899,9 +943,10 @@ class Data
             0x7c => 0x1c,
             0x7d => 0x1d,
             0x7e => 0x1e,
-            0x7f => 0x1f
-        ),
-        'X12' => array( // Set for X12
+            0x7f => 0x1f,
+        ],
+        'X12' => [
+            // Set for X12
             0x0d => 0x00,
             0x2a => 0x01,
             0x3e => 0x02,
@@ -941,24 +986,28 @@ class Data
             0x57 => 0x24,
             0x58 => 0x25,
             0x59 => 0x26,
-            0x5a => 0x27
-        )
-    );
+            0x5a => 0x27,
+        ],
+    ];
 
     /**
      * Get the required codewords padding size
      *
-     * @return array params
+     * @param string $shape Shape.
+     * @param int    $ncw   Number of codewords.
+     *
+     * @return array{int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int}
      *
      * @throws BarcodeException in case of error
      */
-    public static function getPaddingSize($shape, $ncw)
+    public static function getPaddingSize(string $shape, int $ncw): array
     {
         foreach (Data::SYMBATTR[$shape] as $params) {
             if ($params[11] >= $ncw) {
                 return $params;
             }
         }
+
         throw new BarcodeException('Unable to find the correct size');
     }
 }

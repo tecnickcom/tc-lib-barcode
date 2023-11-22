@@ -39,14 +39,14 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'C39E+';
+    protected const FORMAT = 'C39E+';
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $chbar = array(
+    protected const CHBAR = [
         '0' => '111331311',
         '1' => '311311113',
         '2' => '113311113',
@@ -90,71 +90,204 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         '/' => '131311131',
         '+' => '131113131',
         '%' => '111313131',
-        '*' => '131131311'
-    );
+        '*' => '131131311',
+    ];
 
     /**
      * Map for extended characters
      *
-     * @var array
+     * @var array<string>
      */
-    protected $extcodes = array(
-        '%U', '$A', '$B', '$C',
-        '$D', '$E', '$F', '$G',
-        '$H', '$I', '$J', '$K',
-        '$L', '$M', '$N', '$O',
-        '$P', '$Q', '$R', '$S',
-        '$T', '$U', '$V', '$W',
-        '$X', '$Y', '$Z', '%A',
-        '%B', '%C', '%D', '%E',
-        ' ',  '/A', '/B', '/C',
-        '/D', '/E', '/F', '/G',
-        '/H', '/I', '/J', '/K',
-        '/L', '-',  '.',  '/O',
-        '0',  '1',  '2',  '3',
-        '4',  '5',  '6',  '7',
-        '8',  '9',  '/Z', '%F',
-        '%G', '%H', '%I', '%J',
-        '%V', 'A',  'B',  'C',
-        'D',  'E',  'F',  'G',
-        'H',  'I',  'J',  'K',
-        'L',  'M',  'N',  'O',
-        'P',  'Q',  'R',  'S',
-        'T',  'U',  'V',  'W',
-        'X',  'Y',  'Z',  '%K',
-        '%L', '%M', '%N', '%O',
-        '%W', '+A', '+B', '+C',
-        '+D', '+E', '+F', '+G',
-        '+H', '+I', '+J', '+K',
-        '+L', '+M', '+N', '+O',
-        '+P', '+Q', '+R', '+S',
-        '+T', '+U', '+V', '+W',
-        '+X', '+Y', '+Z', '%P',
-        '%Q', '%R', '%S', '%T'
-    );
+    protected const EXTCODES = [
+        '%U',
+        '$A',
+        '$B',
+        '$C',
+        '$D',
+        '$E',
+        '$F',
+        '$G',
+        '$H',
+        '$I',
+        '$J',
+        '$K',
+        '$L',
+        '$M',
+        '$N',
+        '$O',
+        '$P',
+        '$Q',
+        '$R',
+        '$S',
+        '$T',
+        '$U',
+        '$V',
+        '$W',
+        '$X',
+        '$Y',
+        '$Z',
+        '%A',
+        '%B',
+        '%C',
+        '%D',
+        '%E',
+        ' ',
+        '/A',
+        '/B',
+        '/C',
+        '/D',
+        '/E',
+        '/F',
+        '/G',
+        '/H',
+        '/I',
+        '/J',
+        '/K',
+        '/L',
+        '-',
+        '.',
+        '/O',
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '/Z',
+        '%F',
+        '%G',
+        '%H',
+        '%I',
+        '%J',
+        '%V',
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+        'F',
+        'G',
+        'H',
+        'I',
+        'J',
+        'K',
+        'L',
+        'M',
+        'N',
+        'O',
+        'P',
+        'Q',
+        'R',
+        'S',
+        'T',
+        'U',
+        'V',
+        'W',
+        'X',
+        'Y',
+        'Z',
+        '%K',
+        '%L',
+        '%M',
+        '%N',
+        '%O',
+        '%W',
+        '+A',
+        '+B',
+        '+C',
+        '+D',
+        '+E',
+        '+F',
+        '+G',
+        '+H',
+        '+I',
+        '+J',
+        '+K',
+        '+L',
+        '+M',
+        '+N',
+        '+O',
+        '+P',
+        '+Q',
+        '+R',
+        '+S',
+        '+T',
+        '+U',
+        '+V',
+        '+W',
+        '+X',
+        '+Y',
+        '+Z',
+        '%P',
+        '%Q',
+        '%R',
+        '%S',
+        '%T',
+    ];
 
     /**
      * Characters used for checksum
      *
-     * @var array
+     * @var array<string>
      */
-    protected $chksum = array(
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-        'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
-        'W', 'X', 'Y', 'Z', '-', '.', ' ', '$', '/', '+', '%'
-    );
+    protected const CHKSUM = [
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+        'F',
+        'G',
+        'H',
+        'I',
+        'J',
+        'K',
+        'L',
+        'M',
+        'N',
+        'O',
+        'P',
+        'Q',
+        'R',
+        'S',
+        'T',
+        'U',
+        'V',
+        'W',
+        'X',
+        'Y',
+        'Z',
+        '-',
+        '.',
+        ' ',
+        '$',
+        '/',
+        '+',
+        '%',
+    ];
 
     /**
      * Encode a string to be used for CODE 39 Extended mode.
      *
      * @param string $code Code to extend
      *
-     * @return string
-     *
      * @throws BarcodeException in case of error
      */
-    protected function getExtendCode($code)
+    protected function getExtendCode(string $code): string
     {
         $ext = '';
         $clen = strlen($code);
@@ -163,8 +296,10 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
             if ($item > 127) {
                 throw new BarcodeException('Invalid character: chr(' . $item . ')');
             }
-            $ext .= $this->extcodes[$item];
+
+            $ext .= $this::EXTCODES[$item];
         }
+
         return $ext;
     }
 
@@ -175,22 +310,23 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return string char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): string
     {
         $sum = 0;
         $clen = strlen($code);
         for ($chr = 0; $chr < $clen; ++$chr) {
-            $key = array_keys($this->chksum, $code[$chr]);
+            $key = array_keys($this::CHKSUM, $code[$chr]);
             $sum += $key[0];
         }
+
         $idx = ($sum % 43);
-        return $this->chksum[$idx];
+        return $this::CHKSUM[$idx];
     }
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = $this->getExtendCode(strtoupper($this->code));
         $this->extcode = '*' . $code . $this->getChecksum($code) . '*';
@@ -201,28 +337,32 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->ncols = 0;
         $this->nrows = 1;
-        $this->bars = array();
-        $this->formatCode();
+        $this->bars = [];
+        $this::FORMATCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset($this->chbar[$char])) {
+            if (! isset($this::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
+
             for ($pos = 0; $pos < 9; ++$pos) {
-                $bar_width = intval($this->chbar[$char][$pos]);
+                $bar_width = (int) $this::CHBAR[$char][$pos];
                 if ((($pos % 2) == 0) && ($bar_width > 0)) {
-                    $this->bars[] = array($this->ncols, 0, $bar_width, 1);
+                    $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
+
                 $this->ncols += $bar_width;
             }
+
             // intercharacter gap
-            $this->ncols += 1;
+            ++$this->ncols;
         }
+
         --$this->ncols;
     }
 }

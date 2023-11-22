@@ -36,37 +36,49 @@ class ErrorCorrection
      *
      * @param int   $numa First number to multiply.
      * @param int   $numb Second number to multiply.
-     * @param array $log  Log table.
-     * @param array $alog Anti-Log table.
+     * @param array<int, int> $log  Log table.
+     * @param array<int, int> $alog Anti-Log table.
      * @param int   $ngf  Number of Factors of the Reed-Solomon polynomial.
      *
      * @return int product
      */
-    protected function getGFProduct($numa, $numb, $log, $alog, $ngf)
-    {
+    protected function getGFProduct(
+        int $numa,
+        int $numb,
+        array $log,
+        array $alog,
+        int $ngf
+    ): int {
         if (($numa == 0) || ($numb == 0)) {
             return 0;
         }
+
         return ($alog[($log[$numa] + $log[$numb]) % ($ngf - 1)]);
     }
 
     /**
      * Add error correction codewords to data codewords array (ANNEX E).
      *
-     * @param array $wdc Array of datacodewords.
+     * @param array<int, int> $wdc Array of datacodewords.
      * @param int   $nbk Number of blocks.
      * @param int   $ncw Number of data codewords per block.
      * @param int   $ncc Number of correction codewords per block.
      * @param int   $ngf Number of fields on log/antilog table (power of 2).
      * @param int   $vpp The value of its prime modulus polynomial (301 for ECC200).
      *
-     * @return array data codewords + error codewords
+     * @return array<int, int> data codewords + error codewords
      */
-    public function getErrorCorrection($wdc, $nbk, $ncw, $ncc, $ngf = 256, $vpp = 301)
-    {
+    public function getErrorCorrection(
+        array $wdc,
+        int $nbk,
+        int $ncw,
+        int $ncc,
+        int $ngf = 256,
+        int $vpp = 301
+    ): array {
         // generate the log ($log) and antilog ($alog) tables
-        $log = array(0);
-        $alog = array(1);
+        $log = [0];
+        $alog = [1];
         $this->genLogs($log, $alog, $ngf, $vpp);
 
         // generate the polynomial coefficients (c)
@@ -77,8 +89,10 @@ class ErrorCorrection
             for ($j = ($i - 1); $j >= 1; --$j) {
                 $plc[$j] = $plc[($j - 1)] ^ $this->getGFProduct($plc[$j], $alog[$i], $log, $alog, $ngf);
             }
+
             $plc[0] = $this->getGFProduct($plc[0], $alog[$i], $log, $alog, $ngf);
         }
+
         ksort($plc);
 
         // total number of data codewords
@@ -88,10 +102,11 @@ class ErrorCorrection
         // for each block
         for ($b = 0; $b < $nbk; ++$b) {
             // create interleaved data block
-            $block = array();
+            $block = [];
             for ($n = $b; $n < $num_wd; $n += $nbk) {
                 $block[] = $wdc[$n];
             }
+
             // initialize error codewords
             $wec = array_fill(0, ($ncc + 1), 0);
             // calculate error correction codewords for this block
@@ -101,6 +116,7 @@ class ErrorCorrection
                     $wec[$j] = ($wec[($j + 1)] ^ $this->getGFProduct($ker, $plc[($ncc - $j - 1)], $log, $alog, $ngf));
                 }
             }
+
             // add error codewords at the end of data codewords
             $j = 0;
             for ($i = $b; $i < $num_we; $i += $nbk) {
@@ -108,6 +124,7 @@ class ErrorCorrection
                 ++$j;
             }
         }
+
         // reorder codewords
         ksort($wdc);
         return $wdc;
@@ -116,20 +133,26 @@ class ErrorCorrection
     /**
      * Generate the log ($log) and antilog ($alog) tables
      *
-     * @param array $log  Log table
-     * @param array $alog Anti-Log table
+     * @param array<int, int> $log  Log table
+     * @param array<int, int> $alog Anti-Log table
      * @param int   $ngf  Number of fields on log/antilog table (power of 2).
      * @param int   $vpp  The value of its prime modulus polynomial (301 for ECC200).
      */
-    protected function genLogs(&$log, &$alog, $ngf, $vpp)
-    {
+    protected function genLogs(
+        array &$log,
+        array &$alog,
+        int $ngf,
+        int $vpp
+    ): void {
         for ($i = 1; $i < $ngf; ++$i) {
             $alog[$i] = ($alog[($i - 1)] * 2);
             if ($alog[$i] >= $ngf) {
                 $alog[$i] ^= $vpp;
             }
+
             $log[$alog[$i]] = $i;
         }
+
         ksort($log);
     }
 }

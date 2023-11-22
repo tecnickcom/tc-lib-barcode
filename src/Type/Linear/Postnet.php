@@ -39,14 +39,14 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected $format = 'POSTNET';
+    protected const FORMAT = 'POSTNET';
 
     /**
      * Map characters to barcodes
      *
-     * @var array
+     * @var array<int|string, string>
      */
-    protected $chbar = array(
+    protected const CHBAR = [
         '0' => '22111',
         '1' => '11122',
         '2' => '11212',
@@ -56,8 +56,8 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         '6' => '12211',
         '7' => '21112',
         '8' => '21121',
-        '9' => '21211'
-    );
+        '9' => '21211',
+    ];
 
     /**
      * Calculate the checksum.
@@ -66,26 +66,31 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return int char checksum.
      */
-    protected function getChecksum($code)
+    protected function getChecksum(string $code): int
     {
         $sum = 0;
         $len = strlen($code);
         for ($pos = 0; $pos < $len; ++$pos) {
-            $sum += intval($code[$pos]);
+            $sum += (int) $code[$pos];
         }
+
         $check = ($sum % 10);
         if ($check > 0) {
-            $check = (10 - $check);
+            return 10 - $check;
         }
+
         return $check;
     }
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $code = preg_replace('/[-\s]+/', '', $this->code);
+        if ($code === null) {
+            throw new BarcodeException('Code not valid');
+        }
         $this->extcode = $code . $this->getChecksum($code);
     }
 
@@ -94,29 +99,31 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function setBars()
+    protected function setBars(): void
     {
         $this->ncols = 0;
         $this->nrows = 2;
-        $this->bars = array();
-        $this->formatCode();
+        $this->bars = [];
+        $this::FORMATCode();
         $clen = strlen($this->extcode);
         // start bar
-        $this->bars[] = array($this->ncols, 0, 1, 2);
+        $this->bars[] = [$this->ncols, 0, 1, 2];
         $this->ncols += 2;
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (!isset($this->chbar[$char])) {
+            if (! isset($this::CHBAR[$char])) {
                 throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
             }
+
             for ($pos = 0; $pos < 5; ++$pos) {
-                $bar_height = intval($this->chbar[$char][$pos]);
-                $this->bars[] = array($this->ncols, floor(1 / $bar_height), 1, $bar_height);
+                $bar_height = (int) $this::CHBAR[$char][$pos];
+                $this->bars[] = [$this->ncols, (int) floor(1 / $bar_height), 1, $bar_height];
                 $this->ncols += 2;
             }
         }
+
         // end bar
-        $this->bars[] = array($this->ncols, 0, 1, 2);
+        $this->bars[] = [$this->ncols, 0, 1, 2];
         ++$this->ncols;
     }
 }

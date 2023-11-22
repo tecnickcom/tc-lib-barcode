@@ -16,9 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Square\QrCode;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
-
 /**
  * Com\Tecnick\Barcode\Type\Square\QrCode\Spec
  *
@@ -29,6 +26,14 @@ use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @phpstan-type EccSpec array{
+ *            0: int,
+ *            1: int,
+ *            2: int,
+ *            3: int,
+ *            4: int,
+ *        }
  */
 class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
 {
@@ -40,7 +45,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int maximum size (bytes)
      */
-    public function getDataLength($version, $level)
+    public function getDataLength(int $version, int $level): int
     {
         return (Data::CAPACITY[$version][Data::QRCAP_WORDS] - Data::CAPACITY[$version][Data::QRCAP_EC][$level]);
     }
@@ -53,7 +58,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int ECC size (bytes)
      */
-    public function getECCLength($version, $level)
+    public function getECCLength(int $version, int $level): int
     {
         return Data::CAPACITY[$version][Data::QRCAP_EC][$level];
     }
@@ -65,7 +70,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int width
      */
-    public function getWidth($version)
+    public function getWidth(int $version): int
     {
         return Data::CAPACITY[$version][Data::QRCAP_WIDTH];
     }
@@ -77,7 +82,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int number of remainder bits
      */
-    public function getRemainder($version)
+    public function getRemainder(int $version): int
     {
         return Data::CAPACITY[$version][Data::QRCAP_REMINDER];
     }
@@ -90,11 +95,12 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @return int the maximum length (bytes)
      */
-    public function maximumWords($mode, $version)
+    public function maximumWords(int $mode, int $version): int
     {
         if ($mode == Data::ENC_MODES['ST']) {
             return 3;
         }
+
         if ($version <= 9) {
             $lval = 0;
         } elseif ($version <= 26) {
@@ -102,11 +108,13 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
         } else {
             $lval = 2;
         }
+
         $bits = Data::LEN_TABLE_BITS[$mode][$lval];
         $words = (1 << $bits) - 1;
         if ($mode == Data::ENC_MODES['KJ']) {
             $words *= 2; // the number of bytes is required
         }
+
         return $words;
     }
 
@@ -115,33 +123,39 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @param int   $version Version
      * @param int   $level   Error correction level
-     * @param array $spec    Array of ECC specification contains as following:
-     *                       {# of type1 blocks, # of data code, # of ecc code, # of type2 blocks, # of data code}
+     * @param EccSpec $spec Array of ECC specification
      *
-     * @return array spec
+     * @return EccSpec spec:
+     *            0 = # of type1 blocks
+     *            1 = # of data code
+     *            2 = # of ecc code
+     *            3 = # of type2 blocks
+     *            4 = # of data code
      */
-    public function getEccSpec($version, $level, $spec)
+    public function getEccSpec(int $version, int $level, array $spec): array
     {
         if (count($spec) < 5) {
-            $spec = array(0, 0, 0, 0, 0);
+            $spec = [0, 0, 0, 0, 0];
         }
+
         $bv1 = Data::ECC_TABLE[$version][$level][0];
         $bv2 = Data::ECC_TABLE[$version][$level][1];
         $data = $this->getDataLength($version, $level);
         $ecc = $this->getECCLength($version, $level);
         if ($bv2 == 0) {
             $spec[0] = $bv1;
-            $spec[1] = (int)($data / $bv1); /* @phpstan-ignore-line */
-            $spec[2] = (int)($ecc / $bv1); /* @phpstan-ignore-line */
+            $spec[1] = (int) ($data / $bv1); /* @phpstan-ignore-line */
+            $spec[2] = (int) ($ecc / $bv1); /* @phpstan-ignore-line */
             $spec[3] = 0;
             $spec[4] = 0;
         } else {
             $spec[0] = $bv1;
-            $spec[1] = (int)($data / ($bv1 + $bv2));
-            $spec[2] = (int)($ecc  / ($bv1 + $bv2));
+            $spec[1] = (int) ($data / ($bv1 + $bv2));
+            $spec[2] = (int) ($ecc / ($bv1 + $bv2));
             $spec[3] = $bv2;
             $spec[4] = $spec[1] + 1;
         }
+
         return $spec;
     }
 
@@ -150,10 +164,8 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @param int $maskNo Mask number
      * @param int $level  Error correction level
-     *
-     * @return int
      */
-    public function getFormatInfo($maskNo, $level)
+    public function getFormatInfo(int $maskNo, int $level): int
     {
         if (
             ($maskNo < 0)
@@ -163,6 +175,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
         ) {
             return 0;
         }
+
         return Data::FORMAT_INFO[$level][$maskNo];
     }
 }

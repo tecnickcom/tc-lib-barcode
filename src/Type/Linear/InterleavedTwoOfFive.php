@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Linear\InterleavedTwoOfFive;
  *
@@ -39,12 +37,12 @@ class InterleavedTwoOfFive extends \Com\Tecnick\Barcode\Type\Linear\InterleavedT
      *
      * @var string
      */
-    protected $format = 'I25';
+    protected const FORMAT = 'I25';
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code;
     }

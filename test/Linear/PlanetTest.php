@@ -16,7 +16,6 @@
 
 namespace Test\Linear;
 
-use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**
@@ -32,16 +31,16 @@ use Test\TestUtil;
  */
 class PlanetTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('PLANET', '0123456789');
-        $grid = $bobj->getGrid();
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('PLANET', '0123456789');
+        $grid = $type->getGrid();
         $expected = "100000101010101010000010100010001010000010100010100010"
             . "00100010100000101000101010000010100010001000101010001000101\n"
             . "1010101010101010101010101010101010101010101010101010101010101"

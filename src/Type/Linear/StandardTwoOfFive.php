@@ -16,8 +16,6 @@
 
 namespace Com\Tecnick\Barcode\Type\Linear;
 
-use Com\Tecnick\Barcode\Exception as BarcodeException;
-
 /**
  * Com\Tecnick\Barcode\Type\Linear\StandardTwoOfFive;
  *
@@ -39,12 +37,12 @@ class StandardTwoOfFive extends \Com\Tecnick\Barcode\Type\Linear\StandardTwoOfFi
      *
      * @var string
      */
-    protected $format = 'S25';
+    protected const FORMAT = 'S25';
 
     /**
      * Format code
      */
-    protected function formatCode()
+    protected function formatCode(): void
     {
         $this->extcode = $this->code;
     }

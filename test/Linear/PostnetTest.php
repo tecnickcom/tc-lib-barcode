@@ -16,7 +16,6 @@
 
 namespace Test\Linear;
 
-use PHPUnit\Framework\TestCase;
 use Test\TestUtil;
 
 /**
@@ -32,16 +31,16 @@ use Test\TestUtil;
  */
 class PostnetTest extends TestUtil
 {
-    protected function getTestObject()
+    protected function getTestObject(): \Com\Tecnick\Barcode\Barcode
     {
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
-    public function testGetGrid()
+    public function testGetGrid(): void
     {
-        $testObj = $this->getTestObject();
-        $bobj = $testObj->getBarcodeObj('POSTNET', '0123456789');
-        $grid = $bobj->getGrid();
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('POSTNET', '0123456789');
+        $grid = $type->getGrid();
         $expected = "101010000000000000101000001000100000101000001000001000"
             . "10001000001010000010000000101000001000100010000000100010001\n"
             . "1010101010101010101010101010101010101010101010101010101010101"
@@ -49,10 +48,10 @@ class PostnetTest extends TestUtil
         $this->assertEquals($expected, $grid);
     }
 
-    public function testInvalidInput()
+    public function testInvalidInput(): void
     {
-        $this->bcExpectException('\Com\Tecnick\Barcode\Exception');
-        $testObj = $this->getTestObject();
-        $testObj->getBarcodeObj('POSTNET', '}{');
+        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('POSTNET', '}{');
     }
 }
