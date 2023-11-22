@@ -26,6 +26,14 @@ namespace Com\Tecnick\Barcode\Type\Square\QrCode;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @phpstan-type EccSpec array{
+ *            0: int,
+ *            1: int,
+ *            2: int,
+ *            3: int,
+ *            4: int,
+ *        }
  */
 class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
 {
@@ -115,10 +123,14 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      *
      * @param int   $version Version
      * @param int   $level   Error correction level
-     * @param array $spec    Array of ECC specification contains as following:
-     *                       {# of type1 blocks, # of data code, # of ecc code, # of type2 blocks, # of data code}
+     * @param EccSpec $spec Array of ECC specification
      *
-     * @return array spec
+     * @return EccSpec spec:
+     *            0 = # of type1 blocks
+     *            1 = # of data code
+     *            2 = # of ecc code
+     *            3 = # of type2 blocks
+     *            4 = # of data code
      */
     public function getEccSpec(int $version, int $level, array $spec): array
     {

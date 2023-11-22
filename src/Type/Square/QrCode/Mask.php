@@ -31,6 +31,8 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
 {
     /**
      * Run length
+     *
+     * @var array<int, int>
      */
     protected array $runLength = [];
 
@@ -73,10 +75,10 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * Get the best mask
      *
      * @param int   $width Width
-     * @param array $frame Frame
+     * @param array<int, string> $frame Frame
      * @param int   $level Error Correction lLevel
      *
-     * @return array best mask
+     * @return array<int, string> best mask
      */
     protected function mask(
         int $width,
@@ -118,11 +120,11 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * Make a mask
      *
      * @param int   $width  Mask width
-     * @param array $frame  Frame
+     * @param array<int, string> $frame  Frame
      * @param int   $maskNo Mask number
      * @param int   $level  Error Correction level
      *
-     * @return array mask
+     * @return array<int, string> mask
      */
     protected function makeMask(
         int $width,
@@ -139,7 +141,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * Write Format Information on the frame and returns the number of black bits
      *
      * @param int   $width  Mask width
-     * @param array $frame  Frame
+     * @param array<int, string> $frame  Frame
      * @param int   $maskNo Mask number
      * @param int   $level  Error Correction level
      *
@@ -197,7 +199,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      * Evaluate Symbol and returns demerit value.
      *
      * @param int   $width Width
-     * @param array $frame Frame
+     * @param array<int, string> $frame Frame
      */
     protected function evaluateSymbol(int $width, array $frame): int
     {
@@ -285,6 +287,8 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
     /**
      * Calc N1 N3
      *
+     * @param int $length Length
+     *
      * @return int demerit
      */
     protected function calcN1N3(int $length): int
@@ -305,6 +309,9 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
 
     /**
      * Calc N1 N3 delta
+     *
+     * @param int $length Length
+     * @param int $idx    Index
      *
      * @return int demerit delta
      */

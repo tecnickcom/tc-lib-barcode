@@ -34,8 +34,8 @@ abstract class MaskNum
      *
      * @param int   $maskNo Mask number
      * @param int   $width  Width
-     * @param array $frame  Frame
-     * @param array   $mask   Mask
+     * @param array<int, string> $frame  Frame
+     * @param array<int, string> $mask   Mask
      *
      * @return int mask number
      */
@@ -66,9 +66,9 @@ abstract class MaskNum
      *
      * @param int   $maskNo Mask number
      * @param int   $width  Width
-     * @param array $frame  Frame
+     * @param array<int, string> $frame  Frame
      *
-     * @return array bit mask
+     * @return array<int, array<int, int>> bit mask
      */
     protected function generateMaskNo(
         int $maskNo,

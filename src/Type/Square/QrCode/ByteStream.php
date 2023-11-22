@@ -28,6 +28,8 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @phpstan-import-type Item from \Com\Tecnick\Barcode\Type\Square\QrCode\Estimate
  */
 class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
 {
@@ -48,12 +50,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     /**
      * Pack all bit streams padding bits into a byte array
      *
-     * @param array<int, array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        }> $items Items
+     * @param array<int, Item> $items Items
      *
      * @return array<int, int> padded merged byte stream
      */
@@ -69,12 +66,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     /**
      * merge the bit stream
      *
-     * @param array<int, array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        }> $items Items
+     * @param array<int, Item> $items Items
      *
      * @return array<int, int> bitstream
      */
@@ -177,19 +169,9 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     /**
      * convertData
      *
-     * @param array<int, array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        }> $items Items
+     * @param array<int, Item> $items Items
      *
-     * @return array<int, array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        }>
+     * @return array<int, Item>
      */
     protected function convertData(array $items): array
     {
@@ -220,21 +202,11 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     /**
      * Create BitStream
      *
-     * @param array<int, array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        }> $items Items
+     * @param array<int, Item> $items Items
      *
      * @return array{
-     *           0: array<int, array{
-     *                 'mode': int,
-     *                 'size': int,
-     *                 'data': array<int, string>,
-     *                 'bstream': array<int, int>,
-     *             }>,
-     *          1: int,
+     *           0: array<int, Item>,
+     *           1: int,
      *       }
      */
     protected function createBitStream(array $items): array
@@ -252,20 +224,10 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     /**
      * Encode BitStream
      *
-     * @param array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream'?: array<int, int>,
-     *        } $inputitem Input item
+     * @param Item $inputitem Input item
      * @param int $version Code version
      *
-     * @return array{
-     *             'mode': int,
-     *             'size': int,
-     *             'data': array<int, string>,
-     *             'bstream': array<int, int>,
-     *         }
+     * @return Item
      */
     public function encodeBitStream(array $inputitem, int $version): array
     {

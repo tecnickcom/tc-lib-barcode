@@ -34,6 +34,8 @@ abstract class SpecRs
     /**
      * Return block number 0
      *
+     * @param array<int, int> $spec Spec
+     *
      * @return int value
      */
     public function rsBlockNum(array $spec): int
@@ -43,6 +45,8 @@ abstract class SpecRs
 
     /**
      * Return block number 1
+     *
+     * @param array<int, int> $spec Spec
      *
      * @return int value
      */
@@ -54,6 +58,8 @@ abstract class SpecRs
     /**
      * Return data codes 1
      *
+     * @param array<int, int> $spec Spec
+     *
      * @return int value
      */
     public function rsDataCodes1(array $spec): int
@@ -63,6 +69,8 @@ abstract class SpecRs
 
     /**
      * Return ecc codes 1
+     *
+     * @param array<int, int> $spec Spec
      *
      * @return int value
      */
@@ -74,6 +82,8 @@ abstract class SpecRs
     /**
      * Return block number 2
      *
+     * @param array<int, int> $spec Spec
+     *
      * @return int value
      */
     public function rsBlockNum2(array $spec): int
@@ -83,6 +93,8 @@ abstract class SpecRs
 
     /**
      * Return data codes 2
+     *
+     * @param array<int, int> $spec Spec
      *
      * @return int value
      */
@@ -94,6 +106,8 @@ abstract class SpecRs
     /**
      * Return ecc codes 2
      *
+     * @param array<int, int> $spec Spec
+     *
      * @return int value
      */
     public function rsEccCodes2(array $spec): int
@@ -104,6 +118,8 @@ abstract class SpecRs
     /**
      * Return data length
      *
+     * @param array<int, int> $spec Spec
+     *
      * @return int value
      */
     public function rsDataLength(array $spec): int
@@ -113,6 +129,8 @@ abstract class SpecRs
 
     /**
      * Return ecc length
+     *
+     * @param array<int, int> $spec Spec
      *
      * @return int value
      */
@@ -126,7 +144,7 @@ abstract class SpecRs
      *
      * @param int $version Version
      *
-     * @return array of unsigned char.
+     * @return array<int, string> of unsigned char.
      */
     public function createFrame(int $version): array
     {
@@ -198,11 +216,13 @@ abstract class SpecRs
     /**
      * Replace a value on the array at the specified position
      *
+     * @param array<int, string>  $srctab     Source table
      * @param int    $xpos       X position
      * @param int    $ypos       Y position
      * @param string $repl    Value to replace
      * @param int    $replLen Length of the repl string
-     * @return array srctab
+     *
+     * @return array<int, string> srctab
      */
     public function qrstrset(
         array $srctab,
@@ -223,11 +243,11 @@ abstract class SpecRs
     /**
      * Put an alignment marker.
      *
-     * @param array $frame Frame
+     * @param array<int, string> $frame Frame
      * @param int   $pox   X center coordinate of the pattern
      * @param int   $poy   Y center coordinate of the pattern
      *
-     * @return array frame
+     * @return array<int, string> frame
      */
     public function putAlignmentMarker(
         array $frame,
@@ -253,11 +273,11 @@ abstract class SpecRs
     /**
      * Put a finder pattern.
      *
-     * @param array $frame Frame
+     * @param array<int, string> $frame Frame
      * @param int   $pox   X center coordinate of the pattern
      * @param int   $poy   Y center coordinate of the pattern
      *
-     * @return array frame
+     * @return array<int, string> frame
      */
     public function putFinderPattern(
         array $frame,
@@ -299,10 +319,10 @@ abstract class SpecRs
      * Put an alignment pattern.
      *
      * @param int   $version Version
-     * @param array $frame   Frame
+     * @param array<int, string> $frame   Frame
      * @param int   $width   Width
      *
-     * @return array frame
+     * @return array<int, string> frame
      */
     public function putAlignmentPattern(
         int $version,

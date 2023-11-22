@@ -28,11 +28,15 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @phpstan-import-type Item from \Com\Tecnick\Barcode\Type\Square\QrCode\Estimate
  */
 class Split
 {
     /**
      * Input items
+     *
+     * @var array<int, Item>
      */
     protected array $items = [];
 
@@ -67,7 +71,7 @@ class Split
      *
      * @param string $data Data
      *
-     * @return array items
+     * @return array<int, Item> items
      */
     public function getSplittedString(string $data): array
     {

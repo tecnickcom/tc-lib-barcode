@@ -28,6 +28,8 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @phpstan-import-type Item from \Com\Tecnick\Barcode\Type\Square\QrCode\Estimate
  */
 abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimate
 {
@@ -45,22 +47,12 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * Append data to an input object.
      * The data is copied and appended to the input object.
      *
-     * @param array<int, array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        }> $items Input items
+     * @param array<int, Item> $items Input items
      * @param int   $mode  Encoding mode.
      * @param int   $size  Size of data (byte).
      * @param array<int, string> $data  Array of input data.
      *
-     * @return array<int, array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        }> items
+     * @return array<int, Item> items
      */
     public function appendNewInputItem(
         array $items,
@@ -84,12 +76,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * @param array<int, string> $data    Array of input data.
      * @param array<int, int> $bstream Binary stream
      *
-     * @return array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        } input item
+     * @return Item input item
      */
     protected function newInputItem(
         int $mode,

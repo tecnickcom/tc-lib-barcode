@@ -106,7 +106,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     /**
      * Frame
      *
-     * @var array<int, array<int, string>>
+     * @var array<int, string>
      */
     protected array $frame = [];
 

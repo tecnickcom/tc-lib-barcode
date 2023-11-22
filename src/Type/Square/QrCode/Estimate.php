@@ -28,6 +28,13 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @phpstan-type Item array{
+ *            'mode': int,
+ *            'size': int,
+ *            'data': array<int, string>,
+ *            'bstream': array<int, int>,
+ *        }
  */
 abstract class Estimate
 {
@@ -129,12 +136,7 @@ abstract class Estimate
     /**
      * Estimate version
      *
-     * @param array<int, array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        }> $items Items
+     * @param array<int, Item> $items Items
      * @param int $level Error correction level
      *
      * @return int version
@@ -182,12 +184,7 @@ abstract class Estimate
     /**
      * estimateBitStreamSize
      *
-     * @param array<int, array{
-     *            'mode': int,
-     *            'size': int,
-     *            'data': array<int, string>,
-     *            'bstream': array<int, int>,
-     *        }> $items Items
+     * @param array<int, Item> $items Items
      * @param int $version Code version
      *
      * @return int bits
