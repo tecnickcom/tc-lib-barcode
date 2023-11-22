@@ -165,4 +165,18 @@ interface Model
      * @return array<int, array<int, string>>
      */
     public function getGridArray(string $space_char = '0', string $bar_char = '1'): array;
+
+    /**
+     * Get the array containing all the formatted bars coordinates
+     *
+     * @return array<int, array{float, float, float, float}>
+     */
+    public function getBarsArrayXYXY(): array;
+
+    /**
+     * Get the array containing all the formatted bars coordinates
+     *
+     * @return array<int, array{float, float, float, float}>
+     */
+    public function getBarsArrayXYWH(): array;
 }
