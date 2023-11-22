@@ -188,9 +188,9 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
     /**
      * Convert the frame in binary form
      *
-     * @param array $frame Array to binarize
+     * @param array<int, string> $frame Array to binarize
      *
-     * @return array frame in binary form
+     * @return array<int, string> frame in binary form
      */
     protected function binarize(array $frame): array
     {
@@ -209,6 +209,8 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      * Encode the input string
      *
      * @param string $data input string to encode
+     *
+     * @return array<int, string> Encoded data
      */
     protected function encodeString(string $data): array
     {

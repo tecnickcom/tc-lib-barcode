@@ -48,9 +48,14 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     /**
      * Pack all bit streams padding bits into a byte array
      *
-     * @param array $items items
+     * @param array<int, array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        }> $items Items
      *
-     * @return array padded merged byte stream
+     * @return array<int, int> padded merged byte stream
      */
     public function getByteStream(array $items): array
     {
@@ -62,11 +67,77 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     }
 
     /**
+     * merge the bit stream
+     *
+     * @param array<int, array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        }> $items Items
+     *
+     * @return array<int, int> bitstream
+     */
+    protected function mergeBitStream(array $items): array
+    {
+        $items = $this->convertData($items);
+        $bstream = [];
+        foreach ($items as $item) {
+            $bstream = $this->appendBitstream($bstream, $item['bstream']);
+        }
+
+        return $bstream;
+    }
+
+    /**
+     * Append Padding Bit to bitstream
+     *
+     * @param array<int, int> $bstream Bit stream
+     *
+     * @return array<int, int> bitstream
+     */
+    protected function appendPaddingBit(array $bstream): array
+    {
+        if (empty($bstream)) {
+            return [];
+        }
+
+        $bits = count($bstream);
+        $spec = new Spec();
+        $maxwords = $spec->getDataLength($this->version, $this->level);
+        $maxbits = $maxwords * 8;
+        if ($maxbits == $bits) {
+            return $bstream;
+        }
+
+        if ($maxbits - $bits < 5) {
+            return $this->appendNum($bstream, $maxbits - $bits, 0);
+        }
+
+        $bits += 4;
+        $words = (int) (($bits + 7) / 8);
+        $padding = [];
+        $padding = $this->appendNum($padding, $words * 8 - $bits + 4, 0);
+
+        $padlen = $maxwords - $words;
+        if ($padlen > 0) {
+            $padbuf = [];
+            for ($idx = 0; $idx < $padlen; ++$idx) {
+                $padbuf[$idx] = ((($idx & 1) !== 0) ? 0x11 : 0xec);
+            }
+
+            $padding = $this->appendBytes($padding, $padlen, $padbuf);
+        }
+
+        return $this->appendBitstream($bstream, $padding);
+    }
+
+    /**
      * Convert bitstream to bytes
      *
-     * @param array $bstream Original bitstream
+     * @param array<int, int> $bstream Original bitstream
      *
-     * @return array of bytes
+     * @return array<int, int> of bytes
      */
     protected function bitstreamToByte(array $bstream): array
     {
@@ -104,29 +175,21 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     }
 
     /**
-     * merge the bit stream
-     *
-     * @param array $items Items
-     *
-     * @return array bitstream
-     */
-    protected function mergeBitStream(array $items): array
-    {
-        $items = $this->convertData($items);
-        $bstream = [];
-        foreach ($items as $item) {
-            $bstream = $this->appendBitstream($bstream, $item['bstream']);
-        }
-
-        return $bstream;
-    }
-
-    /**
      * convertData
      *
-     * @param array $items Items
+     * @param array<int, array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        }> $items Items
      *
-     * @return array items
+     * @return array<int, array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        }>
      */
     protected function convertData(array $items): array
     {
@@ -157,7 +220,22 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     /**
      * Create BitStream
      *
-     * @return array of items and total bits
+     * @param array<int, array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        }> $items Items
+     *
+     * @return array{
+     *           0: array<int, array{
+     *                 'mode': int,
+     *                 'size': int,
+     *                 'data': array<int, string>,
+     *                 'bstream': array<int, int>,
+     *             }>,
+     *          1: int,
+     *       }
      */
     protected function createBitStream(array $items): array
     {
@@ -174,88 +252,50 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
     /**
      * Encode BitStream
      *
-     * @return array input item
+     * @param array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream'?: array<int, int>,
+     *        } $inputitem Input item
+     * @param int $version Code version
+     *
+     * @return array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         }
      */
     public function encodeBitStream(array $inputitem, int $version): array
     {
         $inputitem['bstream'] = [];
         $spec = new Spec();
         $words = $spec->maximumWords($inputitem['mode'], $version);
-        if ($inputitem['size'] > $words) {
-            $st1 = $this->newInputItem($inputitem['mode'], $words, $inputitem['data']);
-            $st2 = $this->newInputItem(
-                $inputitem['mode'],
-                ($inputitem['size'] - $words),
-                array_slice($inputitem['data'], $words)
-            );
-            $st1 = $this->encodeBitStream($st1, $version);
-            $st2 = $this->encodeBitStream($st2, $version);
-            $inputitem['bstream'] = [];
-            $inputitem['bstream'] = $this->appendBitstream($inputitem['bstream'], $st1['bstream']);
-            $inputitem['bstream'] = $this->appendBitstream($inputitem['bstream'], $st2['bstream']);
-        } else {
-            switch ($inputitem['mode']) {
-                case Data::ENC_MODES['NM']:
-                    $inputitem = $this->encodeModeNum($inputitem, $version);
-                    break;
-                case Data::ENC_MODES['AN']:
-                    $inputitem = $this->encodeModeAn($inputitem, $version);
-                    break;
-                case Data::ENC_MODES['8B']:
-                    $inputitem = $this->encodeMode8($inputitem, $version);
-                    break;
-                case Data::ENC_MODES['KJ']:
-                    $inputitem = $this->encodeModeKanji($inputitem, $version);
-                    break;
-                case Data::ENC_MODES['ST']:
-                    $inputitem = $this->encodeModeStructure($inputitem);
-                    break;
-            }
+
+        if ($inputitem['size'] <= $words) {
+            return match ($inputitem['mode']) {
+                Data::ENC_MODES['NM'] => $this->encodeModeNum($inputitem, $version),
+                Data::ENC_MODES['AN'] => $this->encodeModeAn($inputitem, $version),
+                Data::ENC_MODES['8B'] => $this->encodeMode8($inputitem, $version),
+                Data::ENC_MODES['KJ'] => $this->encodeModeKanji($inputitem, $version),
+                Data::ENC_MODES['ST'] => $this->encodeModeStructure($inputitem),
+                default => throw new BarcodeException('Invalid mode'),
+            };
         }
+
+        $st1 = $this->newInputItem($inputitem['mode'], $words, $inputitem['data']);
+        $st2 = $this->newInputItem(
+            $inputitem['mode'],
+            ($inputitem['size'] - $words),
+            array_slice($inputitem['data'], $words)
+        );
+        $st1 = $this->encodeBitStream($st1, $version);
+        $st2 = $this->encodeBitStream($st2, $version);
+        $inputitem['bstream'] = [];
+        $inputitem['bstream'] = $this->appendBitstream($inputitem['bstream'], $st1['bstream']);
+        $inputitem['bstream'] = $this->appendBitstream($inputitem['bstream'], $st2['bstream']);
 
         return $inputitem;
-    }
-
-    /**
-     * Append Padding Bit to bitstream
-     *
-     * @param array $bstream Bit stream
-     *
-     * @return array bitstream
-     */
-    protected function appendPaddingBit(array $bstream): array
-    {
-        if (empty($bstream)) {
-            return [];
-        }
-
-        $bits = count($bstream);
-        $spec = new Spec();
-        $maxwords = $spec->getDataLength($this->version, $this->level);
-        $maxbits = $maxwords * 8;
-        if ($maxbits == $bits) {
-            return $bstream;
-        }
-
-        if ($maxbits - $bits < 5) {
-            return $this->appendNum($bstream, $maxbits - $bits, 0);
-        }
-
-        $bits += 4;
-        $words = (int) (($bits + 7) / 8);
-        $padding = [];
-        $padding = $this->appendNum($padding, $words * 8 - $bits + 4, 0);
-
-        $padlen = $maxwords - $words;
-        if ($padlen > 0) {
-            $padbuf = [];
-            for ($idx = 0; $idx < $padlen; ++$idx) {
-                $padbuf[$idx] = ((($idx & 1) !== 0) ? 0x11 : 0xec);
-            }
-
-            $padding = $this->appendBytes($padding, $padlen, $padbuf);
-        }
-
-        return $this->appendBitstream($bstream, $padding);
     }
 }
