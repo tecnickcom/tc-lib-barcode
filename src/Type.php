@@ -542,7 +542,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
      *
      * @return array<int, array{float, float, float, float}>
      */
-    protected function getBarsArrayXYXY(): array
+    public function getBarsArrayXYXY(): array
     {
         $rect = [];
         foreach ($this->bars as $bar) {
@@ -581,7 +581,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
      *
      * @return array<int, array{float, float, float, float}>
      */
-    protected function getBarsArrayXYWH(): array
+    public function getBarsArrayXYWH(): array
     {
         $rect = [];
         foreach ($this->bars as $bar) {
