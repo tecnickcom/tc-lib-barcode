@@ -36,6 +36,11 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
 {
     /**
      * Encode TXTC40 shift
+     *
+     * @param int   $chr       Character code
+     * @param int   $enc       Current encoding
+     * @param array<int, int> $temp_cw   Temporary codewords array
+     * @param int   $ptr       Pointer
      */
     public function encodeTXTC40shift(
         int &$chr,
@@ -65,6 +70,13 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
 
     /**
      * Encode TXTC40
+     *
+     * @param string $data      Data string
+     * @param int    $enc       Current encoding
+     * @param array<int, int> $temp_cw   Temporary codewords array
+     * @param int    $ptr       Pointer
+     * @param int    $epos      End position
+     * @param array<int, int> $charset   Charset array
      *
      * @return int   Curent character code
      */
@@ -105,6 +117,14 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * Encode TXTC40 last
      * The following rules apply when only one or two symbol characters remain in the symbol
      * before the start of the error correction codewords.
+     *
+     * @param int   $chr       Character code
+     * @param array<int, int> $cdw       Codewords array
+     * @param int   $cdw_num   Codewords number
+     * @param int   $enc       Current encoding
+     * @param array<int, int> $temp_cw   Temporary codewords array
+     * @param int   $ptr       Pointer
+     * @param int   $epos      End position
      */
     public function encodeTXTC40last(
         int $chr,
@@ -155,6 +175,13 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
 
     /**
      * Encode TXT
+     *
+     * @param array<int, int> $cdw         Codewords array
+     * @param int    $cdw_num     Codewords number
+     * @param int    $pos         Current position
+     * @param int    $data_length Data length
+     * @param string $data        Data string
+     * @param int    $enc         Current encoding
      */
     public function encodeTXT(
         array &$cdw,

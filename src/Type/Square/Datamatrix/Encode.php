@@ -44,6 +44,13 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
 
     /**
      * Encode ASCII
+     *
+     * @param array<int, int>  $cdw         Codewords array
+     * @param int    $cdw_num     Codewords number
+     * @param int    $pos         Current position
+     * @param int    $data_length Data length
+     * @param string $data        Data string
+     * @param int    $enc         Current encoding
      */
     public function encodeASCII(
         array &$cdw,
@@ -95,6 +102,15 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
 
     /**
      * Encode EDF4
+     *
+     * @param int    $epos         Current position
+     * @param array<int, int>  $cdw          Codewords array
+     * @param int    $cdw_num      Codewords number
+     * @param int    $pos          Current position
+     * @param int    $data_length  Data length
+     * @param int    $field_length Field length
+     * @param int    $enc          Current encoding
+     * @param array<int, int>  $temp_cw      Temporary codewords array
      *
      * @return bool true to break the loop
      */
@@ -161,6 +177,14 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
 
     /**
      * Encode EDF
+     *
+     * @param array<int, int>  $cdw          Codewords array
+     * @param int    $cdw_num      Codewords number
+     * @param int    $pos          Current position
+     * @param int    $data_length  Data length
+     * @param int    $field_length Field length
+     * @param string $data         Data string
+     * @param int    $enc          Current encoding
      */
     public function encodeEDF(
         array &$cdw,
@@ -206,6 +230,14 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt
 
     /**
      * Encode Base256
+     *
+     * @param array<int, int>  $cdw          Codewords array
+     * @param int    $cdw_num      Codewords number
+     * @param int    $pos          Current position
+     * @param int    $data_length  Data length
+     * @param int    $field_length Field length
+     * @param string $data         Data string
+     * @param int    $enc          Current encoding
      */
     public function encodeBase256(
         array &$cdw,

@@ -36,8 +36,8 @@ class ErrorCorrection
      *
      * @param int   $numa First number to multiply.
      * @param int   $numb Second number to multiply.
-     * @param array $log  Log table.
-     * @param array $alog Anti-Log table.
+     * @param array<int, int> $log  Log table.
+     * @param array<int, int> $alog Anti-Log table.
      * @param int   $ngf  Number of Factors of the Reed-Solomon polynomial.
      *
      * @return int product
@@ -59,14 +59,14 @@ class ErrorCorrection
     /**
      * Add error correction codewords to data codewords array (ANNEX E).
      *
-     * @param array $wdc Array of datacodewords.
+     * @param array<int, int> $wdc Array of datacodewords.
      * @param int   $nbk Number of blocks.
      * @param int   $ncw Number of data codewords per block.
      * @param int   $ncc Number of correction codewords per block.
      * @param int   $ngf Number of fields on log/antilog table (power of 2).
      * @param int   $vpp The value of its prime modulus polynomial (301 for ECC200).
      *
-     * @return array data codewords + error codewords
+     * @return array<int, int> data codewords + error codewords
      */
     public function getErrorCorrection(
         array $wdc,
@@ -133,8 +133,8 @@ class ErrorCorrection
     /**
      * Generate the log ($log) and antilog ($alog) tables
      *
-     * @param array $log  Log table
-     * @param array $alog Anti-Log table
+     * @param array<int, int> $log  Log table
+     * @param array<int, int> $alog Anti-Log table
      * @param int   $ngf  Number of fields on log/antilog table (power of 2).
      * @param int   $vpp  The value of its prime modulus polynomial (301 for ECC200).
      */

@@ -3,13 +3,13 @@
 /**
  * Datamatrix.php
  *
- * @since       2015-02-21
- * @category    Library
- * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
- * @link        https://github.com/tecnickcom/tc-lib-barcode
+ * @since     2015-02-21
+ * @category  Library
+ * @package   Barcode
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2010-2023 Nicola Asuni - Tecnick.com LTD
+ * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-barcode
  *
  * This file is part of tc-lib-barcode software library.
  */
@@ -26,13 +26,13 @@ use Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode;
  * Datamatrix Barcode type class
  * DATAMATRIX (ISO/IEC 16022)
  *
- * @since       2015-02-21
- * @category    Library
- * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
- * @link        https://github.com/tecnickcom/tc-lib-barcode
+ * @since     2015-02-21
+ * @category  Library
+ * @package   Barcode
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2010-2023 Nicola Asuni - Tecnick.com LTD
+ * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-barcode
  */
 class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
 {
@@ -45,11 +45,15 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
 
     /**
      * Array of codewords.
+     *
+     * @var array<int, int>
      */
     protected array $cdw = [];
 
     /**
      * Binary grid
+     *
+     * @var array<int, array<int, int>>
      */
     protected array $grid = [];
 
@@ -129,7 +133,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     /**
      * Get the codewords
      *
-     * @return array params
+     * @return array{int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int} params
      *
      * @throws BarcodeException in case of error
      */
@@ -162,6 +166,15 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
 
     /**
      * Set the grid
+     *
+     * @param int             $idx    Index
+     * @param array<int, int> $places Places
+     * @param int             $row    Row
+     * @param int             $col    Column
+     * @param int             $rdx    Region data row index
+     * @param int             $cdx    Region data column index
+     * @param int             $rdri   Region data row max index
+     * @param int             $rdci   Region data column max index
      */
     protected function setGrid(
         int &$idx,
@@ -207,7 +220,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      *
      * @param string $data data to encode
      *
-     * @return array of codewords
+     * @return array<int, int> Codewords
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -268,8 +281,6 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     {
         $this->dmx = new Encode($this->shape);
         $params = $this->getCodewords();
-        // initialize empty arrays
-        $this->grid = array_fill(0, ($params[2] * $params[3]), 0);
         // get placement map
         $places = $this->dmx->getPlacementMap($params[2], $params[3]);
         // fill the grid with data

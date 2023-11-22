@@ -90,6 +90,20 @@ class Data
     public const ENC_ASCII_NUM = 7;
 
     /**
+     * Switch codewords.
+     *
+     * @var array<int, int>
+     */
+    public const SWITCHCDW = [
+        Data::ENC_ASCII => 254,
+        Data::ENC_C40 => 230,
+        Data::ENC_TXT => 239,
+        Data::ENC_X12 => 238,
+        Data::ENC_EDF => 240,
+        Data::ENC_BASE256 => 231,
+    ];
+
+    /**
      * Table of Data Matrix ECC 200 Symbol Attributes:
      * <ul><li>SHAPE<ul>
      * <li>total matrix rows (including finder pattern)</li>

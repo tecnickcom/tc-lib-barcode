@@ -209,15 +209,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      */
     protected function getSwitchEncodingCodeword(int $mode): int
     {
-        $map = [
-            Data::ENC_ASCII => 254,
-            Data::ENC_C40 => 230,
-            Data::ENC_TXT => 239,
-            Data::ENC_X12 => 238,
-            Data::ENC_EDF => 240,
-            Data::ENC_BASE256 => 231,
-        ];
-        $cdw = $map[$mode];
+        $cdw = Data::SWITCHCDW[$mode];
         if ($cdw != 254) {
             return $cdw;
         }

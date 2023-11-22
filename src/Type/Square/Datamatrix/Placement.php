@@ -35,13 +35,15 @@ abstract class Placement
      * Places "chr+bit" with appropriate wrapping within array[].
      * (Annex F - ECC 200 symbol character placement)
      *
-     * @param array $marr  Array of symbols.
+     * @param array<int, int> $marr  Array of symbols.
      * @param int   $nrow  Number of rows.
      * @param int   $ncol  Number of columns.
      * @param int   $row   Row number.
      * @param int   $col   Column number.
      * @param int   $chr   Char byte.
      * @param int   $bit   Bit.
+     *
+     * @return array<int, int>
      */
     protected function placeModule(
         array $marr,
@@ -70,12 +72,14 @@ abstract class Placement
      * Places the 8 bits of a utah-shaped symbol character.
      * (Annex F - ECC 200 symbol character placement)
      *
-     * @param array $marr  Array of symbols.
+     * @param array<int, int> $marr  Array of symbols.
      * @param int   $nrow  Number of rows.
      * @param int   $ncol  Number of columns.
      * @param int   $row   Row number.
      * @param int   $col   Column number.
      * @param int   $chr   Char byte.
+     *
+     * @return array<int, int>
      */
     protected function placeUtah(
         array $marr,
@@ -99,12 +103,14 @@ abstract class Placement
      * Places the 8 bits of the first special corner case.
      * (Annex F - ECC 200 symbol character placement)
      *
-     * @param array $marr  Array of symbols
+     * @param array<int, int> $marr  Array of symbols
      * @param int   $nrow  Number of rows
      * @param int   $ncol  Number of columns
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
+     *
+     * @return array<int, int>
      */
     protected function placeCornerA(
         array $marr,
@@ -134,12 +140,14 @@ abstract class Placement
      * Places the 8 bits of the second special corner case.
      * (Annex F - ECC 200 symbol character placement)
      *
-     * @param array $marr  Array of symbols
+     * @param array<int, int> $marr  Array of symbols
      * @param int   $nrow  Number of rows
      * @param int   $ncol  Number of columns
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
+     *
+     * @return array<int, int>
      */
     protected function placeCornerB(
         array $marr,
@@ -169,12 +177,14 @@ abstract class Placement
      * Places the 8 bits of the third special corner case.
      * (Annex F - ECC 200 symbol character placement)
      *
-     * @param array $marr  Array of symbols
+     * @param array<int, int> $marr  Array of symbols
      * @param int   $nrow  Number of rows
      * @param int   $ncol  Number of columns
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
+     *
+     * @return array<int, int>
      */
     protected function placeCornerC(
         array $marr,
@@ -204,12 +214,14 @@ abstract class Placement
      * Places the 8 bits of the fourth special corner case.
      * (Annex F - ECC 200 symbol character placement)
      *
-     * @param array $marr  Array of symbols
+     * @param array<int, int> $marr  Array of symbols
      * @param int   $nrow  Number of rows
      * @param int   $ncol  Number of columns
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
+     *
+     * @return array<int, int>
      */
     protected function placeCornerD(
         array $marr,
@@ -239,12 +251,14 @@ abstract class Placement
      * Sweep upward diagonally, inserting successive characters,
      * (Annex F - ECC 200 symbol character placement)
      *
-     * @param array $marr  Array of symbols
+     * @param array<int, int> $marr  Array of symbols
      * @param int   $nrow  Number of rows
      * @param int   $ncol  Number of columns
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
+     *
+     * @return array<int, int>
      */
     protected function placeSweepUpward(
         array $marr,
@@ -273,12 +287,14 @@ abstract class Placement
      * Sweep downward diagonally, inserting successive characters,
      * (Annex F - ECC 200 symbol character placement)
      *
-     * @param array $marr  Array of symbols
+     * @param array<int, int> $marr  Array of symbols
      * @param int   $nrow  Number of rows
      * @param int   $ncol  Number of columns
      * @param int   $chr   Char byte
      * @param int   $row   Current row
      * @param int   $col   Current column
+     *
+     * @return array<int, int>
      */
     protected function placeSweepDownward(
         array $marr,
@@ -309,6 +325,8 @@ abstract class Placement
      *
      * @param int $nrow  Number of rows.
      * @param int $ncol  Number of columns.
+     *
+     * @return array<int, int>
      */
     public function getPlacementMap(
         int $nrow,
