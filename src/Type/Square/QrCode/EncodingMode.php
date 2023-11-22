@@ -107,10 +107,10 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     /**
      * Append one bitstream to another
      *
-     * @param array $bitstream Original bitstream
-     * @param array $append    Bitstream to append
+     * @param array<int, int> $bitstream Original bitstream
+     * @param array<int, int> $append    Bitstream to append
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
     protected function appendBitstream(array $bitstream, array $append): array
     {
@@ -128,11 +128,11 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     /**
      * Append one bitstream created from number to another
      *
-     * @param array $bitstream Original bitstream
+     * @param array<int, int> $bitstream Original bitstream
      * @param int   $bits      Number of bits
      * @param int   $num       Number
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
     protected function appendNum(array $bitstream, int $bits, int $num): array
     {
@@ -146,11 +146,11 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     /**
      * Append one bitstream created from bytes to another
      *
-     * @param array $bitstream Original bitstream
+     * @param array<int, int> $bitstream Original bitstream
      * @param int   $size      Size
-     * @param array $data      Bytes
+     * @param array<int, int> $data      Bytes
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
     protected function appendBytes(array $bitstream, int $size, array $data): array
     {
@@ -167,7 +167,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      * @param int $bits Number of bits
      * @param int $num  Number
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
     protected function newFromNum(int $bits, int $num): array
     {
@@ -186,9 +186,9 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      * Return new bitstream from bytes
      *
      * @param int   $size Size
-     * @param array $data Bytes
+     * @param array<int, int> $data Bytes
      *
-     * @return array bitstream
+     * @return array<int, int> bitstream
      */
     protected function newFromBytes(int $size, array $data): array
     {
@@ -211,6 +211,8 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      * Return an array with zeros
      *
      * @param int $setLength Array size
+     *
+     * @return array<int, int> array
      */
     protected function allocate(int $setLength): array
     {

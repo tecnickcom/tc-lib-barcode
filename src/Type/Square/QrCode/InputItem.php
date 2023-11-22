@@ -45,12 +45,22 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      * Append data to an input object.
      * The data is copied and appended to the input object.
      *
-     * @param array $items Input items
+     * @param array<int, array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        }> $items Input items
      * @param int   $mode  Encoding mode.
      * @param int   $size  Size of data (byte).
-     * @param array $data  Array of input data.
+     * @param array<int, string> $data  Array of input data.
      *
-     * @return array items
+     * @return array<int, array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        }> items
      */
     public function appendNewInputItem(
         array $items,
@@ -71,10 +81,15 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      *
      * @param int   $mode    Encoding mode.
      * @param int   $size    Size of data (byte).
-     * @param array $data    Array of input data.
-     * @param array $bstream Binary stream
+     * @param array<int, string> $data    Array of input data.
+     * @param array<int, int> $bstream Binary stream
      *
-     * @return array input item
+     * @return array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        } input item
      */
     protected function newInputItem(
         int $mode,
@@ -84,7 +99,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
     ): array {
         $setData = array_slice($data, 0, $size);
         if (count($setData) < $size) {
-            $setData = array_merge($setData, array_fill(0, ($size - count($setData)), 0));
+            $setData = array_merge($setData, array_fill(0, ($size - count($setData)), '0'));
         }
 
         if (! $this->check($mode, $size, $setData)) {
@@ -104,7 +119,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
      *
      * @param int   $mode Encoding mode.
      * @param int   $size Size of data (byte).
-     * @param array $data Data to validate
+     * @param array<int, string> $data Data to validate
      *
      * @return bool true in case of valid data, false otherwise
      */
@@ -130,6 +145,9 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
     /**
      * checkModeNum
      *
+     * @param int   $size Size of data (byte).
+     * @param array<int, string> $data Data to validate
+     *
      * @return bool true or false
      */
     protected function checkModeNum(int $size, array $data): bool
@@ -146,6 +164,9 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
     /**
      * checkModeAn
      *
+     * @param int   $size Size of data (byte).
+     * @param array<int, string> $data Data to validate
+     *
      * @return bool true or false
      */
     protected function checkModeAn(int $size, array $data): bool
@@ -161,6 +182,9 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
 
     /**
      * checkModeKanji
+     *
+     * @param int   $size Size of data (byte).
+     * @param array<int, string> $data Data to validate
      *
      * @return bool true or false
      */

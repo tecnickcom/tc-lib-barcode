@@ -28,16 +28,41 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @phpstan-type RSItem array{
+ *          'alpha_to': array<int, int>,
+ *          'fcr': int,
+ *          'genpoly': array<int, int>,
+ *          'gfpoly': int,
+ *          'index_of': array<int, int>,
+ *          'iprim': int,
+ *          'mm': int,
+ *          'nn': int,
+ *          'nroots': int,
+ *          'pad': int,
+ *          'prim': int,
+ *      }
+ *
+ * @phpstan-type RSblock array{
+ *          'data': array<int, int>,
+ *          'dataLength': int,
+ *          'ecc': array<int, int>,
+ *          'eccLength': int,
+ *      }
  */
 abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
 {
     /**
      * Data code
+     *
+     * @var array<int, int>
      */
     protected array $datacode = [];
 
     /**
      * Error correction code
+     *
+     * @var array<int, int>
      */
     protected array $ecccode = [];
 
@@ -48,6 +73,8 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
 
     /**
      * Reed-Solomon blocks
+     *
+     * @var array<int, RSblock>
      */
     protected array $rsblocks = []; //of RSblock
 
@@ -78,6 +105,8 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
 
     /**
      * Frame
+     *
+     * @var array<int, array<int, string>>
      */
     protected array $frame = [];
 
@@ -104,14 +133,14 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     /**
      * Reed-Solomon items
      *
-     * @va array
+     * @var array<int, RSItem>
      */
     protected array $rsitems = [];
 
     /**
      * Initialize code
      *
-     * @param array $spec Array of ECC specification
+     * @param array<int, int> $spec Array of ECC specification
      */
     protected function init(array $spec): void
     {
@@ -141,6 +170,15 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
 
     /**
      * Internal loop for init
+     *
+     * @param int   $endfor  End for
+     * @param int   $dlv     Data length value
+     * @param int   $elv     Error correction length value
+     * @param RSItem $rsv Reed-Solomon values
+     * @param int   $eccPos  Error correction code position
+     * @param int   $blockNo Block number
+     * @param int   $dataPos Data position
+     * @param array<int, int> $ecc     Error correction code
      */
     protected function initLoop(
         int $endfor,
@@ -153,13 +191,15 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         array &$ecc
     ): void {
         for ($idx = 0; $idx < $endfor; ++$idx) {
+            $data = array_slice($this->datacode, $dataPos);
             $ecc = array_slice($this->ecccode, $eccPos);
-            $this->rsblocks[$blockNo] = [];
-            $this->rsblocks[$blockNo]['dataLength'] = $dlv;
-            $this->rsblocks[$blockNo]['data'] = array_slice($this->datacode, $dataPos);
-            $this->rsblocks[$blockNo]['eccLength'] = $elv;
-            $ecc = $this->encodeRsChar($rsv, $this->rsblocks[$blockNo]['data'], $ecc);
-            $this->rsblocks[$blockNo]['ecc'] = $ecc;
+            $ecc = $this->encodeRsChar($rsv, $data, $ecc);
+            $this->rsblocks[$blockNo] = [
+                'data' => $data,
+                'dataLength' => $dlv,
+                'ecc' => $ecc,
+                'eccLength' => $elv,
+            ];
             $this->ecccode = array_merge(array_slice($this->ecccode, 0, $eccPos), $ecc);
             $dataPos += $dlv;
             $eccPos += $elv;
@@ -177,7 +217,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      * @param int $nroots  RS code generator polynomial degree (number of roots)
      * @param int $pad     Padding bytes at front of shortened block
      *
-     * @return array Array of RS values:
+     * @return RSItem Array of RS values:
      *          mm = Bits per symbol;
      *          nn = Symbols per block;
      *          alpha_to = log lookup table array;
@@ -235,7 +275,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     /**
      * modnn
      *
-     * @param array $rsv  RS values
+     * @param RSItem $rsv  RS values
      * @param int   $xpos X position
      *
      * @return int X position
@@ -306,7 +346,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      * @param int $nroots  RS code generator polynomial degree (number of roots)
      * @param int $pad     Padding bytes at front of shortened block
      *
-     * @return array Array of RS values:
+     * @return RSItem Array of RS values:
      *          mm = Bits per symbol;
      *          nn = Symbols per block;
      *          alpha_to = log lookup table array;
@@ -398,11 +438,11 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     /**
      * Encode a Reed-Solomon codec and returns the parity array
      *
-     * @param array $rsv    RS values
-     * @param array $data   Data
-     * @param array $parity Parity
+     * @param RSItem $rsv    RS values
+     * @param array<int, int> $data   Data
+     * @param array<int, int> $parity Parity
      *
-     * @return array Parity array
+     * @return array<int, int> Parity array
      */
     protected function encodeRsChar(
         array $rsv,

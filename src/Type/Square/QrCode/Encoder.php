@@ -35,9 +35,9 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
      * Encode mask
      *
      * @param int   $maskNo   Mask number (masking mode)
-     * @param array $datacode Data code to encode
+     * @param array<int, int> $datacode Data code to encode
      *
-     * @return array Encoded Mask
+     * @return array<int, string> Encoded Mask
      */
     public function encodeMask(int $maskNo, array $datacode): array
     {
@@ -125,7 +125,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
     /**
      * Set frame value at specified position
      *
-     * @param array $pos X,Y position
+     * @param array{'x': int, 'y': int} $pos X,Y position
      * @param int   $val Value of the character to set
      */
     protected function setFrameAt(array $pos, int $val): void
@@ -136,7 +136,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
     /**
      * Return the next frame position
      *
-     * @return array of x,y coordinates
+     * @return array{'x': int, 'y': int} of x,y coordinates
      */
     protected function getNextPosition(): array
     {
@@ -169,6 +169,10 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
 
     /**
      * Internal cycle for getNextPosition
+     *
+     * @param int $xpos X position
+     * @param int $ypos Y position
+     * @param int $wdt  Width
      */
     protected function getNextPositionB(int &$xpos, int &$ypos, int $wdt): void
     {

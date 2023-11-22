@@ -32,7 +32,20 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     /**
      * encode Mode Num
      *
-     * @return array input item
+     * @param array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } $inputitem input item
+     * @param int $version Code version
+     *
+     * @return array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } input item
      */
     protected function encodeModeNum(array $inputitem, int $version): array
     {
@@ -67,7 +80,20 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     /**
      * encode Mode An
      *
-     * @return array input item
+     * @param array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } $inputitem input item
+     * @param int $version Code version
+     *
+     * @return array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } input item
      */
     protected function encodeModeAn(array $inputitem, int $version): array
     {
@@ -96,7 +122,20 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     /**
      * encode Mode 8
      *
-     * @return array input item
+     * @param array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } $inputitem input item
+     * @param int $version Code version
+     *
+     * @return array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } input item
      */
     protected function encodeMode8(array $inputitem, int $version): array
     {
@@ -117,7 +156,20 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     /**
      * encode Mode Kanji
      *
-     * @return array input item
+     * @param array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } $inputitem input item
+     * @param int $version Code version
+     *
+     * @return array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } input item
      */
     protected function encodeModeKanji(array $inputitem, int $version): array
     {
@@ -146,7 +198,19 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     /**
      * encode Mode Structure
      *
-     * @return array input item
+     * @param array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } $inputitem input item
+     *
+     * @return array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } input item
      */
     protected function encodeModeStructure(array $inputitem): array
     {

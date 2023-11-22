@@ -129,6 +129,14 @@ abstract class Estimate
     /**
      * Estimate version
      *
+     * @param array<int, array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        }> $items Items
+     * @param int $level Error correction level
+     *
      * @return int version
      */
     public function estimateVersion(array $items, int $level): int
@@ -173,6 +181,14 @@ abstract class Estimate
 
     /**
      * estimateBitStreamSize
+     *
+     * @param array<int, array{
+     *            'mode': int,
+     *            'size': int,
+     *            'data': array<int, string>,
+     *            'bstream': array<int, int>,
+     *        }> $items Items
+     * @param int $version Code version
      *
      * @return int bits
      */
