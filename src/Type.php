@@ -270,16 +270,23 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 
     /**
      * Get the barcode as SVG image object
+     *
+     * @param string|null $filename Defaults to a md5 hash of the data
      */
-    public function getSvg(): void
+    public function getSvg(?string $filename = null): void
     {
         $svgCode = $this->getSvgCode();
+        if ($filename == null) {
+            $filename = md5($svgCode) . '.svg';
+        } elseif (!str_ends_with($filename, '.svg')) {
+            $filename .= '.svg';
+        }
         header('Content-Type: application/svg+xml');
         header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
         header('Pragma: public');
         header('Expires: Thu, 04 jan 1973 00:00:00 GMT'); // Date in the past
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-        header('Content-Disposition: inline; filename="' . md5($svgCode) . '.svg";');
+        header('Content-Disposition: inline; filename="' . $filename. '";');
         if (empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
             // the content length may vary if the server is using compression
             header('Content-Length: ' . strlen($svgCode));
@@ -380,16 +387,23 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 
     /**
      * Get Barcode as PNG Image (requires GD or Imagick library)
+     *
+     * @param string|null $filename Defaults to a md5 hash of the data
      */
-    public function getPng(): void
+    public function getPng(?string $filename = null): void
     {
         $pngData = $this->getPngData();
+        if ($filename == null) {
+            $filename = md5($pngData) . '.png';
+        } elseif (!str_ends_with($filename, '.png')) {
+            $filename .= '.png';
+        }
         header('Content-Type: image/png');
         header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
         header('Pragma: public');
         header('Expires: Thu, 04 jan 1973 00:00:00 GMT'); // Date in the past
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-        header('Content-Disposition: inline; filename="' . md5($pngData) . '.png";');
+        header('Content-Disposition: inline; filename="' . $filename. '";');
         if (empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
             // the content length may vary if the server is using compression
             header('Content-Length: ' . strlen($pngData));

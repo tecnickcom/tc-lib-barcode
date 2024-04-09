@@ -103,8 +103,10 @@ interface Model
 
     /**
      * Get the barcode as SVG image object
+     *
+     * @param string|null $filename Defaults to a md5 hash of the data
      */
-    public function getSvg(): void;
+    public function getSvg(?string $filename = null): void;
 
     /**
      * Get the barcode as SVG code
@@ -122,8 +124,10 @@ interface Model
 
     /**
      * Get Barcode as PNG Image (requires GD or Imagick library)
+     *
+     * @param string|null $filename Defaults to a md5 hash of the data
      */
-    public function getPng(): void;
+    public function getPng(?string $filename = null): void;
 
     /**
      * Get the barcode as PNG image (requires GD or Imagick library)
