@@ -307,6 +307,23 @@ class BarcodeTest extends TestUtil
         $this->assertEquals('86e0362768e8b1b26032381232c0367f', md5($svg));
     }
 
+    public function testGetnamedSvg(): void
+    {
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj(
+            'LRAW,AB,12,E3F',
+            '01001100011100001111,10110011100011110000',
+            -2,
+            -2,
+            'purple'
+        );
+        ob_start();
+        $type->getSvg("my_file");
+        $svg = ob_get_clean();
+        $this->assertNotFalse($svg);
+        $this->assertEquals('86e0362768e8b1b26032381232c0367f', md5($svg));
+    }
+
     public function testGetPng(): void
     {
         $barcode = $this->getTestObject();
@@ -319,6 +336,23 @@ class BarcodeTest extends TestUtil
         );
         ob_start();
         $type->getPng();
+        $png = ob_get_clean();
+        $this->assertNotFalse($png);
+        $this->assertEquals('PNG', substr($png, 1, 3));
+    }
+
+    public function testGetNamedPng(): void
+    {
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj(
+            'LRAW,AB,12,E3F',
+            '01001100011100001111,10110011100011110000',
+            -2,
+            -2,
+            'purple'
+        );
+        ob_start();
+        $type->getPng("my_file");
         $png = ob_get_clean();
         $this->assertNotFalse($png);
         $this->assertEquals('PNG', substr($png, 1, 3));
