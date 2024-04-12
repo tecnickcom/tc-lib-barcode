@@ -308,7 +308,10 @@ class BarcodeTest extends TestUtil
         $this->assertNotFalse($svg);
         $this->assertEquals('86e0362768e8b1b26032381232c0367f', md5($svg));
         $headers = xdebug_get_headers();
-        $this->assertEquals('Content-Disposition: inline; filename="86e0362768e8b1b26032381232c0367f.svg";', $headers[5]);
+        $this->assertEquals(
+            'Content-Disposition: inline; filename="86e0362768e8b1b26032381232c0367f.svg";',
+            $headers[5]
+        );
 
         // invalid filename
         ob_start();
@@ -317,7 +320,10 @@ class BarcodeTest extends TestUtil
         $this->assertNotFalse($svg);
         $this->assertEquals('86e0362768e8b1b26032381232c0367f', md5($svg));
         $headers = xdebug_get_headers();
-        $this->assertEquals('Content-Disposition: inline; filename="86e0362768e8b1b26032381232c0367f.svg";', $headers[5]);
+        $this->assertEquals(
+            'Content-Disposition: inline; filename="86e0362768e8b1b26032381232c0367f.svg";',
+            $headers[5]
+        );
 
         // valid filename
         ob_start();
@@ -326,7 +332,10 @@ class BarcodeTest extends TestUtil
         $this->assertNotFalse($svg);
         $this->assertEquals('86e0362768e8b1b26032381232c0367f', md5($svg));
         $headers = xdebug_get_headers();
-        $this->assertEquals('Content-Disposition: inline; filename="test_SVG_filename-001.svg";', $headers[5]);
+        $this->assertEquals(
+            'Content-Disposition: inline; filename="test_SVG_filename-001.svg";',
+            $headers[5]
+        );
     }
 
     public function testGetPng(): void
@@ -347,7 +356,10 @@ class BarcodeTest extends TestUtil
         $this->assertNotFalse($png);
         $this->assertEquals('PNG', substr($png, 1, 3));
         $headers = xdebug_get_headers();
-        $this->assertEquals('Content-Disposition: inline; filename="474e4eb4cfd145be38fe1657909b21b2.png";', $headers[5]);
+        $this->assertEquals(
+            'Content-Disposition: inline; filename="474e4eb4cfd145be38fe1657909b21b2.png";',
+            $headers[5]
+        );
 
         // invalid filename
         ob_start();
@@ -356,7 +368,10 @@ class BarcodeTest extends TestUtil
         $this->assertNotFalse($png);
         $this->assertEquals('PNG', substr($png, 1, 3));
         $headers = xdebug_get_headers();
-        $this->assertEquals('Content-Disposition: inline; filename="474e4eb4cfd145be38fe1657909b21b2.png";', $headers[5]);
+        $this->assertEquals(
+            'Content-Disposition: inline; filename="474e4eb4cfd145be38fe1657909b21b2.png";',
+            $headers[5]
+        );
 
         // valid filename
         ob_start();
@@ -365,6 +380,9 @@ class BarcodeTest extends TestUtil
         $this->assertNotFalse($png);
         $this->assertEquals('PNG', substr($png, 1, 3));
         $headers = xdebug_get_headers();
-        $this->assertEquals('Content-Disposition: inline; filename="test_PNG_filename-001.png";', $headers[5]);
+        $this->assertEquals(
+            'Content-Disposition: inline; filename="test_PNG_filename-001.png";',
+            $headers[5]
+        );
     }
 }
