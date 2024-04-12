@@ -26,6 +26,7 @@ jobs:
                 php-version: ["8.0", "8.1", "8.2", "8.3"]
                 experimental: [false]
                 os: [ubuntu-latest]
+                coverage-extension: [xdebug]
         steps:
             - uses: actions/checkout@v4
             - name: Use php ${{ matrix.php-version }}
@@ -35,7 +36,6 @@ jobs:
                   coverage: ${{ matrix.coverage-extension }}
                   extensions: xdebug, bcmath, curl, date, gd, hash, imagick, json, mbstring, openssl, pcre, zlib
                   ini-values: display_errors=on, error_reporting=-1, zend.assertions=1
-                  coverage: xdebug
             - name: List php modules
               run: php -m
             - name: List php modules using "no php ini" mode
