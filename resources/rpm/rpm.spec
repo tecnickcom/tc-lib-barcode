@@ -57,7 +57,7 @@ rm -rf $RPM_BUILD_ROOT
 #%config(noreplace) %{_configpath}*
 
 %changelog
-* Thu Jul 02 2015 Nicola Asuni <info@tecnick.com> 1.2.0-1
+* Thu Jul 02 2024 Nicola Asuni <info@tecnick.com> 1.2.0-1
 - Changed package name, add provides section
-* Tue Feb 24 2015 Nicola Asuni <info@tecnick.com> 1.0.0-1
+* Tue Feb 24 2024 Nicola Asuni <info@tecnick.com> 1.0.0-1
 - Initial Commit

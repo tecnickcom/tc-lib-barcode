@@ -4,12 +4,15 @@
 # @category    Library
 # @package     Barcode
 # @author      Nicola Asuni <info@tecnick.com>
-# @copyright   2015-2023 Nicola Asuni - Tecnick.com LTD
+# @copyright   2015-2024 Nicola Asuni - Tecnick.com LTD
 # @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE)
 # @link        https://github.com/tecnickcom/tc-lib-barcode
 #
 # This file is part of tc-lib-barcode software library.
 # ----------------------------------------------------------------------------------------------------------------------
+
+SHELL=/bin/bash
+.SHELLFLAGS=-o pipefail -c
 
 # Project owner
 OWNER=tecnickcom
@@ -111,6 +114,9 @@ help:
 .PHONY: all
 all: help
 
+# Full build and test sequence
+.PHONY: x
+x: buildall
 
 # Full build and test sequence
 .PHONY: buildall
