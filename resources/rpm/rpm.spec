@@ -17,8 +17,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  php(language) >= 8.0.0
-Requires:  php-composer(%{c_vendor}/tc-lib-color) < 2.0.0
-Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 2.0.8
+Requires:  php-composer(%{c_vendor}/tc-lib-color) < 3.0.0
+Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 2.0.9
 Requires:  php-bcmath
 Requires:  php-date
 Requires:  php-gd
