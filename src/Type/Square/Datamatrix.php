@@ -73,6 +73,11 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected bool $gsonemode = false;
 
     /**
+     * Datamatrix default encoding (0=ASCII (default), 1=C40, 2=TXT, 3=X12, 4=EDF, 5=BASE256)
+     */
+    protected int $encoding = Data::ENC_ASCII;
+
+    /**
      * Set extra (optional) parameters:
      *     1: SHAPE - S=square (default), R=rectangular
      *     2: MODE - N=default, GS1 = the FNC1 codeword is added in the first position of Data Matrix ECC 200 version
@@ -87,15 +92,14 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
 
         // mode
-        if (! isset($this->params[1])) {
-            return;
+        if (isset($this->params[1]) && ($this->params[1] === 'GS1')) {
+            $this->gsonemode = true;
         }
 
-        if ($this->params[1] != 'GS1') {
-            return;
+        // encoding
+        if (isset($this->params[2]) && array_key_exists(intval($this->params[2]), Data::SWITCHCDW)) {
+            $this->encoding = intval($this->params[2]);
         }
-
-        $this->gsonemode = true;
     }
 
     /**
@@ -226,14 +230,21 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function getHighLevelEncoding(string $data): array
     {
-        // STEP A. Start in ASCII encodation.
-        $enc = Data::ENC_ASCII; // current encoding mode
+        // STEP A. Start in predefined encodation.
+        $enc = $this->encoding; // current encoding mode
         $this->dmx->last_enc = $enc; // last used encoding
         $pos = 0; // current position
         $cdw = []; // array of codewords to be returned
         $cdw_num = 0; // number of data codewords
         $data_length = strlen($data); // number of chars
         $field_length = 0; // number of chars in current field
+
+        // Switch to predefined encoding (no action needed if ASCII because it's the default encoding)
+        if ($this->encoding !== Data::ENC_ASCII) {
+            $cdw[] = $this->dmx->getSwitchEncodingCodeword($this->encoding);
+            ++$cdw_num;
+        }
+
         while ($pos < $data_length) {
             // Determine if current char is FNC1 (don't encode it, just pass it through)
             if ($this->gsonemode && ($data[$pos] == chr(232))) {

@@ -207,7 +207,7 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
      * @return int Switch codeword.
      * @protected
      */
-    protected function getSwitchEncodingCodeword(int $mode): int
+    public function getSwitchEncodingCodeword(int $mode): int
     {
         $cdw = Data::SWITCHCDW[$mode];
         if ($cdw != 254) {
