@@ -393,37 +393,37 @@ class DatamatrixTest extends TestUtil
             ],
             // Different encoding datamatrix
             [
-                'DATAMATRIX,S,N,0', // ASCII
+                'DATAMATRIX,S,N,ASCII',
                 '01234567890',
                 'ac7dd9e1ebdb42d07fe928fb33cd307b'
             ],
             [
-                'DATAMATRIX,S,N,1', // C40
+                'DATAMATRIX,S,N,C40',
                 '01234567890',
                 '958a7a3bcd036d7135489eb703a25633'
             ],
             [
-                'DATAMATRIX,S,N,2', // TXT
+                'DATAMATRIX,S,N,TXT',
                 '01234567890',
                 '057981dfbf527b029ae59d65fb55f61d'
             ],
             [
-                'DATAMATRIX,S,N,3', // X12
+                'DATAMATRIX,S,N,X12',
                 '01234567890',
                 '8d75b0fcfb2d0977abd95004a6ba98dd'
             ],
             [
-                'DATAMATRIX,S,N,4', // EDF
+                'DATAMATRIX,S,N,EDF',
                 '01234567890',
                 '989eab3ca16c97e05dd2307bef32f64b'
             ],
             [
-                'DATAMATRIX,S,N,5', // BASE256
+                'DATAMATRIX,S,N,BASE256',
                 '01234567890',
                 '8b4f688a774130bc654e39dfcfadb482'
             ],
             [
-                'DATAMATRIX,S,GS1,1', // GS1 + C40
+                'DATAMATRIX,S,GS1,C40',
                 "\xE8" . '01095011010209171719050810ABCD1234' . "\xE8" . '2110',
                 'ba117111dfa40a40e1bb968c719d2eef'
             ]

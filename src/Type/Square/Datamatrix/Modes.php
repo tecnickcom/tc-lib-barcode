@@ -203,9 +203,10 @@ abstract class Modes extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Placeme
 
     /**
      * Get the switching codeword to a new encoding mode (latch codeword)
+     *
      * @param int $mode New encoding mode.
+     *
      * @return int Switch codeword.
-     * @protected
      */
     public function getSwitchEncodingCodeword(int $mode): int
     {

@@ -73,32 +73,32 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected bool $gsonemode = false;
 
     /**
-     * Datamatrix default encoding (0=ASCII (default), 1=C40, 2=TXT, 3=X12, 4=EDF, 5=BASE256)
+     * Datamatrix default encoding.
+     * See Data::SWITCHCDW for valid values.
      */
-    protected int $encoding = Data::ENC_ASCII;
+    protected int $defenc = Data::ENC_ASCII;
 
     /**
      * Set extra (optional) parameters:
-     *     1: SHAPE - S=square (default), R=rectangular
-     *     2: MODE - N=default, GS1 = the FNC1 codeword is added in the first position of Data Matrix ECC 200 version
+     *     1: SHAPE: S=square (default), R=rectangular.
+     *     2: MODE: N=default, GS1 = the FNC1 codeword is added in the first position of Data Matrix ECC 200 version.
+     *     3: ENCODING: ASCII (default), C40, TXT, X12, EDIFACT, BASE256.
      */
     protected function setParameters(): void
     {
         parent::setParameters();
 
         // shape
-        if (isset($this->params[0]) && ($this->params[0] == 'R')) {
+        if (isset($this->params[0]) && ($this->params[0] === 'R')) {
             $this->shape = 'R';
         }
 
         // mode
-        if (isset($this->params[1]) && ($this->params[1] === 'GS1')) {
-            $this->gsonemode = true;
-        }
+        $this->gsonemode = (isset($this->params[1]) && ($this->params[1] === 'GS1'));
 
         // encoding
-        if (isset($this->params[2]) && array_key_exists(intval($this->params[2]), Data::SWITCHCDW)) {
-            $this->encoding = intval($this->params[2]);
+        if (isset($this->params[2])) {
+            $this->defenc = Data::ENCOPTS[$this->params[2]] ?? Data::ENC_ASCII;
         }
     }
 
@@ -231,7 +231,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected function getHighLevelEncoding(string $data): array
     {
         // STEP A. Start in predefined encodation.
-        $enc = $this->encoding; // current encoding mode
+        $enc = $this->defenc; // current encoding mode
         $this->dmx->last_enc = $enc; // last used encoding
         $pos = 0; // current position
         $cdw = []; // array of codewords to be returned
@@ -240,8 +240,8 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $field_length = 0; // number of chars in current field
 
         // Switch to predefined encoding (no action needed if ASCII because it's the default encoding)
-        if ($this->encoding !== Data::ENC_ASCII) {
-            $cdw[] = $this->dmx->getSwitchEncodingCodeword($this->encoding);
+        if ($this->defenc !== Data::ENC_ASCII) {
+            $cdw[] = $this->dmx->getSwitchEncodingCodeword($this->defenc);
             ++$cdw_num;
         }
 

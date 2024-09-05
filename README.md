@@ -147,7 +147,7 @@ Create a composer.json in your projects root-directory:
 ```json
 {
     "require": {
-        "tecnickcom/tc-lib-barcode": "^2.0"
+        "tecnickcom/tc-lib-barcode": "^2.3"
     }
 }
 ```
@@ -155,7 +155,7 @@ Create a composer.json in your projects root-directory:
 Or add to an existing project with: 
 
 ```bash
-composer require tecnickcom/tc-lib-barcode ^2.0
+composer require tecnickcom/tc-lib-barcode ^2.3
 ```
 
 ## Packaging
@@ -166,7 +166,7 @@ this library includes make targets for building these packages (`make rpm` and `
 The packages are generated under the `target` directory.
 
 When this library is installed using an RPM or DEB package, you can use it your code by including the autoloader:
-```
+```php
 require_once ('/usr/share/php/Com/Tecnick/Barcode/autoload.php');
 ```
 
