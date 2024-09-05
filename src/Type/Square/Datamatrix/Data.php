@@ -90,6 +90,20 @@ class Data
     public const ENC_ASCII_NUM = 7;
 
     /**
+     * Encoding options that can be specified as input parameter.
+     *
+     * @var array<string, int>
+     */
+    public const ENCOPTS = [
+        'ASCII' => Data::ENC_ASCII,
+        'C40' => Data::ENC_C40,
+        'TXT' => Data::ENC_TXT,
+        'X12' => Data::ENC_X12,
+        'EDF' => Data::ENC_EDF,
+        'BASE256' => Data::ENC_BASE256,
+    ];
+
+    /**
      * Switch codewords.
      *
      * @var array<int, int>

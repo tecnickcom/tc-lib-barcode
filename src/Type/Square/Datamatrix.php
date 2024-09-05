@@ -73,29 +73,33 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
     protected bool $gsonemode = false;
 
     /**
+     * Datamatrix default encoding.
+     * See Data::SWITCHCDW for valid values.
+     */
+    protected int $defenc = Data::ENC_ASCII;
+
+    /**
      * Set extra (optional) parameters:
-     *     1: SHAPE - S=square (default), R=rectangular
-     *     2: MODE - N=default, GS1 = the FNC1 codeword is added in the first position of Data Matrix ECC 200 version
+     *     1: SHAPE: S=square (default), R=rectangular.
+     *     2: MODE: N=default, GS1 = the FNC1 codeword is added in the first position of Data Matrix ECC 200 version.
+     *     3: ENCODING: ASCII (default), C40, TXT, X12, EDIFACT, BASE256.
      */
     protected function setParameters(): void
     {
         parent::setParameters();
 
         // shape
-        if (isset($this->params[0]) && ($this->params[0] == 'R')) {
+        if (isset($this->params[0]) && ($this->params[0] === 'R')) {
             $this->shape = 'R';
         }
 
         // mode
-        if (! isset($this->params[1])) {
-            return;
-        }
+        $this->gsonemode = (isset($this->params[1]) && ($this->params[1] === 'GS1'));
 
-        if ($this->params[1] != 'GS1') {
-            return;
+        // encoding
+        if (isset($this->params[2])) {
+            $this->defenc = Data::ENCOPTS[$this->params[2]] ?? Data::ENC_ASCII;
         }
-
-        $this->gsonemode = true;
     }
 
     /**
@@ -226,14 +230,21 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function getHighLevelEncoding(string $data): array
     {
-        // STEP A. Start in ASCII encodation.
-        $enc = Data::ENC_ASCII; // current encoding mode
+        // STEP A. Start in predefined encodation.
+        $enc = $this->defenc; // current encoding mode
         $this->dmx->last_enc = $enc; // last used encoding
         $pos = 0; // current position
         $cdw = []; // array of codewords to be returned
         $cdw_num = 0; // number of data codewords
         $data_length = strlen($data); // number of chars
         $field_length = 0; // number of chars in current field
+
+        // Switch to predefined encoding (no action needed if ASCII because it's the default encoding)
+        if ($this->defenc !== Data::ENC_ASCII) {
+            $cdw[] = $this->dmx->getSwitchEncodingCodeword($this->defenc);
+            ++$cdw_num;
+        }
+
         while ($pos < $data_length) {
             // Determine if current char is FNC1 (don't encode it, just pass it through)
             if ($this->gsonemode && ($data[$pos] == chr(232))) {
