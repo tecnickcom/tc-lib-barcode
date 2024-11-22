@@ -112,7 +112,14 @@ interface Model
     public function getSvg(?string $filename = null): void;
 
     /**
-     * Get the barcode as SVG code
+     * Get the barcode as inline SVG code.
+     *
+     * @return string Inline SVG code.
+     */
+    public function getInlineSvgCode(): string;
+
+    /**
+     * Get the barcode as SVG code, including the XML declaration.
      *
      * @return string SVG code
      */

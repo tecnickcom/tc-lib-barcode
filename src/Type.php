@@ -305,7 +305,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
     }
 
     /**
-     * Get the barcode as SVG image object
+     * Get the barcode as SVG image object.
      *
      * @param string|null $filename The file name without extension (optional).
      *                              Only allows alphanumeric characters, underscores and hyphens.
@@ -318,11 +318,11 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
     }
 
     /**
-     * Get the barcode as SVG code
+     * Get the barcode as inline SVG code.
      *
-     * @return string SVG code
+     * @return string Inline SVG code.
      */
-    public function getSvgCode(): string
+    public function getInlineSvgCode(): string
     {
         // flags for htmlspecialchars
         $hflag = ENT_NOQUOTES;
@@ -332,15 +332,16 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 
         $width = sprintf('%F', ($this->width + $this->padding['L'] + $this->padding['R']));
         $height = sprintf('%F', ($this->height + $this->padding['T'] + $this->padding['B']));
-        $svg = '<?xml version="1.0" standalone="no" ?>' . "\n"
-            . '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
-            . "\n"
-            . '<svg'
+
+        $svg = '<svg'
+            . ' version="1.2"'
+            . ' baseProfile="full"'
+            . ' xmlns="http://www.w3.org/2000/svg"'
+            . ' xmlns:xlink="http://www.w3.org/1999/xlink"'
+            . ' xmlns:ev="http://www.w3.org/2001/xml-events"'
             . ' width="' . $width . '"'
             . ' height="' . $height . '"'
             . ' viewBox="0 0 ' . $width . ' ' . $height . '"'
-            . ' version="1.1"'
-            . ' xmlns="http://www.w3.org/2000/svg"'
             . '>' . "\n"
             . "\t" . '<desc>' . htmlspecialchars($this->code, $hflag, 'UTF-8') . '</desc>' . "\n";
         if ($this->bg_color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
@@ -369,6 +370,18 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 
         return $svg . ('	</g>' . "\n"
             . '</svg>' . "\n");
+    }
+
+    /**
+     * Get the barcode as SVG code, including the XML declaration.
+     *
+     * @return string SVG code
+     */
+    public function getSvgCode(): string
+    {
+        return '<?xml version="1.0" standalone="no" ?>'
+            . "\n"
+            . $this->getInlineSvgCode();
     }
 
     /**

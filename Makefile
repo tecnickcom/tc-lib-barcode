@@ -268,3 +268,8 @@ test:
 uninstall:
 	rm -rf $(PATHINSTBIN)
 	rm -rf $(PATHINSTDOC)
+
+# Increase the version patch number
+.PHONY: versionup
+versionup:
+	echo ${VERSION} | gawk -F. '{printf("%d.%d.%d\n",$$1,$$2,(($$3+1)));}' > VERSION
