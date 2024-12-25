@@ -220,7 +220,7 @@ abstract class SpecRs
      * @param int    $xpos       X position
      * @param int    $ypos       Y position
      * @param string $repl    Value to replace
-     * @param int    $replLen Length of the repl string
+     * @param int|null    $replLen Length of the repl string
      *
      * @return array<int, string> srctab
      */
@@ -229,7 +229,7 @@ abstract class SpecRs
         int $xpos,
         int $ypos,
         string $repl,
-        int $replLen = null
+        ?int $replLen = null
     ): array {
         $srctab[$ypos] = substr_replace(
             $srctab[$ypos],
