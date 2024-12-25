@@ -88,7 +88,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
                 // single character shift
                 $code_data[] = 98;
                 // mark shift
-                $sequence[$key][3] = true;
+                $sequence[$key][3] = '';
             } elseif (! isset($sequence[($key - 1)][3])) {
                 $code_data[] = 101;
             }
@@ -174,8 +174,6 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $key        Sequence current key
      * @param array{string, string, int} $seq        Sequence current value
-     *
-     * @throws BarcodeException in case of error
      */
     protected function processSequenceBB(
         array &$sequence,
@@ -192,7 +190,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
             // single character shift
             $code_data[] = 98;
             // mark shift
-            $sequence[$key][3] = true;
+            $sequence[$key][3] = '';
         } elseif (! isset($sequence[($key - 1)][3])) {
             $code_data[] = 100;
         }

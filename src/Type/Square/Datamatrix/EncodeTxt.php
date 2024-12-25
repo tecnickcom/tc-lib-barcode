@@ -76,7 +76,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * @param array<int, int> $temp_cw   Temporary codewords array
      * @param int    $ptr       Pointer
      * @param int    $epos      End position
-     * @param array<int, int> $charset   Charset array
+     * @param array<int|string, int> $charset   Charset array
      *
      * @return int   Curent character code
      */

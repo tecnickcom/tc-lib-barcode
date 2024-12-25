@@ -86,7 +86,7 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols = 0;
         $this->nrows = 1;
         $this->bars = [];
-        $this::FORMATCode();
+        $this->formatCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];

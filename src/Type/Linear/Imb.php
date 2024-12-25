@@ -453,7 +453,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Get the routing code binary block
      *
-     * @param string $routing_code the routing code
+     * @param numeric-string $routing_code the routing code
      *
      * @throws BarcodeException in case of error
      */
@@ -485,13 +485,13 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $tracking_number = $code_arr[0];
         $binary_code = '0';
         if (isset($code_arr[1])) {
-            $binary_code = $this->getRoutingCode($code_arr[1]);
+            $binary_code = $this->getRoutingCode($code_arr[1]); // @phpstan-ignore argument.type
         }
 
-        $binary_code = bcmul($binary_code, '10');
-        $binary_code = bcadd($binary_code, $tracking_number[0]);
-        $binary_code = bcmul($binary_code, '5');
-        $binary_code = bcadd($binary_code, $tracking_number[1]);
+        $binary_code = bcmul($binary_code, '10'); // @phpstan-ignore argument.type
+        $binary_code = bcadd($binary_code, $tracking_number[0]); // @phpstan-ignore argument.type
+        $binary_code = bcmul($binary_code, '5'); // @phpstan-ignore argument.type
+        $binary_code = bcadd($binary_code, $tracking_number[1]); // @phpstan-ignore argument.type
         $binary_code .= substr($tracking_number, 2, 18);
         // convert to hexadecimal
         $binary_code = $this->convertDecToHex($binary_code);
@@ -504,7 +504,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         // calculate frame check sequence
         $fcs = $this->getFrameCheckSequence($binary_code_arr);
         // exclude first 2 bits from first byte
-        $first_byte = sprintf('%2s', dechex((hexdec($binary_code_arr[0]) << 2) >> 2));
+        $first_byte = sprintf('%2s', dechex((int) (hexdec($binary_code_arr[0]) << 2) >> 2));
         $binary_code_102bit = $first_byte . substr($binary_code, 2);
         // convert binary data to codewords
         $codewords = [];

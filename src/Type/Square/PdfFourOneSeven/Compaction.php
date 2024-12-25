@@ -149,10 +149,10 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
                 }
 
                 // append the result array at the end
-                $codewords = array_merge($codewords, $cw6);
+                $codewords = array_merge($codewords, $cw6); //@phpstan-ignore parameterByRef.type
             } else {
                 for ($idx = 0; $idx < $sublen; ++$idx) {
-                    $codewords[] = ord($code[$idx]);
+                    $codewords[] = ord($code[$idx]); //@phpstan-ignore parameterByRef.type
                 }
             }
 

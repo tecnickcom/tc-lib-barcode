@@ -17,6 +17,7 @@
 namespace Test\Square;
 
 use Test\TestUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * PDF417 Barcode class test
@@ -51,9 +52,7 @@ class PdfFourOneSevenTest extends TestUtil
         $barcode->getBarcodeObj('PDF417', $code);
     }
 
-    /**
-     * @dataProvider getGridDataProvider
-     */
+    #[DataProvider('getGridDataProvider')]
     public function testGetGrid(string $options, string $code, mixed $expected): void
     {
         $barcode = $this->getTestObject();
@@ -251,14 +250,12 @@ class PdfFourOneSevenTest extends TestUtil
         ];
     }
 
-    /**
-     * @dataProvider getStringDataProvider
-     */
+    #[DataProvider('getStringDataProvider')]
     public function testStrings(string $code): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('PDF417', $code);
-        $this->assertNotNull($type);
+        $this->assertNotNull($type); // @phpstan-ignore method.alreadyNarrowedType
     }
 
     /**

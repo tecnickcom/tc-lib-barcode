@@ -76,7 +76,7 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
      */
     protected function setBars(): void
     {
-        $this::FORMATCode();
+        $this->formatCode();
         if (strlen($this->extcode) % 2 != 0) {
             // add leading zero if code-length is odd
             $this->extcode = '0' . $this->extcode;

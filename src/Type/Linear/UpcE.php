@@ -156,7 +156,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      */
     protected function setBars(): void
     {
-        $this::FORMATCode();
+        $this->formatCode();
         $upce_code = $this->convertUpcaToUpce($this->extcode);
         $seq = '101'; // left guard bar
         $parity = $this::PARITIES_UPCE[$this->extcode[1]][$this->check];

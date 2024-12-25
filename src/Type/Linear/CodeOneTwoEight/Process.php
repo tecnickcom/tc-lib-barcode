@@ -326,7 +326,8 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             if (($char_id >= 241) && ($char_id <= 244)) {
                 $code_data[] = $this::FNC_A[$char_id];
             } elseif ($char_id <= 95) {
-                $code_data[] = strpos($this::KEYS_A, $char);
+                $cdpos = strpos($this::KEYS_A, $char);
+                $code_data[] = is_int($cdpos) ? $cdpos : 0;
             } else {
                 throw new BarcodeException('Invalid character sequence');
             }
@@ -353,7 +354,8 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             if (($char_id >= 241) && ($char_id <= 244)) {
                 $code_data[] = $this::FNC_B[$char_id];
             } elseif (($char_id >= 32) && ($char_id <= 127)) {
-                $code_data[] = strpos($this::KEYS_B, $char);
+                $cdpos = strpos($this::KEYS_B, $char);
+                $code_data[] = is_int($cdpos) ? $cdpos : 0;
             } else {
                 throw new BarcodeException('Invalid character sequence: ' . $char_id);
             }

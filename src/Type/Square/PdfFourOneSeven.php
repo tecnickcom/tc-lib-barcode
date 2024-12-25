@@ -129,7 +129,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     /**
      * Set macro block parameter
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     protected function setMacroBlockParam(): void
     {
@@ -264,8 +264,14 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         $errsize = (2 << $ecl);
         // calculate number of columns (number of codewords per row) and rows
         $nce = ($numcw + $errsize + 1);
-        $cols = min(30, max(1, round((sqrt(4761 + (68 * $this->aspectratio * $this->row_height * $nce)) - 69) / 34)));
-        $rows = min(90, max(3, ceil($nce / $cols)));
+        $cols = (int) min(
+            30,
+            max(1, round((sqrt(4761 + (68 * $this->aspectratio * $this->row_height * $nce)) - 69) / 34))
+        );
+        $rows = (int) min(
+            90,
+            max(3, ceil($nce / $cols))
+        );
         $size = ($cols * $rows);
         if ($size > 928) {
             // set dimensions to get maximum capacity

@@ -114,7 +114,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      */
     protected function appendBitstream(array $bitstream, array $append): array
     {
-        if ((! is_array($append)) || (count($append) == 0)) {
+        if (count($append) == 0) {
             return $bitstream;
         }
 

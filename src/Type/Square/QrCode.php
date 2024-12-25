@@ -100,8 +100,8 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      *     6: BEST MASK - true to find the best mask (slow)
      *     7: DEFAULT MASK - mask to use when the best mask option is false
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function setParameters(): void
     {

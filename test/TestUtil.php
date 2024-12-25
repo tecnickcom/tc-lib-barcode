@@ -28,6 +28,8 @@ use PHPUnit\Framework\TestCase;
  * @copyright 2015-2024 Nicola Asuni - Tecnick.com LTD
  * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link      https://github.com/tecnickcom/tc-lib-barcode
+ *
+ * @SuppressWarnings("PHPMD.NumberOfChildren")
  */
 class TestUtil extends TestCase
 {

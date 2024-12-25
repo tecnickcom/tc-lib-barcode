@@ -131,7 +131,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
         $code_len = strlen($code);
         $sum_a = 0;
         for ($pos = 1; $pos < $data_len; $pos += 2) {
-            $sum_a += $code[$pos];
+            $sum_a += (int) $code[$pos];
         }
 
         if ($this->code_length > 12) {
@@ -140,7 +140,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
 
         $sum_b = 0;
         for ($pos = 0; $pos < $data_len; $pos += 2) {
-            $sum_b += ($code[$pos]);
+            $sum_b += (int) ($code[$pos]);
         }
 
         if ($this->code_length < 13) {
@@ -185,7 +185,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
             throw new BarcodeException('Input code must be a number');
         }
 
-        $this::FORMATCode();
+        $this->formatCode();
         $seq = '101'; // left guard bar
         $half_len = (int) ceil($this->code_length / 2);
         $parity = $this::PARITIES[$this->extcode[0]];

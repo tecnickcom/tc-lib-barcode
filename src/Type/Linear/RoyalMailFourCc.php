@@ -175,7 +175,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getCoreBars(): void
     {
-        $this::FORMATCode();
+        $this->formatCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];

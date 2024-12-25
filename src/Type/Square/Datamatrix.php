@@ -226,7 +226,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      *
      * @return array<int, int> Codewords
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     protected function getHighLevelEncoding(string $data): array
     {

@@ -79,7 +79,7 @@ abstract class Convert
      * Array containing the position and dimensions of each barcode bar
      * (x, y, width, height)
      *
-     * @var array<array{int, int, int, int}>,
+     * @var array<array{int, int, int, int}>
      */
     protected array $bars = [];
 

@@ -34,7 +34,7 @@ class ErrorCorrection
     /**
      * Galois Field primitive by word size.
      *
-     * @var array<int, int>
+     * @var array<int>
      */
     protected const GF = [
         4 => 19, // 10011  GF(16) (x^4 + x + 1) Mode message
@@ -48,7 +48,7 @@ class ErrorCorrection
      * Map the log and exp (inverse log) tables by word size.
      * NOTE: It is equal to 2^word_size.
      *
-     * @var array<int, int>
+     * @var array<int>
      */
     protected const TSIZE = [
         4 => 16,
@@ -61,14 +61,14 @@ class ErrorCorrection
     /**
      * Log table.
      *
-     * @var array<int, int>
+     * @var array<int>
      */
     protected array $tlog = [];
 
     /**
      * Exponential (inverse log) table.
      *
-     * @var array<int, int>
+     * @var array<int>
      */
     protected array $texp = [];
 
@@ -90,15 +90,15 @@ class ErrorCorrection
     /**
      * Returns the Reed-Solomon Error Correction Codewords added to the input data.
      *
-     * @param array<int, int> $data   Array of data codewords to process.
+     * @param array<int> $data   Array of data codewords to process.
      * @param int   $necc   Number of error correction bytes.
      *
-     * @return array<int, int>
+     * @return array<int>
      */
     public function checkwords(array $data, int $necc): array
     {
         $coeff = $this->getCoefficients($data, $necc);
-        return array_pad($coeff, -$necc, 0);
+        return array_pad($coeff, -$necc, 0); // @phpstan-ignore return.type
     }
 
     /**
@@ -131,10 +131,10 @@ class ErrorCorrection
     /**
      * Calculates the coefficients of the error correction polynomial.
      *
-     * @param array<int, int> $data   Array of data codewords to process.
+     * @param array<int> $data   Array of data codewords to process.
      * @param int   $necc   Number of error correction bytes.
      *
-     * @return array<int, int> Array of coefficients.
+     * @return array<int> Array of coefficients.
      */
     protected function getCoefficients(array $data, int $necc): array
     {
@@ -159,10 +159,10 @@ class ErrorCorrection
     /**
      * Returns the product of two coefficient arrays.
      *
-     * @param array<int, int> $acf First array of coefficients.
-     * @param array<int, int> $bcf Second array of coefficients.
+     * @param array<int> $acf First array of coefficients.
+     * @param array<int> $bcf Second array of coefficients.
      *
-     * @return array<int, int> Array of coefficients.
+     * @return array<int> Array of coefficients.
      */
     protected function multiplyCoeff(array $acf, array $bcf): array
     {
@@ -196,9 +196,9 @@ class ErrorCorrection
     /**
      * Left-trim coefficients array.
      *
-     * @param array<int, int> $coeff Array of coefficients.
+     * @param array<int> $coeff Array of coefficients.
      *
-     * @return array<int, int> Array of coefficients.
+     * @return array<int> Array of coefficients.
      */
     protected function trimCoefficients(array $coeff): array
     {
@@ -212,11 +212,11 @@ class ErrorCorrection
     /**
      * Returns the product of a polynomial by a monomial.
      *
-     * @param array<int, int> $coeff  Array of polynomial coefficients.
+     * @param array<int> $coeff  Array of polynomial coefficients.
      * @param int   $mon    Monomial.
      * @param int   $deg    Degree of the monomial.
      *
-     * @return array<int, int> Array of coefficients.
+     * @return array<int> Array of coefficients.
      */
     protected function multiplyByMonomial(array $coeff, int $mon, int $deg): array
     {
@@ -235,10 +235,10 @@ class ErrorCorrection
     /**
      * Adds or subtracts two coefficient arrays.
      *
-     * @param array<int, int> $smaller The smaller array of coefficients.
-     * @param array<int, int> $larger  The larger array of coefficients.
+     * @param array<int> $smaller The smaller array of coefficients.
+     * @param array<int> $larger  The larger array of coefficients.
      *
-     * @return array<int, int> Array of coefficients.
+     * @return array<int> Array of coefficients.
      */
     protected function addOrSubtract(array $smaller, array $larger): array
     {

@@ -76,8 +76,8 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      *     3: LAYERS  : Custom number of layers (0 = auto).
      *     4: ECI     : Extended Channel Interpretation (ECI) code. Use -1 for FNC1. See $this->eci.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function setParameters(): void
     {

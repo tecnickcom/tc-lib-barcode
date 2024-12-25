@@ -119,7 +119,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars(): void
     {
-        $this::FORMATCode();
+        $this->formatCode();
         $chk = $this->getChecksum($this->extcode);
         $parity = $this::PARITIES[$chk];
         $seq = '1011'; // left guard bar

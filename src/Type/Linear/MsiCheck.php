@@ -113,7 +113,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars(): void
     {
-        $this::FORMATCode();
+        $this->formatCode();
         $seq = '110'; // left guard
         $clen = strlen($this->extcode);
         for ($pos = 0; $pos < $clen; ++$pos) {

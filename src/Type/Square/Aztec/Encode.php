@@ -36,7 +36,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     /**
      * Bidimensional grid containing the encoded data.
      *
-     * @var array<int, array<int, int>>
+     * @var array<int, array<int>>
      */
     protected array $grid = [];
 
@@ -77,7 +77,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     /**
      * Returns the bidimensional grid containing the encoded data.
      *
-     * @return array<int, array<int, int>>
+     * @return array<int, array<int>>
      */
     public function getGrid(): array
     {
@@ -200,8 +200,8 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      *
      * @param int $numcdw Number of data codewords.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function drawMode(int $numcdw): void
     {

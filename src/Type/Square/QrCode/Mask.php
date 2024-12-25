@@ -132,6 +132,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
         int $maskNo,
         int $level
     ): array {
+        $mask = [];
         $this->makeMaskNo($maskNo, $width, $frame, $mask);
         $this->writeFormatInformation($width, $mask, $maskNo, $level);
         return $mask;

@@ -34,7 +34,7 @@ use Com\Tecnick\Color\Pdf;
  * @license   http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link      https://github.com/tecnickcom/tc-lib-barcode
  *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
  */
 abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 {
@@ -85,8 +85,6 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 
     /**
      * Set the bars array
-     *
-     * @throws BarcodeException in case of error
      */
     protected function setBars(): void
     {
@@ -140,7 +138,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
      */
     protected function setPadding(array $padding): static
     {
-        if (! is_array($padding) || (count($padding) != 4)) {
+        if (count($padding) != 4) {
             throw new BarcodeException(
                 'Invalid padding, expecting an array of 4 numbers (top, right, bottom, left)'
             );
@@ -494,8 +492,8 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
      */
     public function getGd(): \GdImage
     {
-        $width = (int) ceil($this->width + $this->padding['L'] + $this->padding['R']);
-        $height = (int) ceil($this->height + $this->padding['T'] + $this->padding['B']);
+        $width = max(1, (int) ceil($this->width + $this->padding['L'] + $this->padding['R']));
+        $height = max(1, (int) ceil($this->height + $this->padding['T'] + $this->padding['B']));
         $img = imagecreate($width, $height);
         if ($img === false) {
             throw new BarcodeException('Unable to create GD image');
@@ -506,9 +504,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
             $rgbcolor = $bgobj->invertColor()->getNormalizedArray(255);
             $background_color = imagecolorallocate(
                 $img,
-                (int) round($rgbcolor['R']),
-                (int) round($rgbcolor['G']),
-                (int) round($rgbcolor['B']),
+                (int) round($rgbcolor['R']), // @phpstan-ignore argument.type
+                (int) round($rgbcolor['G']), // @phpstan-ignore argument.type
+                (int) round($rgbcolor['B']), // @phpstan-ignore argument.type
             );
             if ($background_color === false) {
                 throw new BarcodeException('Unable to allocate default GD background color');
@@ -518,9 +516,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
             $rgbcolor = $this->bg_color_obj->getNormalizedArray(255);
             $bg_color = imagecolorallocate(
                 $img,
-                (int) round($rgbcolor['R']),
-                (int) round($rgbcolor['G']),
-                (int) round($rgbcolor['B']),
+                (int) round($rgbcolor['R']),  // @phpstan-ignore argument.type
+                (int) round($rgbcolor['G']), // @phpstan-ignore argument.type
+                (int) round($rgbcolor['B']), // @phpstan-ignore argument.type
             );
             if ($bg_color === false) {
                 throw new BarcodeException('Unable to allocate GD background color');
@@ -531,9 +529,9 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
         $rgbcolor = $this->color_obj->getNormalizedArray(255);
         $bar_color = imagecolorallocate(
             $img,
-            (int) round($rgbcolor['R']),
-            (int) round($rgbcolor['G']),
-            (int) round($rgbcolor['B']),
+            (int) round($rgbcolor['R']), // @phpstan-ignore argument.type
+            (int) round($rgbcolor['G']), // @phpstan-ignore argument.type
+            (int) round($rgbcolor['B']), // @phpstan-ignore argument.type
         );
         if ($bar_color === false) {
             throw new BarcodeException('Unable to allocate GD foreground color');

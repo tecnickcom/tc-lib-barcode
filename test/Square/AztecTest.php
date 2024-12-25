@@ -17,6 +17,7 @@
 namespace Test\Square;
 
 use Test\TestUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * AZTEC Barcode class test
@@ -51,9 +52,7 @@ class AztecTest extends TestUtil
         $barcode->getBarcodeObj('AZTEC,100,B,F,3', $code);
     }
 
-    /**
-     * @dataProvider getGridDataProvider
-     */
+    #[DataProvider('getGridDataProvider')]
     public function testGetGrid(string $options, string $code, mixed $expected): void
     {
         $barcode = $this->getTestObject();
@@ -220,14 +219,12 @@ class AztecTest extends TestUtil
         ];
     }
 
-    /**
-     * @dataProvider getStringDataProvider
-     */
+    #[DataProvider('getStringDataProvider')]
     public function testStrings(string $code): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('AZTEC,50,B,F', $code);
-        $this->assertNotNull($type);
+        $this->assertNotNull($type); // @phpstan-ignore method.alreadyNarrowedType
     }
 
     /**

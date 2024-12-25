@@ -81,7 +81,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step K
      *
-     * @param array<int, int> $numch   Number of characters
+     * @param array<int, int|float> $numch   Number of characters
      *
      * @return int encoding mode
      */
@@ -154,7 +154,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      * Step L
      *
      * @param int $chr    Character code
-     * @param array<int, int> $numch   Number of characters
+     * @param array<int, int|float> $numch   Number of characters
      */
     protected function stepL(int $chr, array &$numch): void
     {
@@ -173,7 +173,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      * Step M
      *
      * @param int $chr    Character code
-     * @param array<int, int> $numch   Number of characters
+     * @param array<int, int|float> $numch   Number of characters
      */
     protected function stepM(int $chr, array &$numch): void
     {
@@ -190,7 +190,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      * Step N
      *
      * @param int $chr    Character code
-     * @param array<int, int> $numch   Number of characters
+     * @param array<int, int|float> $numch   Number of characters
      */
     protected function stepN(int $chr, array &$numch): void
     {
@@ -207,7 +207,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      * Step O
      *
      * @param int $chr    Character code
-     * @param array<int, int> $numch   Number of characters
+     * @param array<int, int|float> $numch   Number of characters
      */
     protected function stepO(int $chr, array &$numch): void
     {
@@ -224,7 +224,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      * Step P
      *
      * @param int $chr    Character code
-     * @param array<int, int> $numch   Number of characters
+     * @param array<int, int|float> $numch   Number of characters
      */
     protected function stepP(int $chr, array &$numch): void
     {
@@ -241,7 +241,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      * Step Q
      *
      * @param int $chr    Character code
-     * @param array<int, int> $numch   Number of characters
+     * @param array<int, int|float> $numch   Number of characters
      */
     protected function stepQ(int $chr, array &$numch): void
     {
@@ -255,7 +255,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step R-f
      *
-     * @param array<int, int> $numch   Number of characters
+     * @param array<int, int|float> $numch   Number of characters
      * @param int    $pos  Current position
      * @param int    $data_length  Data length
      * @param int    $charscount   Number of processed characters
@@ -307,7 +307,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step R
      *
-     * @param array<int, int> $numch   Number of characters
+     * @param array<int, int|float> $numch   Number of characters
      * @param int    $pos  Current position
      * @param int    $data_length  Data length
      * @param int    $charscount   Number of processed characters

@@ -31,7 +31,7 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
  */
 abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
 {
@@ -56,17 +56,17 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         $chars = array_values($chrarr);
         $chrlen = count($chars);
         if ($hint == 'B') {
-            $this->binaryEncode($chars, $chrlen);
+            $this->binaryEncode($chars, $chrlen); // @phpstan-ignore argument.type
             return;
         }
 
-        $this->autoEncode($chars, $chrlen);
+        $this->autoEncode($chars, $chrlen); // @phpstan-ignore argument.type
     }
 
     /**
      * Forced binary encoding for the given characters.
      *
-     * @param array<int, int> $chars  Integer ASCII values of the characters to encode.
+     * @param array<int> $chars  Integer ASCII values of the characters to encode.
      * @param int   $chrlen Lenght of the $chars array.
      */
     protected function binaryEncode(array $chars, int $chrlen): void
@@ -107,7 +107,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Automatic encoding for the given characters.
      *
-     * @param array<int, int> $chars  Integer ASCII values of the characters to encode.
+     * @param array<int> $chars  Integer ASCII values of the characters to encode.
      * @param int   $chrlen Lenght of the $chars array.
      */
     protected function autoEncode(array $chars, int $chrlen): void
@@ -129,7 +129,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Process mode characters.
      *
-     * @param array<int, int> $chars The array of characters.
+     * @param array<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      */
@@ -158,7 +158,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Count consecutive characters in the same mode.
      *
-     * @param array<int, int> $chars The array of characters.
+     * @param array<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      * @param int $mode The current mode.
@@ -192,7 +192,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Process consecutive binary characters.
      *
-     * @param array<int, int> $chars The array of characters.
+     * @param array<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
@@ -247,11 +247,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Count consecutive binary characters.
      *
-     * @param array<int, int> $chars The array of characters.
+     * @param array<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     protected function countBinaryChars(
         array &$chars,
@@ -278,13 +278,13 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Process consecutive special Punctuation Pairs.
      *
-     * @param array<int, int> $chars The array of characters.
+     * @param array<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
      * @return bool True if pair characters have been found and processed.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     protected function processPunctPairs(
         array &$chars,
@@ -334,7 +334,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Count consecutive special Punctuation Pairs.
      *
-     * @param array<int, int> $chars The array of characters.
+     * @param array<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      */
@@ -364,7 +364,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * Counts the number of consecutive charcters that are in both PUNCT or DIGIT modes.
      * Returns the array with the codewords.
      *
-     * @param array<int, int> &$chars The string to count the characters in.
+     * @param array<int> &$chars The string to count the characters in.
      * @param int   $idx    The starting index to count from.
      * @param int   $chrlen The length of the string to count.
      *

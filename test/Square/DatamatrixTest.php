@@ -17,6 +17,7 @@
 namespace Test\Square;
 
 use Test\TestUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Datamatrix Barcode class test
@@ -75,9 +76,7 @@ class DatamatrixTest extends TestUtil
         $encode->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
     }
 
-    /**
-     * @dataProvider getGridDataProvider
-     */
+    #[DataProvider('getGridDataProvider')]
     public function testGetGrid(string $mode, string $code, mixed $expected): void
     {
         $barcode = $this->getTestObject();
@@ -430,14 +429,12 @@ class DatamatrixTest extends TestUtil
         ];
     }
 
-    /**
-     * @dataProvider getStringDataProvider
-     */
+    #[DataProvider('getStringDataProvider')]
     public function testStrings(string $code): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('DATAMATRIX', $code);
-        $this->assertNotNull($type);
+        $this->assertNotNull($type); // @phpstan-ignore method.alreadyNarrowedType
     }
 
     /**

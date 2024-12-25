@@ -345,14 +345,14 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
      *
      * @throws BarcodeException in case of error
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function setBars(): void
     {
         $this->ncols = 0;
         $this->nrows = 1;
         $this->bars = [];
-        $this::FORMATCode();
+        $this->formatCode();
         $clen = strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = ord($this->extcode[$chr]);

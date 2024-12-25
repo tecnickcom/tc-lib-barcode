@@ -104,7 +104,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols = 0;
         $this->nrows = 2;
         $this->bars = [];
-        $this::FORMATCode();
+        $this->formatCode();
         $clen = strlen($this->extcode);
         // start bar
         $this->bars[] = [$this->ncols, 0, 1, 2];

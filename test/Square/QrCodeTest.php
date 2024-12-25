@@ -17,6 +17,7 @@
 namespace Test\Square;
 
 use Test\TestUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * QR-Code Barcode class test
@@ -51,9 +52,7 @@ class QrCodeTest extends TestUtil
         $barcode->getBarcodeObj('QRCODE', $code);
     }
 
-    /**
-     * @dataProvider getGridDataProvider
-     */
+    #[DataProvider('getGridDataProvider')]
     public function testGetGrid(string $options, string $code, mixed $expected): void
     {
         $barcode = $this->getTestObject();
@@ -349,14 +348,12 @@ class QrCodeTest extends TestUtil
         ];
     }
 
-    /**
-     * @dataProvider getStringDataProvider
-     */
+    #[DataProvider('getStringDataProvider')]
     public function testStrings(string $code): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('QRCODE,H,NL,0,1,3,1', $code);
-        $this->assertNotNull($type);
+        $this->assertNotNull($type); // @phpstan-ignore method.alreadyNarrowedType
     }
 
     /**

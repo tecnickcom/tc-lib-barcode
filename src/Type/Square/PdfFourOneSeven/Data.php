@@ -29,7 +29,7 @@ namespace Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven;
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
- * @SuppressWarnings(PHPMD.ExcessiveClassLength)
+ * @SuppressWarnings("PHPMD.ExcessiveClassLength")
  */
 abstract class Data
 {
