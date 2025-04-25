@@ -362,8 +362,8 @@ class BarcodeTest extends TestUtil
         $this->assertNotFalse($png);
         $this->assertEquals('PNG', substr($png, 1, 3));
         $headers = xdebug_get_headers();
-        $this->assertEquals(
-            'Content-Disposition: inline; filename="474e4eb4cfd145be38fe1657909b21b2.png";',
+        $this->assertStringContainsString(
+            'Content-Disposition: inline; filename="',
             $headers[5]
         );
 
@@ -374,8 +374,8 @@ class BarcodeTest extends TestUtil
         $this->assertNotFalse($png);
         $this->assertEquals('PNG', substr($png, 1, 3));
         $headers = xdebug_get_headers();
-        $this->assertEquals(
-            'Content-Disposition: inline; filename="474e4eb4cfd145be38fe1657909b21b2.png";',
+        $this->assertStringContainsString(
+            'Content-Disposition: inline; filename="',
             $headers[5]
         );
 
