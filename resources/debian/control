@@ -10,7 +10,7 @@ Vcs-Git: https://github.com/~#VENDOR#~/~#PROJECT#~.git
 Package: ~#PKGNAME#~
 Provides: php-~#PROJECT#~
 Architecture: all
-Depends: php (>= 8.1.0), php-bcmath, php-date, php-gd, php-tecnickcom-tc-lib-color (<< 3.0.0), php-tecnickcom-tc-lib-color (>= 2.2.12), ${misc:Depends}
+Depends: php (>= 8.1.0), php-bcmath, php-date, php-gd, php-tecnickcom-tc-lib-color (<< 3.0.0), php-tecnickcom-tc-lib-color (>= 2.2.13), ${misc:Depends}
 Description: PHP Barcode library
  This library includes PHP classes to generate linear
  and bidimensional barcodes:
