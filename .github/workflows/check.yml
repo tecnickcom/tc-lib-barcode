@@ -28,7 +28,7 @@ jobs:
                 os: [ubuntu-latest]
                 coverage-extension: [xdebug]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
             - name: Use php ${{ matrix.php-version }}
               uses: shivammathur/setup-php@v2
               with:
