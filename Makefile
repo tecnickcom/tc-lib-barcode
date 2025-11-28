@@ -141,7 +141,7 @@ clean:
 .PHONY: codefix
 codefix:
 	./vendor/bin/phpcbf --config-set ignore_non_auto_fixable_on_exit 1
-	./vendor/bin/phpcbf --ignore="./vendor/" --standard=psr12 src test
+	./vendor/bin/phpcbf --ignore="\./vendor/" --standard=psr12 src test
 
 # Build a DEB package for Debian-like Linux distributions
 .PHONY: deb
@@ -214,7 +214,7 @@ endif
 # Test source code for coding standard violations
 .PHONY: lint
 lint:
-	./vendor/bin/phpcs --ignore="./vendor/" --standard=phpcs.xml src test
+	./vendor/bin/phpcs --ignore="\./vendor/" --standard=phpcs.xml src test
 	./vendor/bin/phpmd src text codesize,unusedcode,naming,design --exclude */vendor/*
 	./vendor/bin/phpmd test text unusedcode,naming,design --exclude */vendor/*
 	php -r 'exit((int)version_compare(PHP_MAJOR_VERSION, "7", ">"));' || ./vendor/phpstan.phar analyse
