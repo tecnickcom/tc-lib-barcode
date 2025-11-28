@@ -93,7 +93,18 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
             return false;
         }
 
-        $this->layer = $this->compact ? Data::SIZE_COMPACT[$this->numlayers] : Data::SIZE_FULL[$this->numlayers];
+        if ($this->compact) {
+            if (empty(Data::SIZE_COMPACT[$this->numlayers])) {
+                return false;
+            }
+            $this->layer = Data::SIZE_COMPACT[$this->numlayers];
+            return true;
+        }
+
+        if (empty(Data::SIZE_FULL[$this->numlayers])) {
+            return false;
+        }
+        $this->layer = Data::SIZE_FULL[$this->numlayers];
         return true;
     }
 

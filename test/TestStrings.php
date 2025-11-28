@@ -34,6 +34,8 @@ class TestStrings
      * Array containing testing strings.
      *
      * @var array<array{string}>
+     *
+     * @phpcs:disable Generic.Files.LineLength.TooLong
      */
     public static $data = [
         // Reserved keywords

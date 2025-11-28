@@ -97,7 +97,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function maximumWords(int $mode, int $version): int
     {
-        if ($mode == Data::ENC_MODES['ST']) {
+        if (($mode == Data::ENC_MODES['ST']) || ($mode < Data::ENC_MODES['NL']) || ($mode > Data::ENC_MODES['ST'])) {
             return 3;
         }
 

@@ -156,7 +156,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         $row %= 6;
         $col %= 6;
         $check = array_keys($this::CHKSUM, $row . $col);
-        return $check[0];
+        return intval($check[0]);
     }
 
     /**

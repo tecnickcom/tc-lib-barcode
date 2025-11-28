@@ -66,7 +66,7 @@ abstract class Estimate
      */
     public function getLengthIndicator(int $mode, int $version): int
     {
-        if ($mode == Data::ENC_MODES['ST']) {
+        if (($mode == Data::ENC_MODES['ST']) || ($mode < Data::ENC_MODES['NL']) || ($mode > Data::ENC_MODES['ST'])) {
             return 0;
         }
 

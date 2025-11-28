@@ -51,7 +51,12 @@ abstract class MaskNum
         for ($ypos = 0; $ypos < $width; ++$ypos) {
             for ($xpos = 0; $xpos < $width; ++$xpos) {
                 if ($bitMask[$ypos][$xpos] == 1) {
-                    $mask[$ypos][$xpos] = chr(ord($frame[$ypos][$xpos]) ^ ((int) ($bitMask[$ypos][$xpos])));
+                    $mask[$ypos] = substr_replace(
+                        $mask[$ypos],
+                        chr(ord($frame[$ypos][$xpos]) ^ ((int) ($bitMask[$ypos][$xpos]))),
+                        $xpos,
+                        1
+                    );
                 }
 
                 $bnum += ord($mask[$ypos][$xpos]) & 1;

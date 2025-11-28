@@ -145,6 +145,8 @@ abstract class SpecRs
      * @param int $version Version
      *
      * @return array<int, string> of unsigned char.
+     *
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function createFrame(int $version): array
     {
@@ -158,9 +160,24 @@ abstract class SpecRs
         // Separator
         $yOffset = $width - 7;
         for ($ypos = 0; $ypos < 7; ++$ypos) {
-            $frame[$ypos][7] = "\xc0";
-            $frame[$ypos][$width - 8] = "\xc0";
-            $frame[$yOffset][7] = "\xc0";
+            $frame[$ypos] = substr_replace(
+                $frame[$ypos],
+                "\xc0",
+                7,
+                1,
+            );
+            $frame[$ypos] = substr_replace(
+                $frame[$ypos],
+                "\xc0",
+                ($width - 8),
+                1,
+            );
+            $frame[$yOffset] = substr_replace(
+                $frame[$yOffset],
+                "\xc0",
+                7,
+                1,
+            );
             ++$yOffset;
         }
 
@@ -175,15 +192,35 @@ abstract class SpecRs
 
         $yOffset = $width - 8;
         for ($ypos = 0; $ypos < 8; ++$ypos, ++$yOffset) {
-            $frame[$ypos][8] = "\x84";
-            $frame[$yOffset][8] = "\x84";
+            $frame[$ypos] = substr_replace(
+                $frame[$ypos],
+                "\x84",
+                8,
+                1,
+            );
+            $frame[$yOffset] = substr_replace(
+                $frame[$yOffset],
+                "\x84",
+                8,
+                1,
+            );
         }
 
         // Timing pattern
         $wdo = $width - 15;
         for ($idx = 1; $idx < $wdo; ++$idx) {
-            $frame[6][(7 + $idx)] = chr(0x90 | ($idx & 1));
-            $frame[(7 + $idx)][6] = chr(0x90 | ($idx & 1));
+            $frame[6] = substr_replace(
+                $frame[6],
+                chr(0x90 | ($idx & 1)),
+                (7 + $idx),
+                1,
+            );
+            $frame[(7 + $idx)] = substr_replace(
+                $frame[(7 + $idx)],
+                chr(0x90 | ($idx & 1)),
+                6,
+                1,
+            );
         }
 
         // Alignment pattern
@@ -194,7 +231,12 @@ abstract class SpecRs
             $val = $vinf;
             for ($xpos = 0; $xpos < 6; ++$xpos) {
                 for ($ypos = 0; $ypos < 3; ++$ypos) {
-                    $frame[(($width - 11) + $ypos)][$xpos] = chr(0x88 | ($val & 1));
+                    $frame[(($width - 11) + $ypos)] = substr_replace(
+                        $frame[(($width - 11) + $ypos)],
+                        chr(0x88 | ($val & 1)),
+                        $xpos,
+                        1,
+                    );
                     $val >>= 1;
                 }
             }
@@ -202,14 +244,24 @@ abstract class SpecRs
             $val = $vinf;
             for ($ypos = 0; $ypos < 6; ++$ypos) {
                 for ($xpos = 0; $xpos < 3; ++$xpos) {
-                    $frame[$ypos][($xpos + ($width - 11))] = chr(0x88 | ($val & 1));
+                    $frame[$ypos] = substr_replace(
+                        $frame[$ypos],
+                        chr(0x88 | ($val & 1)),
+                        ($xpos + ($width - 11)),
+                        1,
+                    );
                     $val >>= 1;
                 }
             }
         }
 
         // and a little bit...
-        $frame[$width - 8][8] = "\x81";
+        $frame[($width - 8)] = substr_replace(
+            $frame[($width - 8)],
+            "\x81",
+            8,
+            1,
+        );
         return $frame;
     }
 

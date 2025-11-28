@@ -98,7 +98,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
 
         // encoding
         if (isset($this->params[2])) {
-            $this->defenc = Data::ENCOPTS[$this->params[2]] ?? Data::ENC_ASCII;
+            $this->defenc = Data::ENCOPTS[strval($this->params[2])] ?? Data::ENC_ASCII;
         }
     }
 
@@ -212,7 +212,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                 $cdw_id = (floor($places[$idx] / 10) - 1);
                 // codeword BIT mask
                 $cdw_bit = 2 ** (8 - ($places[$idx] % 10));
-                $this->grid[$row][$col] = (($this->cdw[$cdw_id] & $cdw_bit) == 0) ? 0 : 1;
+                $this->grid[$row][$col] = (($this->cdw[intval($cdw_id)] & $cdw_bit) == 0) ? 0 : 1;
             }
 
             ++$idx;

@@ -164,12 +164,26 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
             } else {
                 $val = 0x84;
             }
-
-            $frame[8][($width - 1 - $idx)] = chr($val);
+            $frame[8] = substr_replace(
+                $frame[8],
+                chr($val),
+                ($width - 1 - $idx),
+                1,
+            );
             if ($idx < 6) {
-                $frame[$idx][8] = chr($val);
+                $frame[$idx] = substr_replace(
+                    $frame[$idx],
+                    chr($val),
+                    8,
+                    1,
+                );
             } else {
-                $frame[($idx + 1)][8] = chr($val);
+                $frame[($idx + 1)] = substr_replace(
+                    $frame[($idx + 1)],
+                    chr($val),
+                    8,
+                    1,
+                );
             }
 
             $format >>= 1;
@@ -182,12 +196,26 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
             } else {
                 $val = 0x84;
             }
-
-            $frame[($width - 7 + $idx)][8] = chr($val);
+            $frame[($width - 7 + $idx)] = substr_replace(
+                $frame[($width - 7 + $idx)],
+                chr($val),
+                8,
+                1,
+            );
             if ($idx == 0) {
-                $frame[8][7] = chr($val);
+                $frame[8] = substr_replace(
+                    $frame[8],
+                    chr($val),
+                    7,
+                    1,
+                );
             } else {
-                $frame[8][(6 - $idx)] = chr($val);
+                $frame[8] = substr_replace(
+                    $frame[8],
+                    chr($val),
+                    (6 - $idx),
+                    1,
+                );
             }
 
             $format >>= 1;

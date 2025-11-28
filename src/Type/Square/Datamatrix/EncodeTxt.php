@@ -51,21 +51,29 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         if (isset(Data::CHSET['SH1'][$chr])) {
             $temp_cw[] = 0; // shift 1
             $shiftset = Data::CHSET['SH1'];
+            $ptr++;
         } elseif (isset(Data::CHSET['SH2'][$chr])) {
             $temp_cw[] = 1; // shift 2
             $shiftset = Data::CHSET['SH2'];
+            $ptr++;
         } elseif (($enc == Data::ENC_C40) && isset(Data::CHSET['S3C'][$chr])) {
             $temp_cw[] = 2; // shift 3
             $shiftset = Data::CHSET['S3C'];
+            $ptr++;
         } elseif (($enc == Data::ENC_TXT) && isset(Data::CHSET['S3T'][$chr])) {
             $temp_cw[] = 2; // shift 3
             $shiftset = Data::CHSET['S3T'];
+            $ptr++;
         } else {
             throw new BarcodeException('Error');
         }
 
+        if (!isset($shiftset[$chr])) {
+            throw new BarcodeException('TXTC40 Shift Error');
+        }
+
         $temp_cw[] = $shiftset[$chr];
-        $ptr += 2;
+        $ptr++;
     }
 
     /**

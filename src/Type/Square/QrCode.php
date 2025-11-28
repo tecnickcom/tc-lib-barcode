@@ -110,22 +110,22 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
         // level
         if (
             ! isset($this->params[0])
-            || ! isset(Data::ECC_LEVELS[$this->params[0]])
+            || ! isset(Data::ECC_LEVELS[strval($this->params[0])])
         ) {
             $this->params[0] = 'L';
         }
 
-        $this->level = Data::ECC_LEVELS[$this->params[0]];
+        $this->level = Data::ECC_LEVELS[strval($this->params[0])];
 
         // hint
         if (
             ! isset($this->params[1])
-            || ! isset(Data::ENC_MODES[$this->params[1]])
+            || ! isset(Data::ENC_MODES[strval($this->params[1])])
         ) {
             $this->params[1] = '8B';
         }
 
-        $this->hint = Data::ENC_MODES[$this->params[1]];
+        $this->hint = Data::ENC_MODES[strval($this->params[1])];
 
         // version
         if (

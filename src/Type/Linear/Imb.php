@@ -509,14 +509,14 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         // convert binary data to codewords
         $codewords = [];
         $data = $this->convertHexToDec($binary_code_102bit);
-        $codewords[0] = bcmod($data, '636') * 2;
+        $codewords[0] = (int) bcmod($data, '636') * 2;
         $data = bcdiv($data, '636');
         for ($pos = 1; $pos < 9; ++$pos) {
-            $codewords[$pos] = bcmod($data, '1365');
+            $codewords[$pos] = (int) bcmod($data, '1365');
             $data = bcdiv($data, '1365');
         }
 
-        $codewords[9] = $data;
+        $codewords[9] = (int) $data;
         if (($fcs >> 10) == 1) {
             $codewords[9] += 659;
         }

@@ -177,7 +177,7 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
 
             $tdg = '1' . $code;
             do {
-                $ddg = bcmod($tdg, '900');
+                $ddg = (int) bcmod($tdg, '900');
                 $tdg = bcdiv($tdg, '900');
                 array_unshift($codewords, $ddg);
             } while ($tdg != '0');
