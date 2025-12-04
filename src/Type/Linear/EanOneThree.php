@@ -128,7 +128,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     protected function getChecksum(string $code): int
     {
         $data_len = ($this->code_length - 1);
-        $code_len = strlen($code);
+        $code_len = \strlen($code);
         $sum_a = 0;
         for ($pos = 1; $pos < $data_len; $pos += 2) {
             $sum_a += (int) $code[$pos];
@@ -170,7 +170,7 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode(): void
     {
-        $code = str_pad($this->code, ($this->code_length - 1), '0', STR_PAD_LEFT);
+        $code = \str_pad($this->code, ($this->code_length - 1), '0', STR_PAD_LEFT);
         $this->extcode = $code . $this->getChecksum($code);
     }
 
@@ -181,13 +181,13 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars(): void
     {
-        if (! is_numeric($this->code)) {
+        if (! \is_numeric($this->code)) {
             throw new BarcodeException('Input code must be a number');
         }
 
         $this->formatCode();
         $seq = '101'; // left guard bar
-        $half_len = (int) ceil($this->code_length / 2);
+        $half_len = (int) \ceil($this->code_length / 2);
         $parity = $this::PARITIES[$this->extcode[0]];
         for ($pos = 1; $pos < $half_len; ++$pos) {
             $seq .= $this::CHBAR[$parity[($pos - 1)]][$this->extcode[$pos]];

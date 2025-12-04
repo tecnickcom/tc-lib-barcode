@@ -299,13 +299,13 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
     protected function getChecksum(string $code): string
     {
         // translate special characters
-        $code = strtr($code, chr(128) . chr(131) . chr(129) . chr(130), '<=>?');
-        $clen = strlen($code);
+        $code = \strtr($code, \chr(128) . \chr(131) . \chr(129) . \chr(130), '<=>?');
+        $clen = \strlen($code);
         // calculate check digit C
         $pck = 1;
         $check = 0;
         for ($idx = ($clen - 1); $idx >= 0; --$idx) {
-            $key = array_keys($this::CHKSUM, $code[$idx]);
+            $key = \array_keys($this::CHKSUM, $code[$idx]);
             $check += ($key[0] * $pck);
             ++$pck;
             if ($pck > 20) {
@@ -320,7 +320,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         $pck = 1;
         $check = 0;
         for ($idx = $clen; $idx >= 0; --$idx) {
-            $key = array_keys($this::CHKSUM, $code[$idx]);
+            $key = \array_keys($this::CHKSUM, $code[$idx]);
             $check += ($key[0] * $pck);
             ++$pck;
             if ($pck > 15) {
@@ -332,10 +332,10 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         $key = $this::CHKSUM[$check];
         $checksum = $chk . $key;
         // restore special characters
-        $checksum = strtr(
+        $checksum = \strtr(
             $checksum,
             '<=>?',
-            chr(128) . chr(131) . chr(129) . chr(130)
+            \chr(128) . \chr(131) . \chr(129) . \chr(130)
         );
         return $checksum;
     }
@@ -353,9 +353,9 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         $this->nrows = 1;
         $this->bars = [];
         $this->formatCode();
-        $clen = strlen($this->extcode);
+        $clen = \strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
-            $char = ord($this->extcode[$chr]);
+            $char = \ord($this->extcode[$chr]);
             for ($pos = 0; $pos < 6; ++$pos) {
                 $bar_width = (int) $this::CHBAR[$char][$pos];
                 if (($pos % 2) == 0) {

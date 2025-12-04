@@ -55,7 +55,7 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
     {
         $this->formatCode();
         $seq = '101'; // left guard bar
-        $half_len = (int) ceil($this->code_length / 2);
+        $half_len = (int) \ceil($this->code_length / 2);
         for ($pos = 0; $pos < $half_len; ++$pos) {
             $seq .= $this::CHBAR['A'][$this->extcode[$pos]];
         }

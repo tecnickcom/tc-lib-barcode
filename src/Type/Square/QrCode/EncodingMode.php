@@ -65,7 +65,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
     protected function getEncodingModeKj(string $data, int $pos): int
     {
         if (($this->hint == Data::ENC_MODES['KJ']) && isset($data[($pos + 1)])) {
-            $word = ((ord($data[$pos]) << 8) | ord($data[($pos + 1)]));
+            $word = ((\ord($data[$pos]) << 8) | \ord($data[($pos + 1)]));
             if ((($word >= 0x8140) && ($word <= 0x9ffc)) || (($word >= 0xe040) && ($word <= 0xebbf))) {
                 return Data::ENC_MODES['KJ'];
             }
@@ -86,7 +86,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
             return false;
         }
 
-        return ((ord($str[$pos]) >= ord('0')) && (ord($str[$pos]) <= ord('9')));
+        return ((\ord($str[$pos]) >= \ord('0')) && (\ord($str[$pos]) <= \ord('9')));
     }
 
     /**
@@ -101,7 +101,7 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
             return false;
         }
 
-        return ($this->lookAnTable(ord($str[$pos])) >= 0);
+        return ($this->lookAnTable(\ord($str[$pos])) >= 0);
     }
 
     /**
@@ -114,15 +114,15 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      */
     protected function appendBitstream(array $bitstream, array $append): array
     {
-        if (count($append) == 0) {
+        if (\count($append) == 0) {
             return $bitstream;
         }
 
-        if (count($bitstream) == 0) {
+        if (\count($bitstream) == 0) {
             return $append;
         }
 
-        return array_values(array_merge($bitstream, $append));
+        return \array_values(\array_merge($bitstream, $append));
     }
 
     /**
@@ -216,6 +216,6 @@ abstract class EncodingMode extends \Com\Tecnick\Barcode\Type\Square\QrCode\Inpu
      */
     protected function allocate(int $setLength): array
     {
-        return array_fill(0, $setLength, 0);
+        return \array_fill(0, $setLength, 0);
     }
 }

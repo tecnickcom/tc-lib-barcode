@@ -61,6 +61,6 @@ class CodeOneOneTest extends TestUtil
     {
         $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $barcode->getBarcodeObj('CODE11', chr(255));
+        $barcode->getBarcodeObj('CODE11', \chr(255));
     }
 }

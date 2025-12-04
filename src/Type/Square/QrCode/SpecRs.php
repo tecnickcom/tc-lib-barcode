@@ -151,8 +151,8 @@ abstract class SpecRs
     public function createFrame(int $version): array
     {
         $width = Data::CAPACITY[$version][Data::QRCAP_WIDTH];
-        $frameLine = str_repeat("\0", $width);
-        $frame = array_fill(0, $width, $frameLine);
+        $frameLine = \str_repeat("\0", $width);
+        $frame = \array_fill(0, $width, $frameLine);
         // Finder pattern
         $frame = $this->putFinderPattern($frame, 0, 0);
         $frame = $this->putFinderPattern($frame, $width - 7, 0);
@@ -160,19 +160,19 @@ abstract class SpecRs
         // Separator
         $yOffset = $width - 7;
         for ($ypos = 0; $ypos < 7; ++$ypos) {
-            $frame[$ypos] = substr_replace(
+            $frame[$ypos] = \substr_replace(
                 $frame[$ypos],
                 "\xc0",
                 7,
                 1,
             );
-            $frame[$ypos] = substr_replace(
+            $frame[$ypos] = \substr_replace(
                 $frame[$ypos],
                 "\xc0",
                 ($width - 8),
                 1,
             );
-            $frame[$yOffset] = substr_replace(
+            $frame[$yOffset] = \substr_replace(
                 $frame[$yOffset],
                 "\xc0",
                 7,
@@ -181,24 +181,24 @@ abstract class SpecRs
             ++$yOffset;
         }
 
-        $setPattern = str_repeat("\xc0", 8);
+        $setPattern = \str_repeat("\xc0", 8);
         $frame = $this->qrstrset($frame, 0, 7, $setPattern);
         $frame = $this->qrstrset($frame, $width - 8, 7, $setPattern);
         $frame = $this->qrstrset($frame, 0, $width - 8, $setPattern);
         // Format info
-        $setPattern = str_repeat("\x84", 9);
+        $setPattern = \str_repeat("\x84", 9);
         $frame = $this->qrstrset($frame, 0, 8, $setPattern);
         $frame = $this->qrstrset($frame, $width - 8, 8, $setPattern, 8);
 
         $yOffset = $width - 8;
         for ($ypos = 0; $ypos < 8; ++$ypos, ++$yOffset) {
-            $frame[$ypos] = substr_replace(
+            $frame[$ypos] = \substr_replace(
                 $frame[$ypos],
                 "\x84",
                 8,
                 1,
             );
-            $frame[$yOffset] = substr_replace(
+            $frame[$yOffset] = \substr_replace(
                 $frame[$yOffset],
                 "\x84",
                 8,
@@ -209,15 +209,15 @@ abstract class SpecRs
         // Timing pattern
         $wdo = $width - 15;
         for ($idx = 1; $idx < $wdo; ++$idx) {
-            $frame[6] = substr_replace(
+            $frame[6] = \substr_replace(
                 $frame[6],
-                chr(0x90 | ($idx & 1)),
+                \chr(0x90 | ($idx & 1)),
                 (7 + $idx),
                 1,
             );
-            $frame[(7 + $idx)] = substr_replace(
+            $frame[(7 + $idx)] = \substr_replace(
                 $frame[(7 + $idx)],
-                chr(0x90 | ($idx & 1)),
+                \chr(0x90 | ($idx & 1)),
                 6,
                 1,
             );
@@ -231,9 +231,9 @@ abstract class SpecRs
             $val = $vinf;
             for ($xpos = 0; $xpos < 6; ++$xpos) {
                 for ($ypos = 0; $ypos < 3; ++$ypos) {
-                    $frame[(($width - 11) + $ypos)] = substr_replace(
+                    $frame[(($width - 11) + $ypos)] = \substr_replace(
                         $frame[(($width - 11) + $ypos)],
-                        chr(0x88 | ($val & 1)),
+                        \chr(0x88 | ($val & 1)),
                         $xpos,
                         1,
                     );
@@ -244,9 +244,9 @@ abstract class SpecRs
             $val = $vinf;
             for ($ypos = 0; $ypos < 6; ++$ypos) {
                 for ($xpos = 0; $xpos < 3; ++$xpos) {
-                    $frame[$ypos] = substr_replace(
+                    $frame[$ypos] = \substr_replace(
                         $frame[$ypos],
-                        chr(0x88 | ($val & 1)),
+                        \chr(0x88 | ($val & 1)),
                         ($xpos + ($width - 11)),
                         1,
                     );
@@ -256,7 +256,7 @@ abstract class SpecRs
         }
 
         // and a little bit...
-        $frame[($width - 8)] = substr_replace(
+        $frame[($width - 8)] = \substr_replace(
             $frame[($width - 8)],
             "\x81",
             8,
@@ -283,11 +283,11 @@ abstract class SpecRs
         string $repl,
         ?int $replLen = null
     ): array {
-        $srctab[$ypos] = substr_replace(
+        $srctab[$ypos] = \substr_replace(
             $srctab[$ypos],
-            ($replLen !== null) ? substr($repl, 0, $replLen) : $repl,
+            ($replLen !== null) ? \substr($repl, 0, $replLen) : $repl,
             $xpos,
-            $replLen ?? strlen($repl)
+            $replLen ?? \strlen($repl)
         );
         return $srctab;
     }

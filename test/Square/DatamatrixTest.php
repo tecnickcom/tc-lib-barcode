@@ -48,7 +48,7 @@ class DatamatrixTest extends TestUtil
     {
         $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $code = str_pad('', 3000, 'X');
+        $code = \str_pad('', 3000, 'X');
         $barcode->getBarcodeObj('DATAMATRIX', $code);
     }
 
@@ -82,7 +82,7 @@ class DatamatrixTest extends TestUtil
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj($mode, $code);
         $grid = $type->getGrid();
-        $this->assertEquals($expected, md5($grid));
+        $this->assertEquals($expected, \md5($grid));
     }
 
     /**
@@ -291,7 +291,7 @@ class DatamatrixTest extends TestUtil
             ],
             [
                 'DATAMATRIX',
-                str_pad('', 300, "\xFE\xFD\xFC\xFB"),
+                \str_pad('', 300, "\xFE\xFD\xFC\xFB"),
                 'e524bb17821d0461f3db6f313d35018f',
             ],
             [

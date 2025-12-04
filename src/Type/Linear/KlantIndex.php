@@ -46,7 +46,7 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
      */
     protected function formatCode(): void
     {
-        $this->extcode = strtoupper($this->code);
+        $this->extcode = \strtoupper($this->code);
     }
 
     /**

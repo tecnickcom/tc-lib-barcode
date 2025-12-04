@@ -57,7 +57,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
      */
     protected function getMinLayers(array $data, int $numbits): int
     {
-        if ($numbits <= $data[count($data)][3]) {
+        if ($numbits <= $data[\count($data)][3]) {
             foreach ($data as $numlayers => $size) {
                 if ($numbits <= $size[3]) {
                     return $numlayers;

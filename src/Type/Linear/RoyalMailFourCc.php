@@ -142,11 +142,11 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     {
         $row = 0;
         $col = 0;
-        $len = strlen($code);
+        $len = \strlen($code);
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
             if (! isset($this::CHKSUM[$char])) {
-                throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . \ord($char) . ')');
             }
 
             $row += (int) $this::CHKSUM[$char][0];
@@ -155,8 +155,8 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
 
         $row %= 6;
         $col %= 6;
-        $check = array_keys($this::CHKSUM, $row . $col);
-        return intval($check[0]);
+        $check = \array_keys($this::CHKSUM, $row . $col);
+        return \intval($check[0]);
     }
 
     /**
@@ -164,7 +164,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode(): void
     {
-        $code = strtoupper($this->code);
+        $code = \strtoupper($this->code);
         $this->extcode = $code . $this->getChecksum($code);
     }
 
@@ -176,7 +176,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
     protected function getCoreBars(): void
     {
         $this->formatCode();
-        $clen = strlen($this->extcode);
+        $clen = \strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             for ($pos = 0; $pos < 4; ++$pos) {

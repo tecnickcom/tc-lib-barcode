@@ -58,6 +58,6 @@ class CodeNineThreeTest extends TestUtil
     {
         $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $barcode->getBarcodeObj('C93', chr(255));
+        $barcode->getBarcodeObj('C93', \chr(255));
     }
 }

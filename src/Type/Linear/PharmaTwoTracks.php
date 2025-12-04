@@ -67,11 +67,11 @@ class PharmaTwoTracks extends \Com\Tecnick\Barcode\Type\Linear
             }
         } while ($code != 0);
 
-        $seq = strrev($seq);
+        $seq = \strrev($seq);
         $this->ncols = 0;
         $this->nrows = 2;
         $this->bars = [];
-        $len = strlen($seq);
+        $len = \strlen($seq);
         for ($pos = 0; $pos < $len; ++$pos) {
             switch ($seq[$pos]) {
                 case '1':

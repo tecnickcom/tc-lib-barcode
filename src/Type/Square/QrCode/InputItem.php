@@ -84,9 +84,9 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
         array $data,
         array $bstream = []
     ): array {
-        $setData = array_slice($data, 0, $size);
-        if (count($setData) < $size) {
-            $setData = array_merge($setData, array_fill(0, ($size - count($setData)), '0'));
+        $setData = \array_slice($data, 0, $size);
+        if (\count($setData) < $size) {
+            $setData = \array_merge($setData, \array_fill(0, ($size - \count($setData)), '0'));
         }
 
         if (! $this->check($mode, $size, $setData)) {
@@ -140,7 +140,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
     protected function checkModeNum(int $size, array $data): bool
     {
         for ($idx = 0; $idx < $size; ++$idx) {
-            if ((ord($data[$idx]) < ord('0')) || (ord($data[$idx]) > ord('9'))) {
+            if ((\ord($data[$idx]) < \ord('0')) || (\ord($data[$idx]) > \ord('9'))) {
                 return false;
             }
         }
@@ -159,7 +159,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
     protected function checkModeAn(int $size, array $data): bool
     {
         for ($idx = 0; $idx < $size; ++$idx) {
-            if ($this->lookAnTable(ord($data[$idx])) == -1) {
+            if ($this->lookAnTable(\ord($data[$idx])) == -1) {
                 return false;
             }
         }
@@ -182,7 +182,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
         }
 
         for ($idx = 0; $idx < $size; $idx += 2) {
-            $val = (ord($data[$idx]) << 8) | ord($data[($idx + 1)]);
+            $val = (\ord($data[$idx]) << 8) | \ord($data[($idx + 1)]);
             if (($val < 0x8140) || (($val > 0x9ffc) && ($val < 0xe040)) || ($val > 0xebbf)) {
                 return false;
             }

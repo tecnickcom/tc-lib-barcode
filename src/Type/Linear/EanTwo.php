@@ -109,7 +109,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode(): void
     {
-        $this->extcode = str_pad($this->code, $this->code_length, '0', STR_PAD_LEFT);
+        $this->extcode = \str_pad($this->code, $this->code_length, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -124,7 +124,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
         $parity = $this::PARITIES[$chk];
         $seq = '1011'; // left guard bar
         $seq .= $this::CHBAR[$parity[0]][$this->extcode[0]];
-        $len = strlen($this->extcode);
+        $len = \strlen($this->extcode);
         for ($pos = 1; $pos < $len; ++$pos) {
             $seq .= '01'; // separator
             $seq .= $this::CHBAR[$parity[$pos]][$this->extcode[$pos]];

@@ -74,16 +74,16 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getChecksum(string $code): int
     {
-        $clen = strlen($code);
+        $clen = \strlen($code);
         $pix = 2;
         $check = 0;
         for ($pos = ($clen - 1); $pos >= 0; --$pos) {
             $hex = $code[$pos];
-            if (! ctype_xdigit($hex)) {
+            if (! \ctype_xdigit($hex)) {
                 continue;
             }
 
-            $check += (hexdec($hex) * $pix);
+            $check += (\hexdec($hex) * $pix);
             ++$pix;
             if ($pix > 7) {
                 $pix = 2;
@@ -115,11 +115,11 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
     {
         $this->formatCode();
         $seq = '110'; // left guard
-        $clen = strlen($this->extcode);
+        $clen = \strlen($this->extcode);
         for ($pos = 0; $pos < $clen; ++$pos) {
             $digit = $this->extcode[$pos];
             if (! isset($this::CHBAR[$digit])) {
-                throw new BarcodeException('Invalid character: chr(' . ord($digit) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . \ord($digit) . ')');
             }
 
             $seq .= $this::CHBAR[$digit];

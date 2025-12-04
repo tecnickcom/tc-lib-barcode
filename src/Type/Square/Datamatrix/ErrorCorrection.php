@@ -82,7 +82,7 @@ class ErrorCorrection
         $this->genLogs($log, $alog, $ngf, $vpp);
 
         // generate the polynomial coefficients (c)
-        $plc = array_fill(0, ($ncc + 1), 0);
+        $plc = \array_fill(0, ($ncc + 1), 0);
         $plc[0] = 1;
         for ($i = 1; $i <= $ncc; ++$i) {
             $plc[$i] = $plc[($i - 1)];
@@ -93,7 +93,7 @@ class ErrorCorrection
             $plc[0] = $this->getGFProduct($plc[0], $alog[$i], $log, $alog, $ngf);
         }
 
-        ksort($plc);
+        \ksort($plc);
 
         // total number of data codewords
         $num_wd = ($nbk * $ncw);
@@ -108,7 +108,7 @@ class ErrorCorrection
             }
 
             // initialize error codewords
-            $wec = array_fill(0, ($ncc + 1), 0);
+            $wec = \array_fill(0, ($ncc + 1), 0);
             // calculate error correction codewords for this block
             for ($i = 0; $i < $ncw; ++$i) {
                 $ker = ($wec[0] ^ $block[$i]);
@@ -126,7 +126,7 @@ class ErrorCorrection
         }
 
         // reorder codewords
-        ksort($wdc);
+        \ksort($wdc);
         return $wdc;
     }
 
@@ -153,6 +153,6 @@ class ErrorCorrection
             $log[$alog[$i]] = $i;
         }
 
-        ksort($log);
+        \ksort($log);
     }
 }

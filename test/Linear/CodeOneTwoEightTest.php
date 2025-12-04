@@ -114,13 +114,13 @@ class CodeOneTwoEightTest extends TestUtil
             . "000110010011101011001000011011100100100001101001100011101011\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $barcode->getBarcodeObj('C128', chr(241) . '0000801234999999999');
+        $bobj = $barcode->getBarcodeObj('C128', \chr(241) . '0000801234999999999');
         $grid = $bobj->getGrid();
         $expected = "1101001000011110101110100111011001011101111011011001100100011001001100110110011101101"
             . "1101101000111010111011110101110111101011101111010111011110110100010001100011101011\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $barcode->getBarcodeObj('C128', chr(241) . "000000\tABCDEF");
+        $bobj = $barcode->getBarcodeObj('C128', \chr(241) . "000000\tABCDEF");
         $grid = $bobj->getGrid();
         $expected = "1101001110011110101110111101011101101100110011011001100110110011001110101111010000110100101000"
             . "110001000101100010001000110101100010001000110100010001100010100001100101100011101011\n";
@@ -146,7 +146,7 @@ class CodeOneTwoEightTest extends TestUtil
             . "01011\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $barcode->getBarcodeObj('C128', chr(241) . "\tABCD");
+        $bobj = $barcode->getBarcodeObj('C128', \chr(241) . "\tABCD");
         $grid = $bobj->getGrid();
         $expected = "1101000010011110101110111101011101000011010010100011000100010110001000100011010110001000110111"
             . "011101100011101011\n";
@@ -157,13 +157,13 @@ class CodeOneTwoEightTest extends TestUtil
         $expected = "11010000100100001101001111010001010010110000110111000101100011101011\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $barcode->getBarcodeObj('C128', chr(241) . '00123456780000000001');
+        $bobj = $barcode->getBarcodeObj('C128', \chr(241) . '00123456780000000001');
         $grid = $bobj->getGrid();
         $expected = "1101001110011110101110111101011101101100110010110011100100010110001110001011011000010100110110"
                     . "0110011011001100110110011001101100110011001101100100101111001100011101011\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $barcode->getBarcodeObj('C128', chr(241) . '42029651' . chr(241) . '9405510200864168997758');
+        $bobj = $barcode->getBarcodeObj('C128', \chr(241) . '42029651' . \chr(241) . '9405510200864168997758');
         $grid = $bobj->getGrid();
         $expected = "11010011100111101011101111010111010110111000110011001101011110001011011101000101111011101111010"
                     . "1110101110111101000101111010001001100110111010001100110011011011001100111101001001100010001010"

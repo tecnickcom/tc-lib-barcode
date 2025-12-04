@@ -107,8 +107,8 @@ class Barcode
         array $padding = [0, 0, 0, 0]
     ): Model {
         // extract extra parameters (if any)
-        $params = explode(',', $type);
-        $type = array_shift($params);
+        $params = \explode(',', $type);
+        $type = \array_shift($params);
 
         $bclass = match ($type) {
             'C128' => 'Linear\\CodeOneTwoEight',           // CODE 128

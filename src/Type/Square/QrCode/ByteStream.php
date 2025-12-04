@@ -94,7 +94,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
             return [];
         }
 
-        $bits = count($bstream);
+        $bits = \count($bstream);
         $spec = new Spec();
         $maxwords = $spec->getDataLength($this->version, $this->level);
         $maxbits = $maxwords * 8;
@@ -133,12 +133,12 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
      */
     protected function bitstreamToByte(array $bstream): array
     {
-        $size = count($bstream);
+        $size = \count($bstream);
         if ($size == 0) {
             return [];
         }
 
-        $data = array_fill(0, (int) (($size + 7) / 8), 0);
+        $data = \array_fill(0, (int) (($size + 7) / 8), 0);
         $bytes = (int) ($size / 8);
         $pos = 0;
         for ($idx = 0; $idx < $bytes; ++$idx) {
@@ -214,7 +214,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
         $total = 0;
         foreach ($items as $key => $item) {
             $items[$key] = $this->encodeBitStream($item, $this->version);
-            $bits = count($items[$key]['bstream']);
+            $bits = \count($items[$key]['bstream']);
             $total += $bits;
         }
 
@@ -250,7 +250,7 @@ class ByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\Encode
         $st2 = $this->newInputItem(
             $inputitem['mode'],
             ($inputitem['size'] - $words),
-            array_slice($inputitem['data'], $words)
+            \array_slice($inputitem['data'], $words)
         );
         $st1 = $this->encodeBitStream($st1, $version);
         $st2 = $this->encodeBitStream($st2, $version);

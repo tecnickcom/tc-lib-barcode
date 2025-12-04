@@ -73,7 +73,7 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode(): void
     {
-        $this->extcode = 'A' . strtoupper($this->code) . 'A';
+        $this->extcode = 'A' . \strtoupper($this->code) . 'A';
     }
 
     /**
@@ -87,11 +87,11 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
         $this->nrows = 1;
         $this->bars = [];
         $this->formatCode();
-        $clen = strlen($this->extcode);
+        $clen = \strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (! isset($this::CHBAR[$char])) {
-                throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . \ord($char) . ')');
             }
 
             for ($pos = 0; $pos < 8; ++$pos) {

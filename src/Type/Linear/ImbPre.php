@@ -48,8 +48,8 @@ class ImbPre extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars(): void
     {
-        $code = strtolower($this->code);
-        if (preg_match('/^[fadt]{65}$/', $code) != 1) {
+        $code = \strtolower($this->code);
+        if (\preg_match('/^[fadt]{65}$/', $code) != 1) {
             throw new BarcodeException('Invalid character sequence');
         }
 

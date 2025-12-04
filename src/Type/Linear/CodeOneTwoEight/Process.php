@@ -222,10 +222,10 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     protected function getNumericSequence(string $code): array
     {
         $sequence = [];
-        $len = strlen($code);
+        $len = \strlen($code);
         // get numeric sequences (if any)
         $numseq = [];
-        preg_match_all('/(\d{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
+        \preg_match_all('/(\d{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
         if (! empty($numseq[1])) {
             $end_offset = 0;
             foreach ($numseq[1] as $val) {
@@ -233,7 +233,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
                 $offset = $val[1];
 
                 // numeric sequence
-                $slen = strlen($val[0]);
+                $slen = \strlen($val[0]);
                 if ($slen % 2 != 0) {
                     // the length must be even
                     --$slen;
@@ -243,22 +243,22 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
 
                 if ($offset > $end_offset) {
                     // non numeric sequence
-                    $sequence = array_merge(
+                    $sequence = \array_merge(
                         $sequence,
-                        $this->get128ABsequence(substr($code, $end_offset, ($offset - $end_offset)))
+                        $this->get128ABsequence(\substr($code, $end_offset, ($offset - $end_offset)))
                     );
                 }
 
-                $sequence[] = ['C', substr($code, $offset, $slen), $slen];
+                $sequence[] = ['C', \substr($code, $offset, $slen), $slen];
                 $end_offset = $offset + $slen;
             }
 
             if ($end_offset < $len) {
-                $sequence = array_merge($sequence, $this->get128ABsequence(substr($code, $end_offset)));
+                $sequence = \array_merge($sequence, $this->get128ABsequence(\substr($code, $end_offset)));
             }
         } else {
             // text code (non C mode)
-            $sequence = array_merge($sequence, $this->get128ABsequence($code));
+            $sequence = \array_merge($sequence, $this->get128ABsequence($code));
         }
 
         return $sequence;
@@ -273,30 +273,30 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function get128ABsequence(string $code): array
     {
-        $len = strlen($code);
+        $len = \strlen($code);
         $sequence = [];
         // get A sequences (if any)
         $aseq = [];
-        preg_match_all('/([\x00-\x1f])/', $code, $aseq, PREG_OFFSET_CAPTURE);
+        \preg_match_all('/([\x00-\x1f])/', $code, $aseq, PREG_OFFSET_CAPTURE);
         if (! empty($aseq[1])) {
             // get the entire A sequence (excluding FNC1-FNC4)
-            preg_match_all('/([\x00-\x5f]+)/', $code, $aseq, PREG_OFFSET_CAPTURE);
+            \preg_match_all('/([\x00-\x5f]+)/', $code, $aseq, PREG_OFFSET_CAPTURE);
             $end_offset = 0;
             foreach ($aseq[1] as $val) {
                 $offset = $val[1];
                 if ($offset > $end_offset) {
                     // B sequence
-                    $sequence[] = ['B', substr($code, $end_offset, ($offset - $end_offset)), ($offset - $end_offset)];
+                    $sequence[] = ['B', \substr($code, $end_offset, ($offset - $end_offset)), ($offset - $end_offset)];
                 }
 
                 // A sequence
-                $slen = strlen($val[0]);
-                $sequence[] = ['A', substr($code, $offset, $slen), $slen];
+                $slen = \strlen($val[0]);
+                $sequence[] = ['A', \substr($code, $offset, $slen), $slen];
                 $end_offset = $offset + $slen;
             }
 
             if ($end_offset < $len) {
-                $sequence[] = ['B', substr($code, $end_offset), ($len - $end_offset)];
+                $sequence[] = ['B', \substr($code, $end_offset), ($len - $end_offset)];
             }
         } else {
             // only B sequence
@@ -322,12 +322,12 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     ): void {
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
-            $char_id = ord($char);
+            $char_id = \ord($char);
             if (($char_id >= 241) && ($char_id <= 244)) {
                 $code_data[] = $this::FNC_A[$char_id];
             } elseif ($char_id <= 95) {
-                $cdpos = strpos($this::KEYS_A, $char);
-                $code_data[] = is_int($cdpos) ? $cdpos : 0;
+                $cdpos = \strpos($this::KEYS_A, $char);
+                $code_data[] = \is_int($cdpos) ? $cdpos : 0;
             } else {
                 throw new BarcodeException('Invalid character sequence');
             }
@@ -350,12 +350,12 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     ): void {
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
-            $char_id = ord($char);
+            $char_id = \ord($char);
             if (($char_id >= 241) && ($char_id <= 244)) {
                 $code_data[] = $this::FNC_B[$char_id];
             } elseif (($char_id >= 32) && ($char_id <= 127)) {
-                $cdpos = strpos($this::KEYS_B, $char);
-                $code_data[] = is_int($cdpos) ? $cdpos : 0;
+                $cdpos = \strpos($this::KEYS_B, $char);
+                $code_data[] = \is_int($cdpos) ? $cdpos : 0;
             } else {
                 throw new BarcodeException('Invalid character sequence: ' . $char_id);
             }
@@ -375,10 +375,10 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
         string $code
     ): void {
         // code blocks separated by FNC1 (chr 241)
-        $blocks = explode(chr(241), $code);
+        $blocks = \explode(\chr(241), $code);
 
         foreach ($blocks as $block) {
-            $len = strlen($block);
+            $len = \strlen($block);
 
             if ($len % 2 != 0) {
                 throw new BarcodeException('The length of each FNC1-separated code block must be even');
@@ -386,7 +386,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
 
             for ($pos = 0; $pos < $len; $pos += 2) {
                 $chrnum = $block[$pos] . $block[($pos + 1)];
-                if (preg_match('/(\d{2})/', $chrnum) > 0) {
+                if (\preg_match('/(\d{2})/', $chrnum) > 0) {
                     $code_data[] = (int) $chrnum;
                 } else {
                     throw new BarcodeException('Invalid character sequence');
@@ -397,7 +397,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
         }
 
         // remove last 102 code
-        array_pop($code_data);
+        \array_pop($code_data);
     }
 
     /**
@@ -425,7 +425,7 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
         $code_data[] = 106;
         $code_data[] = 107;
         // add start code at the beginning
-        array_unshift($code_data, $startid);
+        \array_unshift($code_data, $startid);
 
         return $code_data;
     }

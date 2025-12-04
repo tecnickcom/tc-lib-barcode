@@ -61,7 +61,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
             }
         }
 
-        return (int) min($maxecl, $ecl);
+        return (int) \min($maxecl, $ecl);
     }
 
     /**
@@ -81,7 +81,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
         // maximum index for RS_FACTORS[$ecl]
         $eclmaxid = ($eclsize - 1);
         // initialize array of error correction codewords
-        $ecw = array_fill(0, $eclsize, 0);
+        $ecw = \array_fill(0, $eclsize, 0);
         // for each data codeword
         foreach ($codewords as $codeword) {
             $tk1 = ($codeword + $ecw[$eclmaxid]) % 929;
@@ -102,7 +102,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
             }
         }
 
-        return array_reverse($ecw);
+        return \array_reverse($ecw);
     }
 
     /**
@@ -116,26 +116,26 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
     protected function processSequence(array &$sequence_array, string $code, int $seq, int $offset): void
     {
         // extract text sequence before the number sequence
-        $prevseq = substr($code, $offset, ($seq - $offset));
+        $prevseq = \substr($code, $offset, ($seq - $offset));
         $textseq = [];
         // get text sequences
-        preg_match_all('/([\x09\x0a\x0d\x20-\x7e]{5,})/', $prevseq, $textseq, PREG_OFFSET_CAPTURE);
-        $textseq[1][] = ['', strlen($prevseq)];
+        \preg_match_all('/([\x09\x0a\x0d\x20-\x7e]{5,})/', $prevseq, $textseq, PREG_OFFSET_CAPTURE);
+        $textseq[1][] = ['', \strlen($prevseq)];
         $txtoffset = 0;
         foreach ($textseq[1] as $txtseq) {
-            $txtseqlen = strlen($txtseq[0]);
+            $txtseqlen = \strlen($txtseq[0]);
             if ($txtseq[1] > 0) {
                 // extract byte sequence before the text sequence
-                $prevtxtseq = substr($prevseq, $txtoffset, ($txtseq[1] - $txtoffset));
-                if (strlen($prevtxtseq) > 0) {
+                $prevtxtseq = \substr($prevseq, $txtoffset, ($txtseq[1] - $txtoffset));
+                if (\strlen($prevtxtseq) > 0) {
                     // add BYTE sequence
                     if (
-                        (strlen($prevtxtseq) == 1)
+                        (\strlen($prevtxtseq) == 1)
                         && (($sequence_array !== [])
-                        && ($sequence_array[(count($sequence_array) - 1)][0] == 900))
+                        && ($sequence_array[(\count($sequence_array) - 1)][0] == 900))
                     ) {
                         $sequence_array[] = [913, $prevtxtseq];
-                    } elseif ((strlen($prevtxtseq) % 6) == 0) {
+                    } elseif ((\strlen($prevtxtseq) % 6) == 0) {
                         $sequence_array[] = [924, $prevtxtseq];
                     } else {
                         $sequence_array[] = [901, $prevtxtseq];
@@ -164,11 +164,11 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
         $sequence_array = []; // array to be returned
         $numseq = [];
         // get numeric sequences
-        preg_match_all('/(\d{13,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
-        $numseq[1][] = ['', strlen($code)];
+        \preg_match_all('/(\d{13,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
+        $numseq[1][] = ['', \strlen($code)];
         $offset = 0;
         foreach ($numseq[1] as $seq) {
-            $seqlen = strlen($seq[0]);
+            $seqlen = \strlen($seq[0]);
             if ($seq[1] > 0) {
                 $this->processSequence($sequence_array, $code, $seq[1], $offset);
             }

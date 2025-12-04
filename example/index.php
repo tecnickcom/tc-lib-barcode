@@ -64,8 +64,8 @@ $square = [
     'QRCODE,H,ST,0,0' => ['abcdefghijklmnopqrstuvwxy0123456789', 'QR-CODE WITH PARAMETERS'],
     'DATAMATRIX' => ['0123456789', 'DATAMATRIX (ISO/IEC 16022) SQUARE'],
     'DATAMATRIX,R' => ['0123456789012345678901234567890123456789', 'DATAMATRIX Rectangular (ISO/IEC 16022) RECTANGULAR'],
-    'DATAMATRIX,S,GS1' => [chr(232) . '01095011010209171719050810ABCD1234' . chr(232) . '2110', 'GS1 DATAMATRIX (ISO/IEC 16022) SQUARE GS1'],
-    'DATAMATRIX,R,GS1' => [chr(232) . '01095011010209171719050810ABCD1234' . chr(232) . '2110', 'GS1 DATAMATRIX (ISO/IEC 16022) RECTANGULAR GS1'],
+    'DATAMATRIX,S,GS1' => [\chr(232) . '01095011010209171719050810ABCD1234' . \chr(232) . '2110', 'GS1 DATAMATRIX (ISO/IEC 16022) SQUARE GS1'],
+    'DATAMATRIX,R,GS1' => [\chr(232) . '01095011010209171719050810ABCD1234' . \chr(232) . '2110', 'GS1 DATAMATRIX (ISO/IEC 16022) RECTANGULAR GS1'],
 ];
 
 $barcode = new \Com\Tecnick\Barcode\Barcode();
@@ -105,13 +105,13 @@ echo "
         <p>This is an usage example of <a href=\"https://github.com/tecnickcom/tc-lib-barcode\" title=\"tc-lib-barcode: PHP library to generate linear and bidimensional barcodes\">tc-lib-barcode</a> library.</p>
         <h2>Output Formats</h2>
         <h3>PNG Image</h3>
-        <p><img alt=\"Embedded Image\" src=\"data:image/png;base64," . base64_encode($bobj->getPngData()) . "\" /></p>
+        <p><img alt=\"Embedded Image\" src=\"data:image/png;base64," . \base64_encode($bobj->getPngData()) . "\" /></p>
         <h3>SVG Image</h3>
         <p style=\"font-family:monospace;\">" . $bobj->getSvgCode() . "</p>
         <h3>HTML DIV</h3>
         <p style=\"font-family:monospace;\">" . $bobj->getHtmlDiv() . "</p>
         <h3>Unicode String</h3>
-        <pre style=\"font-family:monospace;line-height:0.61em;font-size:6px;\">" . $bobj->getGrid(json_decode('"\u00A0"'), json_decode('"\u2584"')) . "</pre>
+        <pre style=\"font-family:monospace;line-height:0.61em;font-size:6px;\">" . $bobj->getGrid(\json_decode('"\u00A0"'), \json_decode('"\u2584"')) . "</pre>
         <h3>Binary String</h3>
         <pre style=\"font-family:monospace;\">" . $bobj->getGrid() . "</pre>
         <h2>Barcode Types</h2>

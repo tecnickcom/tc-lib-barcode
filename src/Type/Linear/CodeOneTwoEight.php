@@ -142,7 +142,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         int $key,
         array $seq
     ): void {
-        $tmpchr = ord($seq[1][0]);
+        $tmpchr = \ord($seq[1][0]);
         if (
             ($seq[2] == 1)
             && ($tmpchr >= 241)

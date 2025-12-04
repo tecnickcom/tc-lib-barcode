@@ -135,23 +135,23 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     {
         if (
             isset($this->params[4])
-            && (is_string($this->params[4]))
+            && (\is_string($this->params[4]))
             && ($this->params[2] !== '')
             && ($this->params[3] !== '')
             && ($this->params[4] !== '')
         ) {
             $this->macro['segment_total'] = (int) $this->params[2];
             $this->macro['segment_index'] = (int) $this->params[3];
-            $this->macro['file_id'] = strtr($this->params[4], "\xff", ',');
+            $this->macro['file_id'] = \strtr($this->params[4], "\xff", ',');
             for ($idx = 0; $idx < 7; ++$idx) {
                 $opt = $idx + 5;
                 if (
                     isset($this->params[$opt])
-                    && (is_string($this->params[$opt]))
+                    && (\is_string($this->params[$opt]))
                     && ($this->params[$opt] !== '')
                 ) {
                     /* @phpstan-ignore-next-line */
-                    $this->macro['option_' . $idx] = strtr($this->params[$opt], "\xff", ',');
+                    $this->macro['option_' . $idx] = \strtr($this->params[$opt], "\xff", ',');
                 }
             }
         }
@@ -164,7 +164,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      */
     protected function setBars(): void
     {
-        if (strlen((string) $this->code) == 0) {
+        if (\strlen((string) $this->code) == 0) {
             throw new BarcodeException('Empty input');
         }
 
@@ -189,11 +189,11 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         // beginning of macro control block
         $macrocw[] = 928;
         // segment index
-        $cdw = $this->getCompaction(902, sprintf('%05d', $this->macro['segment_index']), false);
-        $macrocw = array_merge($macrocw, $cdw);
+        $cdw = $this->getCompaction(902, \sprintf('%05d', $this->macro['segment_index']), false);
+        $macrocw = \array_merge($macrocw, $cdw);
         // file ID
         $cdw = $this->getCompaction(900, $this->macro['file_id'], false);
-        $macrocw = array_merge($macrocw, $cdw);
+        $macrocw = \array_merge($macrocw, $cdw);
         // optional fields
         $optmodes = [900, 902, 902, 900, 900, 902, 902];
         $optsize = [-1, 2, 4, -1, -1, -1, 2];
@@ -202,13 +202,13 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
                 $macrocw[] = 923;
                 $macrocw[] = $key;
                 if ($optsize[$key] == 2) {
-                    $this->macro['option_' . $key] = sprintf('%05d', $this->macro['option_' . $key]);
+                    $this->macro['option_' . $key] = \sprintf('%05d', $this->macro['option_' . $key]);
                 } elseif ($optsize[$key] == 4) {
-                    $this->macro['option_' . $key] = sprintf('%010d', $this->macro['option_' . $key]);
+                    $this->macro['option_' . $key] = \sprintf('%010d', $this->macro['option_' . $key]);
                 }
 
                 $cdw = $this->getCompaction($omode, $this->macro['option_' . $key], false);
-                $macrocw = array_merge($macrocw, $cdw);
+                $macrocw = \array_merge($macrocw, $cdw);
             }
         }
 
@@ -218,7 +218,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         }
 
         // update total codewords
-        $numcw += count($macrocw);
+        $numcw += \count($macrocw);
         return $macrocw;
     }
 
@@ -243,16 +243,16 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         $sequence = $this->getInputSequences($this->code);
         foreach ($sequence as $seq) {
             $cws = $this->getCompaction($seq[0], $seq[1], true);
-            $codewords = array_merge($codewords, $cws);
+            $codewords = \array_merge($codewords, $cws);
         }
 
         if ($codewords[0] == 900) {
             // Text Alpha is the default mode, so remove the first code
-            array_shift($codewords);
+            \array_shift($codewords);
         }
 
         // count number of codewords
-        $numcw = count($codewords);
+        $numcw = \count($codewords);
         if ($numcw > 925) {
             throw new BarcodeException('The maximum codeword capaciy has been reached: ' . $numcw . ' > 925');
         }
@@ -264,18 +264,18 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         $errsize = (2 << $ecl);
         // calculate number of columns (number of codewords per row) and rows
         $nce = ($numcw + $errsize + 1);
-        $cols = (int) min(
+        $cols = (int) \min(
             30,
-            max(1, round((sqrt(4761 + (68 * $this->aspectratio * $this->row_height * $nce)) - 69) / 34))
+            \max(1, \round((\sqrt(4761 + (68 * $this->aspectratio * $this->row_height * $nce)) - 69) / 34))
         );
-        $rows = (int) min(
+        $rows = (int) \min(
             90,
-            max(3, ceil($nce / $cols))
+            \max(3, \ceil($nce / $cols))
         );
         $size = ($cols * $rows);
         if ($size > 928) {
             // set dimensions to get maximum capacity
-            if (abs($this->aspectratio - (17 * 29 / 32)) < abs($this->aspectratio - (17 * 16 / 58))) {
+            if (\abs($this->aspectratio - (17 * 29 / 32)) < \abs($this->aspectratio - (17 * 16 / 58))) {
                 $cols = 29;
                 $rows = 32;
             } else {
@@ -290,22 +290,22 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         $pad = (int) ($size - $nce);
         if ($pad > 0) {
             // add padding
-            $codewords = array_merge($codewords, array_fill(0, $pad, 900));
+            $codewords = \array_merge($codewords, \array_fill(0, $pad, 900));
         }
 
         if ($macrocw !== []) {
             // add macro section
-            $codewords = array_merge($codewords, $macrocw);
+            $codewords = \array_merge($codewords, $macrocw);
         }
 
         // Symbol Length Descriptor (number of data codewords including Symbol Length Descriptor and pad codewords)
         $sld = (int) ($size - $errsize);
         // add symbol length description
-        array_unshift($codewords, $sld);
+        \array_unshift($codewords, $sld);
         // calculate error correction
         $ecw = $this->getErrorCorrection($codewords, $ecl);
         // add error correction codewords
-        return array_merge($codewords, $ecw);
+        return \array_merge($codewords, $ecw);
     }
 
     /**
@@ -323,12 +323,12 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         $codewords = $this->getCodewords($rows, $cols, $ecl);
         $barcode = '';
         // add horizontal quiet zones to start and stop patterns
-        $pstart = str_repeat('0', $this->quiet_horizontal) . Data::START_PATTERN;
+        $pstart = \str_repeat('0', $this->quiet_horizontal) . Data::START_PATTERN;
         $this->nrows = ($rows * $this->row_height) + (2 * $this->quiet_vertical);
         $this->ncols = (($cols + 2) * 17) + 35 + (2 * $this->quiet_horizontal);
         // build rows for vertical quiet zone
-        $empty_row = ',' . str_repeat('0', $this->ncols);
-        $empty_rows = str_repeat($empty_row, $this->quiet_vertical);
+        $empty_row = ',' . \str_repeat('0', $this->ncols);
+        $empty_rows = \str_repeat($empty_row, $this->quiet_vertical);
         $barcode .= $empty_rows;
         $kcw = 0; // codeword index
         $cid = 0; // initial cluster
@@ -354,18 +354,18 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
             }
 
             // left row indicator
-            $row .= sprintf('%17b', Data::CLUSTERS[$cid][$rval]);
+            $row .= \sprintf('%17b', Data::CLUSTERS[$cid][$rval]);
             // for each column
             for ($cix = 0; $cix < $cols; ++$cix) {
-                $row .= sprintf('%17b', Data::CLUSTERS[$cid][$codewords[$kcw]]);
+                $row .= \sprintf('%17b', Data::CLUSTERS[$cid][$codewords[$kcw]]);
                 ++$kcw;
             }
 
             // right row indicator
-            $row .= sprintf('%17b', Data::CLUSTERS[$cid][$cval]);
+            $row .= \sprintf('%17b', Data::CLUSTERS[$cid][$cval]);
             // row stop code
-            $row .= Data::STOP_PATTERN . str_repeat('0', $this->quiet_horizontal);
-            $brow = ',' . str_repeat($row, $this->row_height);
+            $row .= Data::STOP_PATTERN . \str_repeat('0', $this->quiet_horizontal);
+            $brow = ',' . \str_repeat($row, $this->row_height);
             $barcode .= $brow;
             ++$cid;
             if ($cid > 2) {

@@ -48,7 +48,7 @@ class PdfFourOneSevenTest extends TestUtil
     {
         $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $code = str_pad('', 1000, 'X1');
+        $code = \str_pad('', 1000, 'X1');
         $barcode->getBarcodeObj('PDF417', $code);
     }
 
@@ -58,7 +58,7 @@ class PdfFourOneSevenTest extends TestUtil
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('PDF417' . $options, $code);
         $grid = $type->getGrid();
-        $this->assertEquals($expected, md5($grid));
+        $this->assertEquals($expected, \md5($grid));
     }
 
     /**
@@ -69,13 +69,13 @@ class PdfFourOneSevenTest extends TestUtil
         return [
             [
                 '',
-                str_pad('', 1850, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                \str_pad('', 1850, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
                 '38e205c911b94a62c72b7d20fa4361f8',
             ],
             // max text
             [
                 '',
-                str_pad('', 2710, '123456789'),
+                \str_pad('', 2710, '123456789'),
                 '32ba9be56f3e66559b4d4a50f6276da7',
             ],
             // max digits
@@ -91,17 +91,17 @@ class PdfFourOneSevenTest extends TestUtil
             ],
             [
                 ',2,8,1,0,0,0,1,2',
-                str_pad('', 1750, 'X'),
+                \str_pad('', 1750, 'X'),
                 'f0874a35e15f11f9aa8bc070a4be24bf',
             ],
             [
                 ',15,8,1,0,0,0,1,2',
-                str_pad('', 1750, 'X'),
+                \str_pad('', 1750, 'X'),
                 '0288f0a87cc069fc34d6168d7a9f7846',
             ],
             [
                 '',
-                str_pad('', 350, '0123456789'),
+                \str_pad('', 350, '0123456789'),
                 '394d93048831fee232413da29fb709fb',
             ],
             [

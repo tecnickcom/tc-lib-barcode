@@ -45,7 +45,7 @@ class CodeOneTwoEightBTest extends TestUtil
             . "10011001110100111011011101110100110011100101100110000101001100011101011\n";
         $this->assertEquals($expected, $grid);
 
-        $bobj = $barcode->getBarcodeObj('C128B', chr(241) . '01234567891');
+        $bobj = $barcode->getBarcodeObj('C128B', \chr(241) . '01234567891');
         $grid = $bobj->getGrid();
         $expected = "11010010000111101011101001110110010011100110110011100101100101110011001001"
             . "110110111001001100111010011101101110111010011001110010110010011100110100001100101100011101011\n";
@@ -56,6 +56,6 @@ class CodeOneTwoEightBTest extends TestUtil
     {
         $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $barcode->getBarcodeObj('C128B', chr(246) . '01234567891');
+        $barcode->getBarcodeObj('C128B', \chr(246) . '01234567891');
     }
 }

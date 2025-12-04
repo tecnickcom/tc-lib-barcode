@@ -139,8 +139,8 @@ abstract class Convert
             throw new BarcodeException('Empty input string');
         }
 
-        $this->nrows = count($rows);
-        $this->ncols = is_array($rows[0]) ? count($rows[0]) : strlen($rows[0]);
+        $this->nrows = \count($rows);
+        $this->ncols = \is_array($rows[0]) ? \count($rows[0]) : \strlen($rows[0]);
 
         if ($this->ncols === 0) {
             throw new BarcodeException('Empty columns');
@@ -148,8 +148,8 @@ abstract class Convert
 
         $this->bars = [];
         foreach ($rows as $posy => $row) {
-            if (! is_array($row)) {
-                $row = str_split($row, 1);
+            if (! \is_array($row)) {
+                $row = \str_split($row, 1);
             }
 
             $prevcol = '';
@@ -186,12 +186,12 @@ abstract class Convert
 
         $replace = ['', '', '', ''];
 
-        $code = preg_replace($search, $replace, $data);
+        $code = \preg_replace($search, $replace, $data);
         if ($code === null) {
             throw new BarcodeException('Invalid input string');
         }
 
-        return explode(',', $code);
+        return \explode(',', $code);
     }
 
     /**
@@ -209,12 +209,12 @@ abstract class Convert
 
         $hex = [];
         while ($number > 0) {
-            $hex[] = strtoupper(dechex((int) bcmod($number, '16')));
-            $number = bcdiv($number, '16', 0);
+            $hex[] = \strtoupper(\dechex((int) \bcmod($number, '16')));
+            $number = \bcdiv($number, '16', 0);
         }
 
-        $hex = array_reverse($hex);
-        return implode('', $hex);
+        $hex = \array_reverse($hex);
+        return \implode('', $hex);
     }
 
     /**
@@ -228,10 +228,10 @@ abstract class Convert
     {
         $dec = '0';
         $bitval = '1';
-        $len = strlen($hex);
+        $len = \strlen($hex);
         for ($pos = ($len - 1); $pos >= 0; --$pos) {
-            $dec = bcadd($dec, bcmul((string) hexdec($hex[$pos]), $bitval));
-            $bitval = bcmul($bitval, '16');
+            $dec = \bcadd($dec, \bcmul((string) \hexdec($hex[$pos]), $bitval));
+            $bitval = \bcmul($bitval, '16');
         }
 
         return $dec;
@@ -249,7 +249,7 @@ abstract class Convert
         string $space_char = '0',
         string $bar_char = '1'
     ): array {
-        $raw = array_fill(0, $this->nrows, array_fill(0, $this->ncols, $space_char));
+        $raw = \array_fill(0, $this->nrows, \array_fill(0, $this->ncols, $space_char));
         foreach ($this->bars as $bar) {
             if ($bar[2] <= 0) {
                 continue;
@@ -277,7 +277,7 @@ abstract class Convert
     protected function getRotatedBarArray(): array
     {
         $grid = $this->getGridArray();
-        $cols = array_map(null, ...$grid);
+        $cols = \array_map(null, ...$grid);
         $bars = [];
         foreach ($cols as $posx => $col) {
             $prevrow = '';

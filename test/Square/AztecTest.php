@@ -48,7 +48,7 @@ class AztecTest extends TestUtil
     {
         $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $code = str_pad('', 2000, '0123456789');
+        $code = \str_pad('', 2000, '0123456789');
         $barcode->getBarcodeObj('AZTEC,100,B,F,3', $code);
     }
 
@@ -58,7 +58,7 @@ class AztecTest extends TestUtil
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('AZTEC' . $options, $code);
         $grid = $type->getGrid();
-        $this->assertEquals($expected, md5($grid));
+        $this->assertEquals($expected, \md5($grid));
     }
 
     /**

@@ -69,7 +69,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
     protected function getChecksum(string $code): int
     {
         $sum = 0;
-        $len = strlen($code);
+        $len = \strlen($code);
         for ($pos = 0; $pos < $len; ++$pos) {
             $sum += (int) $code[$pos];
         }
@@ -87,7 +87,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode(): void
     {
-        $code = preg_replace('/[-\s]+/', '', $this->code);
+        $code = \preg_replace('/[-\s]+/', '', $this->code);
         if ($code === null) {
             throw new BarcodeException('Code not valid');
         }
@@ -105,19 +105,19 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         $this->nrows = 2;
         $this->bars = [];
         $this->formatCode();
-        $clen = strlen($this->extcode);
+        $clen = \strlen($this->extcode);
         // start bar
         $this->bars[] = [$this->ncols, 0, 1, 2];
         $this->ncols += 2;
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (! isset($this::CHBAR[$char])) {
-                throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . \ord($char) . ')');
             }
 
             for ($pos = 0; $pos < 5; ++$pos) {
                 $bar_height = (int) $this::CHBAR[$char][$pos];
-                $this->bars[] = [$this->ncols, (int) floor(1 / $bar_height), 1, $bar_height];
+                $this->bars[] = [$this->ncols, (int) \floor(1 / $bar_height), 1, $bar_height];
                 $this->ncols += 2;
             }
         }

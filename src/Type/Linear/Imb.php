@@ -385,7 +385,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $genpoly = 0x0F35; // generator polynomial
         $fcs = 0x07FF; // Frame Check Sequence
         // do most significant byte skipping the 2 most significant bits
-        $data = hexdec($code_arr[0]) << 5;
+        $data = \hexdec($code_arr[0]) << 5;
         for ($bit = 2; $bit < 8; ++$bit) {
             $fcs = (($fcs ^ $data) & 0x400) !== 0 ? ($fcs << 1) ^ $genpoly : $fcs << 1;
 
@@ -395,7 +395,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
 
         // do rest of bytes
         for ($byte = 1; $byte < 13; ++$byte) {
-            $data = hexdec($code_arr[$byte]) << 3;
+            $data = \hexdec($code_arr[$byte]) << 3;
             for ($bit = 0; $bit < 8; ++$bit) {
                 $fcs = (($fcs ^ $data) & 0x400) !== 0 ? ($fcs << 1) ^ $genpoly : $fcs << 1;
 
@@ -460,11 +460,11 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     protected function getRoutingCode(string $routing_code): string
     {
         // Conversion of Routing Code
-        return match (strlen($routing_code)) {
+        return match (\strlen($routing_code)) {
             0 => '0',
-            5 => bcadd($routing_code, '1'),
-            9 => bcadd($routing_code, '100001'),
-            11 => bcadd($routing_code, '1000100001'),
+            5 => \bcadd($routing_code, '1'),
+            9 => \bcadd($routing_code, '100001'),
+            11 => \bcadd($routing_code, '1000100001'),
             default => throw new BarcodeException('Invalid routing code'),
         };
     }
@@ -481,39 +481,39 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols = 0;
         $this->nrows = 3;
         $this->bars = [];
-        $code_arr = explode('-', $this->code);
+        $code_arr = \explode('-', $this->code);
         $tracking_number = $code_arr[0];
         $binary_code = '0';
         if (isset($code_arr[1])) {
             $binary_code = $this->getRoutingCode($code_arr[1]); // @phpstan-ignore argument.type
         }
 
-        $binary_code = bcmul($binary_code, '10'); // @phpstan-ignore argument.type
-        $binary_code = bcadd($binary_code, $tracking_number[0]); // @phpstan-ignore argument.type
-        $binary_code = bcmul($binary_code, '5'); // @phpstan-ignore argument.type
-        $binary_code = bcadd($binary_code, $tracking_number[1]); // @phpstan-ignore argument.type
-        $binary_code .= substr($tracking_number, 2, 18);
+        $binary_code = \bcmul($binary_code, '10'); // @phpstan-ignore argument.type
+        $binary_code = \bcadd($binary_code, $tracking_number[0]); // @phpstan-ignore argument.type
+        $binary_code = \bcmul($binary_code, '5'); // @phpstan-ignore argument.type
+        $binary_code = \bcadd($binary_code, $tracking_number[1]); // @phpstan-ignore argument.type
+        $binary_code .= \substr($tracking_number, 2, 18);
         // convert to hexadecimal
         $binary_code = $this->convertDecToHex($binary_code);
         // pad to get 13 bytes
-        $binary_code = str_pad($binary_code, 26, '0', STR_PAD_LEFT);
+        $binary_code = \str_pad($binary_code, 26, '0', STR_PAD_LEFT);
         // convert string to array of bytes
-        $binary_code_arr = chunk_split($binary_code, 2, "\r");
-        $binary_code_arr = substr($binary_code_arr, 0, -1);
-        $binary_code_arr = explode("\r", $binary_code_arr);
+        $binary_code_arr = \chunk_split($binary_code, 2, "\r");
+        $binary_code_arr = \substr($binary_code_arr, 0, -1);
+        $binary_code_arr = \explode("\r", $binary_code_arr);
         // calculate frame check sequence
         $fcs = $this->getFrameCheckSequence($binary_code_arr);
         // exclude first 2 bits from first byte
-        $first_byte = sprintf('%2s', dechex((int) (hexdec($binary_code_arr[0]) << 2) >> 2));
-        $binary_code_102bit = $first_byte . substr($binary_code, 2);
+        $first_byte = \sprintf('%2s', \dechex((int) (\hexdec($binary_code_arr[0]) << 2) >> 2));
+        $binary_code_102bit = $first_byte . \substr($binary_code, 2);
         // convert binary data to codewords
         $codewords = [];
         $data = $this->convertHexToDec($binary_code_102bit);
-        $codewords[0] = (int) bcmod($data, '636') * 2;
-        $data = bcdiv($data, '636');
+        $codewords[0] = (int) \bcmod($data, '636') * 2;
+        $data = \bcdiv($data, '636');
         for ($pos = 1; $pos < 9; ++$pos) {
-            $codewords[$pos] = (int) bcmod($data, '1365');
-            $data = bcdiv($data, '1365');
+            $codewords[$pos] = (int) \bcmod($data, '1365');
+            $data = \bcdiv($data, '1365');
         }
 
         $codewords[9] = (int) $data;
@@ -539,7 +539,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
             $bitmask /= 2;
         }
 
-        return array_reverse($characters);
+        return \array_reverse($characters);
     }
 
     /**

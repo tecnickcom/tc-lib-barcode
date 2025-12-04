@@ -163,7 +163,7 @@ abstract class Codeword
         int $wsize
     ): array {
         $words = [];
-        $numwords = (int) ceil($totbits / $wsize);
+        $numwords = (int) \ceil($totbits / $wsize);
         for ($idx = 0; $idx < $numwords; ++$idx) {
             $wrd = 0;
             for ($bit = 0; $bit < $wsize; ++$bit) {
@@ -290,12 +290,12 @@ abstract class Codeword
         }
 
         $seci = (string) $eci;
-        $digits = strlen($seci);
+        $digits = \strlen($seci);
         $this->addRawCwd(3, $digits); // 1–6 digits
         for ($idx = 0; $idx < $digits; ++$idx) {
             $this->addCdw(
                 Data::MODE_DIGIT,
-                $this->charEnc(Data::MODE_DIGIT, ord($seci[$idx]))
+                $this->charEnc(Data::MODE_DIGIT, \ord($seci[$idx]))
             );
         }
     }

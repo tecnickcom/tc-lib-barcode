@@ -191,8 +191,8 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         array &$ecc
     ): void {
         for ($idx = 0; $idx < $endfor; ++$idx) {
-            $data = array_slice($this->datacode, $dataPos);
-            $ecc = array_slice($this->ecccode, $eccPos);
+            $data = \array_slice($this->datacode, $dataPos);
+            $ecc = \array_slice($this->ecccode, $eccPos);
             $ecc = $this->encodeRsChar($rsv, $data, $ecc);
             $this->rsblocks[$blockNo] = [
                 'data' => $data,
@@ -200,7 +200,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
                 'ecc' => $ecc,
                 'eccLength' => $elv,
             ];
-            $this->ecccode = array_merge(array_slice($this->ecccode, 0, $eccPos), $ecc);
+            $this->ecccode = \array_merge(\array_slice($this->ecccode, 0, $eccPos), $ecc);
             $dataPos += $dlv;
             $eccPos += $elv;
             ++$blockNo;
@@ -268,7 +268,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         }
 
         $rsv = $this->initRsChar($symsize, $gfpoly, $fcr, $prim, $nroots, $pad);
-        array_unshift($this->rsitems, $rsv);
+        \array_unshift($this->rsitems, $rsv);
         return $rsv;
     }
 
@@ -374,13 +374,13 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         $rsv['mm'] = $symsize;
         $rsv['nn'] = ((1 << $symsize) - 1);
         $rsv['pad'] = $pad;
-        $rsv['alpha_to'] = array_fill(0, ($rsv['nn'] + 1), 0);
-        $rsv['index_of'] = array_fill(0, ($rsv['nn'] + 1), 0);
+        $rsv['alpha_to'] = \array_fill(0, ($rsv['nn'] + 1), 0);
+        $rsv['index_of'] = \array_fill(0, ($rsv['nn'] + 1), 0);
         // PHP style macro replacement
         $nnv = &$rsv['nn'];
         $azv = &$nnv;
         // Generate Galois field lookup tables
-        $rsv['index_of'][0] = $azv; // log(zero) = -inf
+        $rsv['index_of'][0] = $azv; // \log(zero) = -inf
         $rsv['alpha_to'][$azv] = 0; // alpha**-inf = 0
         $srv = 1;
         for ($idx = 0; $idx < $rsv['nn']; ++$idx) {
@@ -399,7 +399,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         }
 
         // form RS code generator polynomial from its roots
-        $rsv['genpoly'] = array_fill(0, ($nroots + 1), 0);
+        $rsv['genpoly'] = \array_fill(0, ($nroots + 1), 0);
         $rsv['fcr'] = $fcr;
         $rsv['prim'] = $prim;
         $rsv['nroots'] = $nroots;
@@ -465,7 +465,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         // the number of pad symbols in a block
         $pad = &$rsv['pad'];
         $azv = &$nnv;
-        $parity = array_fill(0, $nroots, 0);
+        $parity = \array_fill(0, $nroots, 0);
         for ($idx = 0; $idx < ($nnv - $nroots - $pad); ++$idx) {
             $feedback = $indexof[$data[$idx] ^ $parity[0]];
             if ($feedback != $azv) {
@@ -479,7 +479,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
             }
 
             // Shift
-            array_shift($parity);
+            \array_shift($parity);
             $parity[] = $feedback != $azv ? $alphato[$this->modnn($rsv, $feedback + $genpoly[0])] : 0;
         }
 

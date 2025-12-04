@@ -101,7 +101,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         int $wsize
     ): int {
         $cdw = $this->bitstreamToWords($bitstream, $totbits, $wsize);
-        $numcdw = count($cdw);
+        $numcdw = \count($cdw);
         $totwords = (int) ($nbits / $wsize);
         $eccwords = ($totwords - $numcdw);
         $errorCorrection = new ErrorCorrection($wsize);
@@ -121,8 +121,8 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     {
         // initialize grid
         $size = $this->layer[0];
-        $row = array_fill(0, $size, 0);
-        $this->grid = array_fill(0, $size, $row);
+        $row = \array_fill(0, $size, 0);
+        $this->grid = \array_fill(0, $size, $row);
         // draw center
         $center = (int) (($size - 1) / 2);
         $this->gridcenter = $center;

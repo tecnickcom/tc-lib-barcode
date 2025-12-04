@@ -98,7 +98,7 @@ class ErrorCorrection
     public function checkwords(array $data, int $necc): array
     {
         $coeff = $this->getCoefficients($data, $necc);
-        return array_pad($coeff, -$necc, 0); // @phpstan-ignore return.type
+        return \array_pad($coeff, -$necc, 0); // @phpstan-ignore return.type
     }
 
     /**
@@ -109,7 +109,7 @@ class ErrorCorrection
     protected function genTables(int $wsize): void
     {
         $this->tsize = self::TSIZE[$wsize];
-        $this->tlog = array_fill(0, $this->tsize, 0);
+        $this->tlog = \array_fill(0, $this->tsize, 0);
         $this->texp = $this->tlog;
         $primitive = self::GF[$wsize];
         $val = 1;
@@ -145,12 +145,12 @@ class ErrorCorrection
 
         $deg = ($necc + 1);
         $coeff = $this->multiplyByMonomial($data, 1, $necc);
-        $len = count($coeff);
+        $len = \count($coeff);
         while (($len >= $deg) && ($coeff[0] != 0)) {
             $scale = $this->multiply($coeff[0], 1);
             $largercoeffs = $this->multiplyByMonomial($gen, $scale, ($len - $deg));
             $coeff = $this->addOrSubtract($coeff, $largercoeffs);
-            $len = count($coeff);
+            $len = \count($coeff);
         }
 
         return $coeff;
@@ -166,9 +166,9 @@ class ErrorCorrection
      */
     protected function multiplyCoeff(array $acf, array $bcf): array
     {
-        $alen = count($acf);
-        $blen = count($bcf);
-        $coeff = array_fill(0, ($alen + $blen - 1), 0);
+        $alen = \count($acf);
+        $blen = \count($bcf);
+        $coeff = \array_fill(0, ($alen + $blen - 1), 0);
         for ($aid = 0; $aid < $alen; ++$aid) {
             for ($bid = 0; $bid < $blen; ++$bid) {
                 $coeff[$aid + $bid] ^= ($this->multiply($acf[$aid], $bcf[$bid]));
@@ -203,7 +203,7 @@ class ErrorCorrection
     protected function trimCoefficients(array $coeff): array
     {
         while ($coeff !== [] && $coeff[0] == 0) {
-            array_shift($coeff);
+            \array_shift($coeff);
         }
 
         return $coeff;
@@ -223,8 +223,8 @@ class ErrorCorrection
         // if ($mon == 0) {
         //     return array(0);
         // }
-        $ncf = count($coeff);
-        $prod = array_fill(0, ($ncf + $deg), 0);
+        $ncf = \count($coeff);
+        $prod = \array_fill(0, ($ncf + $deg), 0);
         for ($idx = 0; $idx < $ncf; ++$idx) {
             $prod[$idx] = $this->multiply($coeff[$idx], $mon);
         }
@@ -248,15 +248,15 @@ class ErrorCorrection
         // if ($larger[0] == 0) {
         //     return $smaller;
         // }
-        $slen = count($smaller);
-        $llen = count($larger);
+        $slen = \count($smaller);
+        $llen = \count($larger);
         // if ($slen > $llen) {
         //     // swap arrays
         //     list($smaller, $larger) = array($larger, $smaller);
         //     list($slen, $llen) = array($llen, $slen);
         // }
         $lendiff = ($llen - $slen);
-        $coeff = array_slice($larger, 0, $lendiff);
+        $coeff = \array_slice($larger, 0, $lendiff);
         for ($idx = $lendiff; $idx < $llen; ++$idx) {
             $coeff[$idx] = ($smaller[($idx - $lendiff)] ^ $larger[$idx]);
         }

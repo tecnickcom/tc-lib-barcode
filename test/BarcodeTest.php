@@ -284,16 +284,16 @@ class BarcodeTest extends TestUtil
 ';
         $this->assertEquals($expected, $hdiv);
 
-        if (extension_loaded('imagick')) {
+        if (\extension_loaded('imagick')) {
             $pngik = $type->setBackgroundColor('white')->getPngData(true);
-            $this->assertEquals('PNG', substr($pngik, 1, 3));
+            $this->assertEquals('PNG', \substr($pngik, 1, 3));
         }
 
         $pnggd = $type->setBackgroundColor('white')->getPngData(false);
-        $this->assertEquals('PNG', substr($pnggd, 1, 3));
+        $this->assertEquals('PNG', \substr($pnggd, 1, 3));
 
         $pnggd = $type->setBackgroundColor('')->getPngData(false);
-        $this->assertEquals('PNG', substr($pnggd, 1, 3));
+        $this->assertEquals('PNG', \substr($pnggd, 1, 3));
     }
 
     public function testGetSvg(): void
@@ -308,11 +308,11 @@ class BarcodeTest extends TestUtil
         );
 
         // empty filename
-        ob_start();
+        \ob_start();
         $type->getSvg();
-        $svg = ob_get_clean();
+        $svg = \ob_get_clean();
         $this->assertNotFalse($svg);
-        $this->assertEquals('114f33435c265345f7c6cdf673922292', md5($svg));
+        $this->assertEquals('114f33435c265345f7c6cdf673922292', \md5($svg));
         $headers = xdebug_get_headers();
         $this->assertEquals(
             'Content-Disposition: inline; filename="114f33435c265345f7c6cdf673922292.svg";',
@@ -320,11 +320,11 @@ class BarcodeTest extends TestUtil
         );
 
         // invalid filename
-        ob_start();
+        \ob_start();
         $type->getSvg('#~');
-        $svg = ob_get_clean();
+        $svg = \ob_get_clean();
         $this->assertNotFalse($svg);
-        $this->assertEquals('114f33435c265345f7c6cdf673922292', md5($svg));
+        $this->assertEquals('114f33435c265345f7c6cdf673922292', \md5($svg));
         $headers = xdebug_get_headers();
         $this->assertEquals(
             'Content-Disposition: inline; filename="114f33435c265345f7c6cdf673922292.svg";',
@@ -332,11 +332,11 @@ class BarcodeTest extends TestUtil
         );
 
         // valid filename
-        ob_start();
+        \ob_start();
         $type->getSvg('test_SVG_filename-001');
-        $svg = ob_get_clean();
+        $svg = \ob_get_clean();
         $this->assertNotFalse($svg);
-        $this->assertEquals('114f33435c265345f7c6cdf673922292', md5($svg));
+        $this->assertEquals('114f33435c265345f7c6cdf673922292', \md5($svg));
         $headers = xdebug_get_headers();
         $this->assertEquals(
             'Content-Disposition: inline; filename="test_SVG_filename-001.svg";',
@@ -356,29 +356,29 @@ class BarcodeTest extends TestUtil
         );
 
         // empty filename
-        ob_start();
+        \ob_start();
         $type->getPng();
-        $png = ob_get_clean();
+        $png = \ob_get_clean();
         $this->assertNotFalse($png);
-        $this->assertEquals('PNG', substr($png, 1, 3));
+        $this->assertEquals('PNG', \substr($png, 1, 3));
         $headers = xdebug_get_headers();
         $this->assertNotEmpty($headers[5]);
 
         // invalid filename
-        ob_start();
+        \ob_start();
         $type->getPng('#~');
-        $png = ob_get_clean();
+        $png = \ob_get_clean();
         $this->assertNotFalse($png);
-        $this->assertEquals('PNG', substr($png, 1, 3));
+        $this->assertEquals('PNG', \substr($png, 1, 3));
         $headers = xdebug_get_headers();
         $this->assertNotEmpty($headers[5]);
 
         // valid filename
-        ob_start();
+        \ob_start();
         $type->getPng('test_PNG_filename-001');
-        $png = ob_get_clean();
+        $png = \ob_get_clean();
         $this->assertNotFalse($png);
-        $this->assertEquals('PNG', substr($png, 1, 3));
+        $this->assertEquals('PNG', \substr($png, 1, 3));
         $headers = xdebug_get_headers();
         $this->assertEquals(
             'Content-Disposition: inline; filename="test_PNG_filename-001.png";',

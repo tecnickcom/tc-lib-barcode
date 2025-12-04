@@ -333,7 +333,7 @@ abstract class Placement
         int $ncol
     ): array {
         // initialize array with zeros
-        $marr = array_fill(0, ($nrow * $ncol), 0);
+        $marr = \array_fill(0, ($nrow * $ncol), 0);
         // set starting values
         $chr = 1;
         $row = 4;

@@ -97,7 +97,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         array &$charset
     ): int {
         // 2. process the next character in C40 encodation.
-        $chr = ord($data[$epos]);
+        $chr = \ord($data[$epos]);
         ++$epos;
         // check for extended character
         if (($chr & 0x80) !== 0) {
@@ -162,8 +162,8 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
             $this->last_enc = $enc;
         } elseif (($cdwr == 2) && ($ptr == 2)) {
             // b. If two symbol characters remain and two C40 values remain to be encoded
-            $ch1 = array_shift($temp_cw);
-            $ch2 = array_shift($temp_cw);
+            $ch1 = \array_shift($temp_cw);
+            $ch2 = \array_shift($temp_cw);
             $ptr -= 2;
             $tmp = ((1600 * $ch1) + (40 * $ch2) + 1);
             $cdw[] = ($tmp >> 8);
@@ -209,9 +209,9 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         do {
             $chr = $this->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
             if ($ptr >= 3) {
-                $ch1 = array_shift($temp_cw);
-                $ch2 = array_shift($temp_cw);
-                $ch3 = array_shift($temp_cw);
+                $ch1 = \array_shift($temp_cw);
+                $ch2 = \array_shift($temp_cw);
+                $ch3 = \array_shift($temp_cw);
                 $ptr -= 3;
                 $tmp = ((1600 * $ch1) + (40 * $ch2) + $ch3 + 1);
                 $cdw[] = ($tmp >> 8);

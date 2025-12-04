@@ -134,7 +134,7 @@ class Spec extends \Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs
      */
     public function getEccSpec(int $version, int $level, array $spec): array
     {
-        if (count($spec) < 5) {
+        if (\count($spec) < 5) {
             $spec = [0, 0, 0, 0, 0];
         }
 

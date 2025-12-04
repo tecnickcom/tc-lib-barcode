@@ -70,7 +70,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getChecksum(string $code): string
     {
-        $len = strlen($code);
+        $len = \strlen($code);
         // calculate check digit C
         $ptr = 1;
         $ccheck = 0;
@@ -132,11 +132,11 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         $this->nrows = 1;
         $this->bars = [];
         $this->formatCode();
-        $clen = strlen($this->extcode);
+        $clen = \strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (! isset($this::CHBAR[$char])) {
-                throw new BarcodeException('Invalid character: chr(' . ord($char) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . \ord($char) . ')');
             }
 
             for ($pos = 0; $pos < 6; ++$pos) {

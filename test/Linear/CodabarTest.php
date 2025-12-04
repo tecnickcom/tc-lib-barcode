@@ -50,6 +50,6 @@ class CodabarTest extends TestUtil
     {
         $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $barcode->getBarcodeObj('CODABAR', chr(218));
+        $barcode->getBarcodeObj('CODABAR', \chr(218));
     }
 }

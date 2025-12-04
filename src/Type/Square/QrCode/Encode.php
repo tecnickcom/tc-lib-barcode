@@ -59,18 +59,18 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $inputitem['size']
         );
         for ($i = 0; $i < $words; ++$i) {
-            $val = (ord($inputitem['data'][$i * 3]) - ord('0')) * 100;
-            $val += (ord($inputitem['data'][$i * 3 + 1]) - ord('0')) * 10;
-            $val += (ord($inputitem['data'][$i * 3 + 2]) - ord('0'));
+            $val = (\ord($inputitem['data'][$i * 3]) - \ord('0')) * 100;
+            $val += (\ord($inputitem['data'][$i * 3 + 1]) - \ord('0')) * 10;
+            $val += (\ord($inputitem['data'][$i * 3 + 2]) - \ord('0'));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 10, $val);
         }
 
         if ($inputitem['size'] - $words * 3 == 1) {
-            $val = ord($inputitem['data'][$words * 3]) - ord('0');
+            $val = \ord($inputitem['data'][$words * 3]) - \ord('0');
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $val);
         } elseif (($inputitem['size'] - ($words * 3)) == 2) {
-            $val = (ord($inputitem['data'][$words * 3]) - ord('0')) * 10;
-            $val += (ord($inputitem['data'][$words * 3 + 1]) - ord('0'));
+            $val = (\ord($inputitem['data'][$words * 3]) - \ord('0')) * 10;
+            $val += (\ord($inputitem['data'][$words * 3 + 1]) - \ord('0'));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 7, $val);
         }
 
@@ -106,13 +106,13 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $inputitem['size']
         );
         for ($idx = 0; $idx < $words; ++$idx) {
-            $val = $this->lookAnTable(ord($inputitem['data'][($idx * 2)])) * 45;
-            $val += $this->lookAnTable(ord($inputitem['data'][($idx * 2) + 1]));
+            $val = $this->lookAnTable(\ord($inputitem['data'][($idx * 2)])) * 45;
+            $val += $this->lookAnTable(\ord($inputitem['data'][($idx * 2) + 1]));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 11, $val);
         }
 
         if (($inputitem['size'] & 1) !== 0) {
-            $val = $this->lookAnTable(ord($inputitem['data'][($words * 2)]));
+            $val = $this->lookAnTable(\ord($inputitem['data'][($words * 2)]));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 6, $val);
         }
 
@@ -147,7 +147,7 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             $inputitem['size']
         );
         for ($idx = 0; $idx < $inputitem['size']; ++$idx) {
-            $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 8, ord($inputitem['data'][$idx]));
+            $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 8, \ord($inputitem['data'][$idx]));
         }
 
         return $inputitem;
@@ -181,7 +181,7 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
             (int) ($inputitem['size'] / 2)
         );
         for ($idx = 0; $idx < $inputitem['size']; $idx += 2) {
-            $val = (ord($inputitem['data'][$idx]) << 8) | ord($inputitem['data'][($idx + 1)]);
+            $val = (\ord($inputitem['data'][$idx]) << 8) | \ord($inputitem['data'][($idx + 1)]);
             if ($val <= 0x9ffc) {
                 $val -= 0x8140;
             } else {
@@ -216,9 +216,9 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     {
         $inputitem['bstream'] = [];
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x03);
-        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, ord($inputitem['data'][1]) - 1);
-        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, ord($inputitem['data'][0]) - 1);
-        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 8, ord($inputitem['data'][2]));
+        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, \ord($inputitem['data'][1]) - 1);
+        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, \ord($inputitem['data'][0]) - 1);
+        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 8, \ord($inputitem['data'][2]));
         return $inputitem;
     }
 }

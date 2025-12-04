@@ -48,13 +48,13 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         string $hint = 'A'
     ): void {
         $this->addFLG($eci);
-        $chrarr = unpack('C*', $code);
+        $chrarr = \unpack('C*', $code);
         if ($chrarr === false) {
             throw new BarcodeException('Unable to unpack the code');
         }
 
-        $chars = array_values($chrarr);
-        $chrlen = count($chars);
+        $chars = \array_values($chrarr);
+        $chrlen = \count($chars);
         if ($hint == 'B') {
             $this->binaryEncode($chars, $chrlen); // @phpstan-ignore argument.type
             return;
@@ -311,7 +311,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
                 break;
             case Data::MODE_DIGIT:
                 $common = $this->countPunctAndDigitChars($chars, $idx, $chrlen);
-                $clen = count($common);
+                $clen = \count($common);
                 if (($clen > 0) && ($clen < 6)) {
                     $this->tmpCdws = $common;
                     $this->mergeTmpCwdRaw();
