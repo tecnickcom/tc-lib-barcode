@@ -246,9 +246,10 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
 
         while ($pos < $data_length) {
-            // Determine if current char is FNC1 (don't encode it, just pass it through)
-            if ($this->gsonemode && ($data[$pos] == \chr(232))) {
-                $cdw[] = 232;
+            // Determine if current char is FNC1 (chr(232)) or <GS> (chr(29)) (don't encode it, just pass it through)
+            // https://www.gs1.org/standards/gs1-datamatrix-guideline/25#sub-subsection-02-02-01-title
+            if ($this->gsonemode && \in_array($ord = \ord($data[$pos]), [232, 29], true)) {
+                $cdw[] = $ord;
                 ++$pos;
                 ++$cdw_num;
                 continue;

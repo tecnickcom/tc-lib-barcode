@@ -425,6 +425,11 @@ class DatamatrixTest extends TestUtil
                 'DATAMATRIX,S,GS1,C40',
                 "\xE8" . '01095011010209171719050810ABCD1234' . "\xE8" . '2110',
                 'ba117111dfa40a40e1bb968c719d2eef'
+            ],
+            [
+                'DATAMATRIX,S,GS1',
+                "\xE8" . '01095011010209171719050810ABCD1234' . "\x1D" . '2110',
+                'cc096c94e0e2d88e8c50e3fdccef60ce'
             ]
         ];
     }
