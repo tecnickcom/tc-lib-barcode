@@ -246,12 +246,18 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
 
         while ($pos < $data_length) {
-            // Determine if current char is FNC1 (don't encode it, just pass it through)
-            if ($this->gsonemode && ($data[$pos] == \chr(232))) {
-                $cdw[] = 232;
-                ++$pos;
-                ++$cdw_num;
-                continue;
+            if ($this->gsonemode) {
+                // check for control characters
+                $cco = \ord($data[$pos]);
+                if (
+                    $cco == 232   // FNC1 (ASCII 232 - HEX \xE8)
+                    || $cco == 29 // <GS> (ASCII  29 - HEX \x1D)
+                ) {
+                    $cdw[] = $cco; // don't encode, just pass it through.
+                    ++$pos;
+                    ++$cdw_num;
+                    continue;
+                }
             }
 
             switch ($enc) {
