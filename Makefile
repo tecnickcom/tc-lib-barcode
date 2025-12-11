@@ -84,7 +84,7 @@ COMPOSER=$(PHP) -d "apc.enable_cli=0" $(shell which composer)
 PHPDOC=$(shell which phpDocumentor)
 
 # phpstan version
-PHPSTANVER=2.1.32
+PHPSTANVER=2.1.33
 
 # --- MAKE TARGETS ---
 
@@ -214,7 +214,7 @@ endif
 # Test source code for coding standard violations
 .PHONY: lint
 lint:
-	./vendor/bin/phpcs --ignore="\./vendor/" --standard=phpcs.xml src test
+	./vendor/bin/phpcs --standard=phpcs.xml
 	./vendor/bin/phpmd src text codesize,unusedcode,naming,design --exclude */vendor/*
 	./vendor/bin/phpmd test text unusedcode,naming,design --exclude */vendor/*
 	php -r 'exit((int)version_compare(PHP_MAJOR_VERSION, "7", ">"));' || ./vendor/phpstan.phar analyse
