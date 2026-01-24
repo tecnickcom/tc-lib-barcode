@@ -6,9 +6,9 @@
  * @since       2023-10-13
  * @category    Library
  * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2023-2024 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @author     2026 Nicola Asuni <info@tecnick.com>
+ * @copyright   2023-2026 Nicola Asuni - Tecnick.com LTD
+ * @license     https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
  * This file is part of tc-lib-barcode software library.
@@ -26,9 +26,9 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @since       2023-10-13
  * @category    Library
  * @package     Barcode
- * @author      Nicola Asuni <info@tecnick.com>
- * @copyright   2023-2024 Nicola Asuni - Tecnick.com LTD
- * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @author     2026 Nicola Asuni <info@tecnick.com>
+ * @copyright   2023-2026 Nicola Asuni - Tecnick.com LTD
+ * @license     https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
  * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
@@ -67,7 +67,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * Forced binary encoding for the given characters.
      *
      * @param array<int> $chars  Integer ASCII values of the characters to encode.
-     * @param int   $chrlen Lenght of the $chars array.
+     * @param int   $chrlen Length of the $chars array.
      */
     protected function binaryEncode(array $chars, int $chrlen): void
     {
@@ -108,7 +108,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * Automatic encoding for the given characters.
      *
      * @param array<int> $chars  Integer ASCII values of the characters to encode.
-     * @param int   $chrlen Lenght of the $chars array.
+     * @param int   $chrlen Length of the $chars array.
      */
     protected function autoEncode(array $chars, int $chrlen): void
     {
