@@ -6,7 +6,7 @@
  * @since     2020-12-19
  * @category  Library
  * @package   Barcode
- * @author   2026 Nicola Asuni <info@tecnick.com>
+ * @author    Nicola Asuni <info@tecnick.com>
  * @copyright 2015-2026 Nicola Asuni - Tecnick.com LTD
  * @license   https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link      https://github.com/tecnickcom/tc-lib-barcode
@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  * @since     2020-12-19
  * @category  Library
  * @package   Barcode
- * @author   2026 Nicola Asuni <info@tecnick.com>
+ * @author    Nicola Asuni <info@tecnick.com>
  * @copyright 2015-2026 Nicola Asuni - Tecnick.com LTD
  * @license   https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link      https://github.com/tecnickcom/tc-lib-barcode
