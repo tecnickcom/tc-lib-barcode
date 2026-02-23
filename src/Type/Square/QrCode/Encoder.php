@@ -130,7 +130,7 @@ class Encoder extends \Com\Tecnick\Barcode\Type\Square\QrCode\Init
      */
     protected function setFrameAt(array $pos, int $val): void
     {
-        $this->frame[$pos['y']][$pos['x']] = \chr($val);
+        $this->frame[$pos['y']][$pos['x']] = \chr($val & 0xFF);
     }
 
     /**

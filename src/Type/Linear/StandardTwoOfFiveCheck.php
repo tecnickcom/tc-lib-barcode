@@ -113,7 +113,7 @@ class StandardTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear
         for ($idx = 0; $idx < $clen; ++$idx) {
             $digit = $this->extcode[$idx];
             if (! isset($this::CHBAR[$digit])) {
-                throw new BarcodeException('Invalid character: \chr(' . \ord($digit) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . (\ord($digit) & 0xFF) . ')');
             }
 
             $seq .= $this::CHBAR[$digit];

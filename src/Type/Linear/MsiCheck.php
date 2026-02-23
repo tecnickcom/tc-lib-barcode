@@ -119,7 +119,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         for ($pos = 0; $pos < $clen; ++$pos) {
             $digit = $this->extcode[$pos];
             if (! isset($this::CHBAR[$digit])) {
-                throw new BarcodeException('Invalid character: \chr(' . \ord($digit) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . (\ord($digit) & 0xFF) . ')');
             }
 
             $seq .= $this::CHBAR[$digit];

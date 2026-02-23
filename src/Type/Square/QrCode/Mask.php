@@ -166,21 +166,21 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
             }
             $frame[8] = \substr_replace(
                 $frame[8],
-                \chr($val),
+                \chr($val & 0xFF),
                 ($width - 1 - $idx),
                 1,
             );
             if ($idx < 6) {
                 $frame[$idx] = \substr_replace(
                     $frame[$idx],
-                    \chr($val),
+                    \chr($val & 0xFF),
                     8,
                     1,
                 );
             } else {
                 $frame[($idx + 1)] = \substr_replace(
                     $frame[($idx + 1)],
-                    \chr($val),
+                    \chr($val & 0xFF),
                     8,
                     1,
                 );
@@ -198,21 +198,21 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
             }
             $frame[($width - 7 + $idx)] = \substr_replace(
                 $frame[($width - 7 + $idx)],
-                \chr($val),
+                \chr($val & 0xFF),
                 8,
                 1,
             );
             if ($idx == 0) {
                 $frame[8] = \substr_replace(
                     $frame[8],
-                    \chr($val),
+                    \chr($val & 0xFF),
                     7,
                     1,
                 );
             } else {
                 $frame[8] = \substr_replace(
                     $frame[8],
-                    \chr($val),
+                    \chr($val & 0xFF),
                     (6 - $idx),
                     1,
                 );

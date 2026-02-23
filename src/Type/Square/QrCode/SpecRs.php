@@ -211,13 +211,13 @@ abstract class SpecRs
         for ($idx = 1; $idx < $wdo; ++$idx) {
             $frame[6] = \substr_replace(
                 $frame[6],
-                \chr(0x90 | ($idx & 1)),
+                \chr((0x90 | ($idx & 1)) & 0xFF),
                 (7 + $idx),
                 1,
             );
             $frame[(7 + $idx)] = \substr_replace(
                 $frame[(7 + $idx)],
-                \chr(0x90 | ($idx & 1)),
+                \chr((0x90 | ($idx & 1)) & 0xFF),
                 6,
                 1,
             );
@@ -233,7 +233,7 @@ abstract class SpecRs
                 for ($ypos = 0; $ypos < 3; ++$ypos) {
                     $frame[(($width - 11) + $ypos)] = \substr_replace(
                         $frame[(($width - 11) + $ypos)],
-                        \chr(0x88 | ($val & 1)),
+                        \chr((0x88 | ($val & 1)) & 0xFF),
                         $xpos,
                         1,
                     );
@@ -246,7 +246,7 @@ abstract class SpecRs
                 for ($xpos = 0; $xpos < 3; ++$xpos) {
                     $frame[$ypos] = \substr_replace(
                         $frame[$ypos],
-                        \chr(0x88 | ($val & 1)),
+                        (\chr(0x88 | ($val & 1) & 0xFF)),
                         ($xpos + ($width - 11)),
                         1,
                     );

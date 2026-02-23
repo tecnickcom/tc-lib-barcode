@@ -146,7 +146,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
             if (! isset($this::CHKSUM[$char])) {
-                throw new BarcodeException('Invalid character: \chr(' . \ord($char) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
             }
 
             $row += (int) $this::CHKSUM[$char][0];

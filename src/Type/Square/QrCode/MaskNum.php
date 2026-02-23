@@ -53,7 +53,7 @@ abstract class MaskNum
                 if ($bitMask[$ypos][$xpos] == 1) {
                     $mask[$ypos] = \substr_replace(
                         $mask[$ypos],
-                        \chr(\ord($frame[$ypos][$xpos]) ^ ((int) ($bitMask[$ypos][$xpos]))),
+                        \chr((\ord($frame[$ypos][$xpos]) ^ ((int) ($bitMask[$ypos][$xpos])) & 0xFF)),
                         $xpos,
                         1
                     );

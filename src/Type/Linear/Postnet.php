@@ -112,7 +112,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (! isset($this::CHBAR[$char])) {
-                throw new BarcodeException('Invalid character: \chr(' . \ord($char) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
             }
 
             for ($pos = 0; $pos < 5; ++$pos) {

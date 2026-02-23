@@ -294,7 +294,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $item = \ord($code[$chr]);
             if ($item > 127) {
-                throw new BarcodeException('Invalid character: \chr(' . $item . ')');
+                throw new BarcodeException('Invalid character: \chr(' . ($item & 0xFF) . ')');
             }
 
             $ext .= $this::EXTCODES[$item];
@@ -347,7 +347,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (! isset($this::CHBAR[$char])) {
-                throw new BarcodeException('Invalid character: \chr(' . \ord($char) . ')');
+                throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
             }
 
             for ($pos = 0; $pos < 9; ++$pos) {
