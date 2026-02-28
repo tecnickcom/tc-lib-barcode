@@ -422,17 +422,33 @@ class DatamatrixTest extends TestUtil
                 '8b4f688a774130bc654e39dfcfadb482'
             ],
             [
-                'DATAMATRIX,S,GS1,C40',
+                'DATAMATRIX,S,GS1',
                 // \xE8 is the control character FNC1 (ASCII 232)
-                "\xE8" . '01095011010209171719050810ABCD1234' . "\xE8" . '2110',
-                'ba117111dfa40a40e1bb968c719d2eef'
+                // Expected read:
+                //     (01)03453120000011
+                //     (17)191125
+                //     (10)ABCD1234
+                //     (21)10
+                "\xE8" . '01034531200000111719112510ABCD1234' . "\xE8" . '2110',
+                '3c66c6c7355e7dea071501216e894eac'
             ],
             [
                 'DATAMATRIX,S,GS1',
                 // \xE8 is the control character FNC1 (ASCII 232)
                 // \x1D is the control character <GS> (ASCII 29)
-                "\xE8" . '01095011010209171719050810ABCD1234' . "\x1D" . '2110',
-                'cc096c94e0e2d88e8c50e3fdccef60ce'
+                // Expected read:
+                //     (01)03453120000011
+                //     (17)191125
+                //     (10)ABCD1234
+                //     (21)10
+                "\xE8" . '01034531200000111719112510ABCD1234' . "\x1D" . '2110',
+                '3c66c6c7355e7dea071501216e894eac'
+            ],
+            [
+                'DATAMATRIX,S,GS1,C40',
+                // \xE8 is the control character FNC1 (ASCII 232)
+                "\xE8" . '01095011010209171719050810ABCD1234' . "\xE8" . '2110',
+                'ba117111dfa40a40e1bb968c719d2eef'
             ]
         ];
     }

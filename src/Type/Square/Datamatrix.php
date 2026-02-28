@@ -253,7 +253,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                     $cco == 232   // FNC1 (ASCII 232 - HEX \xE8)
                     || $cco == 29 // <GS> (ASCII  29 - HEX \x1D)
                 ) {
-                    $cdw[] = $cco; // don't encode, just pass it through.
+                    $cdw[] = 232; // FNC1
                     ++$pos;
                     ++$cdw_num;
                     continue;
