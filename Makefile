@@ -101,22 +101,10 @@ help:
 	@echo "$(PROJECT) Makefile."
 	@echo "The following commands are available:"
 	@echo ""
-	@echo "  make buildall : Build and test everything from scratch"
-	@echo "  make bz2      : Package the library in a compressed bz2 archive"
-	@echo "  make clean    : Delete the vendor and target directories"
-	@echo "  make codefix  : Fix code style violations"
-	@echo "  make deb      : Build a DEB package for Debian-like Linux distributions"
-	@echo "  make deps     : Download all dependencies"
-	@echo "  make doc      : Generate source code documentation"
-	@echo "  make lint     : Test source code for coding standard violations"
-	@echo "  make qa       : Run all tests and reports"
-	@echo "  make report   : Generate various reports"
-	@echo "  make rpm      : Build an RPM package for RedHat-like Linux distributions"
-	@echo "  make server   : Start the development server"
-	@echo "  make test     : Run unit tests"
+	@awk '/^## /{desc=substr($$0,4)} /^\.PHONY:/{if(NF>1) {target=$$2; if(desc) printf "  make %-15s: %s\n",target,desc; desc=""}}' Makefile
 	@echo ""
-	@echo "To test and build everything from scratch:"
-	@echo "make buildall"
+	@echo "To test and build everything from scratch, use the shortcut:"
+	@echo "    make x"
 	@echo ""
 
 # alias for help target
@@ -127,29 +115,29 @@ all: help
 .PHONY: x
 x: buildall
 
-# Full build and test sequence
+## Full build and test sequence
 .PHONY: buildall
 buildall: deps codefix qa bz2 rpm deb
 
-# Package the library in a compressed bz2 archive
+## Package the library in a compressed bz2 archive
 .PHONY: bz2
 bz2:
 	rm -rf $(PATHBZ2PKG)
 	make install DESTDIR=$(PATHBZ2PKG)
 	tar -jcvf $(PATHBZ2PKG)/$(PKGNAME)-$(VERSION)-$(RELEASE).tbz2 -C $(PATHBZ2PKG) $(DATADIR)
 
-# Delete the vendor and target directories
+## Delete the vendor and target directories
 .PHONY: clean
 clean:
 	rm -rf ./vendor $(TARGETDIR)
 
-# Fix code style violations
+## Fix code style violations
 .PHONY: codefix
 codefix:
 	./vendor/bin/phpcbf --config-set ignore_non_auto_fixable_on_exit 1
 	./vendor/bin/phpcbf --ignore="\./vendor/" --standard=psr12 src test
 
-# Build a DEB package for Debian-like Linux distributions
+## Build a DEB package for Debian-like Linux distributions
 .PHONY: deb
 deb:
 	rm -rf $(PATHDEBPKG)
@@ -174,7 +162,7 @@ endif
 	echo "new-package-should-close-itp-bug" > $(PATHDEBPKG)/$(PKGNAME)-$(VERSION)/debian/$(PKGNAME).lintian-overrides
 	cd $(PATHDEBPKG)/$(PKGNAME)-$(VERSION) && debuild -us -uc
 
-# Clean all artifacts and download all dependencies
+## Clean all artifacts and download all dependencies
 .PHONY: deps
 deps: ensuretarget
 	rm -rf ./vendor/*
@@ -182,20 +170,20 @@ deps: ensuretarget
 	curl --silent --show-error --fail --location --output ./vendor/phpstan.phar https://github.com/phpstan/phpstan/releases/download/${PHPSTANVER}/phpstan.phar \
 	&& chmod +x ./vendor/phpstan.phar
 
-# Generate source code documentation
+## Generate source code documentation
 .PHONY: doc
 doc: ensuretarget
 	rm -rf $(TARGETDIR)/doc
 	$(PHPDOC) -d ./src -t $(TARGETDIR)/doc/
 
-# Create missing target directories for test and build artifacts
+## Create missing target directories for test and build artifacts
 .PHONY: ensuretarget
 ensuretarget:
 	mkdir -p $(TARGETDIR)/test
 	mkdir -p $(TARGETDIR)/report
 	mkdir -p $(TARGETDIR)/doc
 
-# Install this application
+## Install this application
 .PHONY: install
 install: uninstall
 	mkdir -p $(PATHINSTBIN)
@@ -217,7 +205,7 @@ ifneq ($(strip $(CONFIGPATH)),)
 	find $(PATHINSTCFG) -type f -exec chmod 644 {} \;
 endif
 
-# Test source code for coding standard violations
+## Test source code for coding standard violations
 .PHONY: lint
 lint:
 	./vendor/bin/phpcs --standard=phpcs.xml
@@ -225,17 +213,17 @@ lint:
 	./vendor/bin/phpmd test text unusedcode,naming,design --exclude */vendor/*
 	php -r 'exit((int)version_compare(PHP_MAJOR_VERSION, "7", ">"));' || ./vendor/phpstan.phar analyse
 
-# Run all tests and reports
+## Run all tests and reports
 .PHONY: qa
 qa: ensuretarget lint test report
 
-# Generate various reports
+## Generate various reports
 .PHONY: report
 report: ensuretarget
 	./vendor/bin/pdepend --jdepend-xml=$(TARGETDIR)/report/dependencies.xml --summary-xml=$(TARGETDIR)/report/metrics.xml --jdepend-chart=$(TARGETDIR)/report/dependecies.svg --overview-pyramid=$(TARGETDIR)/report/overview-pyramid.svg --ignore=vendor ./src
 	#./vendor/bartlett/php-compatinfo/bin/phpcompatinfo --no-ansi analyser:run src/ > $(TARGETDIR)/report/phpcompatinfo.txt
 
-# Build the RPM package for RedHat-like Linux distributions
+## Build the RPM package for RedHat-like Linux distributions
 .PHONY: rpm
 rpm:
 	rm -rf $(PATHRPMPKG)
@@ -253,12 +241,12 @@ rpm:
 	--define "_configpath /$(CONFIGPATH)" \
 	-bb resources/rpm/rpm.spec
 
-# Start the development server
+## Start the development server
 .PHONY: server
 server:
 	$(PHP) -t example -S localhost:$(PORT)
 
-# Tag this GIT version
+## Tag this GIT version
 .PHONY: tag
 tag:
 	git checkout main && \
@@ -266,20 +254,20 @@ tag:
 	git push origin --tags && \
 	git pull
 
-# Run unit tests
+## Run unit tests
 .PHONY: test
 test:
 	cp phpunit.xml.dist phpunit.xml
 	#./vendor/bin/phpunit --migrate-configuration || true
 	XDEBUG_MODE=coverage ./vendor/bin/phpunit --stderr test
 
-# Remove all installed files
+## Remove all installed files
 .PHONY: uninstall
 uninstall:
 	rm -rf $(PATHINSTBIN)
 	rm -rf $(PATHINSTDOC)
 
-# Increase the version patch number
+## Increase the version patch number
 .PHONY: versionup
 versionup:
 	echo ${VERSION} | gawk -F. '{printf("%d.%d.%d\n",$$1,$$2,(($$3+1)));}' > VERSION
