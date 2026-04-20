@@ -18,6 +18,8 @@ If this library saves you time, please consider [supporting development via PayP
 
 `tc-lib-barcode` is a pure-PHP barcode generation library with broad support for industrial, retail, logistics, and document automation use cases.
 
+It focuses on deterministic output and specification-driven encoding, making it suitable for labels, tickets, warehouse flows, and compliance documents. The API is structured so applications can generate barcode data once and render it as vectors or raster images depending on their output target.
+
 | | |
 |---|---|
 | **Namespace** | `\Com\Tecnick\Barcode` |

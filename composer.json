@@ -2,9 +2,11 @@
   "name": "tecnickcom/tc-lib-barcode",
   "description": "PHP library to generate linear and bidimensional barcodes",
   "type": "library",
-  "homepage": "http://www.tecnick.com",
+  "homepage": "https://tcpdf.org",
   "license": "LGPL-3.0-or-later",
   "keywords": [
+    "tc-lib-barcode",
+    "barcode",
     "3 of 9",
     "ANSI MH10.8M-1983",
     "AZTEC",
