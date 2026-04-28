@@ -60,7 +60,7 @@
     "ext-date": "*",
     "ext-gd": "*",
     "ext-pcre": "*",
-    "tecnickcom/tc-lib-color": "^2.3"
+    "tecnickcom/tc-lib-color": "^2.4"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

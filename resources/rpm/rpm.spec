@@ -9,16 +9,14 @@ Version:   %{_version}
 Release:   %{_release}%{?dist}
 Summary:   PHP library to generate linear and bidimensional barcodes
 
-Group:     Development/Libraries
 License:   LGPLv3+
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  php(language) >= 8.1.0
 Requires:  php-composer(%{c_vendor}/tc-lib-color) < 3.0.0
-Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 2.3.14
+Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 2.4.1
 Requires:  php-bcmath
 Requires:  php-date
 Requires:  php-gd
@@ -43,18 +41,14 @@ Optional dependency: php-pecl-imagick
 #(cd %{_current_directory} && make build)
 
 %install
-rm -rf $RPM_BUILD_ROOT
-(cd %{_current_directory} && make install DESTDIR=$RPM_BUILD_ROOT)
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-#(cd %{_current_directory} && make clean)
+rm -rf %{buildroot}
+(cd %{_current_directory} && make install DESTDIR=%{buildroot})
 
 %files
 %attr(-,root,root) %{_libpath}
 %attr(-,root,root) %{_docpath}
 %docdir %{_docpath}
-#%config(noreplace) %{_configpath}*
+# Optional config files can be listed here when used by a project.
 
 %changelog
 * Thu Jul 02 2026 Nicola Asuni <info@tecnick.com> 1.2.0-1

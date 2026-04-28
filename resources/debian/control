@@ -2,15 +2,17 @@ Source: ~#PKGNAME#~
 Maintainer: Nicola Asuni <info@tecnick.com>
 Section: php
 Priority: optional
-Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.7
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
 Homepage: https://github.com/~#VENDOR#~/~#PROJECT#~
 Vcs-Git: https://github.com/~#VENDOR#~/~#PROJECT#~.git
+Vcs-Browser: https://github.com/~#VENDOR#~/~#PROJECT#~
 
 Package: ~#PKGNAME#~
 Provides: php-~#PROJECT#~
 Architecture: all
-Depends: php (>= 8.1.0), php-bcmath, php-date, php-gd, php-tecnickcom-tc-lib-color (<< 3.0.0), php-tecnickcom-tc-lib-color (>= 2.3.14), ${misc:Depends}
+Depends: php (>= 8.1.0), php-bcmath, php-date, php-gd, php-tecnickcom-tc-lib-color (<< 3.0.0), php-tecnickcom-tc-lib-color (>= 2.4.1), ${misc:Depends}
 Description: PHP Barcode library
  This library includes PHP classes to generate linear
  and bidimensional barcodes:
