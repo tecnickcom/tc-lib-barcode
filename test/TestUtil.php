@@ -37,7 +37,7 @@ class TestUtil extends TestCase
         mixed $expected,
         mixed $actual,
         float $delta = 0.01,
-        string $message = ''
+        string $message = '',
     ): void {
         parent::assertEqualsWithDelta($expected, $actual, $delta, $message);
     }
@@ -45,8 +45,31 @@ class TestUtil extends TestCase
     /**
      * @param class-string<\Throwable> $exception
      */
-    public function bcExpectException($exception): void
+    public function bcExpectException(string $exception): void
     {
+        if (!\is_a($exception, \Throwable::class, true)) {
+            self::fail('Expected a throwable class name.');
+        }
+
         parent::expectException($exception);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function getResponseHeaders(): array
+    {
+        if (\function_exists('xdebug_get_headers')) {
+            /** @var list<string> $rawHeaders */
+            $rawHeaders = xdebug_get_headers();
+            $headers = [];
+            foreach ($rawHeaders as $header) {
+                $headers[] = $header;
+            }
+
+            return $headers;
+        }
+
+        return \headers_list();
     }
 }

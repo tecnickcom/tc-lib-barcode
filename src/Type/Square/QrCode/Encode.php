@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Encode.php
  *
@@ -29,6 +31,24 @@ namespace Com\Tecnick\Barcode\Type\Square\QrCode;
  */
 abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMode
 {
+    protected function getEncModeValue(string $mode): int
+    {
+        return Data::ENC_MODES[$mode] ?? 0;
+    }
+
+    /**
+     * @param array{
+     *             'mode': int,
+     *             'size': int,
+     *             'data': array<int, string>,
+     *             'bstream': array<int, int>,
+     *         } $inputitem
+     */
+    protected function getDataOrd(array $inputitem, int $idx): int
+    {
+        return \ord($inputitem['data'][$idx] ?? "\x00");
+    }
+
     /**
      * encode Mode Num
      *
@@ -55,22 +75,26 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $val);
         $inputitem['bstream'] = $this->appendNum(
             $inputitem['bstream'],
-            $this->getLengthIndicator(Data::ENC_MODES['NM'], $version),
-            $inputitem['size']
+            $this->getLengthIndicator($this->getEncModeValue('NM'), $version),
+            $inputitem['size'],
         );
         for ($i = 0; $i < $words; ++$i) {
-            $val = (\ord($inputitem['data'][$i * 3]) - \ord('0')) * 100;
-            $val += (\ord($inputitem['data'][$i * 3 + 1]) - \ord('0')) * 10;
-            $val += (\ord($inputitem['data'][$i * 3 + 2]) - \ord('0'));
+            $val = ($this->getDataOrd($inputitem, $i * 3) - \ord('0')) * 100;
+            $val += ($this->getDataOrd($inputitem, ($i * 3) + 1) - \ord('0')) * 10;
+            $val += $this->getDataOrd($inputitem, ($i * 3) + 2) - \ord('0');
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 10, $val);
         }
 
-        if ($inputitem['size'] - $words * 3 == 1) {
-            $val = \ord($inputitem['data'][$words * 3]) - \ord('0');
+        $remaining = $inputitem['size'] - ($words * 3);
+        if ($remaining === 1) {
+            $val = $this->getDataOrd($inputitem, $words * 3) - \ord('0');
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $val);
-        } elseif (($inputitem['size'] - ($words * 3)) == 2) {
-            $val = (\ord($inputitem['data'][$words * 3]) - \ord('0')) * 10;
-            $val += (\ord($inputitem['data'][$words * 3 + 1]) - \ord('0'));
+            return $inputitem;
+        }
+
+        if ($remaining === 2) {
+            $val = ($this->getDataOrd($inputitem, $words * 3) - \ord('0')) * 10;
+            $val += $this->getDataOrd($inputitem, ($words * 3) + 1) - \ord('0');
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 7, $val);
         }
 
@@ -102,17 +126,17 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x02);
         $inputitem['bstream'] = $this->appendNum(
             $inputitem['bstream'],
-            $this->getLengthIndicator(Data::ENC_MODES['AN'], $version),
-            $inputitem['size']
+            $this->getLengthIndicator($this->getEncModeValue('AN'), $version),
+            $inputitem['size'],
         );
         for ($idx = 0; $idx < $words; ++$idx) {
-            $val = $this->lookAnTable(\ord($inputitem['data'][($idx * 2)])) * 45;
-            $val += $this->lookAnTable(\ord($inputitem['data'][($idx * 2) + 1]));
+            $val = $this->lookAnTable($this->getDataOrd($inputitem, $idx * 2)) * 45;
+            $val += $this->lookAnTable($this->getDataOrd($inputitem, ($idx * 2) + 1));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 11, $val);
         }
 
         if (($inputitem['size'] & 1) !== 0) {
-            $val = $this->lookAnTable(\ord($inputitem['data'][($words * 2)]));
+            $val = $this->lookAnTable($this->getDataOrd($inputitem, $words * 2));
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 6, $val);
         }
 
@@ -143,11 +167,11 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x4);
         $inputitem['bstream'] = $this->appendNum(
             $inputitem['bstream'],
-            $this->getLengthIndicator(Data::ENC_MODES['8B'], $version),
-            $inputitem['size']
+            $this->getLengthIndicator($this->getEncModeValue('8B'), $version),
+            $inputitem['size'],
         );
         for ($idx = 0; $idx < $inputitem['size']; ++$idx) {
-            $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 8, \ord($inputitem['data'][$idx]));
+            $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 8, $this->getDataOrd($inputitem, $idx));
         }
 
         return $inputitem;
@@ -177,16 +201,17 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x8);
         $inputitem['bstream'] = $this->appendNum(
             $inputitem['bstream'],
-            $this->getLengthIndicator(Data::ENC_MODES['KJ'], $version),
-            (int) ($inputitem['size'] / 2)
+            $this->getLengthIndicator($this->getEncModeValue('KJ'), $version),
+            (int) ($inputitem['size'] / 2),
         );
         for ($idx = 0; $idx < $inputitem['size']; $idx += 2) {
-            $val = (\ord($inputitem['data'][$idx]) << 8) | \ord($inputitem['data'][($idx + 1)]);
+            $val = ($this->getDataOrd($inputitem, $idx) << 8) | $this->getDataOrd($inputitem, $idx + 1);
+            $valOffset = 0xc140;
             if ($val <= 0x9ffc) {
-                $val -= 0x8140;
-            } else {
-                $val -= 0xc140;
+                $valOffset = 0x8140;
             }
+
+            $val -= $valOffset;
 
             $val = ($val & 0xff) + (($val >> 8) * 0xc0);
             $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 13, $val);
@@ -216,9 +241,9 @@ abstract class Encode extends \Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMo
     {
         $inputitem['bstream'] = [];
         $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, 0x03);
-        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, \ord($inputitem['data'][1]) - 1);
-        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, \ord($inputitem['data'][0]) - 1);
-        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 8, \ord($inputitem['data'][2]));
+        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $this->getDataOrd($inputitem, 1) - 1);
+        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 4, $this->getDataOrd($inputitem, 0) - 1);
+        $inputitem['bstream'] = $this->appendNum($inputitem['bstream'], 8, $this->getDataOrd($inputitem, 2));
         return $inputitem;
     }
 }

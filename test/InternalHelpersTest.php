@@ -22,6 +22,10 @@ use Test\Fixture\InternalQrByteStream;
 
 class InternalHelpersTest extends TestUtil
 {
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testBaseTypeDefaultHooksAreCovered(): void
     {
         $type = new InternalBarcodeType(true);
@@ -37,49 +41,43 @@ class InternalHelpersTest extends TestUtil
         $this->assertNull($type->getArray()['bg_color_obj']);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testQrInputItemPaddingAndAppendBranches(): void
     {
-        $helper = new InternalQrByteStream(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['8B'],
-            1,
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ECC_LEVELS['L']
-        );
+        $helper = new InternalQrByteStream(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_8B, 1, 0);
 
-        $item = $helper->exposeNewInputItem(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['NM'],
-            3,
-            ['1']
-        );
+        $item = $helper->exposeNewInputItem(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_NM, 3, ['1']);
 
         $this->assertSame(['1', '0', '0'], $item['data']);
         $this->assertSame(-1, $helper->exposeLookAnTable(128));
 
         $items = $helper->exposeAppendNewInputItem(
             [],
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['AN'],
+            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_AN,
             2,
-            ['A', 'Z']
+            ['A', 'Z'],
         );
 
         $this->assertCount(1, $items);
-        $this->assertSame(['A', 'Z'], $items[0]['data']);
+        $firstItem = $items[0] ?? null;
+        $this->assertNotNull($firstItem);
+        $this->assertSame(['A', 'Z'], $firstItem['data']);
     }
 
     /**
      * @param array<int, string> $data
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
      */
     #[DataProvider('getInvalidQrInputItemProvider')]
     public function testQrInputItemInvalidBranches(int $mode, int $size, array $data): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
 
-        /** @var array<int, string> $data */
-
-        $helper = new InternalQrByteStream(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['8B'],
-            1,
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ECC_LEVELS['L']
-        );
+        $helper = new InternalQrByteStream(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_8B, 1, 0);
 
         $helper->exposeNewInputItem($mode, $size, $data);
     }
@@ -90,30 +88,31 @@ class InternalHelpersTest extends TestUtil
     public static function getInvalidQrInputItemProvider(): array
     {
         return [
-            [\Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['AN'], 1, ["\x80"]],
-            [\Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['KJ'], 1, ["\x81"]],
+            [\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_AN, 1, ["\x80"]],
+            [\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_KJ, 1, ["\x81"]],
             [999, 1, ['A']],
-            [\Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['NM'], 0, ['1']],
+            [\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_NM, 0, ['1']],
         ];
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testQrByteStreamPaddingAndBitstreamBranches(): void
     {
-        $helper = new InternalQrByteStream(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['8B'],
-            1,
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ECC_LEVELS['L']
-        );
+        $helper = new InternalQrByteStream(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_8B, 1, 0);
         $spec = new \Com\Tecnick\Barcode\Type\Square\QrCode\Spec();
-        $maxWords = $spec->getDataLength(1, \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ECC_LEVELS['L']);
-        $maxBits = ($maxWords * 8);
+        $maxWords = $spec->getDataLength(1, 0);
+        $maxBits = $maxWords * 8;
 
         $this->assertSame([], $helper->exposeAppendPaddingBit([]));
 
-        $exact = \array_fill(0, $maxBits, 0);
+        $exact = \array_fill(0, \max(0, $maxBits), 0);
         $this->assertSame($exact, $helper->exposeAppendPaddingBit($exact));
 
-        $short = \array_fill(0, ($maxBits - 2), 1);
+        $shortBits = \max(0, $maxBits - 2);
+        $short = \array_fill(0, $shortBits, 1);
         $this->assertCount($maxBits, $helper->exposeAppendPaddingBit($short));
 
         $padded = $helper->exposeAppendPaddingBit([1, 0, 1, 0]);
@@ -123,19 +122,15 @@ class InternalHelpersTest extends TestUtil
         $this->assertSame([21], $helper->exposeBitstreamToByte([1, 0, 1, 0, 1]));
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testQrByteStreamCreateAndConvertBranches(): void
     {
-        $helper = new InternalQrByteStream(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['8B'],
-            1,
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ECC_LEVELS['L']
-        );
+        $helper = new InternalQrByteStream(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_8B, 1, 0);
 
-        $item = $helper->exposeNewInputItem(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['NM'],
-            3,
-            ['1', '2', '3']
-        );
+        $item = $helper->exposeNewInputItem(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_NM, 3, ['1', '2', '3']);
         $stream = $helper->exposeCreateBitStream([$item]);
         $this->assertGreaterThan(0, $stream[1]);
 
@@ -147,18 +142,20 @@ class InternalHelpersTest extends TestUtil
         ];
 
         $converted = $helper->exposeConvertData([$item]);
-        $this->assertSame($encoded['bstream'], $converted[0]['bstream']);
+        $firstConverted = $converted[0] ?? null;
+        $this->assertNotNull($firstConverted);
+        $this->assertSame($encoded['bstream'], $firstConverted['bstream']);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testQrByteStreamNegativeBitsThrowsException(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
 
-        $helper = new InternalQrByteStream(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['8B'],
-            1,
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ECC_LEVELS['L']
-        );
+        $helper = new InternalQrByteStream(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_8B, 1, 0);
         $helper->forcedEstVer = 1;
         $helper->queuedCbs = [
             [[], -1],
@@ -167,35 +164,35 @@ class InternalHelpersTest extends TestUtil
         $helper->exposeConvertData([]);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testQrByteStreamEncodeBranches(): void
     {
-        $helper = new InternalQrByteStream(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['8B'],
-            1,
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ECC_LEVELS['L']
-        );
+        $helper = new InternalQrByteStream(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_8B, 1, 0);
 
         $spec = new \Com\Tecnick\Barcode\Type\Square\QrCode\Spec();
-        $words = $spec->maximumWords(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['8B'], 1);
+        $words = $spec->maximumWords(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_8B, 1);
         $item = $helper->exposeNewInputItem(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['8B'],
-            ($words + 1),
-            \array_fill(0, ($words + 1), 'A')
+            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_8B,
+            $words + 1,
+            \array_fill(0, \max(0, $words + 1), 'A'),
         );
 
         $encoded = $helper->encodeBitStream($item, 1);
         $this->assertNotEmpty($encoded['bstream']);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testQrByteStreamEncodeInvalidModeThrowsException(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
 
-        $helper = new InternalQrByteStream(
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ENC_MODES['8B'],
-            1,
-            \Com\Tecnick\Barcode\Type\Square\QrCode\Data::ECC_LEVELS['L']
-        );
+        $helper = new InternalQrByteStream(\Com\Tecnick\Barcode\Type\Square\QrCode\Data::MODE_8B, 1, 0);
 
         $helper->encodeBitStream([
             'mode' => 999,
@@ -205,12 +202,16 @@ class InternalHelpersTest extends TestUtil
         ], 1);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testDatamatrixPaddingSizeHelper(): void
     {
         $params = \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data::getPaddingSize('S', 1);
         $this->assertCount(16, $params);
 
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data::getPaddingSize('S', PHP_INT_MAX);
     }
 }

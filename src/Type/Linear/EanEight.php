@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * EanEight.php
  *
@@ -57,12 +59,12 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
         $seq = '101'; // left guard bar
         $half_len = (int) \ceil($this->code_length / 2);
         for ($pos = 0; $pos < $half_len; ++$pos) {
-            $seq .= $this::CHBAR['A'][$this->extcode[$pos]];
+            $seq .= $this->getBarPattern('A', $this->getCharAt($this->extcode, $pos));
         }
 
         $seq .= '01010'; // center guard bar
         for ($pos = $half_len; $pos < $this->code_length; ++$pos) {
-            $seq .= $this::CHBAR['C'][$this->extcode[$pos]];
+            $seq .= $this->getBarPattern('C', $this->getCharAt($this->extcode, $pos));
         }
 
         $seq .= '101'; // right guard bar

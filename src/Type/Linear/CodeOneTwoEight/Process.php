@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Process.php
  *
@@ -163,13 +165,14 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected const KEYS_A = ' !"#$%&\'()*+,-./'
-        . '0123456789'
-        . ':;<=>?@'
-        . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        . '[\\]^_'
-        . "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F"
-        . "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F";
+    protected const KEYS_A =
+        ' !"#$%&\'()*+,-./'
+            . '0123456789'
+            . ':;<=>?@'
+            . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            . '[\\]^_'
+            . "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F"
+            . "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F";
 
     /**
      * Map ASCII characters for code B (ASCII 32 - 127)
@@ -177,14 +180,15 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @var string
      */
-    protected const KEYS_B = ' !"#$%&\'()*+,-./'
-        . '0123456789'
-        . ':;<=>?@'
-        . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        . '[\\]^_`'
-        . 'abcdefghijklmnopqrstuvwxyz'
-        . '{|}~'
-        . "\x7F";
+    protected const KEYS_B =
+        ' !"#$%&\'()*+,-./'
+            . '0123456789'
+            . ':;<=>?@'
+            . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            . '[\\]^_`'
+            . 'abcdefghijklmnopqrstuvwxyz'
+            . '{|}~'
+            . "\x7F";
 
     /**
      * Map special FNC codes for Code Set A (FNC 1-4)
@@ -210,6 +214,28 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
         244 => 100,
     ];
 
+    protected function getFncAValue(int $char_id): int
+    {
+        return match ($char_id) {
+            241 => 102,
+            242 => 97,
+            243 => 96,
+            244 => 101,
+            default => 0,
+        };
+    }
+
+    protected function getFncBValue(int $char_id): int
+    {
+        return match ($char_id) {
+            241 => 102,
+            242 => 97,
+            243 => 96,
+            244 => 100,
+            default => 0,
+        };
+    }
+
     /**
      * Get the numeric sequence (if any)
      *
@@ -223,42 +249,62 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     {
         $sequence = [];
         $len = \strlen($code);
-        // get numeric sequences (if any)
-        $numseq = [];
-        \preg_match_all('/(\d{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
-        if (! empty($numseq[1])) {
-            $end_offset = 0;
-            foreach ($numseq[1] as $val) {
-                // offset to the start of numeric substr
-                $offset = $val[1];
+        $end_offset = 0;
+        $offset = 0;
 
-                // numeric sequence
-                $slen = \strlen($val[0]);
-                if ($slen % 2 != 0) {
-                    // the length must be even
-                    --$slen;
-                    // add 1 to start of offset so numbers are c type encoded "from the end"
-                    ++$offset;
-                }
+        while ($offset < $len) {
+            $chr = $code[$offset];
+            $ord = \ord($chr);
 
-                if ($offset > $end_offset) {
-                    // non numeric sequence
-                    $sequence = \array_merge(
-                        $sequence,
-                        $this->get128ABsequence(\substr($code, $end_offset, ($offset - $end_offset)))
-                    );
-                }
-
-                $sequence[] = ['C', \substr($code, $offset, $slen), $slen];
-                $end_offset = $offset + $slen;
+            if ($ord < 48 || $ord > 57) {
+                ++$offset;
+                continue;
             }
 
-            if ($end_offset < $len) {
-                $sequence = \array_merge($sequence, $this->get128ABsequence(\substr($code, $end_offset)));
+            $digit_start = $offset;
+            while ($offset < $len) {
+                $digit_chr = $code[$offset];
+                $digit_ord = \ord($digit_chr);
+                if ($digit_ord < 48 || $digit_ord > 57) {
+                    break;
+                }
+
+                ++$offset;
             }
-        } else {
-            // text code (non C mode)
-            $sequence = \array_merge($sequence, $this->get128ABsequence($code));
+
+            $digit_len = $offset - $digit_start;
+            if ($digit_len < 4) {
+                continue;
+            }
+
+            $num_offset = $digit_start;
+            $num_len = $digit_len;
+            if (($num_len % 2) !== 0) {
+                --$num_len;
+                ++$num_offset;
+            }
+
+            if ($num_len <= 0) {
+                continue;
+            }
+
+            if ($num_offset > $end_offset) {
+                $sequence = \array_merge(
+                    $sequence,
+                    $this->get128ABsequence(\substr($code, $end_offset, $num_offset - $end_offset)),
+                );
+            }
+
+            $sequence[] = ['C', \substr($code, $num_offset, $num_len), $num_len];
+            $end_offset = $num_offset + $num_len;
+        }
+
+        if ($end_offset < $len) {
+            $sequence = \array_merge($sequence, $this->get128ABsequence(\substr($code, $end_offset)));
+        }
+
+        if ($sequence === []) {
+            $sequence[] = ['B', $code, $len];
         }
 
         return $sequence;
@@ -275,32 +321,49 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
     {
         $len = \strlen($code);
         $sequence = [];
-        // get A sequences (if any)
-        $aseq = [];
-        \preg_match_all('/([\x00-\x1f])/', $code, $aseq, PREG_OFFSET_CAPTURE);
-        if (! empty($aseq[1])) {
-            // get the entire A sequence (excluding FNC1-FNC4)
-            \preg_match_all('/([\x00-\x5f]+)/', $code, $aseq, PREG_OFFSET_CAPTURE);
-            $end_offset = 0;
-            foreach ($aseq[1] as $val) {
-                $offset = $val[1];
-                if ($offset > $end_offset) {
-                    // B sequence
-                    $sequence[] = ['B', \substr($code, $end_offset, ($offset - $end_offset)), ($offset - $end_offset)];
-                }
 
-                // A sequence
-                $slen = \strlen($val[0]);
-                $sequence[] = ['A', \substr($code, $offset, $slen), $slen];
-                $end_offset = $offset + $slen;
+        $has_a_only = false;
+        for ($pos = 0; $pos < $len; ++$pos) {
+            if (\ord($code[$pos]) >= 32) {
+                continue;
             }
 
-            if ($end_offset < $len) {
-                $sequence[] = ['B', \substr($code, $end_offset), ($len - $end_offset)];
-            }
-        } else {
-            // only B sequence
+            $has_a_only = true;
+            break;
+        }
+
+        if (!$has_a_only) {
             $sequence[] = ['B', $code, $len];
+
+            return $sequence;
+        }
+
+        $end_offset = 0;
+        $pos = 0;
+        while ($pos < $len) {
+            if (\ord($code[$pos]) > 95) {
+                ++$pos;
+                continue;
+            }
+
+            $start = $pos;
+            while ($pos < $len && \ord($code[$pos]) <= 95) {
+                ++$pos;
+            }
+
+            if ($start > $end_offset) {
+                $slen = $start - $end_offset;
+                $sequence[] = ['B', \substr($code, $end_offset, $slen), $slen];
+            }
+
+            $slen = $pos - $start;
+            $sequence[] = ['A', \substr($code, $start, $slen), $slen];
+            $end_offset = $pos;
+        }
+
+        if ($end_offset < $len) {
+            $slen = $len - $end_offset;
+            $sequence[] = ['B', \substr($code, $end_offset, $slen), $slen];
         }
 
         return $sequence;
@@ -315,22 +378,23 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeDataA(
-        array &$code_data,
-        string $code,
-        int $len
-    ): void {
+    protected function getCodeDataA(array &$code_data, string $code, int $len): void
+    {
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
             $char_id = \ord($char);
-            if (($char_id >= 241) && ($char_id <= 244)) {
-                $code_data[] = $this::FNC_A[$char_id];
-            } elseif ($char_id <= 95) {
+            if ($char_id >= 241 && $char_id <= 244) {
+                $code_data[] = $this->getFncAValue($char_id);
+                continue;
+            }
+
+            if ($char_id <= 95) {
                 $cdpos = \strpos($this::KEYS_A, $char);
                 $code_data[] = \is_int($cdpos) ? $cdpos : 0;
-            } else {
-                throw new BarcodeException('Invalid character sequence');
+                continue;
             }
+
+            throw new BarcodeException('Invalid character sequence');
         }
     }
 
@@ -343,22 +407,23 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeDataB(
-        array &$code_data,
-        string $code,
-        int $len
-    ): void {
+    protected function getCodeDataB(array &$code_data, string $code, int $len): void
+    {
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
             $char_id = \ord($char);
-            if (($char_id >= 241) && ($char_id <= 244)) {
-                $code_data[] = $this::FNC_B[$char_id];
-            } elseif (($char_id >= 32) && ($char_id <= 127)) {
+            if ($char_id >= 241 && $char_id <= 244) {
+                $code_data[] = $this->getFncBValue($char_id);
+                continue;
+            }
+
+            if ($char_id >= 32 && $char_id <= 127) {
                 $cdpos = \strpos($this::KEYS_B, $char);
                 $code_data[] = \is_int($cdpos) ? $cdpos : 0;
-            } else {
-                throw new BarcodeException('Invalid character sequence: ' . $char_id);
+                continue;
             }
+
+            throw new BarcodeException('Invalid character sequence: ' . $char_id);
         }
     }
 
@@ -370,27 +435,26 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @throws BarcodeException in case of error
      */
-    protected function getCodeDataC(
-        array &$code_data,
-        string $code
-    ): void {
+    protected function getCodeDataC(array &$code_data, string $code): void
+    {
         // code blocks separated by FNC1 (chr 241)
         $blocks = \explode(\chr(241), $code);
 
         foreach ($blocks as $block) {
             $len = \strlen($block);
 
-            if ($len % 2 != 0) {
+            if (($len % 2) !== 0) {
                 throw new BarcodeException('The length of each FNC1-separated code block must be even');
             }
 
             for ($pos = 0; $pos < $len; $pos += 2) {
-                $chrnum = $block[$pos] . $block[($pos + 1)];
-                if (\preg_match('/(\d{2})/', $chrnum) > 0) {
+                $chrnum = $block[$pos] . $block[$pos + 1];
+                if (\preg_match('/(\d{2})/', $chrnum) === 1) {
                     $code_data[] = (int) $chrnum;
-                } else {
-                    throw new BarcodeException('Invalid character sequence');
+                    continue;
                 }
+
+                throw new BarcodeException('Invalid character sequence');
             }
 
             $code_data[] = 102;
@@ -408,18 +472,16 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @return array<int, int> Array of codepoints
      */
-    protected function finalizeCodeData(
-        array $code_data,
-        int $startid
-    ): array {
+    protected function finalizeCodeData(array $code_data, int $startid): array
+    {
         // calculate check character
         $sum = $startid;
         foreach ($code_data as $key => $val) {
-            $sum += ($val * ($key + 1));
+            $sum += $val * ($key + 1);
         }
 
         // add check character
-        $code_data[] = ($sum % 103);
+        $code_data[] = $sum % 103;
 
         // add stop sequence
         $code_data[] = 106;

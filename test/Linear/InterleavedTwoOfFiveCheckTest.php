@@ -36,21 +36,26 @@ class InterleavedTwoOfFiveCheckTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
-        $type = $barcode->getBarcodeObj(
-            'I25+',
-            '0123456789'
-        );
+        $type = $barcode->getBarcodeObj('I25+', '0123456789');
         $grid = $type->getGrid();
         $expected = "10101010110011001011010010101100110110100101001101001100101010010101100110100110100110101101\n";
         $this->assertEquals($expected, $grid);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testInvalidInput(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('I25+', 'GHI');
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * EncodeTxt.php
  *
@@ -35,45 +37,85 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
 class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
 {
     /**
+     * @return array<int|string, int>
+     */
+    protected function getCharset(string $key): array
+    {
+        return Data::CHSET[$key] ?? [];
+    }
+
+    /**
+     * @param array<int|string, int> $charset
+     */
+    protected function getCharsetValue(array $charset, int $chr): int
+    {
+        return $charset[$chr] ?? 0;
+    }
+
+    /**
+     * @param array<int, int> $temp_cw
+     */
+    protected function shiftTempCw(array &$temp_cw): int
+    {
+        if (!\array_key_exists(0, $temp_cw)) {
+            return 0;
+        }
+
+        $val = $temp_cw[0];
+        \array_splice($temp_cw, 0, 1);
+        return $val;
+    }
+
+    protected function getCharsetId(int $enc): string
+    {
+        return Data::CHSET_ID[$enc] ?? 'BAS';
+    }
+
+    /**
      * Encode TXTC40 shift
      *
      * @param int   $chr       Character code
      * @param int   $enc       Current encoding
      * @param array<int, int> $temp_cw   Temporary codewords array
      * @param int   $ptr       Pointer
+     *
+     * @throws BarcodeException in case of shift encoding errors
      */
-    public function encodeTXTC40shift(
-        int &$chr,
-        int &$enc,
-        array &$temp_cw,
-        int &$ptr
-    ): void {
-        if (isset(Data::CHSET['SH1'][$chr])) {
+    public function encodeTXTC40shift(int &$chr, int &$enc, array &$temp_cw, int &$ptr): void
+    {
+        $shiftset = $this->getCharset('SH1');
+        if (\array_key_exists($chr, $shiftset)) {
             $temp_cw[] = 0; // shift 1
-            $shiftset = Data::CHSET['SH1'];
-            $ptr++;
-        } elseif (isset(Data::CHSET['SH2'][$chr])) {
+            $temp_cw[] = $this->getCharsetValue($shiftset, $chr);
+            $ptr += 2;
+            return;
+        }
+
+        $shiftset = $this->getCharset('SH2');
+        if (\array_key_exists($chr, $shiftset)) {
             $temp_cw[] = 1; // shift 2
-            $shiftset = Data::CHSET['SH2'];
-            $ptr++;
-        } elseif (($enc == Data::ENC_C40) && isset(Data::CHSET['S3C'][$chr])) {
-            $temp_cw[] = 2; // shift 3
-            $shiftset = Data::CHSET['S3C'];
-            $ptr++;
-        } elseif (($enc == Data::ENC_TXT) && isset(Data::CHSET['S3T'][$chr])) {
-            $temp_cw[] = 2; // shift 3
-            $shiftset = Data::CHSET['S3T'];
-            $ptr++;
-        } else {
-            throw new BarcodeException('Error');
+            $temp_cw[] = $this->getCharsetValue($shiftset, $chr);
+            $ptr += 2;
+            return;
         }
 
-        if (!isset($shiftset[$chr])) {
-            throw new BarcodeException('TXTC40 Shift Error');
+        $shiftset = $this->getCharset('S3C');
+        if ($enc === Data::ENC_C40 && \array_key_exists($chr, $shiftset)) {
+            $temp_cw[] = 2; // shift 3
+            $temp_cw[] = $this->getCharsetValue($shiftset, $chr);
+            $ptr += 2;
+            return;
         }
 
-        $temp_cw[] = $shiftset[$chr];
-        $ptr++;
+        $shiftset = $this->getCharset('S3T');
+        if ($enc === Data::ENC_TXT && \array_key_exists($chr, $shiftset)) {
+            $temp_cw[] = 2; // shift 3
+            $temp_cw[] = $this->getCharsetValue($shiftset, $chr);
+            $ptr += 2;
+            return;
+        }
+
+        throw new BarcodeException('Error');
     }
 
     /**
@@ -87,21 +129,17 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * @param array<int|string, int> $charset   Charset array
      *
      * @return int   Curent character code
+     *
+     * @throws BarcodeException in case of TXT/C40 encoding errors
      */
-    public function encodeTXTC40(
-        string &$data,
-        int &$enc,
-        array &$temp_cw,
-        int &$ptr,
-        int &$epos,
-        array &$charset
-    ): int {
+    public function encodeTXTC40(string &$data, int &$enc, array &$temp_cw, int &$ptr, int &$epos, array &$charset): int
+    {
         // 2. process the next character in C40 encodation.
         $chr = \ord($data[$epos]);
         ++$epos;
         // check for extended character
         if (($chr & 0x80) !== 0) {
-            if ($enc == Data::ENC_X12) {
+            if ($enc === Data::ENC_X12) {
                 throw new BarcodeException('TXTC40 Error');
             }
 
@@ -111,12 +149,13 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
             $ptr += 2;
         }
 
-        if (isset($charset[$chr])) {
-            $temp_cw[] = $charset[$chr];
+        if (\array_key_exists($chr, $charset)) {
+            $temp_cw[] = $this->getCharsetValue($charset, $chr);
             ++$ptr;
-        } else {
-            $this->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
+            return $chr;
         }
+
+        $this->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
 
         return $chr;
     }
@@ -141,37 +180,46 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
         int &$enc,
         array &$temp_cw,
         int &$ptr,
-        int &$epos
+        int &$epos,
     ): void {
         // get remaining number of data symbols
-        $cdwr = ($this->getMaxDataCodewords($cdw_num + $ptr) - $cdw_num);
-        if (($cdwr == 1) && ($ptr == 1)) {
+        $cdwr = $this->getMaxDataCodewords($cdw_num + $ptr) - $cdw_num;
+        if ($cdwr === 1 && $ptr === 1) {
             // d. If one symbol character remains and one
             // C40 value (data character) remains to be encoded
-            $cdw[] = ($chr + 1);
+            $cdw[] = $chr + 1;
             ++$cdw_num;
             $enc = Data::ENC_ASCII;
             $this->last_enc = $enc;
-        } elseif (($cdwr == 2) && ($ptr == 1)) {
+            return;
+        }
+
+        if ($cdwr === 2 && $ptr === 1) {
             // c. If two symbol characters remain and only one
             // C40 value (data character) remains to be encoded
             $cdw[] = 254;
-            $cdw[] = ($chr + 1);
+            $cdw[] = $chr + 1;
             $cdw_num += 2;
             $enc = Data::ENC_ASCII;
             $this->last_enc = $enc;
-        } elseif (($cdwr == 2) && ($ptr == 2)) {
+            return;
+        }
+
+        if ($cdwr === 2 && $ptr === 2) {
             // b. If two symbol characters remain and two C40 values remain to be encoded
-            $ch1 = \array_shift($temp_cw);
-            $ch2 = \array_shift($temp_cw);
+            $ch1 = $this->shiftTempCw($temp_cw);
+            $ch2 = $this->shiftTempCw($temp_cw);
             $ptr -= 2;
-            $tmp = ((1600 * $ch1) + (40 * $ch2) + 1);
-            $cdw[] = ($tmp >> 8);
-            $cdw[] = ($tmp % 256);
+            $tmp = (1600 * $ch1) + (40 * $ch2) + 1;
+            $cdw[] = $tmp >> 8;
+            $cdw[] = $tmp % 256;
             $cdw_num += 2;
             $enc = Data::ENC_ASCII;
             $this->last_enc = $enc;
-        } elseif ($enc != Data::ENC_ASCII) {
+            return;
+        }
+
+        if ($enc !== Data::ENC_ASCII) {
             // switch to ASCII encoding
             $enc = Data::ENC_ASCII;
             $this->last_enc = $enc;
@@ -190,41 +238,38 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
      * @param int    $data_length Data length
      * @param string $data        Data string
      * @param int    $enc         Current encoding
+     *
+     * @throws BarcodeException in case of TXT/C40 encoding errors
      */
-    public function encodeTXT(
-        array &$cdw,
-        int &$cdw_num,
-        int &$pos,
-        int &$data_length,
-        string &$data,
-        int &$enc
-    ): void {
+    public function encodeTXT(array &$cdw, int &$cdw_num, int &$pos, int &$data_length, string &$data, int &$enc): void
+    {
+        /** @var array<int, int> $temp_cw */
         $temp_cw = [];
         $ptr = 0;
         $epos = $pos;
         // get charset ID
-        $set_id = Data::CHSET_ID[$enc];
+        $set_id = $this->getCharsetId($enc);
         // get basic charset for current encoding
-        $charset = Data::CHSET[$set_id];
+        $charset = $this->getCharset($set_id);
         do {
             $chr = $this->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
             if ($ptr >= 3) {
-                $ch1 = \array_shift($temp_cw);
-                $ch2 = \array_shift($temp_cw);
-                $ch3 = \array_shift($temp_cw);
+                $ch1 = $this->shiftTempCw($temp_cw);
+                $ch2 = $this->shiftTempCw($temp_cw);
+                $ch3 = $this->shiftTempCw($temp_cw);
                 $ptr -= 3;
-                $tmp = ((1600 * $ch1) + (40 * $ch2) + $ch3 + 1);
-                $cdw[] = ($tmp >> 8);
-                $cdw[] = ($tmp % 256);
+                $tmp = (1600 * $ch1) + (40 * $ch2) + $ch3 + 1;
+                $cdw[] = $tmp >> 8;
+                $cdw[] = $tmp % 256;
                 $cdw_num += 2;
                 $pos = $epos;
                 // 1. If the C40 encoding is at the point of starting a new double symbol character and
                 // if the look-ahead test (starting at step J) indicates another mode, switch to that mode.
                 $newenc = $this->lookAheadTest($data, $pos, $enc);
-                if ($newenc != $enc) {
+                if ($newenc !== $enc) {
                     // switch to new encoding
                     $enc = $newenc;
-                    if ($enc != Data::ENC_ASCII) {
+                    if ($enc !== Data::ENC_ASCII) {
                         // set unlatch character
                         $cdw[] = $this->getSwitchEncodingCodeword(Data::ENC_ASCII);
                         ++$cdw_num;
@@ -237,7 +282,7 @@ class EncodeTxt extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps
                     break;
                 }
             }
-        } while (($ptr > 0) && ($epos < $data_length));
+        } while ($ptr > 0 && $epos < $data_length);
 
         // process last data (if any)
         if ($ptr > 0) {

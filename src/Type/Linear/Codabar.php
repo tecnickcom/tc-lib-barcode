@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Codabar.php
  *
@@ -33,6 +35,12 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class Codabar extends \Com\Tecnick\Barcode\Type\Linear
 {
+    protected function getBarWidth(string $char, int $pos): int
+    {
+        $pattern = $this::CHBAR[$char] ?? '11111111';
+        return (int) ($pattern[$pos] ?? '1');
+    }
+
     /**
      * Barcode format
      *
@@ -90,13 +98,13 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
         $clen = \strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (! isset($this::CHBAR[$char])) {
+            if (!\array_key_exists($char, $this::CHBAR)) {
                 throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
             }
 
             for ($pos = 0; $pos < 8; ++$pos) {
-                $bar_width = (int) $this::CHBAR[$char][$pos];
-                if (($pos % 2) == 0) {
+                $bar_width = $this->getBarWidth($char, $pos);
+                if (($pos % 2) === 0) {
                     $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
 

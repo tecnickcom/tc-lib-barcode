@@ -36,26 +36,32 @@ class ImbPreTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
-        $type = $barcode->getBarcodeObj(
-            'IMBPRE',
-            'fatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdf'
-        );
+        $type = $barcode->getBarcodeObj('IMBPRE', 'fatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdfatdf');
         $grid = $type->getGrid();
-        $expected = "101000001010000010100000101000001010000010100000101000001010"
+        $expected =
+            '101000001010000010100000101000001010000010100000101000001010'
             . "000010100000101000001010000010100000101000001010000010100000101000001\n"
-            . "1010101010101010101010101010101010101010101010101010101010101010101"
+            . '1010101010101010101010101010101010101010101010101010101010101010101'
             . "01010101010101010101010101010101010101010101010101010101010101\n"
-            . "1000001010000010100000101000001010000010100000101000001010000010100"
+            . '1000001010000010100000101000001010000010100000101000001010000010100'
             . "00010100000101000001010000010100000101000001010000010100000101\n";
         $this->assertEquals($expected, $grid);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testInvalidInput(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('IMBPRE', 'fatd');
     }

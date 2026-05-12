@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Encode.php
  *
@@ -53,16 +55,13 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      * @param int    $eci  The ECI mode to use.
      * @param string $hint The mode to use.
      * @param string $mode The mode to use (A = Automatic; F = Full Range mode).
+     *
+     * @throws BarcodeException
      */
-    public function __construct(
-        string $code,
-        int $ecc = 33,
-        int $eci = 0,
-        string $hint = 'A',
-        string $mode = 'A'
-    ) {
+    public function __construct(string $code, int $ecc = 33, int $eci = 0, string $hint = 'A', string $mode = 'A')
+    {
         $this->highLevelEncoding($code, $eci, $hint);
-        if (! $this->sizeAndBitStuffing($ecc, $mode)) {
+        if (!$this->sizeAndBitStuffing($ecc, $mode)) {
             throw new BarcodeException('Data too long');
         }
 
@@ -94,16 +93,12 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      *
      * @return int The number of data codewords.
      */
-    protected function addCheckWords(
-        array &$bitstream,
-        int &$totbits,
-        int $nbits,
-        int $wsize
-    ): int {
+    protected function addCheckWords(array &$bitstream, int &$totbits, int $nbits, int $wsize): int
+    {
         $cdw = $this->bitstreamToWords($bitstream, $totbits, $wsize);
         $numcdw = \count($cdw);
         $totwords = (int) ($nbits / $wsize);
-        $eccwords = ($totwords - $numcdw);
+        $eccwords = $totwords - $numcdw;
         $errorCorrection = new ErrorCorrection($wsize);
         $checkwords = $errorCorrection->checkwords($cdw, $eccwords);
         // append check codewords
@@ -121,6 +116,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
     {
         // initialize grid
         $size = $this->layer[0];
+        $size = \max(0, $size);
         $row = \array_fill(0, $size, 0);
         $this->grid = \array_fill(0, $size, $row);
         // draw center
@@ -132,36 +128,36 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $bemid = (int) (($bewidth - 1) / 2);
         for ($rng = 2; $rng < $bemid; $rng += 2) {
             // center cross points
-            $this->grid[($center + $rng)][($center)] = 1;
-            $this->grid[($center - $rng)][($center)] = 1;
-            $this->grid[($center)][($center + $rng)] = 1;
-            $this->grid[($center)][($center - $rng)] = 1;
+            $this->grid[$center + $rng][$center] = 1;
+            $this->grid[$center - $rng][$center] = 1;
+            $this->grid[$center][$center + $rng] = 1;
+            $this->grid[$center][$center - $rng] = 1;
             // corner points
-            $this->grid[($center + $rng)][($center + $rng)] = 1;
-            $this->grid[($center + $rng)][($center - $rng)] = 1;
-            $this->grid[($center - $rng)][($center + $rng)] = 1;
-            $this->grid[($center - $rng)][($center - $rng)] = 1;
+            $this->grid[$center + $rng][$center + $rng] = 1;
+            $this->grid[$center + $rng][$center - $rng] = 1;
+            $this->grid[$center - $rng][$center + $rng] = 1;
+            $this->grid[$center - $rng][$center - $rng] = 1;
             for ($pos = 1; $pos < $rng; ++$pos) {
                 // horizontal points
-                $this->grid[($center + $rng)][($center + $pos)] = 1;
-                $this->grid[($center + $rng)][($center - $pos)] = 1;
-                $this->grid[($center - $rng)][($center + $pos)] = 1;
-                $this->grid[($center - $rng)][($center - $pos)] = 1;
+                $this->grid[$center + $rng][$center + $pos] = 1;
+                $this->grid[$center + $rng][$center - $pos] = 1;
+                $this->grid[$center - $rng][$center + $pos] = 1;
+                $this->grid[$center - $rng][$center - $pos] = 1;
                 // vertical points
-                $this->grid[($center + $pos)][($center + $rng)] = 1;
-                $this->grid[($center + $pos)][($center - $rng)] = 1;
-                $this->grid[($center - $pos)][($center + $rng)] = 1;
-                $this->grid[($center - $pos)][($center - $rng)] = 1;
+                $this->grid[$center + $pos][$center + $rng] = 1;
+                $this->grid[$center + $pos][$center - $rng] = 1;
+                $this->grid[$center - $pos][$center + $rng] = 1;
+                $this->grid[$center - $pos][$center - $rng] = 1;
             }
         }
 
         // draw orientation patterns
-        $this->grid[($center - $bemid)][($center - $bemid)] = 1; // TL
-        $this->grid[($center - $bemid)][($center - $bemid + 1)] = 1; // TL-R
-        $this->grid[($center - $bemid + 1)][($center - $bemid)] = 1; // TL-B
-        $this->grid[($center - $bemid)][($center + $bemid)] = 1; // TR-T
-        $this->grid[($center - $bemid + 1)][($center + $bemid)] = 1; // TR-B
-        $this->grid[($center + $bemid - 1)][($center + $bemid)] = 1; // BR
+        $this->grid[$center - $bemid][$center - $bemid] = 1; // TL
+        $this->grid[$center - $bemid][$center - $bemid + 1] = 1; // TL-R
+        $this->grid[$center - $bemid + 1][$center - $bemid] = 1; // TL-B
+        $this->grid[$center - $bemid][$center + $bemid] = 1; // TR-T
+        $this->grid[$center - $bemid + 1][$center + $bemid] = 1; // TR-B
+        $this->grid[$center + $bemid - 1][$center + $bemid] = 1; // BR
         if ($this->compact) {
             return;
         }
@@ -171,26 +167,26 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         // central cross
         for ($pos = 8; $pos <= $halfsize; $pos += 2) {
             // horizontal
-            $this->grid[($center)][($center - $pos)] = 1;
-            $this->grid[($center)][($center + $pos)] = 1;
+            $this->grid[$center][$center - $pos] = 1;
+            $this->grid[$center][$center + $pos] = 1;
             // vertical
-            $this->grid[($center - $pos)][($center)] = 1;
-            $this->grid[($center + $pos)][($center)] = 1;
+            $this->grid[$center - $pos][$center] = 1;
+            $this->grid[$center + $pos][$center] = 1;
         }
 
         // grid lines
         for ($pos = 2; $pos <= $halfsize; $pos += 2) {
             for ($ref = 16; $ref <= $halfsize; $ref += 16) {
                 // horizontal
-                $this->grid[($center - $ref)][($center - $pos)] = 1;
-                $this->grid[($center - $ref)][($center + $pos)] = 1;
-                $this->grid[($center + $ref)][($center - $pos)] = 1;
-                $this->grid[($center + $ref)][($center + $pos)] = 1;
+                $this->grid[$center - $ref][$center - $pos] = 1;
+                $this->grid[$center - $ref][$center + $pos] = 1;
+                $this->grid[$center + $ref][$center - $pos] = 1;
+                $this->grid[$center + $ref][$center + $pos] = 1;
                 // vertical
-                $this->grid[($center - $pos)][($center - $ref)] = 1;
-                $this->grid[($center - $pos)][($center + $ref)] = 1;
-                $this->grid[($center + $pos)][($center - $ref)] = 1;
-                $this->grid[($center + $pos)][($center + $ref)] = 1;
+                $this->grid[$center - $pos][$center - $ref] = 1;
+                $this->grid[$center - $pos][$center + $ref] = 1;
+                $this->grid[$center + $pos][$center - $ref] = 1;
+                $this->grid[$center + $pos][$center + $ref] = 1;
             }
         }
     }
@@ -223,17 +219,17 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
             $scol = -3;
         }
 
-        $this->appendWordToBitstream($modebs, $nbits, $layersbits, ($this->numlayers - 1));
-        $this->appendWordToBitstream($modebs, $nbits, $codewordsbits, ($numcdw - 1));
+        $this->appendWordToBitstream($modebs, $nbits, $layersbits, $this->numlayers - 1);
+        $this->appendWordToBitstream($modebs, $nbits, $codewordsbits, $numcdw - 1);
         $this->addCheckWords($modebs, $nbits, $modebits, 4);
         // draw the mode message in the grid clockwise starting from the top left corner
         $bit = 0;
         // top
-        $ypos = ($center + $srow);
-        $xpos = ($center + $scol);
+        $ypos = $center + $srow;
+        $xpos = $center + $scol;
         for ($pos = 0; $pos < $sidelen; ++$pos) {
             $xpos += $this->skipModeRefGrid($pos);
-            $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
+            $this->grid[$ypos][$xpos] = ($modebs[$bit++] ?? 0) === 0 ? 0 : 1;
             ++$xpos;
         }
 
@@ -242,7 +238,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         ++$xpos;
         for ($pos = 0; $pos < $sidelen; ++$pos) {
             $ypos += $this->skipModeRefGrid($pos);
-            $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
+            $this->grid[$ypos][$xpos] = ($modebs[$bit++] ?? 0) === 0 ? 0 : 1;
             ++$ypos;
         }
 
@@ -251,7 +247,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         $xpos -= 2;
         for ($pos = 0; $pos < $sidelen; ++$pos) {
             $xpos -= $this->skipModeRefGrid($pos);
-            $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
+            $this->grid[$ypos][$xpos] = ($modebs[$bit++] ?? 0) === 0 ? 0 : 1;
             --$xpos;
         }
 
@@ -260,7 +256,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         --$xpos;
         for ($pos = 0; $pos < $sidelen; ++$pos) {
             $ypos -= $this->skipModeRefGrid($pos);
-            $this->grid[$ypos][$xpos] = (empty($modebs[$bit++]) ? 0 : 1);
+            $this->grid[$ypos][$xpos] = ($modebs[$bit++] ?? 0) === 0 ? 0 : 1;
             --$ypos;
         }
     }
@@ -272,7 +268,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected function popBit(int &$bit): int
     {
-        return (empty($this->bitstream[$bit--]) ? 0 : 1);
+        return ($this->bitstream[$bit--] ?? 0) === 0 ? 0 : 1;
     }
 
     /**
@@ -282,7 +278,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected function skipModeRefGrid(int $pos): int
     {
-        return (int) ((! $this->compact) && ($pos == 5));
+        return (int) (!$this->compact && $pos === 5);
     }
 
     /**
@@ -292,7 +288,7 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
      */
     protected function skipRefGrid(int $pos): int
     {
-        return (int) ((! $this->compact) && (($pos % 16) == 0));
+        return (int) (!$this->compact && ($pos % 16) === 0);
     }
 
     /**
@@ -311,52 +307,52 @@ class Encode extends \Com\Tecnick\Barcode\Type\Square\Aztec\Bitstream
         }
 
         $skip = 0; // skip reference grid while drwaing dominoes
-        $bit = ($this->totbits - 1); // index of last bitstream bit (first to draw)
+        $bit = $this->totbits - 1; // index of last bitstream bit (first to draw)
         for ($layer = 0; $layer < $this->numlayers; ++$layer) {
             // top
-            $ypos = ($center + $srow);
-            $xpos = ($center + $scol);
+            $ypos = $center + $srow;
+            $xpos = $center + $scol;
             for ($pos = 0; $pos < $llen; ++$pos) {
                 $xpos += $this->skipRefGrid($xpos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
-                $this->grid[($ypos - 1 - $skip)][$xpos] = $this->popBit($bit);
+                $this->grid[$ypos - 1 - $skip][$xpos] = $this->popBit($bit);
                 ++$xpos;
             }
 
             // right
             ++$ypos;
-            $xpos -= (2 + $skip);
+            $xpos -= 2 + $skip;
             for ($pos = 0; $pos < $llen; ++$pos) {
                 $ypos += $this->skipRefGrid($ypos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
-                $this->grid[$ypos][($xpos + 1 + $skip)] = $this->popBit($bit);
+                $this->grid[$ypos][$xpos + 1 + $skip] = $this->popBit($bit);
                 ++$ypos;
             }
 
             // bottom
-            $ypos -= (2 + $skip);
+            $ypos -= 2 + $skip;
             --$xpos;
             for ($pos = 0; $pos < $llen; ++$pos) {
                 $xpos -= $this->skipRefGrid($xpos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
-                $this->grid[($ypos + 1 + $skip)][$xpos] = $this->popBit($bit);
+                $this->grid[$ypos + 1 + $skip][$xpos] = $this->popBit($bit);
                 --$xpos;
             }
 
             // left
             --$ypos;
-            $xpos += (2 + $skip);
+            $xpos += 2 + $skip;
             for ($pos = 0; $pos < $llen; ++$pos) {
                 $ypos -= $this->skipRefGrid($ypos - $center); // skip reference grid
                 $this->grid[$ypos][$xpos] = $this->popBit($bit);
-                $this->grid[$ypos][($xpos - 1 - $skip)] = $this->popBit($bit);
+                $this->grid[$ypos][$xpos - 1 - $skip] = $this->popBit($bit);
                 --$ypos;
             }
 
             $llen += 4;
-            $srow = ($ypos - $center);
+            $srow = $ypos - $center;
             $srow -= $this->skipRefGrid($srow);
-            $scol = ($xpos - 1 - $center);
+            $scol = $xpos - 1 - $center;
             $scol -= $this->skipRefGrid($scol);
             $skip = $this->skipRefGrid($srow - 1);
         }

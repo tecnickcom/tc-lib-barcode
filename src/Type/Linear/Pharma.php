@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Pharma.php
  *
@@ -51,14 +53,15 @@ class Pharma extends \Com\Tecnick\Barcode\Type\Linear
         $seq = '';
         $code = (int) $this->code;
         while ($code > 0) {
-            if (($code % 2) == 0) {
+            if (($code % 2) === 0) {
                 $seq .= '11100';
                 $code -= 2;
-            } else {
-                $seq .= '100';
-                --$code;
+                $code /= 2;
+                continue;
             }
 
+            $seq .= '100';
+            --$code;
             $code /= 2;
         }
 

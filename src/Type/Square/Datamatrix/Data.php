@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Data.php
  *
@@ -33,6 +35,15 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class Data
 {
+    /**
+     * @return array<int, array{0: int, 1: int, 2: int, 3: int, 4: int, 5: int, 6: int, 7: int, 8: int, 9: int, 10: int, 11: int, 12: int, 13: int, 14: int, 15: int}>
+     */
+    protected static function getSymbAttr(string $shape): array
+    {
+        $attr = Data::SYMBATTR[$shape] ?? [];
+        return \array_values($attr);
+    }
+
     /**
      * ASCII encoding: ASCII character 0 to 127 (1 byte per CW)
      *
@@ -1016,7 +1027,7 @@ class Data
      */
     public static function getPaddingSize(string $shape, int $ncw): array
     {
-        foreach (Data::SYMBATTR[$shape] as $params) {
+        foreach (self::getSymbAttr($shape) as $params) {
             if ($params[11] >= $ncw) {
                 return $params;
             }

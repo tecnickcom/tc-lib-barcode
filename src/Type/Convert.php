@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Convert.php
  *
@@ -140,7 +142,8 @@ abstract class Convert
         }
 
         $this->nrows = \count($rows);
-        $this->ncols = \is_array($rows[0]) ? \count($rows[0]) : \strlen($rows[0]);
+        $firstRow = $rows[0] ?? '';
+        $this->ncols = \is_array($firstRow) ? \count($firstRow) : \strlen($firstRow);
 
         if ($this->ncols === 0) {
             throw new BarcodeException('Empty columns');
@@ -148,7 +151,7 @@ abstract class Convert
 
         $this->bars = [];
         foreach ($rows as $posy => $row) {
-            if (! \is_array($row)) {
+            if (!\is_array($row)) {
                 $row = \str_split($row, 1);
             }
 
@@ -156,16 +159,16 @@ abstract class Convert
             $bar_width = 0;
             $row[] = '0';
             for ($posx = 0; $posx <= $this->ncols; ++$posx) {
-                if ($row[$posx] != $prevcol) {
-                    if ($prevcol == '1') {
-                        $this->bars[] = [($posx - $bar_width), $posy, $bar_width, 1];
+                if (($row[$posx] ?? '0') !== $prevcol) {
+                    if ($prevcol === '1') {
+                        $this->bars[] = [$posx - $bar_width, $posy, $bar_width, 1];
                     }
 
                     $bar_width = 0;
                 }
 
                 ++$bar_width;
-                $prevcol = $row[$posx];
+                $prevcol = (string) ($row[$posx] ?? '0');
             }
         }
     }
@@ -174,13 +177,15 @@ abstract class Convert
      * Extract rows from a binary sequence of comma-separated 01 strings.
      *
      * @return array<int, string>
+     *
+     * @throws BarcodeException in case of invalid input pattern
      */
     protected function getRawCodeRows(string $data): array
     {
         $search = [
-            '/[\s]*/s',    // remove spaces and newlines
-            '/^[\[,]+/',   // remove trailing brackets or commas
-            '/[\],]+$/',   // remove trailing brackets or commas
+            '/[\s]*/s', // remove spaces and newlines
+            '/^[\[,]+/', // remove trailing brackets or commas
+            '/[\],]+$/', // remove trailing brackets or commas
             '/[\]][\[]$/', // convert bracket -separated to comma-separated
         ];
 
@@ -203,7 +208,12 @@ abstract class Convert
      */
     protected function convertDecToHex(string $number): string
     {
-        if ($number == 0) {
+        if (!\preg_match('/^[0-9]+$/', $number)) {
+            return '00';
+        }
+
+        /** @var numeric-string $number */
+        if ($number === '0') {
             return '00';
         }
 
@@ -229,7 +239,7 @@ abstract class Convert
         $dec = '0';
         $bitval = '1';
         $len = \strlen($hex);
-        for ($pos = ($len - 1); $pos >= 0; --$pos) {
+        for ($pos = $len - 1; $pos >= 0; --$pos) {
             $dec = \bcadd($dec, \bcmul((string) \hexdec($hex[$pos]), $bitval));
             $bitval = \bcmul($bitval, '16');
         }
@@ -245,11 +255,9 @@ abstract class Convert
      *
      * @return array<int, array<int, string>>
      */
-    public function getGridArray(
-        string $space_char = '0',
-        string $bar_char = '1'
-    ): array {
-        $raw = \array_fill(0, $this->nrows, \array_fill(0, $this->ncols, $space_char));
+    public function getGridArray(string $space_char = '0', string $bar_char = '1'): array
+    {
+        $raw = \array_fill(0, \max(0, $this->nrows), \array_fill(0, \max(0, $this->ncols), $space_char));
         foreach ($this->bars as $bar) {
             if ($bar[2] <= 0) {
                 continue;
@@ -261,7 +269,7 @@ abstract class Convert
 
             for ($vert = 0; $vert < $bar[3]; ++$vert) {
                 for ($horiz = 0; $horiz < $bar[2]; ++$horiz) {
-                    $raw[($bar[1] + $vert)][($bar[0] + $horiz)] = $bar_char;
+                    $raw[$bar[1] + $vert][$bar[0] + $horiz] = $bar_char;
                 }
             }
         }
@@ -277,6 +285,10 @@ abstract class Convert
     protected function getRotatedBarArray(): array
     {
         $grid = $this->getGridArray();
+        if ($grid === []) {
+            return [];
+        }
+
         $cols = \array_map(null, ...$grid);
         $bars = [];
         foreach ($cols as $posx => $col) {
@@ -284,16 +296,16 @@ abstract class Convert
             $bar_height = 0;
             $col[] = '0';
             for ($posy = 0; $posy <= $this->nrows; ++$posy) {
-                if ($col[$posy] != $prevrow) {
-                    if ($prevrow == '1') {
-                        $bars[] = [$posx, ($posy - $bar_height), 1, $bar_height];
+                if (($col[$posy] ?? '0') !== $prevrow) {
+                    if ($prevrow === '1') {
+                        $bars[] = [$posx, $posy - $bar_height, 1, $bar_height];
                     }
 
                     $bar_height = 0;
                 }
 
                 ++$bar_height;
-                $prevrow = $col[$posy];
+                $prevrow = $col[$posy] ?? '0';
             }
         }
 
@@ -310,10 +322,10 @@ abstract class Convert
     protected function getBarRectXYXY(array $bar): array
     {
         return [
-            ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
-            ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
-            ($this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1),
-            ($this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1),
+            $this->padding['L'] + ($bar[0] * $this->width_ratio),
+            $this->padding['T'] + ($bar[1] * $this->height_ratio),
+            $this->padding['L'] + (($bar[0] + $bar[2]) * $this->width_ratio) - 1,
+            $this->padding['T'] + (($bar[1] + $bar[3]) * $this->height_ratio) - 1,
         ];
     }
 
@@ -327,10 +339,10 @@ abstract class Convert
     protected function getBarRectXYWH(array $bar): array
     {
         return [
-            ($this->padding['L'] + ($bar[0] * $this->width_ratio)),
-            ($this->padding['T'] + ($bar[1] * $this->height_ratio)),
-            ($bar[2] * $this->width_ratio),
-            ($bar[3] * $this->height_ratio),
+            $this->padding['L'] + ($bar[0] * $this->width_ratio),
+            $this->padding['T'] + ($bar[1] * $this->height_ratio),
+            $bar[2] * $this->width_ratio,
+            $bar[3] * $this->height_ratio,
         ];
     }
 }

@@ -36,19 +36,28 @@ class CodabarTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('CODABAR', '0123456789');
         $grid = $type->getGrid();
-        $expected = "10110010010101010011010101100101010010110110010101010110"
+        $expected =
+            '10110010010101010011010101100101010010110110010101010110'
             . "10010110101001010010101101001011010100110101011010010101011001001\n";
         $this->assertEquals($expected, $grid);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testInvalidInput(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('CODABAR', \chr(218));
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * CodeOneTwoEight.php
  *
@@ -51,17 +53,44 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         // process the sequence
         $startid = 0;
         foreach ($sequence as $key => $seq) {
-            $processMethod = 'processSequence' . $seq[0];
-            $this->$processMethod($sequence, $code_data, $startid, $key, $seq);
+            switch ($seq[0]) {
+                case 'A':
+                    $this->processSequenceA($sequence, $code_data, $startid, $key, $seq);
+                    break;
+                case 'B':
+                    $this->processSequenceB($sequence, $code_data, $startid, $key, $seq);
+                    break;
+                case 'C':
+                    $this->processSequenceC($sequence, $code_data, $startid, $key, $seq);
+                    break;
+                default:
+                    throw new BarcodeException('Invalid sequence mode');
+            }
         }
 
         return $this->finalizeCodeData($code_data, $startid);
     }
 
     /**
+     * @param array<int, array{0: string, 1: string, 2: int, 3?: string}> $sequence
+     */
+    protected function getSequenceMode(array $sequence, int $key): string
+    {
+        return $sequence[$key][0] ?? '';
+    }
+
+    /**
+     * @param array<int, array{0: string, 1: string, 2: int, 3?: string}> $sequence
+     */
+    protected function hasSequenceShift(array $sequence, int $key): bool
+    {
+        return ($sequence[$key][3] ?? null) !== null;
+    }
+
+    /**
      * Process the A sequence
      *
-     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, array{0: string, 1: string, 2: int, 3?: string}>  $sequence   Sequence to process
      * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
@@ -69,28 +98,28 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function processSequenceA(
-        array &$sequence,
-        array &$code_data,
-        int &$startid,
-        int $key,
-        array $seq
-    ): void {
-        if ($key == 0) {
+    protected function processSequenceA(array &$sequence, array &$code_data, int &$startid, int $key, array $seq): void
+    {
+        $prev_mode = $this->getSequenceMode($sequence, $key - 1);
+        if ($key === 0) {
             $startid = 103;
-        } elseif ($sequence[($key - 1)][0] != 'A') {
-            if (
-                ($seq[2] == 1)
-                && ($key > 0)
-                && ($sequence[($key - 1)][0] == 'B')
-                && (! isset($sequence[($key - 1)][3]))
-            ) {
-                // single character shift
-                $code_data[] = 98;
-                // mark shift
-                $sequence[$key][3] = '';
-            } elseif (! isset($sequence[($key - 1)][3])) {
-                $code_data[] = 101;
+        }
+
+        if ($key !== 0 && $prev_mode !== 'A') {
+            $hasPrevShift = $this->hasSequenceShift($sequence, $key - 1);
+            $singleShift = $seq[2] === 1 && $key > 0 && $prev_mode === 'B' && !$hasPrevShift;
+            $codeSwitch = match (true) {
+                $singleShift => 98,
+                !$hasPrevShift => 101,
+                default => null,
+            };
+
+            if ($codeSwitch !== null) {
+                $code_data[] = $codeSwitch;
+                if ($codeSwitch === 98) {
+                    // mark single shift
+                    $sequence[$key][3] = '';
+                }
             }
         }
 
@@ -100,7 +129,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     /**
      * Process the B sequence
      *
-     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, array{0: string, 1: string, 2: int, 3?: string}>  $sequence   Sequence to process
      * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
@@ -108,16 +137,14 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function processSequenceB(
-        array &$sequence,
-        array &$code_data,
-        int &$startid,
-        int $key,
-        array $seq
-    ): void {
-        if ($key == 0) {
+    protected function processSequenceB(array &$sequence, array &$code_data, int &$startid, int $key, array $seq): void
+    {
+        $prev_mode = $this->getSequenceMode($sequence, $key - 1);
+        if ($key === 0) {
             $this->processSequenceBA($sequence, $code_data, $startid, $key, $seq);
-        } elseif ($sequence[($key - 1)][0] != 'B') {
+        }
+
+        if ($key !== 0 && $prev_mode !== 'B') {
             $this->processSequenceBB($sequence, $code_data, $key, $seq);
         }
 
@@ -127,7 +154,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     /**
      * Process the B-A sequence
      *
-     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, array{0: string, 1: string, 2: int, 3?: string}>  $sequence   Sequence to process
      * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
@@ -135,71 +162,59 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function processSequenceBA(
-        array &$sequence,
-        array &$code_data,
-        int &$startid,
-        int $key,
-        array $seq
-    ): void {
+    protected function processSequenceBA(array &$sequence, array &$code_data, int &$startid, int $key, array $seq): void
+    {
         $tmpchr = \ord($seq[1][0]);
-        if (
-            ($seq[2] == 1)
-            && ($tmpchr >= 241)
-            && ($tmpchr <= 244)
-            && isset($sequence[($key + 1)])
-            && ($sequence[($key + 1)][0] != 'B')
-        ) {
-            switch ($sequence[($key + 1)][0]) {
+        $next_mode = $this->getSequenceMode($sequence, $key + 1);
+        $startid = 104;
+        if ($seq[2] === 1 && $tmpchr >= 241 && $tmpchr <= 244 && $next_mode !== '' && $next_mode !== 'B') {
+            switch ($next_mode) {
                 case 'A':
                     $startid = 103;
                     $sequence[$key][0] = 'A';
-                    $code_data[] = $this::FNC_A[$tmpchr];
+                    $code_data[] = $this->getFncAValue($tmpchr);
                     break;
                 case 'C':
                     $startid = 105;
                     $sequence[$key][0] = 'C';
-                    $code_data[] = $this::FNC_A[$tmpchr];
+                    $code_data[] = $this->getFncAValue($tmpchr);
                     break;
             }
-        } else {
-            $startid = 104;
         }
     }
 
     /**
      * Process the B-B sequence
      *
-     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, array{0: string, 1: string, 2: int, 3?: string}>  $sequence   Sequence to process
      * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $key        Sequence current key
      * @param array{string, string, int} $seq        Sequence current value
      */
-    protected function processSequenceBB(
-        array &$sequence,
-        array &$code_data,
-        int $key,
-        array $seq
-    ): void {
-        if (
-            ($seq[2] == 1)
-            && ($key > 0)
-            && ($sequence[($key - 1)][0] == 'A')
-            && (! isset($sequence[($key - 1)][3]))
-        ) {
-            // single character shift
-            $code_data[] = 98;
-            // mark shift
-            $sequence[$key][3] = '';
-        } elseif (! isset($sequence[($key - 1)][3])) {
-            $code_data[] = 100;
+    protected function processSequenceBB(array &$sequence, array &$code_data, int $key, array $seq): void
+    {
+        $prev_mode = $this->getSequenceMode($sequence, $key - 1);
+        $hasPrevShift = $this->hasSequenceShift($sequence, $key - 1);
+        $singleShift = $seq[2] === 1 && $key > 0 && $prev_mode === 'A' && !$hasPrevShift;
+        $codeSwitch = match (true) {
+            $singleShift => 98,
+            !$hasPrevShift => 100,
+            default => null,
+        };
+
+        if ($codeSwitch !== null) {
+            $code_data[] = $codeSwitch;
+            if ($codeSwitch === 98) {
+                // mark single shift
+                $sequence[$key][3] = '';
+            }
         }
     }
 
     /**
      * Process the C sequence
      *
-     * @param array<int, array<int, string>>  $sequence   Sequence to process
+     * @param array<int, array{0: string, 1: string, 2: int, 3?: string}>  $sequence   Sequence to process
      * @param array<int, int>  $code_data  Array of codepoints to alter
      * @param int    $startid    Start ID
      * @param int    $key        Sequence current key
@@ -207,20 +222,23 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
      *
      * @throws BarcodeException in case of error
      */
-    protected function processSequenceC(
-        array &$sequence,
-        array &$code_data,
-        int &$startid,
-        int $key,
-        array $seq
-    ): void {
-        if ($key == 0) {
+    protected function processSequenceC(array &$sequence, array &$code_data, int &$startid, int $key, array $seq): void
+    {
+        $prev_mode = $this->getSequenceMode($sequence, $key - 1);
+        if ($key === 0) {
             $startid = 105;
-        } elseif ($sequence[($key - 1)][0] != 'C') {
+        }
+
+        if ($key !== 0 && $prev_mode !== 'C') {
             $code_data[] = 99;
         }
 
         $this->getCodeDataC($code_data, $seq[1]);
+    }
+
+    protected function getBarPattern(int $value): string
+    {
+        return $this::CHBAR[$value] ?? '';
     }
 
     /**
@@ -235,10 +253,10 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         $this->nrows = 1;
         $this->bars = [];
         foreach ($code_data as $val) {
-            $seq = $this::CHBAR[$val];
+            $seq = $this->getBarPattern($val);
             for ($pos = 0; $pos < 6; ++$pos) {
                 $bar_width = (int) $seq[$pos];
-                if ((($pos % 2) == 0) && ($bar_width > 0)) {
+                if (($pos % 2) === 0 && $bar_width > 0) {
                     $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
 

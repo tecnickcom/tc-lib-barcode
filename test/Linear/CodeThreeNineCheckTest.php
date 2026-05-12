@@ -36,13 +36,18 @@ class CodeThreeNineCheckTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('C39+', '0123456789');
         $grid = $type->getGrid();
-        $expected = "10001011101110101010001110111010111010001010111010111000101011101110111000101010101000"
-            . "111010111011101000111010101011100011101010101000101110111011101000101110101011100010111010101"
+        $expected =
+            '10001011101110101010001110111010111010001010111010111000101011101110111000101010101000'
+            . '111010111011101000111010101011100011101010101000101110111011101000101110101011100010111010101'
             . "1100010101110100010111011101\n";
         $this->assertEquals($expected, $grid);
     }

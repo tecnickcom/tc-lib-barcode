@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Layers.php
  *
@@ -32,6 +34,19 @@ namespace Com\Tecnick\Barcode\Type\Square\Aztec;
 abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
 {
     /**
+     * @param array<int, array{0: int, 1: int, 2: int, 3: int, 4: int, 5: int, 6: int}> $data
+     */
+    protected function getLayerMaxBits(array $data): int
+    {
+        if ($data === []) {
+            return 0;
+        }
+
+        $last = \array_values($data)[\count($data) - 1] ?? [0, 0, 0, 0, 0, 0, 0];
+        return $last[3] ?? 0;
+    }
+
+    /**
      * True for compact mode (up to 4 layers), false for full-range mode (up to 32 layers).
      */
     protected bool $compact = true;
@@ -57,7 +72,7 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
      */
     protected function getMinLayers(array $data, int $numbits): int
     {
-        if ($numbits <= $data[\count($data)][3]) {
+        if ($numbits <= $this->getLayerMaxBits($data)) {
             foreach ($data as $numlayers => $size) {
                 if ($numbits <= $size[3]) {
                     return $numlayers;
@@ -79,32 +94,34 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
     protected function setLayerByBits(int $numbits, string $mode = 'A'): bool
     {
         $this->numlayers = 0;
-        if ($mode == 'A') {
+        if ($mode === 'A') {
             $this->compact = true;
             $this->numlayers = $this->getMinLayers(Data::SIZE_COMPACT, $numbits);
         }
 
-        if ($this->numlayers == 0) {
+        if ($this->numlayers === 0) {
             $this->compact = false;
             $this->numlayers = $this->getMinLayers(Data::SIZE_FULL, $numbits);
         }
 
-        if ($this->numlayers == 0) {
+        if ($this->numlayers === 0) {
             return false;
         }
 
         if ($this->compact) {
-            if (empty(Data::SIZE_COMPACT[$this->numlayers])) {
+            $compactLayer = Data::SIZE_COMPACT[$this->numlayers] ?? null;
+            if ($compactLayer === null) {
                 return false;
             }
-            $this->layer = Data::SIZE_COMPACT[$this->numlayers];
+            $this->layer = $compactLayer;
             return true;
         }
 
-        if (empty(Data::SIZE_FULL[$this->numlayers])) {
+        $fullLayer = Data::SIZE_FULL[$this->numlayers] ?? null;
+        if ($fullLayer === null) {
             return false;
         }
-        $this->layer = Data::SIZE_FULL[$this->numlayers];
+        $this->layer = $fullLayer;
         return true;
     }
 
@@ -119,9 +136,9 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
     protected function sizeAndBitStuffing(int $ecc, string $mode = 'A'): bool
     {
         $nsbits = 0;
-        $eccbits = (11 + (int) (($this->totbits * $ecc) / 100));
+        $eccbits = 11 + (int) (($this->totbits * $ecc) / 100);
         do {
-            if (! $this->setLayerByBits(($this->totbits + $nsbits + $eccbits), $mode)) {
+            if (!$this->setLayerByBits($this->totbits + $nsbits + $eccbits, $mode)) {
                 return false;
             }
 
@@ -144,26 +161,25 @@ abstract class Layers extends \Com\Tecnick\Barcode\Type\Square\Aztec\Codeword
     {
         $nsbits = 0;
         $wsize = $this->layer[2];
-        $mask = ((1 << $wsize) - 2); // b-1 bits at 1 and last bit at 0
+        $mask = (1 << $wsize) - 2; // b-1 bits at 1 and last bit at 0
         $this->tmpCdws = [];
         for ($wid = 0; $wid < $this->totbits; $wid += $wsize) {
             $word = 0;
             for ($idx = 0; $idx < $wsize; ++$idx) {
-                $bid = ($wid + $idx);
-                if (($bid >= $this->totbits) || ($this->bitstream[$bid] == 1)) {
-                    $word |= (1 << ($wsize - 1 - $idx)); // the first bit is MSB
+                $bid = $wid + $idx;
+                if ($this->getBitstreamBit($this->bitstream, $bid) === 1) {
+                    $word |= 1 << ($wsize - 1 - $idx); // the first bit is MSB
                 }
             }
 
             // If the first b−1 bits of a code word have the same value,
             // an extra bit with the complementary value is inserted into the data stream.
-            if (($word & $mask) === $mask) {
-                $word &= $mask;
-                --$wid;
-            } elseif (($word & $mask) == 0) {
-                $word |= 1;
-                --$wid;
-            }
+            $maskedWord = $word & $mask;
+            [$word, $wid] = match (true) {
+                $maskedWord === $mask => [$word & $mask, $wid - 1],
+                $maskedWord === 0 => [$word | 1, $wid - 1],
+                default => [$word, $wid],
+            };
 
             $this->tmpCdws[] = [$wsize, $word];
             $nsbits += $wsize;

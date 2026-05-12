@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * EanFive.php
  *
@@ -71,7 +73,8 @@ class EanFive extends \Com\Tecnick\Barcode\Type\Linear\EanTwo
      */
     protected function getChecksum(string $code): int
     {
-        return (((3 * ((int) $code[0] + (int) $code[2] + (int) $code[4]))
-            + (9 * ((int) $code[1] + (int) $code[3]))) % 10);
+        return (
+            ((3 * ((int) $code[0] + (int) $code[2] + (int) $code[4])) + (9 * ((int) $code[1] + (int) $code[3]))) % 10
+        );
     }
 }

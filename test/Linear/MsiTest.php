@@ -36,12 +36,17 @@ class MsiTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('MSI', '0123456789');
         $grid = $type->getGrid();
-        $expected = "110100100100100100100100110100100110100100100110110100110100"
+        $expected =
+            '110100100100100100100100110100100110100100100110110100110100'
             . "1001001101001101001101101001001101101101101001001001101001001101001\n";
         $this->assertEquals($expected, $grid);
     }

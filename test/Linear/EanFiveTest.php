@@ -36,13 +36,14 @@ class EanFiveTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
-        $type = $barcode->getBarcodeObj(
-            'EAN5',
-            '12345'
-        );
+        $type = $barcode->getBarcodeObj('EAN5', '12345');
         $grid = $type->getGrid();
         $expected = "10110110011010010011010100001010100011010110001\n";
         $this->assertEquals($expected, $grid);

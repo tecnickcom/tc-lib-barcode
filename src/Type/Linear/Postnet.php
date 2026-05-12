@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Postnet.php
  *
@@ -34,6 +36,12 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class Postnet extends \Com\Tecnick\Barcode\Type\Linear
 {
+    protected function getBarHeight(string $char, int $pos): int
+    {
+        $pattern = $this::CHBAR[$char] ?? '11111';
+        return (int) ($pattern[$pos] ?? '1');
+    }
+
     /**
      * Barcode format
      *
@@ -74,7 +82,7 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
             $sum += (int) $code[$pos];
         }
 
-        $check = ($sum % 10);
+        $check = $sum % 10;
         if ($check > 0) {
             return 10 - $check;
         }
@@ -84,6 +92,8 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
 
     /**
      * Format code
+     *
+     * @throws BarcodeException in case of error
      */
     protected function formatCode(): void
     {
@@ -111,12 +121,12 @@ class Postnet extends \Com\Tecnick\Barcode\Type\Linear
         $this->ncols += 2;
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (! isset($this::CHBAR[$char])) {
+            if (!\array_key_exists($char, $this::CHBAR)) {
                 throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
             }
 
             for ($pos = 0; $pos < 5; ++$pos) {
-                $bar_height = (int) $this::CHBAR[$char][$pos];
+                $bar_height = $this->getBarHeight($char, $pos);
                 $this->bars[] = [$this->ncols, (int) \floor(1 / $bar_height), 1, $bar_height];
                 $this->ncols += 2;
             }

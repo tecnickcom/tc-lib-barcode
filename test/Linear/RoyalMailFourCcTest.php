@@ -36,20 +36,29 @@ class RoyalMailFourCcTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('RMS4CC', '0123456789');
         $grid = $type->getGrid();
-        $expected = "1000001010000010100000101000001010000010100000101000100010001000100010001000100010001000101\n"
+        $expected =
+            "1000001010000010100000101000001010000010100000101000100010001000100010001000100010001000101\n"
             . "1010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101\n"
             . "0000001010001000100010100010000010100010001010000000001010001000100010100010000010000010101\n";
         $this->assertEquals($expected, $grid);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testInvalidInput(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('RMS4CC', '}{');
     }

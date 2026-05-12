@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Process.php
  *
@@ -32,6 +34,35 @@ namespace Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven;
 abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
 {
     /**
+     * @return array<int, int>
+     */
+    protected function getRsFactors(int $ecl): array
+    {
+        $values = Data::RS_FACTORS[$ecl] ?? [];
+        return \array_values($values);
+    }
+
+    /**
+     * @param array<int, int> $data
+     */
+    protected function getArrayInt(array $data, int $index): int
+    {
+        return $data[$index] ?? 0;
+    }
+
+    /**
+     * @param array<int, array{int, string}> $sequence_array
+     */
+    protected function getLastSequenceMode(array $sequence_array): int
+    {
+        if ($sequence_array === []) {
+            return -1;
+        }
+
+        return $sequence_array[\count($sequence_array) - 1][0] ?? -1;
+    }
+
+    /**
      * Get the error correction level (0-8) to be used
      *
      * @param int $ecl   Error correction level
@@ -42,23 +73,20 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
     protected function getErrorCorrectionLevel(int $ecl, int $numcw): int
     {
         $maxecl = 8; // maximum error level
-        $maxerrsize = (928 - $numcw); // available codewords for error
-        while (($maxecl > 0) && ($maxerrsize < (2 << $maxecl))) {
+        $maxerrsize = 928 - $numcw; // available codewords for error
+        while ($maxecl > 0 && $maxerrsize < (2 << $maxecl)) {
             --$maxecl;
         }
 
-        if (($ecl < 0) || ($ecl > 8)) {
-            if ($numcw < 41) {
-                $ecl = 2;
-            } elseif ($numcw < 161) {
-                $ecl = 3;
-            } elseif ($numcw < 321) {
-                $ecl = 4;
-            } elseif ($numcw < 864) {
-                $ecl = 5;
-            } else {
-                $ecl = $maxecl;
-            }
+        if ($ecl < 0 || $ecl > 8) {
+            $ecl = $maxecl;
+            $ecl = match (true) {
+                $numcw < 41 => 2,
+                $numcw < 161 => 3,
+                $numcw < 321 => 4,
+                $numcw < 864 => 5,
+                default => $ecl,
+            };
         }
 
         return (int) \min($maxecl, $ecl);
@@ -75,31 +103,33 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
     protected function getErrorCorrection(array $codewords, int $ecl): array
     {
         // get error correction coefficients
-        $ecc = Data::RS_FACTORS[$ecl];
+        $ecc = $this->getRsFactors($ecl);
         // number of error correction factors
-        $eclsize = (2 << $ecl);
+        $eclsize = \max(0, 2 << $ecl);
         // maximum index for RS_FACTORS[$ecl]
-        $eclmaxid = ($eclsize - 1);
+        $eclmaxid = $eclsize - 1;
         // initialize array of error correction codewords
         $ecw = \array_fill(0, $eclsize, 0);
         // for each data codeword
         foreach ($codewords as $codeword) {
-            $tk1 = ($codeword + $ecw[$eclmaxid]) % 929;
+            $tk1 = ($codeword + $this->getArrayInt($ecw, $eclmaxid)) % 929;
             for ($idx = $eclmaxid; $idx > 0; --$idx) {
-                $tk2 = (($tk1 * $ecc[$idx]) % 929);
-                $tk3 = (929 - $tk2);
-                $ecw[$idx] = (int) (($ecw[($idx - 1)] + $tk3) % 929);
+                $tk2 = ($tk1 * $this->getArrayInt($ecc, $idx)) % 929;
+                $tk3 = 929 - $tk2;
+                $ecw[$idx] = (int) (($this->getArrayInt($ecw, $idx - 1) + $tk3) % 929);
             }
 
-            $tk2 = (($tk1 * $ecc[0]) % 929);
-            $tk3 = (929 - $tk2);
+            $tk2 = ($tk1 * $this->getArrayInt($ecc, 0)) % 929;
+            $tk3 = 929 - $tk2;
             $ecw[0] = (int) ($tk3 % 929);
         }
 
         foreach ($ecw as $idx => $err) {
-            if ($err != 0) {
-                $ecw[$idx] = (int) (929 - $err);
+            if ($err === 0) {
+                continue;
             }
+
+            $ecw[$idx] = (int) (929 - $err);
         }
 
         return \array_reverse($ecw);
@@ -116,30 +146,28 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
     protected function processSequence(array &$sequence_array, string $code, int $seq, int $offset): void
     {
         // extract text sequence before the number sequence
-        $prevseq = \substr($code, $offset, ($seq - $offset));
+        $prevseq = \substr($code, $offset, $seq - $offset);
         $textseq = [];
         // get text sequences
         \preg_match_all('/([\x09\x0a\x0d\x20-\x7e]{5,})/', $prevseq, $textseq, PREG_OFFSET_CAPTURE);
         $textseq[1][] = ['', \strlen($prevseq)];
         $txtoffset = 0;
         foreach ($textseq[1] as $txtseq) {
+            $txtSeqOffset = (int) $txtseq[1];
             $txtseqlen = \strlen($txtseq[0]);
-            if ($txtseq[1] > 0) {
+            if ($txtSeqOffset > 0) {
                 // extract byte sequence before the text sequence
-                $prevtxtseq = \substr($prevseq, $txtoffset, ($txtseq[1] - $txtoffset));
+                $prevtxtseq = \substr($prevseq, $txtoffset, $txtSeqOffset - $txtoffset);
                 if (\strlen($prevtxtseq) > 0) {
                     // add BYTE sequence
-                    if (
-                        (\strlen($prevtxtseq) == 1)
-                        && (($sequence_array !== [])
-                        && ($sequence_array[(\count($sequence_array) - 1)][0] == 900))
-                    ) {
-                        $sequence_array[] = [913, $prevtxtseq];
-                    } elseif ((\strlen($prevtxtseq) % 6) == 0) {
-                        $sequence_array[] = [924, $prevtxtseq];
-                    } else {
-                        $sequence_array[] = [901, $prevtxtseq];
-                    }
+                    $mode = 901;
+                    $mode = match (true) {
+                        \strlen($prevtxtseq) === 1 && $this->getLastSequenceMode($sequence_array) === 900 => 913,
+                        (\strlen($prevtxtseq) % 6) === 0 => 924,
+                        default => $mode,
+                    };
+
+                    $sequence_array[] = [$mode, $prevtxtseq];
                 }
             }
 
@@ -148,7 +176,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
                 $sequence_array[] = [900, $txtseq[0]];
             }
 
-            $txtoffset = ($txtseq[1] + $txtseqlen);
+            $txtoffset = $txtSeqOffset + $txtseqlen;
         }
     }
 
@@ -169,8 +197,9 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
         $offset = 0;
         foreach ($numseq[1] as $seq) {
             $seqlen = \strlen($seq[0]);
-            if ($seq[1] > 0) {
-                $this->processSequence($sequence_array, $code, $seq[1], $offset);
+            $seqOffset = (int) $seq[1];
+            if ($seqOffset > 0) {
+                $this->processSequence($sequence_array, $code, $seqOffset, $offset);
             }
 
             if ($seqlen > 0) {
@@ -178,7 +207,7 @@ abstract class Sequence extends \Com\Tecnick\Barcode\Type\Square
                 $sequence_array[] = [902, $seq[0]];
             }
 
-            $offset = ($seq[1] + $seqlen);
+            $offset = $seqOffset + $seqlen;
         }
 
         return $sequence_array;

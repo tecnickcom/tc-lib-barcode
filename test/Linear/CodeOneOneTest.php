@@ -36,18 +36,24 @@ class CodeOneOneTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
         $bobj = $barcode->getBarcodeObj('CODE11', '0123456789');
         $grid = $bobj->getGrid();
-        $expected = "10110010101011011010110100101101100101010110110110"
+        $expected =
+            '10110010101011011010110100101101100101010110110110'
             . "11010100110101010011011010010110101010101101011001\n";
         $this->assertEquals($expected, $grid);
 
         $bobj = $barcode->getBarcodeObj('CODE11', '123-456-789');
         $grid = $bobj->getGrid();
-        $expected = "10110010110101101001011011001010101101010110110110110"
+        $expected =
+            '10110010110101101001011011001010101101010110110110110'
             . "10100110101011010101001101101001011010101101101011010101011001\n";
         $this->assertEquals($expected, $grid);
 
@@ -57,9 +63,13 @@ class CodeOneOneTest extends TestUtil
         $this->assertEquals($expected, $grid);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testInvalidInput(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('CODE11', \chr(255));
     }

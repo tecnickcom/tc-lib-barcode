@@ -36,15 +36,16 @@ class RawTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $testObj = $this->getTestObject();
         $testObj = $this->getTestObject();
 
-        $type = $testObj->getBarcodeObj(
-            'LRAW',
-            '01001100011100001111,10110011100011110000'
-        );
+        $type = $testObj->getBarcodeObj('LRAW', '01001100011100001111,10110011100011110000');
         $grid = $type->getGrid();
         $expected = "01001100011100001111\n10110011100011110000\n";
         $this->assertEquals($expected, $grid);

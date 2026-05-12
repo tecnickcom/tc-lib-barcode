@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Imb.php
  *
@@ -366,11 +368,106 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $rev = 0;
         for ($pos = 0; $pos < 16; ++$pos) {
             $rev <<= 1;
-            $rev |= ($num & 1);
+            $rev |= $num & 1;
             $num >>= 1;
         }
 
         return $rev;
+    }
+
+    /**
+     * @param array<int, string> $code_arr
+     */
+    protected function getCodeByte(array $code_arr, int $index): string
+    {
+        return $code_arr[$index] ?? '00';
+    }
+
+    /**
+     * @return numeric-string
+     *
+     * @throws BarcodeException in case of error
+     */
+    protected function toNumericString(string $value): string
+    {
+        if ($value === '' || !\ctype_digit($value)) {
+            throw new BarcodeException('Invalid numeric string');
+        }
+
+        return $value;
+    }
+
+    /**
+     * @return numeric-string
+     *
+     * @throws BarcodeException in case of error
+     */
+    protected function getTrackingDigit(string $tracking_number, int $index): string
+    {
+        $digit = $tracking_number[$index] ?? '';
+        if (!\ctype_digit($digit)) {
+            throw new BarcodeException('Invalid tracking number');
+        }
+
+        return $digit;
+    }
+
+    /**
+     * @param numeric-string $left
+     * @param numeric-string $right
+     *
+     * @return numeric-string
+     */
+    protected function addNumeric(string $left, string $right): string
+    {
+        return \bcadd($left, $right);
+    }
+
+    /**
+     * @param numeric-string $left
+     * @param numeric-string $right
+     *
+     * @return numeric-string
+     */
+    protected function mulNumeric(string $left, string $right): string
+    {
+        return \bcmul($left, $right);
+    }
+
+    /**
+     * @param numeric-string $left
+     * @param numeric-string $right
+     */
+    protected function modNumeric(string $left, string $right): int
+    {
+        return (int) \bcmod($left, $right);
+    }
+
+    /**
+     * @param numeric-string $left
+     * @param numeric-string $right
+     *
+     * @return numeric-string
+     */
+    protected function divNumeric(string $left, string $right): string
+    {
+        return \bcdiv($left, $right);
+    }
+
+    /**
+     * @param array<int, int> $table
+     */
+    protected function getTableCode(array $table, int $index): int
+    {
+        return $table[$index] ?? 0;
+    }
+
+    /**
+     * @param array<int, int> $chars
+     */
+    protected function getCharValue(array $chars, int $index): int
+    {
+        return $chars[$index] ?? 0;
     }
 
     /**
@@ -385,7 +482,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $genpoly = 0x0F35; // generator polynomial
         $fcs = 0x07FF; // Frame Check Sequence
         // do most significant byte skipping the 2 most significant bits
-        $data = \hexdec($code_arr[0]) << 5;
+        $data = \hexdec($this->getCodeByte($code_arr, 0)) << 5;
         for ($bit = 2; $bit < 8; ++$bit) {
             $fcs = (($fcs ^ $data) & 0x400) !== 0 ? ($fcs << 1) ^ $genpoly : $fcs << 1;
 
@@ -395,7 +492,7 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
 
         // do rest of bytes
         for ($byte = 1; $byte < 13; ++$byte) {
-            $data = \hexdec($code_arr[$byte]) << 3;
+            $data = \hexdec($this->getCodeByte($code_arr, $byte)) << 3;
             for ($bit = 0; $bit < 8; ++$bit) {
                 $fcs = (($fcs ^ $data) & 0x400) !== 0 ? ($fcs << 1) ^ $genpoly : $fcs << 1;
 
@@ -423,26 +520,27 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         for ($count = 0; $count < 8192; ++$count) {
             $bit_count = 0;
             for ($bit_index = 0; $bit_index < 13; ++$bit_index) {
-                $bit_count += (int) (($count & (1 << $bit_index)) != 0);
+                $bit_count += (int) (($count & (1 << $bit_index)) !== 0);
             }
 
             // if we don't have the right number of bits on, go on to the next value
             if ($bit_count === $type) {
-                $reverse = ($this->getReversedUnsignedShort($count) >> 3);
+                $reverse = $this->getReversedUnsignedShort($count) >> 3;
                 // if the reverse is less than count, we have already visited this pair before
                 if ($reverse >= $count) {
                     // If count is symmetric, place it at the first free slot from the end of the list.
                     // Otherwise, place it at the first free slot from the beginning of the list AND place
                     // $reverse ath the next free slot from the beginning of the list
-                    if ($reverse == $count) {
+                    if ($reverse === $count) {
                         $table[$lui] = $count;
                         --$lui;
-                    } else {
-                        $table[$lli] = $count;
-                        ++$lli;
-                        $table[$lli] = $reverse;
-                        ++$lli;
+                        continue;
                     }
+
+                    $table[$lli] = $count;
+                    ++$lli;
+                    $table[$lli] = $reverse;
+                    ++$lli;
                 }
             }
         }
@@ -453,18 +551,27 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     /**
      * Get the routing code binary block
      *
-     * @param numeric-string $routing_code the routing code
+     * @param string $routing_code the routing code
      *
      * @throws BarcodeException in case of error
      */
     protected function getRoutingCode(string $routing_code): string
     {
+        if ($routing_code !== '' && !\ctype_digit($routing_code)) {
+            throw new BarcodeException('Invalid routing code');
+        }
+
+        if ($routing_code === '') {
+            return '0';
+        }
+
+        $routing_code = $this->toNumericString($routing_code);
+
         // Conversion of Routing Code
         return match (\strlen($routing_code)) {
-            0 => '0',
-            5 => \bcadd($routing_code, '1'),
-            9 => \bcadd($routing_code, '100001'),
-            11 => \bcadd($routing_code, '1000100001'),
+            5 => $this->addNumeric($routing_code, '1'),
+            9 => $this->addNumeric($routing_code, '100001'),
+            11 => $this->addNumeric($routing_code, '1000100001'),
             default => throw new BarcodeException('Invalid routing code'),
         };
     }
@@ -483,16 +590,22 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $this->bars = [];
         $code_arr = \explode('-', $this->code);
         $tracking_number = $code_arr[0];
-        $binary_code = '0';
-        if (isset($code_arr[1])) {
-            $binary_code = $this->getRoutingCode($code_arr[1]); // @phpstan-ignore argument.type
+        if (!\preg_match('/^\d{2,20}$/', $tracking_number)) {
+            throw new BarcodeException('Invalid tracking number');
         }
 
-        $binary_code = \bcmul($binary_code, '10'); // @phpstan-ignore argument.type
-        $binary_code = \bcadd($binary_code, $tracking_number[0]); // @phpstan-ignore argument.type
-        $binary_code = \bcmul($binary_code, '5'); // @phpstan-ignore argument.type
-        $binary_code = \bcadd($binary_code, $tracking_number[1]); // @phpstan-ignore argument.type
-        $binary_code .= \substr($tracking_number, 2, 18);
+        $binary_code = '0';
+        if (($code_arr[1] ?? null) !== null) {
+            $binary_code = $this->getRoutingCode($code_arr[1]);
+        }
+
+        $binary_code = $this->toNumericString($binary_code);
+
+        $binary_code = $this->mulNumeric($binary_code, '10');
+        $binary_code = $this->addNumeric($binary_code, $this->getTrackingDigit($tracking_number, 0));
+        $binary_code = $this->mulNumeric($binary_code, '5');
+        $binary_code = $this->addNumeric($binary_code, $this->getTrackingDigit($tracking_number, 1));
+        $binary_code = $this->toNumericString($binary_code . \substr($tracking_number, 2, 18));
         // convert to hexadecimal
         $binary_code = $this->convertDecToHex($binary_code);
         // pad to get 13 bytes
@@ -508,16 +621,16 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $binary_code_102bit = $first_byte . \substr($binary_code, 2);
         // convert binary data to codewords
         $codewords = [];
-        $data = $this->convertHexToDec($binary_code_102bit);
-        $codewords[0] = (int) \bcmod($data, '636') * 2;
-        $data = \bcdiv($data, '636');
+        $data = $this->toNumericString($this->convertHexToDec($binary_code_102bit));
+        $codewords[0] = $this->modNumeric($data, '636') * 2;
+        $data = $this->divNumeric($data, '636');
         for ($pos = 1; $pos < 9; ++$pos) {
-            $codewords[$pos] = (int) \bcmod($data, '1365');
-            $data = \bcdiv($data, '1365');
+            $codewords[$pos] = $this->modNumeric($data, '1365');
+            $data = $this->divNumeric($data, '1365');
         }
 
         $codewords[9] = (int) $data;
-        if (($fcs >> 10) == 1) {
+        if (($fcs >> 10) === 1) {
             $codewords[9] += 659;
         }
 
@@ -528,11 +641,13 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
         $characters = [];
         $bitmask = 512;
         foreach ($codewords as $codeword) {
-            $chrcode = $codeword <= 1286 ? $table5of13[$codeword] : $table2of13[($codeword - 1287)];
+            $chrcode = $codeword <= 1286
+                ? $this->getTableCode($table5of13, $codeword)
+                : $this->getTableCode($table2of13, $codeword - 1287);
 
             if (($fcs & $bitmask) > 0) {
                 // bitwise invert
-                $chrcode = ((~(int) $chrcode) & 8191);
+                $chrcode = ~(int) $chrcode & 8191;
             }
 
             $characters[] = $chrcode;
@@ -551,22 +666,35 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     {
         $chars = $this->getCharsArray();
         for ($pos = 0; $pos < 65; ++$pos) {
-            $asc = (($chars[self::ASC_CHR[$pos]] & 2 ** self::ASC_POS[$pos]) > 0);
-            $dsc = (($chars[self::DSC_CHR[$pos]] & 2 ** self::DSC_POS[$pos]) > 0);
+            $asc_chr = self::ASC_CHR[$pos] ?? 0;
+            $asc_pos = self::ASC_POS[$pos] ?? 0;
+            $dsc_chr = self::DSC_CHR[$pos] ?? 0;
+            $dsc_pos = self::DSC_POS[$pos] ?? 0;
+            $asc = ($this->getCharValue($chars, $asc_chr) & (2 ** $asc_pos)) > 0;
+            $dsc = ($this->getCharValue($chars, $dsc_chr) & (2 ** $dsc_pos)) > 0;
             if ($asc && $dsc) {
                 // full bar (F)
                 $this->bars[] = [$this->ncols, 0, 1, 3];
-            } elseif ($asc) {
-                // ascender (A)
-                $this->bars[] = [$this->ncols, 0, 1, 2];
-            } elseif ($dsc) {
-                // descender (D)
-                $this->bars[] = [$this->ncols, 1, 1, 2];
-            } else {
-                // tracker (T)
-                $this->bars[] = [$this->ncols, 1, 1, 1];
+                $this->ncols += 2;
+                continue;
             }
 
+            if ($asc) {
+                // ascender (A)
+                $this->bars[] = [$this->ncols, 0, 1, 2];
+                $this->ncols += 2;
+                continue;
+            }
+
+            if ($dsc) {
+                // descender (D)
+                $this->bars[] = [$this->ncols, 1, 1, 2];
+                $this->ncols += 2;
+                continue;
+            }
+
+            // tracker (T)
+            $this->bars[] = [$this->ncols, 1, 1, 1];
             $this->ncols += 2;
         }
 

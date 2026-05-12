@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * QrCode.php
  *
@@ -90,6 +92,30 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      */
     protected ByteStream $bsObj;
 
+    protected function getEccLevel(string $level): int
+    {
+        return match ($level) {
+            'L' => 0,
+            'M' => 1,
+            'Q' => 2,
+            'H' => 3,
+            default => 0,
+        };
+    }
+
+    protected function getHintMode(string $mode): int
+    {
+        return match ($mode) {
+            'NL' => -1,
+            'NM' => 0,
+            'AN' => 1,
+            '8B' => 2,
+            'KJ' => 3,
+            'ST' => 4,
+            default => 2,
+        };
+    }
+
     /**
      * Set extra (optional) parameters:
      *     1: LEVEL - error correction level: L, M, Q, H
@@ -108,30 +134,24 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
         parent::setParameters();
 
         // level
-        if (
-            ! isset($this->params[0])
-            || ! isset(Data::ECC_LEVELS[\strval($this->params[0])])
-        ) {
+        if (($this->params[0] ?? null) === null || !\array_key_exists(\strval($this->params[0]), Data::ECC_LEVELS)) {
             $this->params[0] = 'L';
         }
 
-        $this->level = Data::ECC_LEVELS[\strval($this->params[0])];
+        $this->level = $this->getEccLevel(\strval($this->params[0]));
 
         // hint
-        if (
-            ! isset($this->params[1])
-            || ! isset(Data::ENC_MODES[\strval($this->params[1])])
-        ) {
+        if (($this->params[1] ?? null) === null || !\array_key_exists(\strval($this->params[1]), Data::ENC_MODES)) {
             $this->params[1] = '8B';
         }
 
-        $this->hint = Data::ENC_MODES[\strval($this->params[1])];
+        $this->hint = $this->getHintMode(\strval($this->params[1]));
 
         // version
         if (
-            ! isset($this->params[2])
-            || ($this->params[2] < 0)
-            || ($this->params[2] > Data::QRSPEC_VERSION_MAX)
+            ($this->params[2] ?? null) === null
+            || $this->params[2] < 0
+            || $this->params[2] > Data::QRSPEC_VERSION_MAX
         ) {
             $this->params[2] = 0;
         }
@@ -139,26 +159,26 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
         $this->version = (int) $this->params[2];
 
         // case sensitive
-        if (! isset($this->params[3])) {
+        if (($this->params[3] ?? null) === null) {
             $this->params[3] = 1;
         }
 
         $this->case_sensitive = (bool) $this->params[3];
 
         // random mask mode - number of masks to be checked
-        if (! empty($this->params[4])) {
+        if (($this->params[4] ?? null) !== null && $this->params[4] !== '' && (int) $this->params[4] !== 0) {
             $this->random_mask = (int) $this->params[4];
         }
 
         // find best mask
-        if (! isset($this->params[5])) {
+        if (($this->params[5] ?? null) === null) {
             $this->params[5] = 1;
         }
 
         $this->best_mask = (bool) $this->params[5];
 
         // default mask
-        if (! isset($this->params[6])) {
+        if (($this->params[6] ?? null) === null) {
             $this->params[6] = 2;
         }
 
@@ -169,20 +189,17 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      * Get the bars array
      *
      * @throws BarcodeException in case of error
+     * @throws \Random\RandomException in case of random generation error
      */
     protected function setBars(): void
     {
-        if (\strlen((string) $this->code) == 0) {
+        if (\strlen($this->code) === 0) {
             throw new BarcodeException('Empty input');
         }
 
         $this->bsObj = new ByteStream($this->hint, $this->version, $this->level);
         // generate the qrcode
-        $this->processBinarySequence(
-            $this->binarize(
-                $this->encodeString($this->code)
-            )
-        );
+        $this->processBinarySequence($this->binarize($this->encodeString($this->code)));
     }
 
     /**
@@ -198,7 +215,7 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
         // the frame is square (width = height)
         foreach ($frame as &$frameLine) {
             for ($idx = 0; $idx < $len; ++$idx) {
-                $frameLine[$idx] = ((\ord($frameLine[$idx]) & 1) !== 0) ? '1' : '0';
+                $frameLine[$idx] = (\ord($frameLine[$idx]) & 1) !== 0 ? '1' : '0';
             }
         }
 
@@ -211,23 +228,20 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
      * @param string $data input string to encode
      *
      * @return array<int, string> Encoded data
+     *
+     * @throws BarcodeException in case of split/encoding errors
+     * @throws \Random\RandomException in case of random generation error
      */
     protected function encodeString(string $data): array
     {
-        if (! $this->case_sensitive) {
+        if (!$this->case_sensitive) {
             $data = $this->toUpper($data);
         }
 
         $split = new Split($this->bsObj, $this->hint, $this->version);
         $datacode = $this->bsObj->getByteStream($split->getSplittedString($data));
         $this->version = $this->bsObj->version;
-        $encoder = new Encoder(
-            $this->version,
-            $this->level,
-            $this->random_mask,
-            $this->best_mask,
-            $this->default_mask
-        );
+        $encoder = new Encoder($this->version, $this->level, $this->random_mask, $this->best_mask, $this->default_mask);
         return $encoder->encodeMask(-1, $datacode);
     }
 
@@ -243,15 +257,16 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
 
         while ($pos < $len) {
             $mode = $this->bsObj->getEncodingMode($data, $pos);
-            if ($mode == Data::ENC_MODES['KJ']) {
+            if ($mode === $this->getHintMode('KJ')) {
                 $pos += 2;
-            } else {
-                if ((\ord($data[$pos]) >= \ord('a')) && (\ord($data[$pos]) <= \ord('z'))) {
-                    $data[$pos] = \chr((\ord($data[$pos]) - 32) & 0xFF);
-                }
-
-                ++$pos;
+                continue;
             }
+
+            if (\ord($data[$pos]) >= \ord('a') && \ord($data[$pos]) <= \ord('z')) {
+                $data[$pos] = \chr((\ord($data[$pos]) - 32) & 0xFF);
+            }
+
+            ++$pos;
         }
 
         return $data;

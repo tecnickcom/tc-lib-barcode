@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * MsiCheck.php
  *
@@ -34,6 +36,11 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
 {
+    protected function getPattern(string $digit): string
+    {
+        return $this::CHBAR[$digit] ?? '';
+    }
+
     /**
      * Barcode format
      *
@@ -77,13 +84,13 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = \strlen($code);
         $pix = 2;
         $check = 0;
-        for ($pos = ($clen - 1); $pos >= 0; --$pos) {
+        for ($pos = $clen - 1; $pos >= 0; --$pos) {
             $hex = $code[$pos];
-            if (! \ctype_xdigit($hex)) {
+            if (!\ctype_xdigit($hex)) {
                 continue;
             }
 
-            $check += (\hexdec($hex) * $pix);
+            $check += \hexdec($hex) * $pix;
             ++$pix;
             if ($pix > 7) {
                 $pix = 2;
@@ -103,7 +110,7 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function formatCode(): void
     {
-        $this->extcode = $this->code . $this->getChecksum($this->code);
+        $this->extcode = $this->code . (string) $this->getChecksum($this->code);
     }
 
     /**
@@ -118,11 +125,11 @@ class MsiCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = \strlen($this->extcode);
         for ($pos = 0; $pos < $clen; ++$pos) {
             $digit = $this->extcode[$pos];
-            if (! isset($this::CHBAR[$digit])) {
+            if (!\array_key_exists($digit, $this::CHBAR)) {
                 throw new BarcodeException('Invalid character: \chr(' . (\ord($digit) & 0xFF) . ')');
             }
 
-            $seq .= $this::CHBAR[$digit];
+            $seq .= $this->getPattern($digit);
         }
 
         $seq .= '1001'; // right guard

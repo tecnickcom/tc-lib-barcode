@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * PdfFourOneSeven.php
  *
@@ -48,6 +50,19 @@ use Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data;
 class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Compaction
 {
     /**
+     * @param array<int, int> $codewords
+     */
+    protected function getCodewordValue(array $codewords, int $index): int
+    {
+        return $codewords[$index] ?? 0;
+    }
+
+    protected function getClusterCodewordValue(int $clusterId, int $codeword): int
+    {
+        return Data::CLUSTERS[$clusterId][$codeword] ?? 0;
+    }
+
+    /**
      * Barcode format
      *
      * @var string
@@ -83,18 +98,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     /**
      * Information for macro block
      *
-     * @var array{
-     *          'file_id'?: string,
-     *          'option_0'?: string,
-     *          'option_1'?: string,
-     *          'option_2'?: string,
-     *          'option_3'?: string,
-     *          'option_4'?: string,
-     *          'option_5'?: string,
-     *          'option_6'?: string,
-     *          'segment_index'?: int,
-     *          'segment_total'?: int,
-     *      }
+     * @var array<string, int|string>
      */
     protected array $macro = [];
 
@@ -107,18 +111,15 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
 
         // aspect ratio
         if (
-            ! empty($this->params[0])
-            && (($aspectratio = (float) $this->params[0]) >= 1)
+            ($this->params[0] ?? null) !== null
+            && $this->params[0] !== ''
+            && ($aspectratio = (float) $this->params[0]) >= 1
         ) {
             $this->aspectratio = $aspectratio;
         }
 
         // error correction level (auto)
-        if (
-            isset($this->params[1])
-            && (($ecl = (int) $this->params[1]) >= 0)
-            && ($ecl <= 8)
-        ) {
+        if (($this->params[1] ?? null) !== null && ($ecl = (int) $this->params[1]) >= 0 && $ecl <= 8) {
             $this->ecl = $ecl;
         }
 
@@ -134,11 +135,11 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
     protected function setMacroBlockParam(): void
     {
         if (
-            isset($this->params[4])
-            && (\is_string($this->params[4]))
-            && ($this->params[2] !== '')
-            && ($this->params[3] !== '')
-            && ($this->params[4] !== '')
+            ($this->params[4] ?? null) !== null
+            && \is_string($this->params[4])
+            && $this->params[2] !== ''
+            && $this->params[3] !== ''
+            && $this->params[4] !== ''
         ) {
             $this->macro['segment_total'] = (int) $this->params[2];
             $this->macro['segment_index'] = (int) $this->params[3];
@@ -146,9 +147,9 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
             for ($idx = 0; $idx < 7; ++$idx) {
                 $opt = $idx + 5;
                 if (
-                    isset($this->params[$opt])
-                    && (\is_string($this->params[$opt]))
-                    && ($this->params[$opt] !== '')
+                    ($this->params[$opt] ?? null) !== null
+                    && \is_string($this->params[$opt])
+                    && $this->params[$opt] !== ''
                 ) {
                     /* @phpstan-ignore-next-line */
                     $this->macro['option_' . $idx] = \strtr($this->params[$opt], "\xff", ',');
@@ -164,7 +165,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      */
     protected function setBars(): void
     {
-        if (\strlen((string) $this->code) == 0) {
+        if (\strlen($this->code) === 0) {
             throw new BarcodeException('Empty input');
         }
 
@@ -186,33 +187,38 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         }
 
         $macrocw = [];
+        $segmentIndex = (int) ($this->macro['segment_index'] ?? 0);
+        $segmentTotal = (int) ($this->macro['segment_total'] ?? 0);
+        $fileId = (string) ($this->macro['file_id'] ?? '');
         // beginning of macro control block
         $macrocw[] = 928;
         // segment index
-        $cdw = $this->getCompaction(902, \sprintf('%05d', $this->macro['segment_index']), false);
+        $cdw = $this->getCompaction(902, \sprintf('%05d', $segmentIndex), false);
         $macrocw = \array_merge($macrocw, $cdw);
         // file ID
-        $cdw = $this->getCompaction(900, $this->macro['file_id'], false);
+        $cdw = $this->getCompaction(900, $fileId, false);
         $macrocw = \array_merge($macrocw, $cdw);
         // optional fields
         $optmodes = [900, 902, 902, 900, 900, 902, 902];
         $optsize = [-1, 2, 4, -1, -1, -1, 2];
         foreach ($optmodes as $key => $omode) {
-            if (isset($this->macro['option_' . $key])) {
+            $optionKey = 'option_' . $key;
+            if (($this->macro[$optionKey] ?? null) !== null) {
+                $option = (string) $this->macro[$optionKey];
                 $macrocw[] = 923;
                 $macrocw[] = $key;
-                if ($optsize[$key] == 2) {
-                    $this->macro['option_' . $key] = \sprintf('%05d', $this->macro['option_' . $key]);
-                } elseif ($optsize[$key] == 4) {
-                    $this->macro['option_' . $key] = \sprintf('%010d', $this->macro['option_' . $key]);
-                }
+                $option = match ($optsize[$key] ?? -1) {
+                    2 => \sprintf('%05d', $option),
+                    4 => \sprintf('%010d', $option),
+                    default => $option,
+                };
 
-                $cdw = $this->getCompaction($omode, $this->macro['option_' . $key], false);
+                $cdw = $this->getCompaction($omode, $option, false);
                 $macrocw = \array_merge($macrocw, $cdw);
             }
         }
 
-        if ($this->macro['segment_index'] == ($this->macro['segment_total'] - 1)) {
+        if ($segmentIndex === ($segmentTotal - 1)) {
             // end of control block
             $macrocw[] = 922;
         }
@@ -233,11 +239,8 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
      *
      * @throws BarcodeException in case of error
      */
-    public function getCodewords(
-        int &$rows,
-        int &$cols,
-        int &$ecl
-    ): array {
+    public function getCodewords(int &$rows, int &$cols, int &$ecl): array
+    {
         $codewords = []; // array of code-words
         // get the input sequence array
         $sequence = $this->getInputSequences($this->code);
@@ -246,7 +249,7 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
             $codewords = \array_merge($codewords, $cws);
         }
 
-        if ($codewords[0] == 900) {
+        if (($codewords[0] ?? 0) === 900) {
             // Text Alpha is the default mode, so remove the first code
             \array_shift($codewords);
         }
@@ -261,26 +264,22 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
         // set error correction level
         $ecl = $this->getErrorCorrectionLevel($this->ecl, $numcw);
         // number of codewords for error correction
-        $errsize = (2 << $ecl);
+        $errsize = 2 << $ecl;
         // calculate number of columns (number of codewords per row) and rows
-        $nce = ($numcw + $errsize + 1);
-        $cols = (int) \min(
-            30,
-            \max(1, \round((\sqrt(4761 + (68 * $this->aspectratio * $this->row_height * $nce)) - 69) / 34))
-        );
-        $rows = (int) \min(
-            90,
-            \max(3, \ceil($nce / $cols))
-        );
-        $size = ($cols * $rows);
+        $nce = $numcw + $errsize + 1;
+        $cols = (int) \min(30, \max(
+            1,
+            \round((\sqrt(4761 + (68 * $this->aspectratio * $this->row_height * $nce)) - 69) / 34),
+        ));
+        $rows = (int) \min(90, \max(3, \ceil($nce / $cols)));
+        $size = $cols * $rows;
         if ($size > 928) {
             // set dimensions to get maximum capacity
-            if (\abs($this->aspectratio - (17 * 29 / 32)) < \abs($this->aspectratio - (17 * 16 / 58))) {
+            $cols = 16;
+            $rows = 58;
+            if (\abs($this->aspectratio - ((17 * 29) / 32)) < \abs($this->aspectratio - ((17 * 16) / 58))) {
                 $cols = 29;
                 $rows = 32;
-            } else {
-                $cols = 16;
-                $rows = 58;
             }
 
             $size = 928;
@@ -340,29 +339,32 @@ class PdfFourOneSeven extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\C
             $cval = 0;
             switch ($cid) {
                 case 0:
-                    $rval = ((30 * (int) ($rix / 3)) + (int) (($rows - 1) / 3));
-                    $cval = ((30 * (int) ($rix / 3)) + ($cols - 1));
+                    $rval = (30 * (int) ($rix / 3)) + (int) (($rows - 1) / 3);
+                    $cval = (30 * (int) ($rix / 3)) + ($cols - 1);
                     break;
                 case 1:
-                    $rval = ((30 * (int) ($rix / 3)) + ($ecl * 3) + (($rows - 1) % 3));
-                    $cval = ((30 * (int) ($rix / 3)) + (int) (($rows - 1) / 3));
+                    $rval = (30 * (int) ($rix / 3)) + ($ecl * 3) + (($rows - 1) % 3);
+                    $cval = (30 * (int) ($rix / 3)) + (int) (($rows - 1) / 3);
                     break;
                 case 2:
-                    $rval = ((30 * (int) ($rix / 3)) + ($cols - 1));
-                    $cval = ((30 * (int) ($rix / 3)) + ($ecl * 3) + (($rows - 1) % 3));
+                    $rval = (30 * (int) ($rix / 3)) + ($cols - 1);
+                    $cval = (30 * (int) ($rix / 3)) + ($ecl * 3) + (($rows - 1) % 3);
                     break;
             }
 
             // left row indicator
-            $row .= \sprintf('%17b', Data::CLUSTERS[$cid][$rval]);
+            $row .= \sprintf('%17b', $this->getClusterCodewordValue($cid, $rval));
             // for each column
             for ($cix = 0; $cix < $cols; ++$cix) {
-                $row .= \sprintf('%17b', Data::CLUSTERS[$cid][$codewords[$kcw]]);
+                $row .= \sprintf('%17b', $this->getClusterCodewordValue($cid, $this->getCodewordValue(
+                    $codewords,
+                    $kcw,
+                )));
                 ++$kcw;
             }
 
             // right row indicator
-            $row .= \sprintf('%17b', Data::CLUSTERS[$cid][$cval]);
+            $row .= \sprintf('%17b', $this->getClusterCodewordValue($cid, $cval));
             // row stop code
             $row .= Data::STOP_PATTERN . \str_repeat('0', $this->quiet_horizontal);
             $brow = ',' . \str_repeat($row, $this->row_height);

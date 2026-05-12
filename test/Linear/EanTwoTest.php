@@ -36,13 +36,14 @@ class EanTwoTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
-        $type = $barcode->getBarcodeObj(
-            'EAN2',
-            '12'
-        );
+        $type = $barcode->getBarcodeObj('EAN2', '12');
         $grid = $type->getGrid();
         $expected = "10110011001010010011\n";
         $this->assertEquals($expected, $grid);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * CodeNineThree.php
  *
@@ -94,7 +96,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         128 => '121221', // ($)
         129 => '311121', // (/)
         130 => '122211', // (+)
-        131 => '312111',  // (%)
+        131 => '312111', // (%)
     ];
 
     /**
@@ -135,7 +137,7 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         "\x83C",
         "\x83D",
         "\x83E",
-        " ",
+        ' ',
         "\x81A",
         "\x81B",
         "\x81C",
@@ -149,19 +151,19 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         "\x81J",
         "\x81K",
         "\x81L",
-        "-",
-        ".",
+        '-',
+        '.',
         "\x81O",
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
         "\x81Z",
         "\x83F",
         "\x83G",
@@ -169,32 +171,32 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         "\x83I",
         "\x83J",
         "\x83V",
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+        'F',
+        'G',
+        'H',
+        'I',
+        'J',
+        'K',
+        'L',
+        'M',
+        'N',
+        'O',
+        'P',
+        'Q',
+        'R',
+        'S',
+        'T',
+        'U',
+        'V',
+        'W',
+        'X',
+        'Y',
+        'Z',
         "\x83K",
         "\x83L",
         "\x83M",
@@ -289,6 +291,26 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         '?',
     ];
 
+    protected function getChecksumIndex(string $char): int
+    {
+        $index = \array_search($char, $this::CHKSUM, true);
+        if (\is_int($index)) {
+            return $index;
+        }
+
+        return 0;
+    }
+
+    protected function getChecksumChar(int $index): string
+    {
+        return $this::CHKSUM[$index] ?? '';
+    }
+
+    protected function getBarPattern(int $char): string
+    {
+        return $this::CHBAR[$char] ?? '000000';
+    }
+
     /**
      * Calculate CODE 93 checksum (modulo 47).
      *
@@ -304,9 +326,8 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         // calculate check digit C
         $pck = 1;
         $check = 0;
-        for ($idx = ($clen - 1); $idx >= 0; --$idx) {
-            $key = \array_keys($this::CHKSUM, $code[$idx]);
-            $check += ($key[0] * $pck);
+        for ($idx = $clen - 1; $idx >= 0; --$idx) {
+            $check += $this->getChecksumIndex($code[$idx]) * $pck;
             ++$pck;
             if ($pck > 20) {
                 $pck = 1;
@@ -314,14 +335,13 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         }
 
         $check %= 47;
-        $chk = $this::CHKSUM[$check];
+        $chk = $this->getChecksumChar($check);
         $code .= $chk;
         // calculate check digit K
         $pck = 1;
         $check = 0;
         for ($idx = $clen; $idx >= 0; --$idx) {
-            $key = \array_keys($this::CHKSUM, $code[$idx]);
-            $check += ($key[0] * $pck);
+            $check += $this->getChecksumIndex($code[$idx]) * $pck;
             ++$pck;
             if ($pck > 15) {
                 $pck = 1;
@@ -329,15 +349,10 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         }
 
         $check %= 47;
-        $key = $this::CHKSUM[$check];
+        $key = $this->getChecksumChar($check);
         $checksum = $chk . $key;
         // restore special characters
-        $checksum = \strtr(
-            $checksum,
-            '<=>?',
-            \chr(128) . \chr(131) . \chr(129) . \chr(130)
-        );
-        return $checksum;
+        return \strtr($checksum, '<=>?', \chr(128) . \chr(131) . \chr(129) . \chr(130));
     }
 
     /**
@@ -356,9 +371,10 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         $clen = \strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = \ord($this->extcode[$chr]);
+            $pattern = $this->getBarPattern($char);
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = (int) $this::CHBAR[$char][$pos];
-                if (($pos % 2) == 0) {
+                $bar_width = (int) ($pattern[$pos] ?? '0');
+                if (($pos % 2) === 0) {
                     $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
 

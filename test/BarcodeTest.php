@@ -34,93 +34,110 @@ class BarcodeTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetBarcodeObjException(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $barcode->getBarcodeObj(
-            'ERROR',
-            '01001100011100001111,10110011100011110000',
-            -2,
-            -2,
-            'purple'
-        );
+        $barcode->getBarcodeObj('ERROR', '01001100011100001111,10110011100011110000', -2, -2, 'purple');
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testSetPaddingException(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
+        /** @var array{0: int, 1: int, 2: int, 3: int} $invalidPadding */
+        $invalidPadding = [10];
         $barcode->getBarcodeObj(
             'LRAW,AB,12,E3F',
             '01001100011100001111,10110011100011110000',
             -2,
             -2,
             'purple',
-            [10] //@phpstan-ignore-line
+            $invalidPadding,
         );
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testEmptyColumns(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('LRAW', '');
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testEmptyInput(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('LRAW', '');
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testSpotColor(): void
     {
         $barcode = $this->getTestObject();
-        $type = $barcode->getBarcodeObj(
-            'LRAW',
-            '01001100011100001111,10110011100011110000',
+        $type = $barcode->getBarcodeObj('LRAW', '01001100011100001111,10110011100011110000', -2, -2, 'all', [
             -2,
-            -2,
-            'all',
-            [-2, 3, 0, 1]
-        );
+            3,
+            0,
+            1,
+        ]);
         $bobjarr = $type->getArray();
         $this->assertEquals('#000000ff', $bobjarr['color_obj']->getRgbaHexColor());
         $this->assertNUll($bobjarr['bg_color_obj']);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testBackgroundColor(): void
     {
         $barcode = $this->getTestObject();
-        $type = $barcode->getBarcodeObj(
-            'LRAW',
-            '01001100011100001111,10110011100011110000',
+        $type = $barcode->getBarcodeObj('LRAW', '01001100011100001111,10110011100011110000', -2, -2, 'all', [
             -2,
-            -2,
-            'all',
-            [-2, 3, 0, 1]
-        )->setBackgroundColor('mediumaquamarine');
+            3,
+            0,
+            1,
+        ])->setBackgroundColor('mediumaquamarine');
         $bobjarr = $type->getArray();
         $this->assertNotNull($bobjarr['bg_color_obj']);
         $this->assertEquals('#66cdaaff', $bobjarr['bg_color_obj']->getRgbaHexColor());
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testNoColorException(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
-        $barcode->getBarcodeObj(
-            'LRAW',
-            '01001100011100001111,10110011100011110000',
-            -2,
-            -2,
-            '',
-            [-2, 3, 0, 1]
-        );
+        $barcode->getBarcodeObj('LRAW', '01001100011100001111,10110011100011110000', -2, -2, '', [-2, 3, 0, 1]);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testExportMethods(): void
     {
         $barcode = $this->getTestObject();
@@ -130,7 +147,7 @@ class BarcodeTest extends TestUtil
             -2,
             -2,
             'purple',
-            [-2, 3, 0, 1]
+            [-2, 3, 0, 1],
         );
 
         $this->assertEquals('01001100011100001111,10110011100011110000', $type->getExtendedCode());
@@ -147,12 +164,15 @@ class BarcodeTest extends TestUtil
         $this->assertEquals(4, $barr['height']);
         $this->assertEquals(2, $barr['width_ratio']);
         $this->assertEquals(2, $barr['height_ratio']);
-        $this->assertEquals([
-            'T' => 4,
-            'R' => 3,
-            'B' => 0,
-            'L' => 1,
-        ], $barr['padding']);
+        $this->assertEquals(
+            [
+                'T' => 4,
+                'R' => 3,
+                'B' => 0,
+                'L' => 1,
+            ],
+            $barr['padding'],
+        );
         $this->assertEquals(44, $barr['full_width']);
         $this->assertEquals(8, $barr['full_height']);
 
@@ -174,19 +194,20 @@ class BarcodeTest extends TestUtil
         $this->assertEquals($expected, $grid);
 
         $svg = $type->setBackgroundColor('yellow')->getSvgCode();
-        $expected = '<?xml version="1.0" standalone="no" ?>
+        $expected =
+            '<?xml version="1.0" standalone="no" ?>
 <svg'
-        . ' version="1.2"'
-        . ' baseProfile="full"'
-        . ' xmlns="http://www.w3.org/2000/svg"'
-        . ' xmlns:xlink="http://www.w3.org/1999/xlink"'
-        . ' xmlns:ev="http://www.w3.org/2001/xml-events"'
-        . ' width="44.000000"'
-        . ' height="8.000000"'
-        . ' viewBox="0 0 44.000000 8.000000">
+            . ' version="1.2"'
+            . ' baseProfile="full"'
+            . ' xmlns="http://www.w3.org/2000/svg"'
+            . ' xmlns:xlink="http://www.w3.org/1999/xlink"'
+            . ' xmlns:ev="http://www.w3.org/2001/xml-events"'
+            . ' width="44.000000"'
+            . ' height="8.000000"'
+            . ' viewBox="0 0 44.000000 8.000000">
 	<desc>01001100011100001111,10110011100011110000</desc>
 	<rect x="0" y="0" width="44.000000" height="8.000000" fill="#ffff00"'
-        . ' stroke="none" stroke-width="0" stroke-linecap="square" />
+            . ' stroke="none" stroke-width="0" stroke-linecap="square" />
 	<g id="bars" fill="#800080" stroke="none" stroke-width="0" stroke-linecap="square">
 		<rect x="3.000000" y="4.000000" width="2.000000" height="2.000000" />
 		<rect x="9.000000" y="4.000000" width="4.000000" height="2.000000" />
@@ -222,64 +243,65 @@ class BarcodeTest extends TestUtil
         $this->assertEquals($expected, $svg);
 
         $hdiv = $type->setBackgroundColor('lightcoral')->getHtmlDiv();
-        $expected = '<div style="width:44.000000px;height:8.000000px;position:relative;font-size:0;'
-        . 'border:none;padding:0;margin:0;background-color:rgba(94%,50%,50%,1);">
+        $expected =
+            '<div style="width:44.000000px;height:8.000000px;position:relative;font-size:0;'
+            . 'border:none;padding:0;margin:0;background-color:rgba(94%,50%,50%,1);">
 	<div style="background-color:rgba(50%,0%,50%,1);left:3.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:9.000000px;top:4.000000px;'
-        . 'width:4.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:4.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:19.000000px;top:4.000000px;'
-        . 'width:6.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:6.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:33.000000px;top:4.000000px;'
-        . 'width:8.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:8.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:1.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:5.000000px;top:6.000000px;'
-        . 'width:4.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:4.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:13.000000px;top:6.000000px;'
-        . 'width:6.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:6.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:25.000000px;top:6.000000px;'
-        . 'width:8.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:8.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:1.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:3.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:5.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:7.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:9.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:11.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:13.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:15.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:17.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:19.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:21.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:23.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:25.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:27.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:29.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:31.000000px;top:6.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:33.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:35.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:37.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 	<div style="background-color:rgba(50%,0%,50%,1);left:39.000000px;top:4.000000px;'
-        . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
+            . 'width:2.000000px;height:2.000000px;position:absolute;border:none;padding:0;margin:0;">&nbsp;</div>
 </div>
 ';
         $this->assertEquals($expected, $hdiv);
@@ -296,6 +318,10 @@ class BarcodeTest extends TestUtil
         $this->assertEquals('PNG', \substr($pnggd, 1, 3));
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetSvg(): void
     {
         $barcode = $this->getTestObject();
@@ -304,7 +330,7 @@ class BarcodeTest extends TestUtil
             '01001100011100001111,10110011100011110000',
             -2,
             -2,
-            'purple'
+            'purple',
         );
 
         // empty filename
@@ -313,10 +339,10 @@ class BarcodeTest extends TestUtil
         $svg = \ob_get_clean();
         $this->assertNotFalse($svg);
         $this->assertEquals('114f33435c265345f7c6cdf673922292', \md5($svg));
-        $headers = xdebug_get_headers();
+        $headers = $this->getResponseHeaders();
         $this->assertEquals(
             'Content-Disposition: inline; filename="114f33435c265345f7c6cdf673922292.svg";',
-            $headers[5]
+            $headers[5] ?? '',
         );
 
         // invalid filename
@@ -325,10 +351,10 @@ class BarcodeTest extends TestUtil
         $svg = \ob_get_clean();
         $this->assertNotFalse($svg);
         $this->assertEquals('114f33435c265345f7c6cdf673922292', \md5($svg));
-        $headers = xdebug_get_headers();
+        $headers = $this->getResponseHeaders();
         $this->assertEquals(
             'Content-Disposition: inline; filename="114f33435c265345f7c6cdf673922292.svg";',
-            $headers[5]
+            $headers[5] ?? '',
         );
 
         // valid filename
@@ -337,13 +363,14 @@ class BarcodeTest extends TestUtil
         $svg = \ob_get_clean();
         $this->assertNotFalse($svg);
         $this->assertEquals('114f33435c265345f7c6cdf673922292', \md5($svg));
-        $headers = xdebug_get_headers();
-        $this->assertEquals(
-            'Content-Disposition: inline; filename="test_SVG_filename-001.svg";',
-            $headers[5]
-        );
+        $headers = $this->getResponseHeaders();
+        $this->assertEquals('Content-Disposition: inline; filename="test_SVG_filename-001.svg";', $headers[5] ?? '');
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetPng(): void
     {
         $barcode = $this->getTestObject();
@@ -352,7 +379,7 @@ class BarcodeTest extends TestUtil
             '01001100011100001111,10110011100011110000',
             -2,
             -2,
-            'purple'
+            'purple',
         );
 
         // empty filename
@@ -361,8 +388,8 @@ class BarcodeTest extends TestUtil
         $png = \ob_get_clean();
         $this->assertNotFalse($png);
         $this->assertEquals('PNG', \substr($png, 1, 3));
-        $headers = xdebug_get_headers();
-        $this->assertNotEmpty($headers[5]);
+        $headers = $this->getResponseHeaders();
+        $this->assertNotEmpty($headers[5] ?? '');
 
         // invalid filename
         \ob_start();
@@ -370,8 +397,8 @@ class BarcodeTest extends TestUtil
         $png = \ob_get_clean();
         $this->assertNotFalse($png);
         $this->assertEquals('PNG', \substr($png, 1, 3));
-        $headers = xdebug_get_headers();
-        $this->assertNotEmpty($headers[5]);
+        $headers = $this->getResponseHeaders();
+        $this->assertNotEmpty($headers[5] ?? '');
 
         // valid filename
         \ob_start();
@@ -379,10 +406,7 @@ class BarcodeTest extends TestUtil
         $png = \ob_get_clean();
         $this->assertNotFalse($png);
         $this->assertEquals('PNG', \substr($png, 1, 3));
-        $headers = xdebug_get_headers();
-        $this->assertEquals(
-            'Content-Disposition: inline; filename="test_PNG_filename-001.png";',
-            $headers[5]
-        );
+        $headers = $this->getResponseHeaders();
+        $this->assertEquals('Content-Disposition: inline; filename="test_PNG_filename-001.png";', $headers[5] ?? '');
     }
 }

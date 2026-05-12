@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Steps.php
  *
@@ -49,15 +51,17 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
 
         $charscount = 0; // count processed chars
         // STEP J
-        if ($mode == Data::ENC_ASCII) {
-            $numch = [0, 1, 1, 1, 1, 1.25];
-        } else {
-            $numch = [1, 2, 2, 2, 2, 2.25];
-            $numch[$mode] = 0;
-        }
+        $numch = match ($mode) {
+            Data::ENC_C40 => [1.0, 0.0, 2.0, 2.0, 2.0, 2.25],
+            Data::ENC_TXT => [1.0, 2.0, 0.0, 2.0, 2.0, 2.25],
+            Data::ENC_X12 => [1.0, 2.0, 2.0, 0.0, 2.0, 2.25],
+            Data::ENC_EDF => [1.0, 2.0, 2.0, 2.0, 0.0, 2.25],
+            Data::ENC_BASE256 => [1.0, 2.0, 2.0, 2.0, 2.0, 0.0],
+            default => [0.0, 1.0, 1.0, 1.0, 1.0, 1.25],
+        };
 
         while (true) {
-            if (($pos + $charscount) == $data_length) {
+            if (($pos + $charscount) === $data_length) {
                 return $this->stepK($numch);
             }
 
@@ -81,67 +85,67 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step K
      *
-     * @param array<int, int|float> $numch   Number of characters
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch Number of characters
      *
      * @return int encoding mode
      */
     protected function stepK(array $numch): int
     {
         if (
-            $numch[Data::ENC_ASCII] <= \ceil(\min(
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_TXT],
-                $numch[Data::ENC_X12],
-                $numch[Data::ENC_EDF],
-                $numch[Data::ENC_BASE256]
+            ($numch[Data::ENC_ASCII] ?? 0.0) <= \ceil(\min(
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_TXT] ?? 0.0,
+                $numch[Data::ENC_X12] ?? 0.0,
+                $numch[Data::ENC_EDF] ?? 0.0,
+                $numch[Data::ENC_BASE256] ?? 0.0,
             ))
         ) {
             return Data::ENC_ASCII;
         }
 
         if (
-            $numch[Data::ENC_BASE256] < \ceil(\min(
-                $numch[Data::ENC_ASCII],
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_TXT],
-                $numch[Data::ENC_X12],
-                $numch[Data::ENC_EDF]
+            ($numch[Data::ENC_BASE256] ?? 0.0) < \ceil(\min(
+                $numch[Data::ENC_ASCII] ?? 0.0,
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_TXT] ?? 0.0,
+                $numch[Data::ENC_X12] ?? 0.0,
+                $numch[Data::ENC_EDF] ?? 0.0,
             ))
         ) {
             return Data::ENC_BASE256;
         }
 
         if (
-            $numch[Data::ENC_EDF] < \ceil(\min(
-                $numch[Data::ENC_ASCII],
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_TXT],
-                $numch[Data::ENC_X12],
-                $numch[Data::ENC_BASE256]
+            ($numch[Data::ENC_EDF] ?? 0.0) < \ceil(\min(
+                $numch[Data::ENC_ASCII] ?? 0.0,
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_TXT] ?? 0.0,
+                $numch[Data::ENC_X12] ?? 0.0,
+                $numch[Data::ENC_BASE256] ?? 0.0,
             ))
         ) {
             return Data::ENC_EDF;
         }
 
         if (
-            $numch[Data::ENC_TXT] < \ceil(\min(
-                $numch[Data::ENC_ASCII],
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_X12],
-                $numch[Data::ENC_EDF],
-                $numch[Data::ENC_BASE256]
+            ($numch[Data::ENC_TXT] ?? 0.0) < \ceil(\min(
+                $numch[Data::ENC_ASCII] ?? 0.0,
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_X12] ?? 0.0,
+                $numch[Data::ENC_EDF] ?? 0.0,
+                $numch[Data::ENC_BASE256] ?? 0.0,
             ))
         ) {
             return Data::ENC_TXT;
         }
 
         if (
-            $numch[Data::ENC_X12] < \ceil(\min(
-                $numch[Data::ENC_ASCII],
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_TXT],
-                $numch[Data::ENC_EDF],
-                $numch[Data::ENC_BASE256]
+            ($numch[Data::ENC_X12] ?? 0.0) < \ceil(\min(
+                $numch[Data::ENC_ASCII] ?? 0.0,
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_TXT] ?? 0.0,
+                $numch[Data::ENC_EDF] ?? 0.0,
+                $numch[Data::ENC_BASE256] ?? 0.0,
             ))
         ) {
             return Data::ENC_X12;
@@ -151,111 +155,188 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     }
 
     /**
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch
+     */
+    protected function getNumch(array $numch, int $mode): float
+    {
+        return match ($mode) {
+            Data::ENC_ASCII => $numch[0],
+            Data::ENC_C40 => $numch[1],
+            Data::ENC_TXT => $numch[2],
+            Data::ENC_X12 => $numch[3],
+            Data::ENC_EDF => $numch[4],
+            Data::ENC_BASE256 => $numch[5],
+            default => 0.0,
+        };
+    }
+
+    /**
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch
+     */
+    protected function setNumch(array &$numch, int $mode, float $value): void
+    {
+        switch ($mode) {
+            case Data::ENC_ASCII:
+                $numch[0] = $value;
+                return;
+
+            case Data::ENC_C40:
+                $numch[1] = $value;
+                return;
+
+            case Data::ENC_TXT:
+                $numch[2] = $value;
+                return;
+
+            case Data::ENC_X12:
+                $numch[3] = $value;
+                return;
+
+            case Data::ENC_EDF:
+                $numch[4] = $value;
+                return;
+
+            case Data::ENC_BASE256:
+                $numch[5] = $value;
+                return;
+        }
+    }
+
+    /**
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch
+     */
+    protected function addNumch(array &$numch, int $mode, float $value): void
+    {
+        $this->setNumch($numch, $mode, $this->getNumch($numch, $mode) + $value);
+    }
+
+    /**
      * Step L
      *
      * @param int $chr    Character code
-     * @param array<int, int|float> $numch   Number of characters
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch Number of characters
      */
     protected function stepL(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_ASCII_NUM)) {
-            $numch[Data::ENC_ASCII] += (1 / 2);
-        } elseif ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
-            $numch[Data::ENC_ASCII] = \ceil($numch[Data::ENC_ASCII]);
-            $numch[Data::ENC_ASCII] += 2;
-        } else {
-            $numch[Data::ENC_ASCII] = \ceil($numch[Data::ENC_ASCII]);
-            ++$numch[Data::ENC_ASCII];
+            $this->addNumch($numch, Data::ENC_ASCII, 0.5);
+            return;
         }
+
+        if ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
+            $this->setNumch($numch, Data::ENC_ASCII, \ceil($this->getNumch($numch, Data::ENC_ASCII)));
+            $this->addNumch($numch, Data::ENC_ASCII, 2.0);
+            return;
+        }
+
+        $this->setNumch($numch, Data::ENC_ASCII, \ceil($this->getNumch($numch, Data::ENC_ASCII)));
+        $this->addNumch($numch, Data::ENC_ASCII, 1.0);
     }
 
     /**
      * Step M
      *
      * @param int $chr    Character code
-     * @param array<int, int|float> $numch   Number of characters
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch Number of characters
      */
     protected function stepM(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_C40)) {
-            $numch[Data::ENC_C40] += (2 / 3);
-        } elseif ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
-            $numch[Data::ENC_C40] += (8 / 3);
-        } else {
-            $numch[Data::ENC_C40] += (4 / 3);
+            $this->addNumch($numch, Data::ENC_C40, 2.0 / 3.0);
+            return;
         }
+
+        if ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
+            $this->addNumch($numch, Data::ENC_C40, 8.0 / 3.0);
+            return;
+        }
+
+        $this->addNumch($numch, Data::ENC_C40, 4.0 / 3.0);
     }
 
     /**
      * Step N
      *
      * @param int $chr    Character code
-     * @param array<int, int|float> $numch   Number of characters
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch Number of characters
      */
     protected function stepN(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_TXT)) {
-            $numch[Data::ENC_TXT] += (2 / 3);
-        } elseif ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
-            $numch[Data::ENC_TXT] += (8 / 3);
-        } else {
-            $numch[Data::ENC_TXT] += (4 / 3);
+            $this->addNumch($numch, Data::ENC_TXT, 2.0 / 3.0);
+            return;
         }
+
+        if ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
+            $this->addNumch($numch, Data::ENC_TXT, 8.0 / 3.0);
+            return;
+        }
+
+        $this->addNumch($numch, Data::ENC_TXT, 4.0 / 3.0);
     }
 
     /**
      * Step O
      *
      * @param int $chr    Character code
-     * @param array<int, int|float> $numch   Number of characters
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch Number of characters
      */
     protected function stepO(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_X12) || $this->isCharMode($chr, Data::ENC_C40)) {
-            $numch[Data::ENC_X12] += (2 / 3);
-        } elseif ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
-            $numch[Data::ENC_X12] += (13 / 3);
-        } else {
-            $numch[Data::ENC_X12] += (10 / 3);
+            $this->addNumch($numch, Data::ENC_X12, 2.0 / 3.0);
+            return;
         }
+
+        if ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
+            $this->addNumch($numch, Data::ENC_X12, 13.0 / 3.0);
+            return;
+        }
+
+        $this->addNumch($numch, Data::ENC_X12, 10.0 / 3.0);
     }
 
     /**
      * Step P
      *
      * @param int $chr    Character code
-     * @param array<int, int|float> $numch   Number of characters
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch Number of characters
      */
     protected function stepP(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_EDF)) {
-            $numch[Data::ENC_EDF] += (3 / 4);
-        } elseif ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
-            $numch[Data::ENC_EDF] += (17 / 4);
-        } else {
-            $numch[Data::ENC_EDF] += (13 / 4);
+            $this->addNumch($numch, Data::ENC_EDF, 3.0 / 4.0);
+            return;
         }
+
+        if ($this->isCharMode($chr, Data::ENC_ASCII_EXT)) {
+            $this->addNumch($numch, Data::ENC_EDF, 17.0 / 4.0);
+            return;
+        }
+
+        $this->addNumch($numch, Data::ENC_EDF, 13.0 / 4.0);
     }
 
     /**
      * Step Q
      *
      * @param int $chr    Character code
-     * @param array<int, int|float> $numch   Number of characters
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch Number of characters
      */
     protected function stepQ(int $chr, array &$numch): void
     {
         if ($this->isCharMode($chr, Data::ENC_BASE256)) {
-            $numch[Data::ENC_BASE256] += 4;
-        } else {
-            ++$numch[Data::ENC_BASE256];
+            $this->addNumch($numch, Data::ENC_BASE256, 4.0);
+            return;
         }
+
+        $this->addNumch($numch, Data::ENC_BASE256, 1.0);
     }
 
     /**
      * Step R-f
      *
-     * @param array<int, int|float> $numch   Number of characters
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch Number of characters
      * @param int    $pos  Current position
      * @param int    $data_length  Data length
      * @param int    $charscount   Number of processed characters
@@ -263,27 +344,22 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      *
      * @return int   Encoding mode
      */
-    protected function stepRf(
-        array $numch,
-        int $pos,
-        int $data_length,
-        int $charscount,
-        string $data
-    ): int {
+    protected function stepRf(array $numch, int $pos, int $data_length, int $charscount, string $data): int
+    {
         if (
-            ($numch[Data::ENC_C40] + 1) < \min(
-                $numch[Data::ENC_ASCII],
-                $numch[Data::ENC_TXT],
-                $numch[Data::ENC_EDF],
-                $numch[Data::ENC_BASE256]
+            (($numch[Data::ENC_C40] ?? 0.0) + 1) < \min(
+                $numch[Data::ENC_ASCII] ?? 0.0,
+                $numch[Data::ENC_TXT] ?? 0.0,
+                $numch[Data::ENC_EDF] ?? 0.0,
+                $numch[Data::ENC_BASE256] ?? 0.0,
             )
         ) {
-            if ($numch[Data::ENC_C40] < $numch[Data::ENC_X12]) {
+            if (($numch[Data::ENC_C40] ?? 0.0) < ($numch[Data::ENC_X12] ?? 0.0)) {
                 return Data::ENC_C40;
             }
 
-            if ($numch[Data::ENC_C40] == $numch[Data::ENC_X12]) {
-                $ker = ($pos + $charscount + 1);
+            if (($numch[Data::ENC_C40] ?? 0.0) === ($numch[Data::ENC_X12] ?? 0.0)) {
+                $ker = $pos + $charscount + 1;
                 while ($ker < $data_length) {
                     $tmpchr = \ord($data[$ker]);
                     if ($this->isCharMode($tmpchr, Data::ENC_X12)) {
@@ -307,7 +383,7 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
     /**
      * Step R
      *
-     * @param array<int, int|float> $numch   Number of characters
+     * @param array{0: float, 1: float, 2: float, 3: float, 4: float, 5: float} $numch Number of characters
      * @param int    $pos  Current position
      * @param int    $data_length  Data length
      * @param int    $charscount   Number of processed characters
@@ -315,68 +391,63 @@ abstract class Steps extends \Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes
      *
      * @return int   Encoding mode
      */
-    protected function stepR(
-        array $numch,
-        int $pos,
-        int $data_length,
-        int $charscount,
-        string $data
-    ): int {
+    protected function stepR(array $numch, int $pos, int $data_length, int $charscount, string $data): int
+    {
         if (
-            ($numch[Data::ENC_ASCII] + 1) <= \min(
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_TXT],
-                $numch[Data::ENC_X12],
-                $numch[Data::ENC_EDF],
-                $numch[Data::ENC_BASE256]
+            (($numch[Data::ENC_ASCII] ?? 0.0) + 1) <= \min(
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_TXT] ?? 0.0,
+                $numch[Data::ENC_X12] ?? 0.0,
+                $numch[Data::ENC_EDF] ?? 0.0,
+                $numch[Data::ENC_BASE256] ?? 0.0,
             )
         ) {
             return Data::ENC_ASCII;
         }
 
         if (
-            (($numch[Data::ENC_BASE256] + 1) <= $numch[Data::ENC_ASCII])
-            || (($numch[Data::ENC_BASE256] + 1) < \min(
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_TXT],
-                $numch[Data::ENC_X12],
-                $numch[Data::ENC_EDF]
-            ))
+            (($numch[Data::ENC_BASE256] ?? 0.0) + 1) <= ($numch[Data::ENC_ASCII] ?? 0.0)
+            || (($numch[Data::ENC_BASE256] ?? 0.0) + 1) < \min(
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_TXT] ?? 0.0,
+                $numch[Data::ENC_X12] ?? 0.0,
+                $numch[Data::ENC_EDF] ?? 0.0,
+            )
         ) {
             return Data::ENC_BASE256;
         }
 
         if (
-            ($numch[Data::ENC_EDF] + 1) < \min(
-                $numch[Data::ENC_ASCII],
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_TXT],
-                $numch[Data::ENC_X12],
-                $numch[Data::ENC_BASE256]
+            (($numch[Data::ENC_EDF] ?? 0.0) + 1) < \min(
+                $numch[Data::ENC_ASCII] ?? 0.0,
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_TXT] ?? 0.0,
+                $numch[Data::ENC_X12] ?? 0.0,
+                $numch[Data::ENC_BASE256] ?? 0.0,
             )
         ) {
             return Data::ENC_EDF;
         }
 
         if (
-            ($numch[Data::ENC_TXT] + 1) < \min(
-                $numch[Data::ENC_ASCII],
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_X12],
-                $numch[Data::ENC_EDF],
-                $numch[Data::ENC_BASE256]
+            (($numch[Data::ENC_TXT] ?? 0.0) + 1) < \min(
+                $numch[Data::ENC_ASCII] ?? 0.0,
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_X12] ?? 0.0,
+                $numch[Data::ENC_EDF] ?? 0.0,
+                $numch[Data::ENC_BASE256] ?? 0.0,
             )
         ) {
             return Data::ENC_TXT;
         }
 
         if (
-            ($numch[Data::ENC_X12] + 1) < \min(
-                $numch[Data::ENC_ASCII],
-                $numch[Data::ENC_C40],
-                $numch[Data::ENC_TXT],
-                $numch[Data::ENC_EDF],
-                $numch[Data::ENC_BASE256]
+            (($numch[Data::ENC_X12] ?? 0.0) + 1) < \min(
+                $numch[Data::ENC_ASCII] ?? 0.0,
+                $numch[Data::ENC_C40] ?? 0.0,
+                $numch[Data::ENC_TXT] ?? 0.0,
+                $numch[Data::ENC_EDF] ?? 0.0,
+                $numch[Data::ENC_BASE256] ?? 0.0,
             )
         ) {
             return Data::ENC_X12;

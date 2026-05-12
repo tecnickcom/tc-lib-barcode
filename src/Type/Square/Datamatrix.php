@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Datamatrix.php
  *
  * @since     2015-02-21
  * @category  Library
  * @package   Barcode
+ *
+ * @throws BarcodeException in case of error
  * @author    Nicola Asuni <info@tecnick.com>
  * @copyright 2010-2026 Nicola Asuni - Tecnick.com LTD
  * @license   https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
@@ -89,15 +93,15 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         parent::setParameters();
 
         // shape
-        if (isset($this->params[0]) && ($this->params[0] === 'R')) {
+        if (($this->params[0] ?? null) === 'R') {
             $this->shape = 'R';
         }
 
         // mode
-        $this->gsonemode = (isset($this->params[1]) && ($this->params[1] === 'GS1'));
+        $this->gsonemode = ($this->params[1] ?? null) === 'GS1';
 
         // encoding
-        if (isset($this->params[2])) {
+        if (($this->params[2] ?? null) !== null) {
             $this->defenc = Data::ENCOPTS[\strval($this->params[2])] ?? Data::ENC_ASCII;
         }
     }
@@ -116,9 +120,10 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
             return;
         }
 
-        if (($this->dmx->last_enc != Data::ENC_ASCII) && ($this->dmx->last_enc != Data::ENC_BASE256)) {
+        $lastEnc = (int) $this->dmx->last_enc;
+        if ($lastEnc !== Data::ENC_ASCII && $lastEnc !== Data::ENC_BASE256) {
             // return to ASCII encodation before padding
-            $this->cdw[] = $this->dmx->last_enc == Data::ENC_EDF ? 124 : 254;
+            $this->cdw[] = $lastEnc === Data::ENC_EDF ? 124 : 254;
 
             ++$ncw;
         }
@@ -143,7 +148,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function getCodewords(): array
     {
-        if (\strlen((string) $this->code) == 0) {
+        if (\strlen($this->code) === 0) {
             throw new BarcodeException('Empty input');
         }
 
@@ -188,35 +193,49 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         int &$rdx,
         int &$cdx,
         int &$rdri,
-        int &$rdci
+        int &$rdci,
     ): void {
         // braw bits by case
-        if ($rdx == 0) {
+        if ($rdx === 0) {
             // top finder pattern
-            $this->grid[$row][$col] = (int) (($cdx % 2) == 0);
-        } elseif ($rdx == $rdri) {
+            $this->grid[$row][$col] = (int) (($cdx % 2) === 0);
+            return;
+        }
+
+        if ($rdx === $rdri) {
             // bottom finder pattern
             $this->grid[$row][$col] = 1;
-        } elseif ($cdx == 0) {
+            return;
+        }
+
+        if ($cdx === 0) {
             // left finder pattern
             $this->grid[$row][$col] = 1;
-        } elseif ($cdx == $rdci) {
+            return;
+        }
+
+        if ($cdx === $rdci) {
             // right finder pattern
             $this->grid[$row][$col] = (int) (($rdx % 2) > 0);
-        } else {
-            // data bit
-            if ($places[$idx] < 2) {
-                $this->grid[$row][$col] = $places[$idx];
-            } else {
-                // codeword ID
-                $cdw_id = (\floor($places[$idx] / 10) - 1);
-                // codeword BIT mask
-                $cdw_bit = 2 ** (8 - ($places[$idx] % 10));
-                $this->grid[$row][$col] = (($this->cdw[\intval($cdw_id)] & $cdw_bit) == 0) ? 0 : 1;
-            }
-
-            ++$idx;
+            return;
         }
+
+        // data bit
+        $place = $places[$idx] ?? 0;
+        if ($place < 2) {
+            $this->grid[$row][$col] = $place;
+            ++$idx;
+            return;
+        }
+
+        // codeword ID
+        $cdw_id = \floor($place / 10) - 1;
+        // codeword BIT mask
+        $cdw_bit = 2 ** (8 - ($place % 10));
+        $cdw_val = $this->cdw[\intval($cdw_id)] ?? 0;
+        $this->grid[$row][$col] = ($cdw_val & $cdw_bit) === 0 ? 0 : 1;
+
+        ++$idx;
     }
 
     /**
@@ -225,6 +244,8 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
      * @param string $data data to encode
      *
      * @return array<int, int> Codewords
+     *
+     * @throws BarcodeException in case of error
      *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
@@ -250,8 +271,8 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                 // check for control characters
                 $cco = \ord($data[$pos]);
                 if (
-                    $cco == 232   // FNC1 (ASCII 232 - HEX \xE8)
-                    || $cco == 29 // <GS> (ASCII  29 - HEX \x1D)
+                    $cco === 232 // FNC1 (ASCII 232 - HEX \xE8)
+                    || $cco === 29 // <GS> (ASCII  29 - HEX \x1D)
                 ) {
                     $cdw[] = 232; // FNC1
                     ++$pos;
@@ -266,9 +287,9 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                     $this->dmx->encodeASCII($cdw, $cdw_num, $pos, $data_length, $data, $enc);
                     break;
                 case Data::ENC_C40:
-                    // Upper-case alphanumeric
+                // Upper-case alphanumeric
                 case Data::ENC_TXT:
-                    // Lower-case alphanumeric
+                // Lower-case alphanumeric
                 case Data::ENC_X12:
                     // ANSI X12
                     $this->dmx->encodeTXT($cdw, $cdw_num, $pos, $data_length, $data, $enc);
@@ -304,19 +325,19 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         $this->grid = [];
         $idx = 0;
         // region data row max index
-        $rdri = ($params[4] - 1);
+        $rdri = $params[4] - 1;
         // region data column max index
-        $rdci = ($params[5] - 1);
+        $rdci = $params[5] - 1;
         // for each horizontal region
         for ($hr = 0; $hr < $params[8]; ++$hr) {
             // for each row on region
             for ($rdx = 0; $rdx < $params[4]; ++$rdx) {
-                $row = (($hr * $params[4]) + $rdx);
+                $row = ($hr * $params[4]) + $rdx;
                 // for each vertical region
                 for ($vr = 0; $vr < $params[9]; ++$vr) {
                     // for each column on region
                     for ($cdx = 0; $cdx < $params[5]; ++$cdx) {
-                        $col = (($vr * $params[5]) + $cdx);
+                        $col = ($vr * $params[5]) + $cdx;
                         $this->setGrid($idx, $places, $row, $col, $rdx, $cdx, $rdri, $rdci);
                     }
                 }

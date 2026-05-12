@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * ErrorCorrection.php
  *
@@ -41,7 +43,7 @@ class ErrorCorrection
         6 => 67, // 1000011  GF(64) (x^6 + x + 1) 01–02 layers
         8 => 301, // 100101101  GF(256) (x^8 + x^5 + x^3 + x^2 + 1) 03–08 layers
         10 => 1033, // 10000001001  GF(1024) (x^10 + x^3 + 1) 09–22 layers
-        12 => 4201,  // 1000001101001  GF(4096) (x^12 + x^6 + x^5 + x^3 + 1) 23–32 layers
+        12 => 4201, // 1000001101001  GF(4096) (x^12 + x^6 + x^5 + x^3 + 1) 23–32 layers
     ];
 
     /**
@@ -108,12 +110,12 @@ class ErrorCorrection
      */
     protected function genTables(int $wsize): void
     {
-        $this->tsize = self::TSIZE[$wsize];
-        $this->tlog = \array_fill(0, $this->tsize, 0);
+        $this->tsize = self::TSIZE[$wsize] ?? 0;
+        $this->tlog = \array_fill(0, \max(0, $this->tsize), 0);
         $this->texp = $this->tlog;
-        $primitive = self::GF[$wsize];
+        $primitive = self::GF[$wsize] ?? 0;
         $val = 1;
-        $sizeminusone = ($this->tsize - 1);
+        $sizeminusone = $this->tsize - 1;
         for ($idx = 0; $idx < $this->tsize; ++$idx) {
             $this->texp[$idx] = $val;
             $val <<= 1; // multiply by 2
@@ -123,8 +125,9 @@ class ErrorCorrection
             }
         }
 
-        for ($idx = 0; $idx < $this->tsize - 1; ++$idx) {
-            $this->tlog[$this->texp[$idx]] = $idx;
+        for ($idx = 0; $idx < ($this->tsize - 1); ++$idx) {
+            $exp = $this->texp[$idx] ?? 0;
+            $this->tlog[$exp] = $idx;
         }
     }
 
@@ -140,15 +143,15 @@ class ErrorCorrection
     {
         $gen = [1];
         for ($idx = 1; $idx <= $necc; ++$idx) {
-            $gen = $this->multiplyCoeff([1, $this->texp[$idx]], $gen);
+            $gen = $this->multiplyCoeff([1, $this->texp[$idx] ?? 0], $gen);
         }
 
-        $deg = ($necc + 1);
+        $deg = $necc + 1;
         $coeff = $this->multiplyByMonomial($data, 1, $necc);
         $len = \count($coeff);
-        while (($len >= $deg) && ($coeff[0] != 0)) {
-            $scale = $this->multiply($coeff[0], 1);
-            $largercoeffs = $this->multiplyByMonomial($gen, $scale, ($len - $deg));
+        while ($len >= $deg && ($coeff[0] ?? 0) !== 0) {
+            $scale = $this->multiply($coeff[0] ?? 0, 1);
+            $largercoeffs = $this->multiplyByMonomial($gen, $scale, $len - $deg);
             $coeff = $this->addOrSubtract($coeff, $largercoeffs);
             $len = \count($coeff);
         }
@@ -168,10 +171,10 @@ class ErrorCorrection
     {
         $alen = \count($acf);
         $blen = \count($bcf);
-        $coeff = \array_fill(0, ($alen + $blen - 1), 0);
+        $coeff = \array_fill(0, \max(0, $alen + $blen - 1), 0);
         for ($aid = 0; $aid < $alen; ++$aid) {
             for ($bid = 0; $bid < $blen; ++$bid) {
-                $coeff[$aid + $bid] ^= ($this->multiply($acf[$aid], $bcf[$bid]));
+                $coeff[$aid + $bid] = ($coeff[$aid + $bid] ?? 0) ^ $this->multiply($acf[$aid] ?? 0, $bcf[$bid] ?? 0);
             }
         }
 
@@ -186,11 +189,18 @@ class ErrorCorrection
      */
     protected function multiply(int $aval, int $bval): int
     {
-        if ($aval == 0 || $bval == 0) {
+        if ($aval === 0 || $bval === 0) {
             return 0;
         }
 
-        return $this->texp[($this->tlog[$aval] + $this->tlog[$bval]) % ($this->tsize - 1)];
+        $sizeMinusOne = $this->tsize - 1;
+        if ($sizeMinusOne <= 0) {
+            return 0;
+        }
+
+        $index = (($this->tlog[$aval] ?? 0) + ($this->tlog[$bval] ?? 0)) % $sizeMinusOne;
+
+        return $this->texp[$index] ?? 0;
     }
 
     /**
@@ -202,7 +212,7 @@ class ErrorCorrection
      */
     protected function trimCoefficients(array $coeff): array
     {
-        while ($coeff !== [] && $coeff[0] == 0) {
+        while ($coeff !== [] && ($coeff[0] ?? 0) === 0) {
             \array_shift($coeff);
         }
 
@@ -224,9 +234,9 @@ class ErrorCorrection
         //     return array(0);
         // }
         $ncf = \count($coeff);
-        $prod = \array_fill(0, ($ncf + $deg), 0);
+        $prod = \array_fill(0, \max(0, $ncf + $deg), 0);
         for ($idx = 0; $idx < $ncf; ++$idx) {
-            $prod[$idx] = $this->multiply($coeff[$idx], $mon);
+            $prod[$idx] = $this->multiply($coeff[$idx] ?? 0, $mon);
         }
 
         return $this->trimCoefficients($prod);
@@ -255,10 +265,10 @@ class ErrorCorrection
         //     list($smaller, $larger) = array($larger, $smaller);
         //     list($slen, $llen) = array($llen, $slen);
         // }
-        $lendiff = ($llen - $slen);
+        $lendiff = $llen - $slen;
         $coeff = \array_slice($larger, 0, $lendiff);
         for ($idx = $lendiff; $idx < $llen; ++$idx) {
-            $coeff[$idx] = ($smaller[($idx - $lendiff)] ^ $larger[$idx]);
+            $coeff[$idx] = ($smaller[$idx - $lendiff] ?? 0) ^ ($larger[$idx] ?? 0);
         }
 
         return $this->trimCoefficients($coeff);

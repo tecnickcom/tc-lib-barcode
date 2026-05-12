@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Data.php
  *
@@ -44,6 +46,50 @@ class Data
      * @var int
      */
     public const QRSPEC_WIDTH_MAX = 177;
+
+    // -----------------------------------------------------
+
+    /**
+     * Encoding mode: variable.
+     *
+     * @var int
+     */
+    public const MODE_NL = -1;
+
+    /**
+     * Encoding mode: numeric.
+     *
+     * @var int
+     */
+    public const MODE_NM = 0;
+
+    /**
+     * Encoding mode: alphanumeric.
+     *
+     * @var int
+     */
+    public const MODE_AN = 1;
+
+    /**
+     * Encoding mode: 8-bit byte.
+     *
+     * @var int
+     */
+    public const MODE_8B = 2;
+
+    /**
+     * Encoding mode: kanji.
+     *
+     * @var int
+     */
+    public const MODE_KJ = 3;
+
+    /**
+     * Encoding mode: structured append.
+     *
+     * @var int
+     */
+    public const MODE_ST = 4;
 
     // -----------------------------------------------------
 
@@ -139,12 +185,12 @@ class Data
      * @var array<string, int>
      */
     public const ENC_MODES = [
-        'NL' => -1,
-        'NM' => 0,
-        'AN' => 1,
-        '8B' => 2,
-        'KJ' => 3,
-        'ST' => 4,
+        'NL' => self::MODE_NL,
+        'NM' => self::MODE_NM,
+        'AN' => self::MODE_AN,
+        '8B' => self::MODE_8B,
+        'KJ' => self::MODE_KJ,
+        'ST' => self::MODE_ST,
     ];
 
     /**
@@ -187,7 +233,7 @@ class Data
         -1,
         -1,
         -1,
-        //
+
         -1,
         -1,
         -1,
@@ -204,7 +250,7 @@ class Data
         -1,
         -1,
         -1,
-        //
+
         36,
         -1,
         -1,
@@ -221,7 +267,7 @@ class Data
         41,
         42,
         43,
-        //
+
         0,
         1,
         2,
@@ -238,7 +284,7 @@ class Data
         -1,
         -1,
         -1,
-        //
+
         -1,
         10,
         11,
@@ -255,7 +301,7 @@ class Data
         22,
         23,
         24,
-        //
+
         25,
         26,
         27,
@@ -272,7 +318,7 @@ class Data
         -1,
         -1,
         -1,
-        //
+
         -1,
         -1,
         -1,
@@ -289,7 +335,7 @@ class Data
         -1,
         -1,
         -1,
-        //
+
         -1,
         -1,
         -1,
@@ -480,40 +526,40 @@ class Data
      * @var array<int>
      */
     public const VERSION_PATTERN = [
-        0x07c94,
-        0x085bc,
-        0x09a99,
-        0x0a4d3,
-        0x0bbf6,
-        0x0c762,
-        0x0d847,
-        0x0e60d,
-        0x0f928,
-        0x10b78,
-        0x1145d,
-        0x12a17,
-        0x13532,
-        0x149a6,
-        0x15683,
-        0x168c9,
-        0x177ec,
-        0x18ec4,
-        0x191e1,
-        0x1afab,
-        0x1b08e,
-        0x1cc1a,
-        0x1d33f,
-        0x1ed75,
-        0x1f250,
-        0x209d5,
-        0x216f0,
-        0x228ba,
-        0x2379f,
-        0x24b0b,
-        0x2542e,
-        0x26a64,
-        0x27541,
-        0x28c69,
+        0x0_7c94,
+        0x0_85bc,
+        0x0_9a99,
+        0x0_a4d3,
+        0x0_bbf6,
+        0x0_c762,
+        0x0_d847,
+        0x0_e60d,
+        0x0_f928,
+        0x1_0b78,
+        0x1_145d,
+        0x1_2a17,
+        0x1_3532,
+        0x1_49a6,
+        0x1_5683,
+        0x1_68c9,
+        0x1_77ec,
+        0x1_8ec4,
+        0x1_91e1,
+        0x1_afab,
+        0x1_b08e,
+        0x1_cc1a,
+        0x1_d33f,
+        0x1_ed75,
+        0x1_f250,
+        0x2_09d5,
+        0x2_16f0,
+        0x2_28ba,
+        0x2_379f,
+        0x2_4b0b,
+        0x2_542e,
+        0x2_6a64,
+        0x2_7541,
+        0x2_8c69,
     ];
 
     /**

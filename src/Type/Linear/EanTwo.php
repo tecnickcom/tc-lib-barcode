@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * EanTwo.php
  *
@@ -34,6 +36,25 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
 {
+    protected function getCharAt(string $value, int $index): string
+    {
+        return $value[$index] ?? '0';
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function getParityPattern(int $check): array
+    {
+        $pattern = $this::PARITIES[$check] ?? ['A', 'A'];
+        return \array_values($pattern);
+    }
+
+    protected function getBarPattern(string $parity, string $digit): string
+    {
+        return $this::CHBAR[$parity][$digit] ?? '';
+    }
+
     /**
      * Barcode format
      *
@@ -101,7 +122,7 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function getChecksum(string $code): int
     {
-        return ((int) $code % 4);
+        return (int) $code % 4;
     }
 
     /**
@@ -121,13 +142,16 @@ class EanTwo extends \Com\Tecnick\Barcode\Type\Linear
     {
         $this->formatCode();
         $chk = $this->getChecksum($this->extcode);
-        $parity = $this::PARITIES[$chk];
+        $parity = $this->getParityPattern($chk);
         $seq = '1011'; // left guard bar
-        $seq .= $this::CHBAR[$parity[0]][$this->extcode[0]];
+        $seq .= $this->getBarPattern($this->getCharAt($parity[0] ?? 'A', 0), $this->getCharAt($this->extcode, 0));
         $len = \strlen($this->extcode);
         for ($pos = 1; $pos < $len; ++$pos) {
             $seq .= '01'; // separator
-            $seq .= $this::CHBAR[$parity[$pos]][$this->extcode[$pos]];
+            $seq .= $this->getBarPattern(
+                $this->getCharAt($parity[$pos] ?? 'A', 0),
+                $this->getCharAt($this->extcode, $pos),
+            );
         }
 
         $this->processBinarySequence($this->getRawCodeRows($seq));

@@ -36,13 +36,14 @@ class EanEightTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
-        $type = $barcode->getBarcodeObj(
-            'EAN8',
-            '1234567'
-        );
+        $type = $barcode->getBarcodeObj('EAN8', '1234567');
         $grid = $type->getGrid();
         $expected = "1010011001001001101111010100011010101001110101000010001001110010101\n";
         $this->assertEquals($expected, $grid);

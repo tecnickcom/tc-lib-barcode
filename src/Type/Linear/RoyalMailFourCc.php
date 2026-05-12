@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * RoyalMailFourCC.php
  *
@@ -34,6 +36,18 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
 {
+    protected function getChecksumDigit(string $char, int $idx): int
+    {
+        $pair = $this::CHKSUM[$char] ?? '00';
+        return (int) ($pair[$idx] ?? '0');
+    }
+
+    protected function getBarPattern(string $char, int $pos): string
+    {
+        $pattern = $this::CHBAR[$char] ?? '0000';
+        return $pattern[$pos] ?? '0';
+    }
+
     /**
      * Barcode format
      *
@@ -145,22 +159,24 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         $len = \strlen($code);
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
-            if (! isset($this::CHKSUM[$char])) {
+            if (!\array_key_exists($char, $this::CHKSUM)) {
                 throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
             }
 
-            $row += (int) $this::CHKSUM[$char][0];
-            $col += (int) $this::CHKSUM[$char][1];
+            $row += $this->getChecksumDigit($char, 0);
+            $col += $this->getChecksumDigit($char, 1);
         }
 
         $row %= 6;
         $col %= 6;
-        $check = \array_keys($this::CHKSUM, $row . $col);
-        return \intval($check[0]);
+        $check = \array_keys($this::CHKSUM, $row . $col, true);
+        return \intval($check[0] ?? 0);
     }
 
     /**
      * Format code
+     *
+     * @throws BarcodeException in case of error
      */
     protected function formatCode(): void
     {
@@ -180,7 +196,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             for ($pos = 0; $pos < 4; ++$pos) {
-                switch ($this::CHBAR[$char][$pos]) {
+                switch ($this->getBarPattern($char, $pos)) {
                     case '1':
                         $this->bars[] = [$this->ncols, 0, 1, 2];
                         break;

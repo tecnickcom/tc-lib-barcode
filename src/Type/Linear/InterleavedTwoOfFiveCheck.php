@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * InterleavedTwoOfFiveCheck.php
  *
@@ -61,6 +63,11 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
         'Z' => '21',
     ];
 
+    protected function getPattern(string $digit): string
+    {
+        return $this::CHBAR[$digit] ?? '';
+    }
+
     /**
      * Format code
      */
@@ -77,7 +84,7 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
     protected function setBars(): void
     {
         $this->formatCode();
-        if (\strlen($this->extcode) % 2 != 0) {
+        if ((\strlen($this->extcode) % 2) !== 0) {
             // add leading zero if code-length is odd
             $this->extcode = '0' . $this->extcode;
         }
@@ -90,22 +97,24 @@ class InterleavedTwoOfFiveCheck extends \Com\Tecnick\Barcode\Type\Linear\Standar
         $clen = \strlen($this->extcode);
         for ($idx = 0; $idx < $clen; $idx += 2) {
             $char_bar = $this->extcode[$idx];
-            $char_space = $this->extcode[($idx + 1)];
-            if ((! isset($this::CHBAR[$char_bar])) || (! isset($this::CHBAR[$char_space]))) {
+            $char_space = $this->extcode[$idx + 1];
+            if (!\array_key_exists($char_bar, $this::CHBAR) || !\array_key_exists($char_space, $this::CHBAR)) {
                 throw new BarcodeException('Invalid character sequence: ' . $char_bar . $char_space);
             }
 
             // create a bar-space sequence
             $seq = '';
-            $chrlen = \strlen($this::CHBAR[$char_bar]);
+            $bar_pattern = $this->getPattern($char_bar);
+            $space_pattern = $this->getPattern($char_space);
+            $chrlen = \strlen($bar_pattern);
             for ($pos = 0; $pos < $chrlen; ++$pos) {
-                $seq .= $this::CHBAR[$char_bar][$pos] . $this::CHBAR[$char_space][$pos];
+                $seq .= ($bar_pattern[$pos] ?? '0') . ($space_pattern[$pos] ?? '0');
             }
 
             $seqlen = \strlen($seq);
             for ($pos = 0; $pos < $seqlen; ++$pos) {
                 $bar_width = (int) $seq[$pos];
-                if ((($pos % 2) == 0) && ($bar_width > 0)) {
+                if (($pos % 2) === 0 && $bar_width > 0) {
                     $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
 

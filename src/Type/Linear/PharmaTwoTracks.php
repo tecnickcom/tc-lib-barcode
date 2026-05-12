@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * PharmaTwoTracks.php
  *
@@ -55,17 +57,17 @@ class PharmaTwoTracks extends \Com\Tecnick\Barcode\Type\Linear
             switch ($code % 3) {
                 case 0:
                     $seq .= '3';
-                    $code = (($code - 3) / 3);
+                    $code = ($code - 3) / 3;
                     break;
                 case 1:
                     $seq .= '1';
-                    $code = (($code - 1) / 3);
+                    $code = ($code - 1) / 3;
                     break;
                 case 2:
                     $seq .= '2';
-                    $code = (($code - 2) / 3);
+                    $code = ($code - 2) / 3;
             }
-        } while ($code != 0);
+        } while ($code !== 0);
 
         $seq = \strrev($seq);
         $this->ncols = 0;

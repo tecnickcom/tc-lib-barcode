@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Bitstream.php
  *
@@ -41,12 +43,11 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * @param string $code The code to encode.
      * @param int $eci The ECI mode to use.
      * @param string $hint The mode to use.
+     *
+     * @throws BarcodeException in case of error
      */
-    protected function highLevelEncoding(
-        string $code,
-        int $eci = 0,
-        string $hint = 'A'
-    ): void {
+    protected function highLevelEncoding(string $code, int $eci = 0, string $hint = 'A'): void
+    {
         $this->addFLG($eci);
         $chrarr = \unpack('C*', $code);
         if ($chrarr === false) {
@@ -55,7 +56,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
 
         $chars = \array_values($chrarr);
         $chrlen = \count($chars);
-        if ($hint == 'B') {
+        if ($hint === 'B') {
             $this->binaryEncode($chars, $chrlen); // @phpstan-ignore argument.type
             return;
         }
@@ -66,18 +67,18 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Forced binary encoding for the given characters.
      *
-     * @param array<int> $chars  Integer ASCII values of the characters to encode.
+     * @param list<int> $chars  Integer ASCII values of the characters to encode.
      * @param int   $chrlen Length of the $chars array.
      */
     protected function binaryEncode(array $chars, int $chrlen): void
     {
-        $bits = Data::MODE_BITS[Data::MODE_BINARY];
+        $bits = Data::MODE_BITS[Data::MODE_BINARY] ?? 8;
         $this->addShift(Data::MODE_BINARY);
         if ($chrlen > 62) {
             $this->addRawCwd(5, 0);
-            $this->addRawCwd(11, ($chrlen - 31));
+            $this->addRawCwd(11, $chrlen - 31);
             for ($idx = 0; $idx < $chrlen; ++$idx) {
-                $this->addRawCwd($bits, $chars[$idx]);
+                $this->addRawCwd($bits, $chars[$idx] ?? 0);
             }
 
             return;
@@ -86,13 +87,13 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         if ($chrlen > 31) {
             $this->addRawCwd(5, 31);
             for ($idx = 0; $idx < 31; ++$idx) {
-                $this->addRawCwd($bits, $chars[$idx]);
+                $this->addRawCwd($bits, $chars[$idx] ?? 0);
             }
 
             $this->addShift(Data::MODE_BINARY);
-            $this->addRawCwd(5, ($chrlen - 31));
+            $this->addRawCwd(5, $chrlen - 31);
             for ($idx = 31; $idx < $chrlen; ++$idx) {
-                $this->addRawCwd($bits, $chars[$idx]);
+                $this->addRawCwd($bits, $chars[$idx] ?? 0);
             }
 
             return;
@@ -100,14 +101,14 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
 
         $this->addRawCwd(5, $chrlen);
         for ($idx = 0; $idx < $chrlen; ++$idx) {
-            $this->addRawCwd($bits, $chars[$idx]);
+            $this->addRawCwd($bits, $chars[$idx] ?? 0);
         }
     }
 
     /**
      * Automatic encoding for the given characters.
      *
-     * @param array<int> $chars  Integer ASCII values of the characters to encode.
+     * @param list<int> $chars  Integer ASCII values of the characters to encode.
      * @param int   $chrlen Length of the $chars array.
      */
     protected function autoEncode(array $chars, int $chrlen): void
@@ -129,26 +130,27 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Process mode characters.
      *
-     * @param array<int> $chars The array of characters.
+     * @param list<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      */
     protected function processModeChars(array &$chars, int &$idx, int $chrlen): void
     {
-        $ord = $chars[$idx];
+        $ord = $chars[$idx] ?? 0;
         $mode = $this->isSameMode($this->encmode, $ord) ? $this->encmode : $this->charMode($ord);
 
         $nchr = $this->countModeChars($chars, $idx, $chrlen, $mode);
         if ($this->encmode !== $mode) {
-            if (
-                ($nchr == 1)
-                && (isset(Data::SHIFT_MAP[$this->encmode][$mode])
-                && Data::SHIFT_MAP[$this->encmode][$mode] !== [])
-            ) {
+            $shiftMap = Data::SHIFT_MAP[$this->encmode] ?? [];
+            $canShift = $nchr === 1 && (\array_key_exists($mode, $shiftMap) && ($shiftMap[$mode] ?? []) !== []);
+            if ($canShift) {
                 $this->addShift($mode);
-            } else {
-                $this->addLatch($mode);
+                $this->mergeTmpCwd();
+                $idx += $nchr;
+                return;
             }
+
+            $this->addLatch($mode);
         }
 
         $this->mergeTmpCwd();
@@ -158,25 +160,21 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Count consecutive characters in the same mode.
      *
-     * @param array<int> $chars The array of characters.
+     * @param list<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      * @param int $mode The current mode.
      */
-    protected function countModeChars(
-        array &$chars,
-        int $idx,
-        int $chrlen,
-        int $mode
-    ): int {
+    protected function countModeChars(array &$chars, int $idx, int $chrlen, int $mode): int
+    {
         $this->tmpCdws = [];
-        $nbits = Data::MODE_BITS[$mode];
+        $nbits = Data::MODE_BITS[$mode] ?? 0;
         $count = 0;
         do {
-            $ord = $chars[$idx];
+            $ord = $chars[$idx] ?? 0;
             if (
-                (! $this->isSameMode($mode, $ord))
-                || (($idx < ($chrlen - 1)) && ($this->punctPairMode($ord, $chars[($idx + 1)]) > 0))
+                !$this->isSameMode($mode, $ord)
+                || $idx < ($chrlen - 1) && $this->punctPairMode($ord, $chars[$idx + 1] ?? 0) > 0
             ) {
                 return $count;
             }
@@ -192,19 +190,16 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Process consecutive binary characters.
      *
-     * @param array<int> $chars The array of characters.
+     * @param list<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
      * @return bool True if binary characters have been found and processed.
      */
-    protected function processBinaryChars(
-        array &$chars,
-        int &$idx,
-        int $chrlen
-    ): bool {
+    protected function processBinaryChars(array &$chars, int &$idx, int $chrlen): bool
+    {
         $binchrs = $this->countBinaryChars($chars, $idx, $chrlen);
-        if ($binchrs == 0) {
+        if ($binchrs === 0) {
             return false;
         }
 
@@ -212,7 +207,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         $this->addShift(Data::MODE_BINARY);
         if ($binchrs > 62) {
             $this->addRawCwd(5, 0);
-            $this->addRawCwd(11, ($binchrs - 31));
+            $this->addRawCwd(11, $binchrs - 31);
             $this->mergeTmpCwdRaw();
             $idx += $binchrs;
             $this->encmode = $encmode;
@@ -220,16 +215,18 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         }
 
         if ($binchrs > 31) {
-            $nbits = Data::MODE_BITS[Data::MODE_BINARY];
+            $nbits = Data::MODE_BITS[Data::MODE_BINARY] ?? 8;
             $this->addRawCwd(5, 31);
             for ($bcw = 0; $bcw < 31; ++$bcw) {
-                $this->addRawCwd($nbits, $this->tmpCdws[$bcw][1]);
+                $tmpCdw = $this->tmpCdws[$bcw] ?? [0, 0];
+                $this->addRawCwd($nbits, $tmpCdw[1]);
             }
 
             $this->addShift(Data::MODE_BINARY);
-            $this->addRawCwd(5, ($binchrs - 31));
+            $this->addRawCwd(5, $binchrs - 31);
             for ($bcw = 31; $bcw < $binchrs; ++$bcw) {
-                $this->addRawCwd($nbits, $this->tmpCdws[$bcw][1]);
+                $tmpCdw = $this->tmpCdws[$bcw] ?? [0, 0];
+                $this->addRawCwd($nbits, $tmpCdw[1]);
             }
 
             $idx += $binchrs;
@@ -247,23 +244,20 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Count consecutive binary characters.
      *
-     * @param array<int> $chars The array of characters.
+     * @param list<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
-    protected function countBinaryChars(
-        array &$chars,
-        int $idx,
-        int $chrlen
-    ): int {
+    protected function countBinaryChars(array &$chars, int $idx, int $chrlen): int
+    {
         $this->tmpCdws = [];
         $count = 0;
-        $nbits = Data::MODE_BITS[Data::MODE_BINARY];
-        while (($idx < $chrlen) && ($count < 2048)) {
-            $ord = $chars[$idx];
-            if ($this->charMode($ord) != Data::MODE_BINARY) {
+        $nbits = Data::MODE_BITS[Data::MODE_BINARY] ?? 8;
+        while ($idx < $chrlen && $count < 2048) {
+            $ord = $chars[$idx] ?? 0;
+            if ($this->charMode($ord) !== Data::MODE_BINARY) {
                 return $count;
             }
 
@@ -278,7 +272,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
     /**
      * Process consecutive special Punctuation Pairs.
      *
-     * @param array<int> $chars The array of characters.
+     * @param list<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      *
@@ -286,13 +280,10 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
-    protected function processPunctPairs(
-        array &$chars,
-        int &$idx,
-        int $chrlen
-    ): bool {
+    protected function processPunctPairs(array &$chars, int &$idx, int $chrlen): bool
+    {
         $ppairs = $this->countPunctPairs($chars, $idx, $chrlen);
-        if ($ppairs == 0) {
+        if ($ppairs === 0) {
             return false;
         }
 
@@ -312,7 +303,7 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
             case Data::MODE_DIGIT:
                 $common = $this->countPunctAndDigitChars($chars, $idx, $chrlen);
                 $clen = \count($common);
-                if (($clen > 0) && ($clen < 6)) {
+                if ($clen > 0 && $clen < 6) {
                     $this->tmpCdws = $common;
                     $this->mergeTmpCwdRaw();
                     $idx += $clen;
@@ -327,28 +318,25 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
         }
 
         $this->mergeTmpCwd(Data::MODE_PUNCT);
-        $idx += ($ppairs * 2);
+        $idx += $ppairs * 2;
         return true;
     }
 
     /**
      * Count consecutive special Punctuation Pairs.
      *
-     * @param array<int> $chars The array of characters.
+     * @param list<int> $chars The array of characters.
      * @param int $idx The current character index.
      * @param int $chrlen The total number of characters to process.
      */
-    protected function countPunctPairs(
-        array &$chars,
-        int $idx,
-        int $chrlen
-    ): int {
+    protected function countPunctPairs(array &$chars, int $idx, int $chrlen): int
+    {
         $this->tmpCdws = [];
         $pairs = 0;
         $maxidx = $chrlen - 1;
         while ($idx < $maxidx) {
-            $pmode = $this->punctPairMode($chars[$idx], $chars[($idx + 1)]);
-            if ($pmode == 0) {
+            $pmode = $this->punctPairMode($chars[$idx] ?? 0, $chars[$idx + 1] ?? 0);
+            if ($pmode === 0) {
                 return $pairs;
             }
 
@@ -364,21 +352,18 @@ abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
      * Counts the number of consecutive charcters that are in both PUNCT or DIGIT modes.
      * Returns the array with the codewords.
      *
-     * @param array<int> &$chars The string to count the characters in.
+     * @param list<int> $chars The string to count the characters in.
      * @param int   $idx    The starting index to count from.
      * @param int   $chrlen The length of the string to count.
      *
      * @return array<int, array{int, int}> The array of codewords.
      */
-    protected function countPunctAndDigitChars(
-        array &$chars,
-        int $idx,
-        int $chrlen
-    ): array {
+    protected function countPunctAndDigitChars(array $chars, int $idx, int $chrlen): array
+    {
         $words = [];
         while ($idx < $chrlen) {
-            $ord = $chars[$idx];
-            if (! $this->isPunctAndDigitChar($ord)) {
+            $ord = $chars[$idx] ?? 0;
+            if (!$this->isPunctAndDigitChar($ord)) {
                 return $words;
             }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * CodeOneOne.php
  *
@@ -34,6 +36,12 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
 {
+    protected function getBarWidth(string $char, int $pos): int
+    {
+        $pattern = $this::CHBAR[$char] ?? '000000';
+        return (int) ($pattern[$pos] ?? '0');
+    }
+
     /**
      * Barcode format
      *
@@ -74,11 +82,11 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         // calculate check digit C
         $ptr = 1;
         $ccheck = 0;
-        for ($pos = ($len - 1); $pos >= 0; --$pos) {
+        for ($pos = $len - 1; $pos >= 0; --$pos) {
             $digit = $code[$pos];
-            $dval = $digit == '-' ? 10 : (int) $digit;
+            $dval = $digit === '-' ? 10 : (int) $digit;
 
-            $ccheck += ($dval * $ptr);
+            $ccheck += $dval * $ptr;
             ++$ptr;
             if ($ptr > 10) {
                 $ptr = 1;
@@ -86,12 +94,12 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         }
 
         $ccheck %= 11;
-        if ($ccheck == 10) {
+        if ($ccheck === 10) {
             $ccheck = '-';
         }
 
         if ($len <= 10) {
-            return ((string) $ccheck);
+            return (string) $ccheck;
         }
 
         // calculate check digit K
@@ -100,9 +108,9 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         $kcheck = 0;
         for ($pos = $len; $pos >= 0; --$pos) {
             $digit = $code[$pos];
-            $dval = $digit == '-' ? 10 : (int) $digit;
+            $dval = $digit === '-' ? 10 : (int) $digit;
 
-            $kcheck += ($dval * $ptr);
+            $kcheck += $dval * $ptr;
             ++$ptr;
             if ($ptr > 9) {
                 $ptr = 1;
@@ -110,7 +118,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         }
 
         $kcheck %= 11;
-        return ((string) $ccheck . $kcheck);
+        return (string) $ccheck . $kcheck;
     }
 
     /**
@@ -135,13 +143,13 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         $clen = \strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (! isset($this::CHBAR[$char])) {
+            if (!\array_key_exists($char, $this::CHBAR)) {
                 throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
             }
 
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = (int) $this::CHBAR[$char][$pos];
-                if ((($pos % 2) == 0) && ($bar_width > 0)) {
+                $bar_width = $this->getBarWidth($char, $pos);
+                if (($pos % 2) === 0 && $bar_width > 0) {
                     $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
 

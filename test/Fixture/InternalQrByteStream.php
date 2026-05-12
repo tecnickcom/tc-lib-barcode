@@ -40,6 +40,7 @@ class InternalQrByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\ByteS
      * @param array<int, string> $data
      *
      * @return array<int, Item>
+     * @throws \Com\Tecnick\Barcode\Exception
      */
     public function exposeAppendNewInputItem(array $items, int $mode, int $size, array $data): array
     {
@@ -51,6 +52,7 @@ class InternalQrByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\ByteS
      * @param array<int, int> $bstream
      *
      * @return Item
+     * @throws \Com\Tecnick\Barcode\Exception
      */
     public function exposeNewInputItem(int $mode, int $size, array $data, array $bstream = []): array
     {
@@ -81,6 +83,7 @@ class InternalQrByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\ByteS
      * @param array<int, Item> $items
      *
      * @return array<int, Item>
+     * @throws \Com\Tecnick\Barcode\Exception
      */
     public function exposeConvertData(array $items): array
     {
@@ -91,6 +94,7 @@ class InternalQrByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\ByteS
      * @param array<int, Item> $items
      *
      * @return array{0: array<int, Item>, 1: int}
+     * @throws \Com\Tecnick\Barcode\Exception
      */
     public function exposeCreateBitStream(array $items): array
     {
@@ -113,11 +117,7 @@ class InternalQrByteStream extends \Com\Tecnick\Barcode\Type\Square\QrCode\ByteS
     protected function createBitStream(array $items): array
     {
         if ($this->queuedCbs !== []) {
-            $queued = \array_shift($this->queuedCbs);
-
-            if ($queued !== null) {
-                return $queued;
-            }
+            return \array_shift($this->queuedCbs);
         }
 
         return parent::createBitStream($items);

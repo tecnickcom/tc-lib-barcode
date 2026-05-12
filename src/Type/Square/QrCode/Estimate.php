@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Estimate.php
  *
@@ -38,6 +40,50 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 abstract class Estimate
 {
+    protected function getEncModeValue(string $mode): int
+    {
+        return match ($mode) {
+            'NL' => Data::MODE_NL,
+            'NM' => Data::MODE_NM,
+            'AN' => Data::MODE_AN,
+            '8B' => Data::MODE_8B,
+            'KJ' => Data::MODE_KJ,
+            'ST' => Data::MODE_ST,
+            default => 0,
+        };
+    }
+
+    protected function getLenTableBitsValue(int $mode, int $len): int
+    {
+        return Data::LEN_TABLE_BITS[$mode][$len] ?? 0;
+    }
+
+    protected function getCapacityWordsValue(int $version): int
+    {
+        $capacity = Data::CAPACITY[$version] ?? null;
+        if (!\is_array($capacity)) {
+            return 0;
+        }
+
+        $words = $capacity[Data::QRCAP_WORDS] ?? 0;
+        return \is_int($words) ? $words : 0;
+    }
+
+    protected function getCapacityEcValue(int $version, int $level): int
+    {
+        $capacity = Data::CAPACITY[$version] ?? null;
+        if (!\is_array($capacity)) {
+            return 0;
+        }
+
+        $ecLevel = $capacity[Data::QRCAP_EC] ?? [];
+        if (!\is_array($ecLevel)) {
+            return 0;
+        }
+
+        return $ecLevel[$level] ?? 0;
+    }
+
     /**
      * Encoding mode
      */
@@ -66,19 +112,19 @@ abstract class Estimate
      */
     public function getLengthIndicator(int $mode, int $version): int
     {
-        if (($mode == Data::ENC_MODES['ST']) || ($mode < Data::ENC_MODES['NL']) || ($mode > Data::ENC_MODES['ST'])) {
+        $modeSt = $this->getEncModeValue('ST');
+        $modeNl = $this->getEncModeValue('NL');
+        if ($mode === $modeSt || $mode < $modeNl || $mode > $modeSt) {
             return 0;
         }
 
-        if ($version <= 9) {
-            $len = 0;
-        } elseif ($version <= 26) {
-            $len = 1;
-        } else {
-            $len = 2;
-        }
+        $len = match (true) {
+            $version <= 9 => 0,
+            $version <= 26 => 1,
+            default => 2,
+        };
 
-        return Data::LEN_TABLE_BITS[$mode][$len];
+        return $this->getLenTableBitsValue($mode, $len);
     }
 
     /**
@@ -89,7 +135,7 @@ abstract class Estimate
     public function estimateBitsModeNum(int $size): int
     {
         $wdt = (int) ($size / 3);
-        $bits = ($wdt * 10);
+        $bits = $wdt * 10;
         match ($size - ($wdt * 3)) {
             1 => $bits += 4,
             2 => $bits += 7,
@@ -140,6 +186,8 @@ abstract class Estimate
      * @param int $level Error correction level
      *
      * @return int version
+     *
+     * @throws BarcodeException
      */
     public function estimateVersion(array $items, int $level): int
     {
@@ -170,14 +218,14 @@ abstract class Estimate
     protected function getMinimumVersion(int $size, int $level): int
     {
         for ($idx = 1; $idx <= Data::QRSPEC_VERSION_MAX; ++$idx) {
-            $words = (Data::CAPACITY[$idx][Data::QRCAP_WORDS] - Data::CAPACITY[$idx][Data::QRCAP_EC][$level]);
+            $words = $this->getCapacityWordsValue($idx) - $this->getCapacityEcValue($idx, $level);
             if ($words >= $size) {
                 return $idx;
             }
         }
 
         throw new BarcodeException(
-            'The size of input data is greater than Data::QR capacity, try to lower the error correction mode'
+            'The size of input data is greater than Data::QR capacity, try to lower the error correction mode',
         );
     }
 
@@ -192,25 +240,25 @@ abstract class Estimate
     protected function estimateBitStreamSize(array $items, int $version): int
     {
         $bits = 0;
-        if ($version == 0) {
+        if ($version === 0) {
             $version = 1;
         }
 
         foreach ($items as $item) {
             switch ($item['mode']) {
-                case Data::ENC_MODES['NM']:
+                case $this->getEncModeValue('NM'):
                     $bits = $this->estimateBitsModeNum($item['size']);
                     break;
-                case Data::ENC_MODES['AN']:
+                case $this->getEncModeValue('AN'):
                     $bits = $this->estimateBitsModeAn($item['size']);
                     break;
-                case Data::ENC_MODES['8B']:
+                case $this->getEncModeValue('8B'):
                     $bits = $this->estimateBitsMode8($item['size']);
                     break;
-                case Data::ENC_MODES['KJ']:
+                case $this->getEncModeValue('KJ'):
                     $bits = $this->estimateBitsModeKanji($item['size']);
                     break;
-                case Data::ENC_MODES['ST']:
+                case $this->getEncModeValue('ST'):
                     return Data::STRUCTURE_HEADER_BITS;
                 default:
                     return 0;

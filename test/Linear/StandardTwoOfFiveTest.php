@@ -36,13 +36,19 @@ class StandardTwoOfFiveTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('S25', '0123456789');
         $grid = $type->getGrid();
-        $expected = '111011101010101110111010111010101011101011101010111011101110101010101011101011101110101110101010'
-        . '111011101010101010111011101110101011101010111010111010111010111' . "\n";
+        $expected =
+            '111011101010101110111010111010101011101011101010111011101110101010101011101011101110101110101010'
+            . '111011101010101010111011101110101011101010111010111010111010111'
+            . "\n";
         $this->assertEquals($expected, $grid);
     }
 }

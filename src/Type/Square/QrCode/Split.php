@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Split.php
  *
@@ -33,6 +35,11 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class Split
 {
+    protected function getEncMode(string $key): int
+    {
+        return Data::ENC_MODES[$key] ?? 0;
+    }
+
     /**
      * Input items
      *
@@ -62,9 +69,8 @@ class Split
          * Version 1 is 21*21 matrix. And 4 modules increases whenever 1 version increases.
          * So version 40 is 177*177 matrix.
          */
-        protected int $version
-    ) {
-    }
+        protected int $version,
+    ) {}
 
     /**
      * Split the input string
@@ -72,32 +78,37 @@ class Split
      * @param string $data Data
      *
      * @return array<int, Item> items
+     *
+     * @throws BarcodeException in case input data cannot be split
      */
     public function getSplittedString(string $data): array
     {
+        $modeNm = $this->getEncMode('NM');
+        $modeAn = $this->getEncMode('AN');
+        $modeKj = $this->getEncMode('KJ');
         while (\strlen($data) > 0) {
             $mode = $this->encodingMode->getEncodingMode($data, 0);
             switch ($mode) {
-                case Data::ENC_MODES['NM']:
+                case $modeNm:
                     $length = $this->eatNum($data);
                     break;
-                case Data::ENC_MODES['AN']:
+                case $modeAn:
                     $length = $this->eatAn($data);
                     break;
-                case Data::ENC_MODES['KJ']:
-                    if ($this->hint == Data::ENC_MODES['KJ']) {
+                case $modeKj:
+                    if ($this->hint === $modeKj) {
                         $length = $this->eatKanji($data);
-                    } else {
-                        $length = $this->eat8($data);
+                        break;
                     }
 
+                    $length = $this->eat8($data);
                     break;
                 default:
                     $length = $this->eat8($data);
                     break;
             }
 
-            if ($length == 0) {
+            if ($length === 0) {
                 break;
             }
 
@@ -117,40 +128,40 @@ class Split
      * @param string $data Data
      *
      * @return int run
+     *
+     * @throws BarcodeException in case of invalid split input item
      */
     protected function eatNum(string $data): int
     {
-        $lng = $this->encodingMode->getLengthIndicator(Data::ENC_MODES['NM'], $this->version);
+        $modeNm = $this->getEncMode('NM');
+        $modeAn = $this->getEncMode('AN');
+        $mode8b = $this->getEncMode('8B');
+        $lng = $this->encodingMode->getLengthIndicator($modeNm, $this->version);
         $pos = 0;
         while ($this->encodingMode->isDigitAt($data, $pos)) {
             ++$pos;
         }
 
         $mode = $this->encodingMode->getEncodingMode($data, $pos);
-        if ($mode == Data::ENC_MODES['8B']) {
-            $dif = $this->encodingMode->estimateBitsModeNum($pos) + 4 + $lng
-                + $this->encodingMode->estimateBitsMode8(1)         // + 4 + l8
+        if ($mode === $mode8b) {
+            $dif =
+                $this->encodingMode->estimateBitsModeNum($pos) + 4 + $lng + $this->encodingMode->estimateBitsMode8(1) // + 4 + l8
                 - $this->encodingMode->estimateBitsMode8($pos + 1); // - 4 - l8
             if ($dif > 0) {
                 return $this->eat8($data);
             }
         }
 
-        if ($mode == Data::ENC_MODES['AN']) {
-            $dif = $this->encodingMode->estimateBitsModeNum($pos) + 4 + $lng
-                + $this->encodingMode->estimateBitsModeAn(1)        // + 4 + la
+        if ($mode === $modeAn) {
+            $dif =
+                $this->encodingMode->estimateBitsModeNum($pos) + 4 + $lng + $this->encodingMode->estimateBitsModeAn(1) // + 4 + la
                 - $this->encodingMode->estimateBitsModeAn($pos + 1); // - 4 - la
             if ($dif > 0) {
                 return $this->eatAn($data);
             }
         }
 
-        $this->items = $this->encodingMode->appendNewInputItem(
-            $this->items,
-            Data::ENC_MODES['NM'],
-            $pos,
-            \str_split($data)
-        );
+        $this->items = $this->encodingMode->appendNewInputItem($this->items, $modeNm, $pos, \str_split($data));
         return $pos;
     }
 
@@ -160,11 +171,15 @@ class Split
      * @param string $data Data
      *
      * @return int run
+     *
+     * @throws BarcodeException in case of invalid split input item
      */
     protected function eatAn(string $data): int
     {
-        $lag = $this->encodingMode->getLengthIndicator(Data::ENC_MODES['AN'], $this->version);
-        $lng = $this->encodingMode->getLengthIndicator(Data::ENC_MODES['NM'], $this->version);
+        $modeAn = $this->getEncMode('AN');
+        $modeNm = $this->getEncMode('NM');
+        $lag = $this->encodingMode->getLengthIndicator($modeAn, $this->version);
+        $lng = $this->encodingMode->getLengthIndicator($modeNm, $this->version);
         $pos = 1;
         while ($this->encodingMode->isAlphanumericAt($data, $pos)) {
             if ($this->encodingMode->isDigitAt($data, $pos)) {
@@ -173,34 +188,35 @@ class Split
                     ++$qix;
                 }
 
-                $dif = $this->encodingMode->estimateBitsModeAn($pos) // + 4 + lag
-                    + $this->encodingMode->estimateBitsModeNum($qix - $pos) + 4 + $lng
+                $dif =
+                    $this->encodingMode->estimateBitsModeAn($pos) // + 4 + lag
+                        + $this->encodingMode->estimateBitsModeNum($qix - $pos)
+                        + 4
+                        + $lng
                     - $this->encodingMode->estimateBitsModeAn($qix); // - 4 - la
                 if ($dif < 0) {
                     break;
-                } else {
-                    $pos = $qix;
                 }
-            } else {
+
+                $pos = $qix;
+                continue;
+            }
+
+            if (!$this->encodingMode->isDigitAt($data, $pos)) {
                 ++$pos;
             }
         }
 
-        if (! $this->encodingMode->isAlphanumericAt($data, $pos)) {
-            $dif = $this->encodingMode->estimateBitsModeAn($pos) + 4 + $lag
-                + $this->encodingMode->estimateBitsMode8(1) // + 4 + l8
+        if (!$this->encodingMode->isAlphanumericAt($data, $pos)) {
+            $dif =
+                $this->encodingMode->estimateBitsModeAn($pos) + 4 + $lag + $this->encodingMode->estimateBitsMode8(1) // + 4 + l8
                 - $this->encodingMode->estimateBitsMode8($pos + 1); // - 4 - l8
             if ($dif > 0) {
                 return $this->eat8($data);
             }
         }
 
-        $this->items = $this->encodingMode->appendNewInputItem(
-            $this->items,
-            Data::ENC_MODES['AN'],
-            $pos,
-            \str_split($data)
-        );
+        $this->items = $this->encodingMode->appendNewInputItem($this->items, $modeAn, $pos, \str_split($data));
         return $pos;
     }
 
@@ -210,20 +226,18 @@ class Split
      * @param string $data Data
      *
      * @return int run
+     *
+     * @throws BarcodeException in case of invalid split input item
      */
     protected function eatKanji(string $data): int
     {
+        $modeKj = $this->getEncMode('KJ');
         $pos = 0;
-        while ($this->encodingMode->getEncodingMode($data, $pos) == Data::ENC_MODES['KJ']) {
+        while ($this->encodingMode->getEncodingMode($data, $pos) === $modeKj) {
             $pos += 2;
         }
 
-        $this->items = $this->encodingMode->appendNewInputItem(
-            $this->items,
-            Data::ENC_MODES['KJ'],
-            $pos,
-            \str_split($data)
-        );
+        $this->items = $this->encodingMode->appendNewInputItem($this->items, $modeKj, $pos, \str_split($data));
         return $pos;
     }
 
@@ -233,58 +247,71 @@ class Split
      * @param string $data Data
      *
      * @return int run
+     *
+     * @throws BarcodeException in case of invalid split input item
      */
     protected function eat8(string $data): int
     {
-        $lag = $this->encodingMode->getLengthIndicator(Data::ENC_MODES['AN'], $this->version);
-        $lng = $this->encodingMode->getLengthIndicator(Data::ENC_MODES['NM'], $this->version);
+        $modeAn = $this->getEncMode('AN');
+        $modeNm = $this->getEncMode('NM');
+        $modeKj = $this->getEncMode('KJ');
+        $mode8b = $this->getEncMode('8B');
+        $lag = $this->encodingMode->getLengthIndicator($modeAn, $this->version);
+        $lng = $this->encodingMode->getLengthIndicator($modeNm, $this->version);
         $pos = 1;
         $dataStrLen = \strlen($data);
         while ($pos < $dataStrLen) {
             $mode = $this->encodingMode->getEncodingMode($data, $pos);
-            if ($mode == Data::ENC_MODES['KJ']) {
+            if ($mode === $modeKj) {
                 break;
             }
 
-            if ($mode == Data::ENC_MODES['NM']) {
+            if ($mode === $modeNm) {
                 $qix = $pos;
                 while ($this->encodingMode->isDigitAt($data, $qix)) {
                     ++$qix;
                 }
 
-                $dif = $this->encodingMode->estimateBitsMode8($pos) // + 4 + l8
-                    + $this->encodingMode->estimateBitsModeNum($qix - $pos) + 4 + $lng
+                $dif =
+                    $this->encodingMode->estimateBitsMode8($pos) // + 4 + l8
+                        + $this->encodingMode->estimateBitsModeNum($qix - $pos)
+                        + 4
+                        + $lng
                     - $this->encodingMode->estimateBitsMode8($qix); // - 4 - l8
                 if ($dif < 0) {
                     break;
-                } else {
-                    $pos = $qix;
                 }
-            } elseif ($mode == Data::ENC_MODES['AN']) {
+
+                $pos = $qix;
+                continue;
+            }
+
+            if ($mode === $modeAn) {
                 $qix = $pos;
                 while ($this->encodingMode->isAlphanumericAt($data, $qix)) {
                     ++$qix;
                 }
 
-                $dif = $this->encodingMode->estimateBitsMode8($pos)  // + 4 + l8
-                    + $this->encodingMode->estimateBitsModeAn($qix - $pos) + 4 + $lag
+                $dif =
+                    $this->encodingMode->estimateBitsMode8($pos) // + 4 + l8
+                        + $this->encodingMode->estimateBitsModeAn($qix - $pos)
+                        + 4
+                        + $lag
                     - $this->encodingMode->estimateBitsMode8($qix); // - 4 - l8
                 if ($dif < 0) {
                     break;
-                } else {
-                    $pos = $qix;
                 }
-            } else {
+
+                $pos = $qix;
+                continue;
+            }
+
+            if ($mode !== $modeNm && $mode !== $modeAn) {
                 ++$pos;
             }
         }
 
-        $this->items = $this->encodingMode->appendNewInputItem(
-            $this->items,
-            Data::ENC_MODES['8B'],
-            $pos,
-            \str_split($data)
-        );
+        $this->items = $this->encodingMode->appendNewInputItem($this->items, $mode8b, $pos, \str_split($data));
         return $pos;
     }
 }

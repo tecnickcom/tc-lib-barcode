@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Raw.php
  *
@@ -15,6 +17,8 @@
  */
 
 namespace Com\Tecnick\Barcode\Type;
+
+use Com\Tecnick\Barcode\Exception as BarcodeException;
 
 /**
  * Com\Tecnick\Barcode\Type\Raw
@@ -34,6 +38,8 @@ class Raw extends \Com\Tecnick\Barcode\Type
 {
     /**
      * Generate the bars array
+     *
+     * @throws BarcodeException in case of error
      */
     protected function setBars(): void
     {

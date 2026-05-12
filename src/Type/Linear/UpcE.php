@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * UpcE.php
  *
@@ -38,6 +40,25 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  */
 class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
 {
+    protected function getCharAt(string $value, int $index): string
+    {
+        return $value[$index] ?? '0';
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function getUpceParityPattern(string $digit, int $check): array
+    {
+        $pattern = $this::PARITIES_UPCE[$digit][$check] ?? ['A', 'A', 'A', 'A', 'A', 'A'];
+        return \array_values($pattern);
+    }
+
+    protected function getBarPattern(string $parity, string $digit): string
+    {
+        return $this::CHBAR[$parity][$digit] ?? '';
+    }
+
     /**
      * Barcode format
      *
@@ -93,11 +114,11 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
             return '0' . $code[0] . $code[1] . $code[5] . '0000' . $code[2] . $code[3] . $code[4];
         }
 
-        if ($code[5] == 3) {
+        if ($code[5] === '3') {
             return '0' . $code[0] . $code[1] . $code[2] . '00000' . $code[3] . $code[4];
         }
 
-        if ($code[5] == 4) {
+        if ($code[5] === '4') {
             return '0' . $code[0] . $code[1] . $code[2] . $code[3] . '00000' . $code[4];
         }
 
@@ -112,19 +133,19 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
     protected function convertUpcaToUpce(string $code): string
     {
         $tmp = \substr($code, 4, 3);
-        if (($tmp == '000') || ($tmp == '100') || ($tmp == '200')) {
+        if ($tmp === '000' || $tmp === '100' || $tmp === '200') {
             // manufacturer code ends in 000, 100, or 200
             return \substr($code, 2, 2) . \substr($code, 9, 3) . \substr($code, 4, 1);
         }
 
         $tmp = \substr($code, 5, 2);
-        if ($tmp == '00') {
+        if ($tmp === '00') {
             // manufacturer code ends in 00
             return \substr($code, 2, 3) . \substr($code, 10, 2) . '3';
         }
 
         $tmp = \substr($code, 6, 1);
-        if ($tmp == '0') {
+        if ($tmp === '0') {
             // manufacturer code ends in 0
             return \substr($code, 2, 4) . \substr($code, 11, 1) . '4';
         }
@@ -135,15 +156,17 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
 
     /**
      * Format the code
+     *
+     * @throws BarcodeException in case of error
      */
     protected function formatCode(): void
     {
         $code = $this->code;
-        if (\strlen($code) == 6) {
+        if (\strlen($code) === 6) {
             $code = $this->convertUpceToUpca($code);
         }
 
-        $code = \str_pad($code, ($this->code_length - 1), '0', STR_PAD_LEFT);
+        $code = \str_pad($code, $this->code_length - 1, '0', STR_PAD_LEFT);
         $code .= $this->getChecksum($code);
         ++$this->code_length;
         $this->extcode = '0' . $code;
@@ -159,9 +182,9 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
         $this->formatCode();
         $upce_code = $this->convertUpcaToUpce($this->extcode);
         $seq = '101'; // left guard bar
-        $parity = $this::PARITIES_UPCE[$this->extcode[1]][$this->check];
+        $parity = $this->getUpceParityPattern($this->getCharAt($this->extcode, 1), $this->check);
         for ($pos = 0; $pos < 6; ++$pos) {
-            $seq .= $this::CHBAR[$parity[$pos]][$upce_code[$pos]];
+            $seq .= $this->getBarPattern($this->getCharAt($parity[$pos] ?? 'A', 0), $this->getCharAt($upce_code, $pos));
         }
 
         $seq .= '010101'; // right guard bar

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Type.php
  *
@@ -135,7 +137,7 @@ interface Model
     /**
      * Get Barcode as PNG Image (requires GD or Imagick library)
      *
-      * @param string|null $filename The file name without extension (optional).
+     * @param string|null $filename The file name without extension (optional).
      *                              Only allows alphanumeric characters, underscores and hyphens.
      *                              Defaults to a md5 hash of the data.
      *                              The file extension is always '.png'.

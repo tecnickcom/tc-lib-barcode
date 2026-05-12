@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Init.php
  *
@@ -141,6 +143,8 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      * Initialize code
      *
      * @param array<int, int> $spec Array of ECC specification
+     *
+     * @throws BarcodeException in case RS initialization fails
      */
     protected function init(array $spec): void
     {
@@ -153,17 +157,13 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         $ecc = [];
         $endfor = $this->spc->rsBlockNum1($spec);
         $this->initLoop($endfor, $dlv, $elv, $rsv, $eccPos, $blockNo, $dataPos, $ecc);
-        if ($this->spc->rsBlockNum2($spec) == 0) {
+        if ($this->spc->rsBlockNum2($spec) === 0) {
             return;
         }
 
         $dlv = $this->spc->rsDataCodes2($spec);
         $elv = $this->spc->rsEccCodes2($spec);
         $rsv = $this->initRs(8, 0x11d, 0, 1, $elv, 255 - $dlv - $elv);
-        if ($rsv == null) {
-            throw new BarcodeException('Empty RS');
-        }
-
         $endfor = $this->spc->rsBlockNum2($spec);
         $this->initLoop($endfor, $dlv, $elv, $rsv, $eccPos, $blockNo, $dataPos, $ecc);
     }
@@ -188,7 +188,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
         int &$eccPos,
         int &$blockNo,
         int &$dataPos,
-        array &$ecc
+        array &$ecc,
     ): void {
         for ($idx = 0; $idx < $endfor; ++$idx) {
             $data = \array_slice($this->datacode, $dataPos);
@@ -230,37 +230,33 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *          iprim = prim-th root of 1, index form;
      *          pad = Padding bytes in shortened block;
      *          gfpoly.
+     *
+     * @throws BarcodeException in case RS initialization fails
      */
-    protected function initRs(
-        int $symsize,
-        int $gfpoly,
-        int $fcr,
-        int $prim,
-        int $nroots,
-        int $pad
-    ): array {
+    protected function initRs(int $symsize, int $gfpoly, int $fcr, int $prim, int $nroots, int $pad): array
+    {
         foreach ($this->rsitems as $rsv) {
-            if ($rsv['pad'] != $pad) {
+            if ($rsv['pad'] !== $pad) {
                 continue;
             }
 
-            if ($rsv['nroots'] != $nroots) {
+            if ($rsv['nroots'] !== $nroots) {
                 continue;
             }
 
-            if ($rsv['mm'] != $symsize) {
+            if ($rsv['mm'] !== $symsize) {
                 continue;
             }
 
-            if ($rsv['gfpoly'] != $gfpoly) {
+            if ($rsv['gfpoly'] !== $gfpoly) {
                 continue;
             }
 
-            if ($rsv['fcr'] != $fcr) {
+            if ($rsv['fcr'] !== $fcr) {
                 continue;
             }
 
-            if ($rsv['prim'] != $prim) {
+            if ($rsv['prim'] !== $prim) {
                 continue;
             }
 
@@ -284,7 +280,7 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
     {
         while ($xpos >= $rsv['nn']) {
             $xpos -= $rsv['nn'];
-            $xpos = (($xpos >> $rsv['mm']) + ($xpos & $rsv['nn']));
+            $xpos = ($xpos >> $rsv['mm']) + ($xpos & $rsv['nn']);
         }
 
         return $xpos;
@@ -301,15 +297,8 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      */
     protected function checkRsCharParamsA(int $symsize, int $fcr, int $prim): void
     {
-        $shfsymsize = (1 << $symsize);
-        if (
-            ($symsize < 0)
-            || ($symsize > 8)
-            || ($fcr < 0)
-            || ($fcr >= $shfsymsize)
-            || ($prim <= 0)
-            || ($prim >= $shfsymsize)
-        ) {
+        $shfsymsize = 1 << $symsize;
+        if ($symsize < 0 || $symsize > 8 || $fcr < 0 || $fcr >= $shfsymsize || $prim <= 0 || $prim >= $shfsymsize) {
             throw new BarcodeException('Invalid parameters');
         }
     }
@@ -325,13 +314,8 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      */
     protected function checkRsCharParamsB(int $symsize, int $nroots, int $pad): void
     {
-        $shfsymsize = (1 << $symsize);
-        if (
-            ($nroots < 0)
-            || ($nroots >= $shfsymsize)
-            || ($pad < 0)
-            || ($pad >= ($shfsymsize - 1 - $nroots))
-        ) {
+        $shfsymsize = 1 << $symsize;
+        if ($nroots < 0 || $nroots >= $shfsymsize || $pad < 0 || $pad >= ($shfsymsize - 1 - $nroots)) {
             throw new BarcodeException('Invalid parameters');
         }
     }
@@ -359,80 +343,98 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *          iprim = prim-th root of 1, index form;
      *          pad = Padding bytes in shortened block;
      *          gfpoly.
+     *
+     * @throws BarcodeException in case the field generator polynomial is invalid
      */
-    protected function initRsChar(
-        int $symsize,
-        int $gfpoly,
-        int $fcr,
-        int $prim,
-        int $nroots,
-        int $pad
-    ): array {
+    protected function initRsChar(int $symsize, int $gfpoly, int $fcr, int $prim, int $nroots, int $pad): array
+    {
         $this->checkRsCharParamsA($symsize, $fcr, $prim);
         $this->checkRsCharParamsB($symsize, $nroots, $pad);
-        $rsv = [];
-        $rsv['mm'] = $symsize;
-        $rsv['nn'] = ((1 << $symsize) - 1);
-        $rsv['pad'] = $pad;
-        $rsv['alpha_to'] = \array_fill(0, ($rsv['nn'] + 1), 0);
-        $rsv['index_of'] = \array_fill(0, ($rsv['nn'] + 1), 0);
-        // PHP style macro replacement
-        $nnv = &$rsv['nn'];
-        $azv = &$nnv;
+        $nn = (1 << $symsize) - 1;
+        $alphaTo = \array_fill(0, \max(0, $nn + 1), 0);
+        $indexOf = \array_fill(0, \max(0, $nn + 1), 0);
         // Generate Galois field lookup tables
-        $rsv['index_of'][0] = $azv; // \log(zero) = -inf
-        $rsv['alpha_to'][$azv] = 0; // alpha**-inf = 0
+        $indexOf[0] = $nn; // \log(zero) = -inf
+        $alphaTo[$nn] = 0; // alpha**-inf = 0
         $srv = 1;
-        for ($idx = 0; $idx < $rsv['nn']; ++$idx) {
-            $rsv['index_of'][$srv] = $idx;
-            $rsv['alpha_to'][$idx] = $srv;
+        for ($idx = 0; $idx < $nn; ++$idx) {
+            $indexOf[$srv] = $idx;
+            $alphaTo[$idx] = $srv;
             $srv <<= 1;
             if (($srv & (1 << $symsize)) !== 0) {
                 $srv ^= $gfpoly;
             }
 
-            $srv &= $rsv['nn'];
+            $srv &= $nn;
         }
 
-        if ($srv != 1) {
+        if ($srv !== 1) {
             throw new BarcodeException('field generator polynomial is not primitive!');
         }
 
         // form RS code generator polynomial from its roots
-        $rsv['genpoly'] = \array_fill(0, ($nroots + 1), 0);
-        $rsv['fcr'] = $fcr;
-        $rsv['prim'] = $prim;
-        $rsv['nroots'] = $nroots;
-        $rsv['gfpoly'] = $gfpoly;
+        $genpoly = \array_fill(0, \max(0, $nroots + 1), 0);
         // find prim-th root of 1, used in decoding
-        for ($iprim = 1; $iprim % $prim != 0; $iprim += $rsv['nn']) {
-            ; // intentional empty-body loop!
+
+        $iprim = 1;
+        while (($iprim % $prim) !== 0) {
+            $iprim += $nn;
         }
 
-        $rsv['iprim'] = (int) ($iprim / $prim);
-        $rsv['genpoly'][0] = 1;
-        for ($idx = 0, $root = ($fcr * $prim); $idx < $nroots; ++$idx, $root += $prim) {
-            $rsv['genpoly'][($idx + 1)] = 1;
+        $iprim = (int) ($iprim / $prim);
+        $genpoly[0] = 1;
+        for ($idx = 0, $root = $fcr * $prim; $idx < $nroots; ++$idx, $root += $prim) {
+            $genpoly[$idx + 1] = 1;
             // multiply rs->genpoly[] by  @**(root + x)
             for ($jdx = $idx; $jdx > 0; --$jdx) {
-                if ($rsv['genpoly'][$jdx] != 0) {
-                    $rsv['genpoly'][$jdx] = ($rsv['genpoly'][($jdx - 1)]
-                        ^ $rsv['alpha_to'][$this->modnn($rsv, $rsv['index_of'][$rsv['genpoly'][$jdx]] + $root)]);
-                } else {
-                    $rsv['genpoly'][$jdx] = $rsv['genpoly'][($jdx - 1)];
+                $genpolyVal = $genpoly[$jdx] ?? 0;
+                if ($genpolyVal !== 0) {
+                    $prev = $genpoly[$jdx - 1] ?? 0;
+                    $polyIndex = 0;
+                    if ($genpolyVal >= 0) {
+                        $polyIndex = $indexOf[$genpolyVal] ?? 0;
+                    }
+                    $alphaIndex = $this->modnnRaw($nn, $symsize, $polyIndex + $root);
+                    $genpoly[$jdx] = $prev ^ ($alphaTo[$alphaIndex] ?? 0);
+                    continue;
                 }
+
+                $genpoly[$jdx] = $genpoly[$jdx - 1] ?? 0;
             }
 
             // rs->genpoly[0] can never be zero
-            $rsv['genpoly'][0] = $rsv['alpha_to'][$this->modnn($rsv, $rsv['index_of'][$rsv['genpoly'][0]] + $root)];
+            $alphaIndex = $this->modnnRaw($nn, $symsize, ($indexOf[$genpoly[0] ?? 0] ?? 0) + $root);
+            $genpoly[0] = $alphaTo[$alphaIndex] ?? 0;
         }
 
         // convert rs->genpoly[] to index form for quicker encoding
         for ($idx = 0; $idx <= $nroots; ++$idx) {
-            $rsv['genpoly'][$idx] = $rsv['index_of'][$rsv['genpoly'][$idx]];
+            $genpoly[$idx] = $indexOf[$genpoly[$idx] ?? 0] ?? 0;
         }
 
-        return $rsv;
+        return [
+            'alpha_to' => $alphaTo,
+            'fcr' => $fcr,
+            'genpoly' => $genpoly,
+            'gfpoly' => $gfpoly,
+            'index_of' => $indexOf,
+            'iprim' => $iprim,
+            'mm' => $symsize,
+            'nn' => $nn,
+            'nroots' => $nroots,
+            'pad' => $pad,
+            'prim' => $prim,
+        ];
+    }
+
+    protected function modnnRaw(int $nn, int $mm, int $xpos): int
+    {
+        while ($xpos >= $nn) {
+            $xpos -= $nn;
+            $xpos = ($xpos >> $mm) + ($xpos & $nn);
+        }
+
+        return $xpos;
     }
 
     /**
@@ -444,45 +446,35 @@ abstract class Init extends \Com\Tecnick\Barcode\Type\Square\QrCode\Mask
      *
      * @return array<int, int> Parity array
      */
-    protected function encodeRsChar(
-        array $rsv,
-        array $data,
-        array $parity
-    ): array {
-        // the total number of symbols in a RS block
-        $nnv = &$rsv['nn'];
-        // the address of an array of NN elements to convert Galois field elements
-        // in index (log) form to polynomial form
-        $alphato = &$rsv['alpha_to'];
-        // the address of an array of NN elements to convert Galois field elements
-        // in polynomial form to index (log) form
-        $indexof = &$rsv['index_of'];
-        // an array of NROOTS+1 elements containing the generator polynomial in index form
-        $genpoly = &$rsv['genpoly'];
-        // the number of roots in the RS code generator polynomial,
-        // which is the same as the number of parity symbols in a block
-        $nroots = &$rsv['nroots'];
-        // the number of pad symbols in a block
-        $pad = &$rsv['pad'];
-        $azv = &$nnv;
-        $parity = \array_fill(0, $nroots, 0);
-        for ($idx = 0; $idx < ($nnv - $nroots - $pad); ++$idx) {
-            $feedback = $indexof[$data[$idx] ^ $parity[0]];
-            if ($feedback != $azv) {
+    protected function encodeRsChar(array $rsv, array $data, array $parity): array
+    {
+        $nn = $rsv['nn'];
+        $alphaTo = $rsv['alpha_to'];
+        $indexOf = $rsv['index_of'];
+        $genpoly = $rsv['genpoly'];
+        $nroots = $rsv['nroots'];
+        $pad = $rsv['pad'];
+        $parity = \array_values($parity);
+        $parity = \array_fill(0, \max(0, $nroots), 0);
+        for ($idx = 0; $idx < ($nn - $nroots - $pad); ++$idx) {
+            $feedback = $indexOf[($data[$idx] ?? 0) ^ ($parity[0] ?? 0)] ?? 0;
+            if ($feedback !== $nn) {
                 // feedback term is non-zero
                 // This line is unnecessary when GENPOLY[NROOTS] is unity, as it must
                 // always be for the polynomials constructed by initRs()
-                $feedback = $this->modnn($rsv, ($nnv - $genpoly[$nroots] + $feedback));
+                $feedback = $this->modnn($rsv, $nn - ($genpoly[$nroots] ?? 0) + $feedback);
                 for ($jdx = 1; $jdx < $nroots; ++$jdx) {
-                    $parity[$jdx] ^= $alphato[$this->modnn($rsv, $feedback + $genpoly[($nroots - $jdx)])];
+                    $parity[$jdx] =
+                        ($parity[$jdx] ?? 0)
+                        ^ ($alphaTo[$this->modnn($rsv, $feedback + ($genpoly[$nroots - $jdx] ?? 0))] ?? 0);
                 }
             }
 
             // Shift
             \array_shift($parity);
-            $parity[] = $feedback != $azv ? $alphato[$this->modnn($rsv, $feedback + $genpoly[0])] : 0;
+            $parity[] = $feedback !== $nn ? $alphaTo[$this->modnn($rsv, $feedback + ($genpoly[0] ?? 0))] ?? 0 : 0;
         }
 
-        return $parity;
+        return \array_values($parity);
     }
 }

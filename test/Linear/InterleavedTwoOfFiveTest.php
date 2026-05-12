@@ -36,13 +36,14 @@ class InterleavedTwoOfFiveTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
-        $type = $barcode->getBarcodeObj(
-            'I25',
-            '0123456789'
-        );
+        $type = $barcode->getBarcodeObj('I25', '0123456789');
         $grid = $type->getGrid();
         $expected = "101010010110110100100110010101101001011001011010110110100100110100101100101101\n";
         $this->assertEquals($expected, $grid);

@@ -16,8 +16,8 @@
 
 namespace Test\Square;
 
-use Test\TestUtil;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Test\TestUtil;
 
 /**
  * Datamatrix Barcode class test
@@ -37,24 +37,36 @@ class DatamatrixTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testInvalidInput(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('DATAMATRIX', '');
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testCapacityException(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $barcode = $this->getTestObject();
         $code = \str_pad('', 3000, 'X');
         $barcode->getBarcodeObj('DATAMATRIX', $code);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testEncodeTXTC40shiftException(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $encode = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
         $chr = -1;
         $enc = -1;
@@ -63,9 +75,13 @@ class DatamatrixTest extends TestUtil
         $encode->encodeTXTC40shift($chr, $enc, $temp_cw, $ptr);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testEncodeTXTC40Exception(): void
     {
-        $this->bcExpectException('\\' . \Com\Tecnick\Barcode\Exception::class);
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
         $encode = new \Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode();
         $data = "\x80";
         $enc = \Com\Tecnick\Barcode\Type\Square\Datamatrix\Data::ENC_X12;
@@ -76,6 +92,10 @@ class DatamatrixTest extends TestUtil
         $encode->encodeTXTC40($data, $enc, $temp_cw, $ptr, $epos, $charset);
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     #[DataProvider('getGridDataProvider')]
     public function testGetGrid(string $mode, string $code, mixed $expected): void
     {
@@ -91,7 +111,6 @@ class DatamatrixTest extends TestUtil
     public static function getGridDataProvider(): array
     {
         return [
-
             [
                 'DATAMATRIX',
                 '0&0&0&0&0&0&_',
@@ -220,9 +239,9 @@ class DatamatrixTest extends TestUtil
             [
                 'DATAMATRIX',
                 'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdab'
-                . 'cdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd'
-                . 'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdab'
-                . 'cdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd',
+                    . 'cdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd'
+                    . 'abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdab'
+                    . 'cdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd',
                 '4dc0efb6248b3802c2ab7cf123b884d0',
             ],
             [
@@ -233,8 +252,8 @@ class DatamatrixTest extends TestUtil
             [
                 'DATAMATRIX',
                 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
-                . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
-                . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\',
+                    . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
+                    . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\',
                 '0b2921466e097ff9cc1ad63719430540',
             ],
             [
@@ -260,8 +279,8 @@ class DatamatrixTest extends TestUtil
             [
                 'DATAMATRIX',
                 "\xFE\xFD"
-                . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
-                . "\xFC\xFB",
+                    . 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*(),./\\'
+                    . "\xFC\xFB",
                 '0f078e5e5735396312245740484fa6d1',
             ],
             [
@@ -296,45 +315,48 @@ class DatamatrixTest extends TestUtil
             ],
             [
                 'DATAMATRIX',
-                'ec:b47' . "\x7F" . '4#P d*b}gI2#DB|hl{!~[EYH*=cmR{lf'
-                . "\x7F" . '=gcGIa.st286. #*"!eG[.Ryr?Kn,1mIyQqC3 6\'3N>',
+                'ec:b47'
+                    . "\x7F"
+                    . '4#P d*b}gI2#DB|hl{!~[EYH*=cmR{lf'
+                    . "\x7F"
+                    . '=gcGIa.st286. #*"!eG[.Ryr?Kn,1mIyQqC3 6\'3N>',
                 '57fbb9bfb7d542e2e5eadb615e6be549',
             ],
             [
                 'DATAMATRIX',
                 'eA211101A2raJTGL/r9o93CVk4gtpEvWd2A2Qz8jvPc7l8ybD3m'
-                . 'Wel91ih727kldinPeHJCjhr7fIBX1KQQfsN7BFMX00nlS8FlZG+',
+                    . 'Wel91ih727kldinPeHJCjhr7fIBX1KQQfsN7BFMX00nlS8FlZG+',
                 'b2f0d45920c7da5b298bbab5cff5d402',
             ],
             // Square
             [
                 'DATAMATRIX,S',
                 "\xFF\xFE\xFD\xFC\xFB\xFA\xF9\xF8\xF7\xF6"
-            . "\xF5\xF4\xF3\xF2\xF1\xF0\xEF\xEE\xED\xEC"
-            . "\xEB\xEA\xE9\xE8\xE7\xE6\xE5\xE4\xE3\xE2"
-            . "\xE1\xE0\xDF\xDE\xDD\xDC\xDB\xDA\xD9\xD8"
-            . "\xD7\xD6\xD5\xD4\xD3\xD2\xD1\xD0\xCF\xCE"
-            . "\xCD\xCC\xCB\xCA\xC9\xC8\xC7\xC6\xC5\xC4"
-            . "\xC3\xC2\xC1\xC0\xBF\xBE\xBD\xBC\xBB\xBA"
-            . "\xB9\xB8\xB7\xB6\xB5\xB4\xB3\xB2\xB1\xB0"
-            . "\xAF\xAE\xAD\xAC\xAB\xAA\xA9\xA8\xA7\xA6"
-            . "\xA5\xA4\xA3\xA2\xA1\xA0\x9F\x9E\x9D\x9C"
-            . "\x9B\x9A\x99\x98\x97\x96\x95\x94\x93\x92"
-            . "\x91\x90\x8F\x8E\x8D\x8C\x8B\x8A\x89\x88"
-            . "\x87\x86\x85\x84\x83\x82\x81\x80\x7F\x7E"
-            . "\x7D\x7C\x7B\x7A\x79\x78\x77\x76\x75\x74"
-            . "\x73\x72\x71\x70\x6F\x6E\x6D\x6C\x6B\x6A"
-            . "\x69\x68\x67\x66\x65\x64\x63\x62\x61\x60"
-            . "\x5F\x5E\x5D\x5C\x5B\x5A\x59\x58\x57\x56"
-            . "\x55\x54\x53\x52\x51\x50\x4F\x4E\x4D\x4C"
-            . "\x4B\x4A\x49\x48\x47\x46\x45\x44\x43\x42"
-            . "\x41\x40\x3F\x3E\x3D\x3C\x3B\x3A\x39\x38"
-            . "\x37\x36\x35\x34\x33\x32\x31\x30\x2F\x2E"
-            . "\x2D\x2C\x2B\x2A\x29\x28\x27\x26\x25\x24"
-            . "\x23\x22\x21\x20\x1F\x1E\x1D\x1C\x1B\x1A"
-            . "\x19\x18\x17\x16\x15\x14\x13\x12\x11\x10"
-            . "\x0F\x0E\x0D\x0C\x0B\x0A\x09\x08\x07\x06"
-            . "\x05\x04\x03\x02\x01",
+                    . "\xF5\xF4\xF3\xF2\xF1\xF0\xEF\xEE\xED\xEC"
+                    . "\xEB\xEA\xE9\xE8\xE7\xE6\xE5\xE4\xE3\xE2"
+                    . "\xE1\xE0\xDF\xDE\xDD\xDC\xDB\xDA\xD9\xD8"
+                    . "\xD7\xD6\xD5\xD4\xD3\xD2\xD1\xD0\xCF\xCE"
+                    . "\xCD\xCC\xCB\xCA\xC9\xC8\xC7\xC6\xC5\xC4"
+                    . "\xC3\xC2\xC1\xC0\xBF\xBE\xBD\xBC\xBB\xBA"
+                    . "\xB9\xB8\xB7\xB6\xB5\xB4\xB3\xB2\xB1\xB0"
+                    . "\xAF\xAE\xAD\xAC\xAB\xAA\xA9\xA8\xA7\xA6"
+                    . "\xA5\xA4\xA3\xA2\xA1\xA0\x9F\x9E\x9D\x9C"
+                    . "\x9B\x9A\x99\x98\x97\x96\x95\x94\x93\x92"
+                    . "\x91\x90\x8F\x8E\x8D\x8C\x8B\x8A\x89\x88"
+                    . "\x87\x86\x85\x84\x83\x82\x81\x80\x7F\x7E"
+                    . "\x7D\x7C\x7B\x7A\x79\x78\x77\x76\x75\x74"
+                    . "\x73\x72\x71\x70\x6F\x6E\x6D\x6C\x6B\x6A"
+                    . "\x69\x68\x67\x66\x65\x64\x63\x62\x61\x60"
+                    . "\x5F\x5E\x5D\x5C\x5B\x5A\x59\x58\x57\x56"
+                    . "\x55\x54\x53\x52\x51\x50\x4F\x4E\x4D\x4C"
+                    . "\x4B\x4A\x49\x48\x47\x46\x45\x44\x43\x42"
+                    . "\x41\x40\x3F\x3E\x3D\x3C\x3B\x3A\x39\x38"
+                    . "\x37\x36\x35\x34\x33\x32\x31\x30\x2F\x2E"
+                    . "\x2D\x2C\x2B\x2A\x29\x28\x27\x26\x25\x24"
+                    . "\x23\x22\x21\x20\x1F\x1E\x1D\x1C\x1B\x1A"
+                    . "\x19\x18\x17\x16\x15\x14\x13\x12\x11\x10"
+                    . "\x0F\x0E\x0D\x0C\x0B\x0A\x09\x08\x07\x06"
+                    . "\x05\x04\x03\x02\x01",
                 '514963c4fde0cee7ff91f76dd56015cc',
             ],
             // Rectangular shape
@@ -394,32 +416,32 @@ class DatamatrixTest extends TestUtil
             [
                 'DATAMATRIX,S,N,ASCII',
                 '01234567890',
-                'ac7dd9e1ebdb42d07fe928fb33cd307b'
+                'ac7dd9e1ebdb42d07fe928fb33cd307b',
             ],
             [
                 'DATAMATRIX,S,N,C40',
                 '01234567890',
-                '958a7a3bcd036d7135489eb703a25633'
+                '958a7a3bcd036d7135489eb703a25633',
             ],
             [
                 'DATAMATRIX,S,N,TXT',
                 '01234567890',
-                '057981dfbf527b029ae59d65fb55f61d'
+                '057981dfbf527b029ae59d65fb55f61d',
             ],
             [
                 'DATAMATRIX,S,N,X12',
                 '01234567890',
-                '8d75b0fcfb2d0977abd95004a6ba98dd'
+                '8d75b0fcfb2d0977abd95004a6ba98dd',
             ],
             [
                 'DATAMATRIX,S,N,EDF',
                 '01234567890',
-                '989eab3ca16c97e05dd2307bef32f64b'
+                '989eab3ca16c97e05dd2307bef32f64b',
             ],
             [
                 'DATAMATRIX,S,N,BASE256',
                 '01234567890',
-                '8b4f688a774130bc654e39dfcfadb482'
+                '8b4f688a774130bc654e39dfcfadb482',
             ],
             [
                 'DATAMATRIX,S,GS1',
@@ -430,7 +452,7 @@ class DatamatrixTest extends TestUtil
                 //     (10)ABCD1234
                 //     (21)10
                 "\xE8" . '01034531200000111719112510ABCD1234' . "\xE8" . '2110',
-                '3c66c6c7355e7dea071501216e894eac'
+                '3c66c6c7355e7dea071501216e894eac',
             ],
             [
                 'DATAMATRIX,S,GS1',
@@ -442,17 +464,21 @@ class DatamatrixTest extends TestUtil
                 //     (10)ABCD1234
                 //     (21)10
                 "\xE8" . '01034531200000111719112510ABCD1234' . "\x1D" . '2110',
-                '3c66c6c7355e7dea071501216e894eac'
+                '3c66c6c7355e7dea071501216e894eac',
             ],
             [
                 'DATAMATRIX,S,GS1,C40',
                 // \xE8 is the control character FNC1 (ASCII 232)
                 "\xE8" . '01095011010209171719050810ABCD1234' . "\xE8" . '2110',
-                'ba117111dfa40a40e1bb968c719d2eef'
-            ]
+                'ba117111dfa40a40e1bb968c719d2eef',
+            ],
         ];
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     #[DataProvider('getStringDataProvider')]
     public function testStrings(string $code): void
     {
@@ -464,7 +490,7 @@ class DatamatrixTest extends TestUtil
     /**
      * @return array<array{string}>
      */
-    public static function getStringDataProvider()
+    public static function getStringDataProvider(): array
     {
         return \Test\TestStrings::$data;
     }

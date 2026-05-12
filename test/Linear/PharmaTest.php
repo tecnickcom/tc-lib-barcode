@@ -36,12 +36,17 @@ class PharmaTest extends TestUtil
         return new \Com\Tecnick\Barcode\Barcode();
     }
 
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
     public function testGetGrid(): void
     {
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('PHARMA', '0123456789');
         $grid = $type->getGrid();
-        $expected = "111001110010011100100111001110010011100111001110011100100"
+        $expected =
+            '111001110010011100100111001110010011100111001110011100100'
             . "1001110011100100111001001001001110010011100111001\n";
         $this->assertEquals($expected, $grid);
     }

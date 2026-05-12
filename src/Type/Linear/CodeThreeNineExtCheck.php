@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * CodeThreeNineExtCheck.php
  *
@@ -280,6 +282,26 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         '%',
     ];
 
+    protected function getExtendedCodeValue(int $item): string
+    {
+        return $this::EXTCODES[$item] ?? '';
+    }
+
+    protected function getChecksumIndex(string $char): int
+    {
+        $index = \array_search($char, $this::CHKSUM, true);
+        if (\is_int($index)) {
+            return $index;
+        }
+
+        return 0;
+    }
+
+    protected function getChecksumChar(int $index): string
+    {
+        return $this::CHKSUM[$index] ?? '';
+    }
+
     /**
      * Encode a string to be used for CODE 39 Extended mode.
      *
@@ -297,7 +319,7 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
                 throw new BarcodeException('Invalid character: \chr(' . ($item & 0xFF) . ')');
             }
 
-            $ext .= $this::EXTCODES[$item];
+            $ext .= $this->getExtendedCodeValue($item);
         }
 
         return $ext;
@@ -315,16 +337,17 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         $sum = 0;
         $clen = \strlen($code);
         for ($chr = 0; $chr < $clen; ++$chr) {
-            $key = \array_keys($this::CHKSUM, $code[$chr]);
-            $sum += $key[0];
+            $sum += $this->getChecksumIndex($code[$chr]);
         }
 
-        $idx = ($sum % 43);
-        return $this::CHKSUM[$idx];
+        $idx = $sum % 43;
+        return $this->getChecksumChar($idx);
     }
 
     /**
      * Format code
+     *
+     * @throws BarcodeException in case of error
      */
     protected function formatCode(): void
     {
@@ -346,13 +369,14 @@ class CodeThreeNineExtCheck extends \Com\Tecnick\Barcode\Type\Linear
         $clen = \strlen($this->extcode);
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
-            if (! isset($this::CHBAR[$char])) {
+            $pattern = $this::CHBAR[$char] ?? null;
+            if ($pattern === null) {
                 throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
             }
 
             for ($pos = 0; $pos < 9; ++$pos) {
-                $bar_width = (int) $this::CHBAR[$char][$pos];
-                if ((($pos % 2) == 0) && ($bar_width > 0)) {
+                $bar_width = (int) ($pattern[$pos] ?? '0');
+                if (($pos % 2) === 0 && $bar_width > 0) {
                     $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Aztec.php
  *
@@ -85,9 +87,9 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
 
         // ecc percentage
         if (
-            ! isset($this->params[0])
-            || ! \is_numeric($this->params[0])
-            || ! \in_array($this->params[0], \range(1, 100))
+            ($this->params[0] ?? null) === null
+            || !\is_numeric($this->params[0])
+            || !\in_array($this->params[0], \range(1, 100), strict: true)
         ) {
             $this->params[0] = 33;
         }
@@ -96,9 +98,9 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
 
         // hint
         if (
-            ! isset($this->params[1])
-            || ! \is_string($this->params[1])
-            || ! \in_array($this->params[1], ['A', 'B'])
+            ($this->params[1] ?? null) === null
+            || !\is_string($this->params[1])
+            || !\in_array($this->params[1], ['A', 'B'], strict: true)
         ) {
             $this->params[1] = 'A';
         }
@@ -107,9 +109,9 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
 
         // mode
         if (
-            ! isset($this->params[2])
-            || ! \is_string($this->params[2])
-            || ! \in_array($this->params[2], ['A', 'F'])
+            ($this->params[2] ?? null) === null
+            || !\is_string($this->params[2])
+            || !\in_array($this->params[2], ['A', 'F'], strict: true)
         ) {
             $this->params[2] = 'A';
         }
@@ -118,9 +120,9 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
 
         // eci code. Used to set the charset encoding. See $this->eci.
         if (
-            ! isset($this->params[3])
-            || ! \is_numeric($this->params[3])
-            || ! isset(Data::ECI[(int) $this->params[3]])
+            ($this->params[3] ?? null) === null
+            || !\is_numeric($this->params[3])
+            || !\array_key_exists((int) $this->params[3], Data::ECI)
         ) {
             $this->params[3] = -1;
         }
@@ -135,7 +137,7 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
      */
     protected function setBars(): void
     {
-        if (\strlen((string) $this->code) == 0) {
+        if (\strlen($this->code) === 0) {
             throw new BarcodeException('Empty input');
         }
 

@@ -22,8 +22,13 @@ class InternalBarcodeType extends \Com\Tecnick\Barcode\Type
 
     protected const FORMAT = 'INTERNAL';
 
-    public function __construct(private bool $useParentHooks = false)
-    {
+    /**
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function __construct(
+        private bool $useParentHooks = false,
+    ) {
         $this->ncols = 2;
         $this->nrows = 1;
 
