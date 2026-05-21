@@ -123,12 +123,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $barcode = new \Com\Tecnick\Barcode\Barcode();
 $bobj = $barcode->getBarcodeObj(
-    'QRCODE,H',
-    'https://tecnick.com',
-    -4,
-    -4,
-    'black',
-    [-2, -2, -2, -2]
+    type: 'QRCODE,H',
+    code: 'https://tecnick.com',
+    width: -4,
+    height: -4,
+    color: 'black',
+    padding: [-2, -2, -2, -2],
 )->setBackgroundColor('white');
 
 echo $bobj->getHtmlDiv();
@@ -144,6 +144,20 @@ For more formats and rendering options, see the `example/` directory.
 make deps
 make help
 make qa
+```
+
+To preview the example app in a browser:
+
+```bash
+make server
+```
+
+Then open <http://localhost:8000/> (served from the `example/` directory).
+
+To use a different port:
+
+```bash
+make server PORT=8080
 ```
 
 Build artifacts and reports are generated in `target/`.
@@ -169,8 +183,3 @@ require_once '/usr/share/php/Com/Tecnick/Barcode/autoload.php';
 
 Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), and [SECURITY.md](SECURITY.md) before submitting a pull request.
 
----
-
-## Contact
-
-Nicola Asuni - <info@tecnick.com>

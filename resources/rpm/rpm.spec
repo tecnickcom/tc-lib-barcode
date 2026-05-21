@@ -16,7 +16,7 @@ BuildArch: noarch
 
 Requires:  php(language) >= 8.2.0
 Requires:  php-composer(%{c_vendor}/tc-lib-color) < 3.0.0
-Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 2.6.0
+Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 2.7.0
 Requires:  php-bcmath
 Requires:  php-date
 Requires:  php-gd

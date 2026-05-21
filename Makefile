@@ -209,7 +209,7 @@ endif
 ## Format the source code
 .PHONY: format
 format:
-	./vendor/bin/mago fmt src test
+	./vendor/bin/mago fmt src test example
 
 ## Analyze and Lint the source code
 .PHONY: lint

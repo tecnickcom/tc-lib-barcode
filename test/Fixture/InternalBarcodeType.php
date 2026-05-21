@@ -23,6 +23,11 @@ class InternalBarcodeType extends \Com\Tecnick\Barcode\Type
     protected const FORMAT = 'INTERNAL';
 
     /**
+     * @var array<int, array{int, int, int, int}>|null
+     */
+    private ?array $rotatedBarsOverride = null;
+
+    /**
      * @throws \Com\Tecnick\Barcode\Exception
      * @throws \Com\Tecnick\Color\Exception
      */
@@ -53,5 +58,45 @@ class InternalBarcodeType extends \Com\Tecnick\Barcode\Type
         }
 
         $this->bars = [[0, 0, 1, 1]];
+    }
+
+    /**
+     * @param array<int, array{int, int, int, int}> $bars
+     */
+    public function setBarsForTest(array $bars): void
+    {
+        $this->bars = $bars;
+    }
+
+    public function setRowsColsForTest(int $nrows, int $ncols): void
+    {
+        $this->nrows = $nrows;
+        $this->ncols = $ncols;
+    }
+
+    public function setRatiosForTest(float $widthRatio, float $heightRatio): void
+    {
+        $this->width_ratio = $widthRatio;
+        $this->height_ratio = $heightRatio;
+    }
+
+    /**
+     * @param array<int, array{int, int, int, int}>|null $bars
+     */
+    public function setRotatedBarsOverrideForTest(?array $bars): void
+    {
+        $this->rotatedBarsOverride = $bars;
+    }
+
+    /**
+     * @return array<int, array{int, int, int, int}>
+     */
+    protected function getRotatedBarArray(): array
+    {
+        if ($this->rotatedBarsOverride !== null) {
+            return $this->rotatedBarsOverride;
+        }
+
+        return parent::getRotatedBarArray();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * index.php
  *
@@ -14,7 +15,7 @@
  */
 
 // autoloader when using Composer
-require(__DIR__ . '/../vendor/autoload.php');
+require __DIR__ . '/../vendor/autoload.php';
 
 // autoloader when using RPM or DEB package installation
 //require ('/usr/share/php/Com/Tecnick/Barcode/autoload.php');
@@ -63,9 +64,18 @@ $square = [
     'QRCODE' => ['0123456789', 'QR-CODE'],
     'QRCODE,H,ST,0,0' => ['abcdefghijklmnopqrstuvwxy0123456789', 'QR-CODE WITH PARAMETERS'],
     'DATAMATRIX' => ['0123456789', 'DATAMATRIX (ISO/IEC 16022) SQUARE'],
-    'DATAMATRIX,R' => ['0123456789012345678901234567890123456789', 'DATAMATRIX Rectangular (ISO/IEC 16022) RECTANGULAR'],
-    'DATAMATRIX,S,GS1' => [\chr(232) . '01095011010209171719050810ABCD1234' . \chr(232) . '2110', 'GS1 DATAMATRIX (ISO/IEC 16022) SQUARE GS1'],
-    'DATAMATRIX,R,GS1' => [\chr(232) . '01095011010209171719050810ABCD1234' . \chr(232) . '2110', 'GS1 DATAMATRIX (ISO/IEC 16022) RECTANGULAR GS1'],
+    'DATAMATRIX,R' => [
+        '0123456789012345678901234567890123456789',
+        'DATAMATRIX Rectangular (ISO/IEC 16022) RECTANGULAR',
+    ],
+    'DATAMATRIX,S,GS1' => [
+        \chr(232) . '01095011010209171719050810ABCD1234' . \chr(232) . '2110',
+        'GS1 DATAMATRIX (ISO/IEC 16022) SQUARE GS1',
+    ],
+    'DATAMATRIX,R,GS1' => [
+        \chr(232) . '01095011010209171719050810ABCD1234' . \chr(232) . '2110',
+        'GS1 DATAMATRIX (ISO/IEC 16022) RECTANGULAR GS1',
+    ],
 ];
 
 $barcode = new \Com\Tecnick\Barcode\Barcode();
@@ -73,23 +83,45 @@ $barcode = new \Com\Tecnick\Barcode\Barcode();
 $examples = '<h3>Linear</h3>' . "\n";
 foreach ($linear as $type => $code) {
     $bobj = $barcode->getBarcodeObj($type, $code[0], -3, -30, 'black', [0, 0, 0, 0]);
-    $examples .= '<h4>[<span>' . $type . '</span>] ' . $code[1] . '</h4><p style="font-family:monospace;">' . $bobj->getHtmlDiv() . '</p>' . "\n";
+    $examples .=
+        '<h4>[<span>'
+        . $type
+        . '</span>] '
+        . $code[1]
+        . '</h4><p style="font-family:monospace;">'
+        . $bobj->getHtmlDiv()
+        . '</p>'
+        . "\n";
 }
 
 $examples .= '<h3>Square</h3>' . "\n";
 foreach ($square as $type => $code) {
     $bobj = $barcode->getBarcodeObj($type, $code[0], -4, -4, 'black', [0, 0, 0, 0]);
-    $examples .= '<h4>[<span>' . $type . '</span>] ' . $code[1] . '</h4><p style="font-family:monospace;">' . $bobj->getHtmlDiv() . '</p>' . "\n";
+    $examples .=
+        '<h4>[<span>'
+        . $type
+        . '</span>] '
+        . $code[1]
+        . '</h4><p style="font-family:monospace;">'
+        . $bobj->getHtmlDiv()
+        . '</p>'
+        . "\n";
 }
 
-$bobj = $barcode->getBarcodeObj('QRCODE,H', 'https://tecnick.com', -4, -4, 'black', [-2, -2, -2, -2])->setBackgroundColor('#f0f0f0');
+$bobj = $barcode->getBarcodeObj('QRCODE,H', 'https://tecnick.com', -4, -4, 'black', [
+    -2,
+    -2,
+    -2,
+    -2,
+])->setBackgroundColor('#f0f0f0');
 
-echo "
+echo
+    '
 <!DOCTYPE html>
 <html>
     <head>
         <title>Usage example of tc-lib-barcode library</title>
-        <meta charset=\"utf-8\">
+        <meta charset="utf-8">
         <style>
             body {font-family:Arial, Helvetica, sans-serif;margin:30px;}
             table {border: 1px solid black;}
@@ -102,20 +134,33 @@ echo "
     </head>
     <body>
         <h1>Usage example of tc-lib-barcode library</h1>
-        <p>This is an usage example of <a href=\"https://github.com/tecnickcom/tc-lib-barcode\" title=\"tc-lib-barcode: PHP library to generate linear and bidimensional barcodes\">tc-lib-barcode</a> library.</p>
+        <p>This is an usage example of <a href="https://github.com/tecnickcom/tc-lib-barcode" title="tc-lib-barcode: PHP library to generate linear and bidimensional barcodes">tc-lib-barcode</a> library.</p>
         <h2>Output Formats</h2>
         <h3>PNG Image</h3>
-        <p><img alt=\"Embedded Image\" src=\"data:image/png;base64," . \base64_encode($bobj->getPngData()) . "\" /></p>
+        <p><img alt="Embedded Image" src="data:image/png;base64,'
+        . \base64_encode($bobj->getPngData())
+        . '" /></p>
         <h3>SVG Image</h3>
-        <p style=\"font-family:monospace;\">" . $bobj->getSvgCode() . "</p>
+        <p style="font-family:monospace;">'
+        . $bobj->getSvgCode()
+        . '</p>
         <h3>HTML DIV</h3>
-        <p style=\"font-family:monospace;\">" . $bobj->getHtmlDiv() . "</p>
+        <p style="font-family:monospace;">'
+        . $bobj->getHtmlDiv()
+        . '</p>
         <h3>Unicode String</h3>
-        <pre style=\"font-family:monospace;line-height:0.61em;font-size:6px;\">" . $bobj->getGrid(\json_decode('"\u00A0"'), \json_decode('"\u2584"')) . "</pre>
+        <pre style="font-family:monospace;line-height:0.61em;font-size:6px;">'
+        . $bobj->getGrid(\json_decode('"\u00A0"'), \json_decode('"\u2584"'))
+        . '</pre>
         <h3>Binary String</h3>
-        <pre style=\"font-family:monospace;\">" . $bobj->getGrid() . "</pre>
+        <pre style="font-family:monospace;">'
+        . $bobj->getGrid()
+        . '</pre>
         <h2>Barcode Types</h2>
-        " . $examples . "
+        '
+        . $examples
+        . '
     </body>
 </html>
-";
+'
+;
