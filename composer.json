@@ -66,19 +66,13 @@
         "ext-date": "*",
         "ext-gd": "*",
         "ext-pcre": "*",
-        "tecnickcom/tc-lib-color": "^2.7"
+        "tecnickcom/tc-lib-color": "^2.9"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
-    },
     "require-dev": {
         "pdepend/pdepend": "^2.16",
-        "phpunit/phpunit": "^13.1 || ^12.5 || ^11.5",
-        "phpcompatibility/php-compatibility": "^10.0.0@dev"
+        "phpunit/phpunit": "^11.5 || ^12.5 || ^13.2"
     },
     "autoload": {
         "psr-4": {
@@ -95,9 +89,14 @@
         "source": "https://github.com/tecnickcom/tc-lib-barcode"
     },
     "scripts": {
-        "test": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --stderr test",
-        "cs-check": "./vendor/bin/mago --config ./mago.src.toml lint src && ./vendor/bin/mago --config ./mago.test.toml lint test",
-        "cs-fix": "./vendor/bin/mago fmt src test",
-        "analyse": "./vendor/bin/mago --config ./mago.src.toml analyze src && ./vendor/bin/mago --config ./mago.test.toml analyze test"
+        "test": "@php -d xdebug.mode=coverage vendor/bin/phpunit --stderr test",
+        "analyse": ["@analyse:src", "@analyse:test"],
+        "analyse:src": "mago --config mago.src.toml analyze src",
+        "analyse:test": "mago --config mago.test.toml analyze test",
+        "cs-check": ["@cs-check:src", "@cs-check:test"],
+        "cs-check:src": "mago --config mago.src.toml lint src",
+        "cs-check:test": "mago --config mago.test.toml lint test",
+        "cs-fix": "mago fmt src test",
+        "qa": ["@cs-check", "@analyse", "@test"]
     }
 }

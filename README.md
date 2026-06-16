@@ -131,7 +131,7 @@ $bobj = $barcode->getBarcodeObj(
     padding: [-2, -2, -2, -2],
 )->setBackgroundColor('white');
 
-echo $bobj->getHtmlDiv();
+echo $bobj->getInlineSvgCode();
 ```
 
 For more formats and rendering options, see the `example/` directory.
