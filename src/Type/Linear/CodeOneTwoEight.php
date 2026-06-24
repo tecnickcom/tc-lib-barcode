@@ -37,7 +37,7 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
 class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\Process
 {
     /**
-     * Get the coe point array
+     * Get the code point array
      *
      * @return array<int, int>
      *
@@ -107,7 +107,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
 
         if ($key !== 0 && $prev_mode !== 'A') {
             $hasPrevShift = $this->hasSequenceShift($sequence, $key - 1);
-            $singleShift = $seq[2] === 1 && $key > 0 && $prev_mode === 'B' && !$hasPrevShift;
+            $singleShift = $seq[2] === 1 && $prev_mode === 'B' && !$hasPrevShift;
             $codeSwitch = match (true) {
                 $singleShift => 98,
                 !$hasPrevShift => 101,
@@ -195,7 +195,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
     {
         $prev_mode = $this->getSequenceMode($sequence, $key - 1);
         $hasPrevShift = $this->hasSequenceShift($sequence, $key - 1);
-        $singleShift = $seq[2] === 1 && $key > 0 && $prev_mode === 'A' && !$hasPrevShift;
+        $singleShift = $seq[2] === 1 && $prev_mode === 'A' && !$hasPrevShift;
         $codeSwitch = match (true) {
             $singleShift => 98,
             !$hasPrevShift => 100,
@@ -255,7 +255,7 @@ class CodeOneTwoEight extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\P
         foreach ($code_data as $val) {
             $seq = $this->getBarPattern($val);
             for ($pos = 0; $pos < 6; ++$pos) {
-                $bar_width = (int) $seq[$pos];
+                $bar_width = (int) ($seq[$pos] ?? '0');
                 if (($pos % 2) === 0 && $bar_width > 0) {
                     $this->bars[] = [$this->ncols, 0, $bar_width, 1];
                 }

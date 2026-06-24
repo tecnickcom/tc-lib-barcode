@@ -109,7 +109,7 @@ abstract class Convert
     ];
 
     /**
-     * Ratio between the barcode width and the number of rows
+     * Ratio between the barcode width and the number of columns
      */
     protected float $width_ratio = 0;
 
@@ -124,7 +124,7 @@ abstract class Convert
     protected Color $color_obj;
 
     /**
-     * Backgorund Color object
+     * Background Color object
      */
     protected ?Color $bg_color_obj = null;
 
@@ -184,12 +184,12 @@ abstract class Convert
     {
         $search = [
             '/[\s]*/s', // remove spaces and newlines
-            '/^[\[,]+/', // remove trailing brackets or commas
+            '/^[\[,]+/', // remove leading brackets or commas
             '/[\],]+$/', // remove trailing brackets or commas
-            '/[\]][\[]$/', // convert bracket -separated to comma-separated
+            '/[\]][\[]/', // convert bracket-separated rows to comma-separated
         ];
 
-        $replace = ['', '', '', ''];
+        $replace = ['', '', '', ','];
 
         $code = \preg_replace($search, $replace, $data);
         if ($code === null) {

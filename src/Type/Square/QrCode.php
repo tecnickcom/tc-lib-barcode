@@ -77,8 +77,8 @@ class QrCode extends \Com\Tecnick\Barcode\Type\Square
     protected int $random_mask = -1;
 
     /**
-     * If true, estimates best mask (spec. default, but extremally slow;
-     * set to false to significant performance boost but (propably) worst quality code.
+     * If true, estimates the best mask (spec default, but slower);
+     * set to false for a significant performance boost but (probably) lower quality code.
      */
     protected bool $best_mask = true;
 

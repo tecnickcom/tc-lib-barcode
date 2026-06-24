@@ -48,4 +48,17 @@ class EanEightTest extends TestUtil
         $expected = "1010011001001001101111010100011010101001110101000010001001110010101\n";
         $this->assertEquals($expected, $grid);
     }
+
+    /**
+     * Regression: non-numeric input used to produce a malformed barcode instead of throwing.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testNonNumericInput(): void
+    {
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('EAN8', 'abcdefg');
+    }
 }

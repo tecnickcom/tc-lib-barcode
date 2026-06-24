@@ -88,7 +88,7 @@ class PdfFourOneSevenTest extends TestUtil
             [
                 '',
                 \str_pad('', 2710, '123456789'),
-                '32ba9be56f3e66559b4d4a50f6276da7',
+                'c512b5d3ca975a16c21b47e938d2aecb',
             ],
             // max digits
             [
@@ -114,7 +114,7 @@ class PdfFourOneSevenTest extends TestUtil
             [
                 '',
                 \str_pad('', 350, '0123456789'),
-                '394d93048831fee232413da29fb709fb',
+                '9a8e73c7a098fd10ce37605be1c87435',
             ],
             [
                 '',

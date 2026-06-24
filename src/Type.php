@@ -102,10 +102,14 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
      *                                           negative value indicates the number or rows
      *                                           or columns.
      *
-     * @throws BarcodeException in case of invalid padding
+     * @throws BarcodeException in case of an empty barcode or invalid padding
      */
     public function setSize(int $width, int $height, array $padding = [0, 0, 0, 0]): static
     {
+        if ($this->ncols <= 0 || $this->nrows <= 0) {
+            throw new BarcodeException('Empty barcode: the number of rows and columns must be greater than zero');
+        }
+
         $this->width = $width;
         if ($this->width <= 0) {
             $this->width = \abs(\min(-1, $this->width)) * $this->ncols;
@@ -170,7 +174,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
 
     /**
      * Set the color of the bars.
-     * If the color is transparent or empty it will be set to the default black color.
+     * An empty or transparent foreground color is rejected with a BarcodeException.
      *
      * @param string $color Foreground color in Web notation (color name, or hexadecimal code, or CSS syntax)
      *
@@ -484,15 +488,46 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
     }
 
     /**
+     * Maximum width or height, in pixels, of a rendered barcode image.
+     * Guards against pathological size multipliers triggering huge allocations.
+     */
+    protected const MAX_IMAGE_SIDE = 30_000;
+
+    /**
+     * Compute and validate the rendered image dimensions, in pixels.
+     *
+     * @return array{int, int} [width, height], each at least 1 pixel
+     *
+     * @throws BarcodeException if the requested image size is too large
+     */
+    protected function getImageSize(): array
+    {
+        $width = \max(1, (int) \ceil($this->width + $this->padding['L'] + $this->padding['R']));
+        $height = \max(1, (int) \ceil($this->height + $this->padding['T'] + $this->padding['B']));
+        if ($width > self::MAX_IMAGE_SIDE || $height > self::MAX_IMAGE_SIDE) {
+            throw new BarcodeException(
+                'The requested image size ('
+                . $width
+                . 'x'
+                . $height
+                . ' px) exceeds the maximum of '
+                . self::MAX_IMAGE_SIDE
+                . ' px per side',
+            );
+        }
+
+        return [$width, $height];
+    }
+
+    /**
      * Get the barcode as PNG image (requires Imagick library)
      *
-     * @throws BarcodeException if the Imagick library is not installed
+     * @throws BarcodeException if the Imagick library is not installed or the image is too large
      */
     public function getPngDataImagick(): string
     {
         $imagick = new \Imagick();
-        $width = (int) \ceil($this->width + $this->padding['L'] + $this->padding['R']);
-        $height = (int) \ceil($this->height + $this->padding['T'] + $this->padding['B']);
+        [$width, $height] = $this->getImageSize();
         $imagick->newImage($width, $height, 'none', 'png');
         $imagickdraw = new \ImagickDraw();
         if ($this->bg_color_obj instanceof \Com\Tecnick\Color\Model\Rgb) {
@@ -568,12 +603,11 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert implements Model
     /**
      * Get the barcode as GD image object (requires GD library)
      *
-     * @throws BarcodeException if the GD library is not installed
+     * @throws BarcodeException if the GD library is not installed or the image is too large
      */
     public function getGd(): \GdImage
     {
-        $width = \max(1, (int) \ceil($this->width + $this->padding['L'] + $this->padding['R']));
-        $height = \max(1, (int) \ceil($this->height + $this->padding['T'] + $this->padding['B']));
+        [$width, $height] = $this->getImageSize();
         $img = \imagecreate($width, $height);
         if ($img === false) {
             throw new BarcodeException('Unable to create GD image');

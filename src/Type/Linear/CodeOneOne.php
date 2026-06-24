@@ -81,44 +81,45 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         $len = \strlen($code);
         // calculate check digit C
         $ptr = 1;
-        $ccheck = 0;
+        $cval = 0;
         for ($pos = $len - 1; $pos >= 0; --$pos) {
             $digit = $code[$pos];
             $dval = $digit === '-' ? 10 : (int) $digit;
 
-            $ccheck += $dval * $ptr;
+            $cval += $dval * $ptr;
             ++$ptr;
             if ($ptr > 10) {
                 $ptr = 1;
             }
         }
 
-        $ccheck %= 11;
-        if ($ccheck === 10) {
-            $ccheck = '-';
-        }
+        $cval %= 11;
+        $ccheck = $cval === 10 ? '-' : (string) $cval;
 
         if ($len <= 10) {
-            return (string) $ccheck;
+            return $ccheck;
         }
 
-        // calculate check digit K
+        // calculate check digit K (computed over the code with the C check digit appended)
         $code .= $ccheck;
+        $klen = \strlen($code);
         $ptr = 1;
-        $kcheck = 0;
-        for ($pos = $len; $pos >= 0; --$pos) {
+        $kval = 0;
+        for ($pos = $klen - 1; $pos >= 0; --$pos) {
             $digit = $code[$pos];
             $dval = $digit === '-' ? 10 : (int) $digit;
 
-            $kcheck += $dval * $ptr;
+            $kval += $dval * $ptr;
             ++$ptr;
             if ($ptr > 9) {
                 $ptr = 1;
             }
         }
 
-        $kcheck %= 11;
-        return (string) $ccheck . $kcheck;
+        $kval %= 11;
+        $kcheck = $kval === 10 ? '-' : (string) $kval;
+
+        return $ccheck . $kcheck;
     }
 
     /**
@@ -144,7 +145,7 @@ class CodeOneOne extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (!\array_key_exists($char, $this::CHBAR)) {
-                throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
+                throw new BarcodeException('Invalid character: ' . (\ord($char) & 0xFF));
             }
 
             for ($pos = 0; $pos < 6; ++$pos) {

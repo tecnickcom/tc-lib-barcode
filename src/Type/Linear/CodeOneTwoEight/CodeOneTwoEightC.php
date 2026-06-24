@@ -54,7 +54,7 @@ class CodeOneTwoEightC extends \Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight
     {
         $code = $this->code;
         $code_data = [];
-        if (\ord($code[0]) === 241) {
+        if ($code !== '' && \ord($code[0]) === 241) {
             $code_data[] = 102;
             $code = \substr($code, 1);
         }

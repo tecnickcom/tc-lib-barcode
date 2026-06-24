@@ -291,21 +291,6 @@ class CodeNineThree extends \Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtChe
         '?',
     ];
 
-    protected function getChecksumIndex(string $char): int
-    {
-        $index = \array_search($char, $this::CHKSUM, true);
-        if (\is_int($index)) {
-            return $index;
-        }
-
-        return 0;
-    }
-
-    protected function getChecksumChar(int $index): string
-    {
-        return $this::CHKSUM[$index] ?? '';
-    }
-
     protected function getBarPattern(int $char): string
     {
         return $this::CHBAR[$char] ?? '000000';

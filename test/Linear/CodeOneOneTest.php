@@ -73,4 +73,16 @@ class CodeOneOneTest extends TestUtil
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('CODE11', \chr(255));
     }
+
+    /**
+     * Regression: a K check digit evaluating to 10 must be encoded as '-', not '10'.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testKCheckDigitDash(): void
+    {
+        $barcode = $this->getTestObject();
+        $this->assertSame('S000000000077-S', $barcode->getBarcodeObj('CODE11', '00000000007')->getExtendedCode());
+    }
 }

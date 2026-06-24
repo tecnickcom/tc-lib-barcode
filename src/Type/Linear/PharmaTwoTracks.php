@@ -50,6 +50,10 @@ class PharmaTwoTracks extends \Com\Tecnick\Barcode\Type\Linear
      */
     protected function setBars(): void
     {
+        if (!\ctype_digit($this->code) || (int) $this->code < 1) {
+            throw new BarcodeException('Invalid barcode value: the code must be a positive integer');
+        }
+
         $seq = '';
         $code = (int) $this->code;
 

@@ -190,7 +190,11 @@ class EanOneThree extends \Com\Tecnick\Barcode\Type\Linear
     protected function formatCode(): void
     {
         $code = \str_pad($this->code, $this->code_length - 1, '0', STR_PAD_LEFT);
-        $this->extcode = $code . $this->getChecksum($code);
+        // getChecksum() returns the missing check digit, or validates (and returns 0)
+        // when the input already carries it; in the latter case keep the code unchanged
+        // to avoid appending a spurious extra digit to the extended code.
+        $check = $this->getChecksum($code);
+        $this->extcode = \strlen($code) >= $this->code_length ? $code : $code . $check;
     }
 
     /**

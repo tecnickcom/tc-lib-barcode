@@ -61,6 +61,20 @@ class AztecTest extends TestUtil
     }
 
     /**
+     * Regression: the ECC percentage parameter used to be silently ignored (always 33%).
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testEccParameterRespected(): void
+    {
+        $barcode = $this->getTestObject();
+        $low = $barcode->getBarcodeObj('AZTEC,10', 'TEST DATA 123')->getGrid();
+        $high = $barcode->getBarcodeObj('AZTEC,90', 'TEST DATA 123')->getGrid();
+        $this->assertNotSame($low, $high);
+    }
+
+    /**
      * @throws \Com\Tecnick\Barcode\Exception
      * @throws \Com\Tecnick\Color\Exception
      */

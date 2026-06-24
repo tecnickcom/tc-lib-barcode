@@ -409,4 +409,31 @@ class BarcodeTest extends TestUtil
         $headers = $this->getResponseHeaders();
         $this->assertEquals('Content-Disposition: inline; filename="test_PNG_filename-001.png";', $headers[5] ?? '');
     }
+
+    /**
+     * Regression: an over-long payload must be rejected early.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testPayloadTooLong(): void
+    {
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('QRCODE', \str_pad('', 30001, 'A'));
+    }
+
+    /**
+     * Regression: a pathological size multiplier must not trigger a huge image allocation.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testImageTooLarge(): void
+    {
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('QRCODE', 'test', -100000, -100000);
+        $type->getGd();
+    }
 }

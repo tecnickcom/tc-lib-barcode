@@ -42,7 +42,7 @@ abstract class Codeword
             return 1;
         }
 
-        return ($bitstream[$index] ?? 0) === 0 ? 0 : 1;
+        return $bitstream[$index] === 0 ? 0 : 1;
     }
 
     /**

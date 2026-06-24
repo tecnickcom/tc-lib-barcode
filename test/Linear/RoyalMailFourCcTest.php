@@ -62,4 +62,17 @@ class RoyalMailFourCcTest extends TestUtil
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('RMS4CC', '}{');
     }
+
+    /**
+     * Regression: a letter-valued check character used to be mangled to '0'.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testLetterCheckDigit(): void
+    {
+        $barcode = $this->getTestObject();
+        $this->assertSame('1234J', $barcode->getBarcodeObj('RMS4CC', '1234')->getExtendedCode());
+        $this->assertSame('CU9NH', $barcode->getBarcodeObj('RMS4CC', 'CU9N')->getExtendedCode());
+    }
 }

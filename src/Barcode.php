@@ -36,6 +36,16 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
 class Barcode
 {
     /**
+     * Maximum accepted length of the barcode payload.
+     *
+     * No single barcode symbology can encode anywhere near this much data
+     * (the densest, QR version 40-L, tops out at ~7089 numeric digits), so
+     * this is a defensive upper bound to reject abusive inputs early, before
+     * any encoder spends time and memory on data it can never represent.
+     */
+    public const MAX_CODE_LENGTH = 30_000;
+
+    /**
      * List of supported Barcode Types with description.
      *
      * @var array<string, string>
@@ -109,6 +119,12 @@ class Barcode
         string $color = 'black',
         array $padding = [0, 0, 0, 0],
     ): Model {
+        if (\strlen($code) > self::MAX_CODE_LENGTH) {
+            throw new BarcodeException(
+                'The barcode payload is too long: ' . \strlen($code) . ' bytes (maximum ' . self::MAX_CODE_LENGTH . ')',
+            );
+        }
+
         // extract extra parameters (if any)
         $params = \explode(',', $type);
         $type = \array_shift($params);

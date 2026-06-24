@@ -55,6 +55,10 @@ class EanEight extends \Com\Tecnick\Barcode\Type\Linear\EanOneThree
      */
     protected function setBars(): void
     {
+        if (!\is_numeric($this->code)) {
+            throw new BarcodeException('Input code must be a number');
+        }
+
         $this->formatCode();
         $seq = '101'; // left guard bar
         $half_len = (int) \ceil($this->code_length / 2);

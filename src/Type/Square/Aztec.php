@@ -89,7 +89,8 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         if (
             ($this->params[0] ?? null) === null
             || !\is_numeric($this->params[0])
-            || !\in_array($this->params[0], \range(1, 100), strict: true)
+            || (int) $this->params[0] < 1
+            || (int) $this->params[0] > 100
         ) {
             $this->params[0] = 33;
         }

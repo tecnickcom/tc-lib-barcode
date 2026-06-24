@@ -190,30 +190,6 @@ abstract class Process extends \Com\Tecnick\Barcode\Type\Linear
             . '{|}~'
             . "\x7F";
 
-    /**
-     * Map special FNC codes for Code Set A (FNC 1-4)
-     *
-     * @var array<int, int>
-     */
-    protected const FNC_A = [
-        241 => 102,
-        242 => 97,
-        243 => 96,
-        244 => 101,
-    ];
-
-    /**
-     * Map special FNC codes for Code Set B (FNC 1-4)
-     *
-     * @var array<int, int>
-     */
-    protected const FNC_B = [
-        241 => 102,
-        242 => 97,
-        243 => 96,
-        244 => 100,
-    ];
-
     protected function getFncAValue(int $char_id): int
     {
         return match ($char_id) {

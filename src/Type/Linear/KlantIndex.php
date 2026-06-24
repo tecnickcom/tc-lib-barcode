@@ -45,10 +45,20 @@ class KlantIndex extends \Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc
 
     /**
      * Format code
+     *
+     * @throws BarcodeException in case of error
      */
     protected function formatCode(): void
     {
-        $this->extcode = \strtoupper($this->code);
+        $code = \strtoupper($this->code);
+        $len = \strlen($code);
+        for ($pos = 0; $pos < $len; ++$pos) {
+            if (!\array_key_exists($code[$pos], $this::CHBAR)) {
+                throw new BarcodeException('Invalid character: ' . (\ord($code[$pos]) & 0xFF));
+            }
+        }
+
+        $this->extcode = $code;
     }
 
     /**

@@ -110,7 +110,7 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      */
     protected function convertUpceToUpca(string $code): string
     {
-        if ($code[5] < 3) {
+        if ($code[5] < '3') {
             return '0' . $code[0] . $code[1] . $code[5] . '0000' . $code[2] . $code[3] . $code[4];
         }
 
@@ -167,7 +167,13 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
         }
 
         $code = \str_pad($code, $this->code_length - 1, '0', STR_PAD_LEFT);
-        $code .= $this->getChecksum($code);
+        // append the computed check digit only when the input does not already carry it,
+        // otherwise getChecksum() just validates it and returns 0 (avoid a spurious digit)
+        $check = $this->getChecksum($code);
+        if (\strlen($code) < $this->code_length) {
+            $code .= $check;
+        }
+
         ++$this->code_length;
         $this->extcode = '0' . $code;
     }
@@ -179,6 +185,10 @@ class UpcE extends \Com\Tecnick\Barcode\Type\Linear\UpcA
      */
     protected function setBars(): void
     {
+        if (!\is_numeric($this->code)) {
+            throw new BarcodeException('Input code must be a number');
+        }
+
         $this->formatCode();
         $upce_code = $this->convertUpcaToUpce($this->extcode);
         $seq = '101'; // left guard bar

@@ -195,7 +195,7 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         int &$rdri,
         int &$rdci,
     ): void {
-        // braw bits by case
+        // draw bits by case
         if ($rdx === 0) {
             // top finder pattern
             $this->grid[$row][$col] = (int) (($cdx % 2) === 0);

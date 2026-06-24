@@ -50,4 +50,17 @@ class RawTest extends TestUtil
         $expected = "01001100011100001111\n10110011100011110000\n";
         $this->assertEquals($expected, $grid);
     }
+
+    /**
+     * Regression: bracket-separated rows used to be merged into a single row.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testBracketSeparatedRows(): void
+    {
+        $testObj = $this->getTestObject();
+        $type = $testObj->getBarcodeObj('LRAW', '[101][010]');
+        $this->assertSame("101\n010\n", $type->getGrid());
+    }
 }

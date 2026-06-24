@@ -48,4 +48,17 @@ class PharmaTwoTracksTest extends TestUtil
         $expected = "101000001010100010001010001000101\n000010101010001010101000100010001\n";
         $this->assertEquals($expected, $grid);
     }
+
+    /**
+     * Regression: '0' (and other non-positive inputs) used to cause an infinite loop.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testInvalidInput(): void
+    {
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('PHARMA2T', '0');
+    }
 }

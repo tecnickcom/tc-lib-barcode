@@ -49,6 +49,8 @@ jobs:
               env:
                 GH_TOKEN: ${{ github.token }}
               run: make deps
+            - name: Check code formatting
+              run: ./vendor/bin/mago fmt --check src test example
             - name: Run all tests
               run: make qa
             - name: Send coverage

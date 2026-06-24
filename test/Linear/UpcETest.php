@@ -118,4 +118,17 @@ class UpcETest extends TestUtil
         $expected = "101001110100100110011101001100101011110011101010101\n";
         $this->assertEquals($expected, $grid);
     }
+
+    /**
+     * Regression: non-numeric input used to produce a malformed barcode instead of throwing.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testNonNumericInput(): void
+    {
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('UPCE', 'abcdefg');
+    }
 }

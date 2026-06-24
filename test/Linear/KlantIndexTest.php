@@ -51,4 +51,30 @@ class KlantIndexTest extends TestUtil
             . "00001010001000100010100010000010100010001010000000001010001000100010100010000010\n";
         $this->assertEquals($expected, $grid);
     }
+
+    /**
+     * Regression: invalid characters used to be silently mis-encoded.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testInvalidCharacter(): void
+    {
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('KIX', 'INVALID!');
+    }
+
+    /**
+     * Regression: empty input used to raise an uncaught DivisionByZeroError.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testEmptyInput(): void
+    {
+        $this->bcExpectException(\Com\Tecnick\Barcode\Exception::class);
+        $barcode = $this->getTestObject();
+        $barcode->getBarcodeObj('KIX', '');
+    }
 }

@@ -55,7 +55,7 @@ interface Model
 
     /**
      * Set the color of the bars.
-     * If the color is transparent or empty it will be set to the default black color.
+     * An empty or transparent foreground color is rejected with a BarcodeException.
      *
      * @param string $color Foreground color in Web notation (color name, or hexadecimal code, or CSS syntax)
      *

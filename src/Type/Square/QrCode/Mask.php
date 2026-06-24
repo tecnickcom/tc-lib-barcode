@@ -127,7 +127,8 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
         $bestMask = [];
         $checked_masks = [0, 1, 2, 3, 4, 5, 6, 7];
         if ($this->qr_find_from_random >= 0) {
-            $howManuOut = 8 - ($this->qr_find_from_random % 9);
+            // keep at least one candidate mask so a mask and its format info are always applied
+            $howManuOut = \min(7, 8 - ($this->qr_find_from_random % 9));
             for ($idx = 0; $idx < $howManuOut; ++$idx) {
                 $maxpos = \count($checked_masks) - 1;
                 $remPos = $maxpos > 0 ? \random_int(0, $maxpos) : 0;
@@ -138,7 +139,7 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
 
         $bestMask = $frame;
         foreach ($checked_masks as $checked_mask) {
-            $mask = \array_fill(0, \max(0, $width), \str_repeat("\0", $width));
+            $mask = \array_fill(0, \max(0, $width), \str_repeat("\0", \max(0, $width)));
             $demerit = 0;
             $blacks = $this->makeMaskNo($checked_mask, $width, $frame, $mask);
             $blacks += $this->writeFormatInformation($width, $mask, $checked_mask, $level);
@@ -236,14 +237,15 @@ abstract class Mask extends \Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum
      */
     protected function evaluateSymbol(int $width, array $frame): int
     {
-        $frameY = $this->getFrameRow($frame, 0);
-        $frameYM = $frameY;
+        // horizontal direction: accumulate the per-row demerit over every row
+        $demerit = 0;
         for ($ypos = 0; $ypos < $width; ++$ypos) {
             $frameY = $this->getFrameRow($frame, $ypos);
             $frameYM = $ypos > 0 ? $this->getFrameRow($frame, $ypos - 1) : $frameY;
+            $demerit += $this->evaluateSymbolB($ypos, $width, $frameY, $frameYM);
         }
 
-        $demerit = $this->evaluateSymbolB($ypos, $width, $frameY, $frameYM);
+        // vertical direction: accumulate the per-column demerit over every column
         for ($xpos = 0; $xpos < $width; ++$xpos) {
             $head = 0;
             $this->runLength[0] = 1;

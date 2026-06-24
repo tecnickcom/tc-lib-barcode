@@ -298,21 +298,19 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
      */
     protected function processNumericCompaction(string $code, array &$codewords): void
     {
-        while (($codelen = \strlen($code)) > 0) {
-            $rest = '';
-            if ($codelen > 44) {
-                $rest = \substr($code, 44);
-                $code = \substr($code, 0, 44);
-            }
-
-            $tdg = $this->normalizeNumericString('1' . $code);
+        $len = \strlen($code);
+        // numbers are encoded in groups of up to 44 digits, emitted in left-to-right order
+        for ($start = 0; $start < $len; $start += 44) {
+            $tdg = $this->normalizeNumericString('1' . \substr($code, $start, 44));
+            $group = [];
             do {
-                $ddg = $this->modNumeric($tdg, '900');
+                // remainders come out least-significant first
+                $group[] = $this->modNumeric($tdg, '900');
                 $tdg = $this->divNumeric($tdg, '900');
-                \array_unshift($codewords, $ddg);
             } while ($tdg !== '0');
 
-            $code = $rest;
+            // reverse to big-endian, then append this group after the previous ones
+            $codewords = \array_merge($codewords, \array_reverse($group));
         }
     }
 

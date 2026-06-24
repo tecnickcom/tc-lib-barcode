@@ -72,4 +72,18 @@ class EanOneThreeTest extends TestUtil
         $barcode = $this->getTestObject();
         $barcode->getBarcodeObj('EAN13', '1111111111111');
     }
+
+    /**
+     * Regression: a full code that already carries its (valid) check digit must not
+     * gain a spurious extra digit in the extended code.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    public function testFullCodeExtendedCode(): void
+    {
+        $barcode = $this->getTestObject();
+        $type = $barcode->getBarcodeObj('EAN13', '8012345678907');
+        $this->assertSame('8012345678907', $type->getExtendedCode());
+    }
 }

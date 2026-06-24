@@ -99,7 +99,7 @@ class Codabar extends \Com\Tecnick\Barcode\Type\Linear
         for ($chr = 0; $chr < $clen; ++$chr) {
             $char = $this->extcode[$chr];
             if (!\array_key_exists($char, $this::CHBAR)) {
-                throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
+                throw new BarcodeException('Invalid character: ' . (\ord($char) & 0xFF));
             }
 
             for ($pos = 0; $pos < 8; ++$pos) {

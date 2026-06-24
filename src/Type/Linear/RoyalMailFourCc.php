@@ -148,11 +148,11 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
      *
      * @param string $code code to represent.
      *
-     * @return int char checksum.
+     * @return string char checksum.
      *
      * @throws BarcodeException in case of error
      */
-    protected function getChecksum(string $code): int
+    protected function getChecksum(string $code): string
     {
         $row = 0;
         $col = 0;
@@ -160,7 +160,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         for ($pos = 0; $pos < $len; ++$pos) {
             $char = $code[$pos];
             if (!\array_key_exists($char, $this::CHKSUM)) {
-                throw new BarcodeException('Invalid character: \chr(' . (\ord($char) & 0xFF) . ')');
+                throw new BarcodeException('Invalid character: ' . (\ord($char) & 0xFF));
             }
 
             $row += $this->getChecksumDigit($char, 0);
@@ -170,7 +170,7 @@ class RoyalMailFourCc extends \Com\Tecnick\Barcode\Type\Linear
         $row %= 6;
         $col %= 6;
         $check = \array_keys($this::CHKSUM, $row . $col, true);
-        return \intval($check[0] ?? 0);
+        return (string) ($check[0] ?? '0');
     }
 
     /**
