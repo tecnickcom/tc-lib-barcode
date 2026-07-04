@@ -135,8 +135,7 @@ abstract class InputItem extends \Com\Tecnick\Barcode\Type\Square\QrCode\Estimat
             $this->getEncModeValue('NM') => $this->checkModeNum($size, $data),
             $this->getEncModeValue('AN') => $this->checkModeAn($size, $data),
             $this->getEncModeValue('KJ') => $this->checkModeKanji($size, $data),
-            $this->getEncModeValue('8B') => true,
-            $this->getEncModeValue('ST') => true,
+            $this->getEncModeValue('8B'), $this->getEncModeValue('ST') => true,
             default => false,
         };
     }

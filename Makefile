@@ -93,7 +93,7 @@ COMPOSER=$(PHP) -d "apc.enable_cli=0" $(shell which composer)
 PHPDOC=$(shell which phpDocumentor)
 
 # Mago version
-MAGOVERSION=1.40.2
+MAGOVERSION=1.42.0
 
 # --- MAKE TARGETS ---
 
