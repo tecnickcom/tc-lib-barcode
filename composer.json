@@ -63,9 +63,7 @@
     "require": {
         "php": ">=8.2",
         "ext-bcmath": "*",
-        "ext-date": "*",
         "ext-gd": "*",
-        "ext-pcre": "*",
         "tecnickcom/tc-lib-color": "^2.12"
     },
     "minimum-stability": "stable",

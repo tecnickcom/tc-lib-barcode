@@ -101,7 +101,7 @@ It focuses on deterministic output and specification-driven encoding, making it 
 ## Requirements
 
 - PHP 8.2 or later
-- Extensions: `bcmath`, `date`, `gd`, `pcre`
+- Extensions: `bcmath`, `gd`
 - Composer
 
 ---
