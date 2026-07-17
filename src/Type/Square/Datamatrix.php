@@ -8,11 +8,9 @@ declare(strict_types=1);
  * @since     2015-02-21
  * @category  Library
  * @package   Barcode
- *
- * @throws BarcodeException in case of error
  * @author    Nicola Asuni <info@tecnick.com>
  * @copyright 2010-2026 Nicola Asuni - Tecnick.com LTD
- * @license   https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @license   https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE)
  * @link      https://github.com/tecnickcom/tc-lib-barcode
  *
  * This file is part of tc-lib-barcode software library.
@@ -37,7 +35,7 @@ use Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode;
  * @package   Barcode
  * @author    Nicola Asuni <info@tecnick.com>
  * @copyright 2010-2026 Nicola Asuni - Tecnick.com LTD
- * @license   https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @license   https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE)
  * @link      https://github.com/tecnickcom/tc-lib-barcode
  */
 class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
