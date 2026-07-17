@@ -22,6 +22,8 @@ namespace Com\Tecnick\Barcode\Type\Square;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
 use Com\Tecnick\Barcode\Type\Square\Datamatrix\Data;
+use Com\Tecnick\Barcode\Type\Square\Datamatrix\DatamatrixEncoding;
+use Com\Tecnick\Barcode\Type\Square\Datamatrix\DatamatrixShape;
 use Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode;
 
 /**
@@ -93,16 +95,15 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         parent::setParameters();
 
         // shape
-        if (($this->params[0] ?? null) === 'R') {
-            $this->shape = 'R';
-        }
+        $this->shape = DatamatrixShape::fromLoose(\strval($this->params[0] ?? ''))->value;
 
         // mode
         $this->gsonemode = ($this->params[1] ?? null) === 'GS1';
 
         // encoding
         if (($this->params[2] ?? null) !== null) {
-            $this->defenc = Data::ENCOPTS[\strval($this->params[2])] ?? Data::ENC_ASCII;
+            $this->defenc =
+                Data::ENCOPTS[DatamatrixEncoding::fromLoose(\strval($this->params[2]))->value] ?? Data::ENC_ASCII;
         }
     }
 

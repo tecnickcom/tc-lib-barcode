@@ -93,7 +93,8 @@ class Barcode
     /**
      * Get the barcode object
      *
-     * @param string                    $type    Barcode type
+     * @param string|BarcodeType        $type    Barcode type (leading token, optionally followed by
+     *                                           comma-separated extra parameters), or a BarcodeType enum case
      * @param string                    $code    Barcode content
      * @param int                       $width   Barcode width in user units (excluding padding).
      *                                           A negative value indicates the multiplication
@@ -112,13 +113,17 @@ class Barcode
      * @throws \Com\Tecnick\Color\Exception in case of color parsing errors
      */
     public function getBarcodeObj(
-        string $type,
+        string|BarcodeType $type,
         string $code,
         int $width = -1,
         int $height = -1,
         string $color = 'black',
         array $padding = [0, 0, 0, 0],
     ): Model {
+        if ($type instanceof BarcodeType) {
+            $type = $type->value;
+        }
+
         if (\strlen($code) > self::MAX_CODE_LENGTH) {
             throw new BarcodeException(
                 'The barcode payload is too long: ' . \strlen($code) . ' bytes (maximum ' . self::MAX_CODE_LENGTH . ')',

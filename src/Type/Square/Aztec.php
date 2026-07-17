@@ -19,6 +19,8 @@ declare(strict_types=1);
 namespace Com\Tecnick\Barcode\Type\Square;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Type\Square\Aztec\AztecHint;
+use Com\Tecnick\Barcode\Type\Square\Aztec\AztecRange;
 use Com\Tecnick\Barcode\Type\Square\Aztec\Data;
 use Com\Tecnick\Barcode\Type\Square\Aztec\Encode;
 
@@ -98,26 +100,14 @@ class Aztec extends \Com\Tecnick\Barcode\Type\Square
         $this->ecc = (int) $this->params[0];
 
         // hint
-        if (
-            ($this->params[1] ?? null) === null
-            || !\is_string($this->params[1])
-            || !\in_array($this->params[1], ['A', 'B'], strict: true)
-        ) {
-            $this->params[1] = 'A';
-        }
-
-        $this->hint = $this->params[1];
+        $aztecHint = AztecHint::fromLoose(\is_string($this->params[1] ?? null) ? $this->params[1] : '');
+        $this->params[1] = $aztecHint->value;
+        $this->hint = $aztecHint->value;
 
         // mode
-        if (
-            ($this->params[2] ?? null) === null
-            || !\is_string($this->params[2])
-            || !\in_array($this->params[2], ['A', 'F'], strict: true)
-        ) {
-            $this->params[2] = 'A';
-        }
-
-        $this->mode = $this->params[2];
+        $aztecRange = AztecRange::fromLoose(\is_string($this->params[2] ?? null) ? $this->params[2] : '');
+        $this->params[2] = $aztecRange->value;
+        $this->mode = $aztecRange->value;
 
         // eci code. Used to set the charset encoding. See $this->eci.
         if (
