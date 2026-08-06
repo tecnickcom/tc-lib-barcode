@@ -53,6 +53,8 @@ jobs:
               run: ./vendor/bin/mago fmt --check src test example
             - name: Run all tests
               run: make qa
+            - name: Run all tests without the optional bcmath extension
+              run: php -d disable_functions=bcadd,bcmul,bcdiv,bcmod vendor/bin/phpunit --no-coverage --stderr test
             - name: Send coverage
               uses: codecov/codecov-action@v7
               with:

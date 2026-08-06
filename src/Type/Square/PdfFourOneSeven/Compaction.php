@@ -105,48 +105,6 @@ abstract class Compaction extends \Com\Tecnick\Barcode\Type\Square\PdfFourOneSev
     }
 
     /**
-     * @param numeric-string $left
-     * @param numeric-string $right
-     *
-     * @return numeric-string
-     */
-    protected function mulNumeric(string $left, string $right): string
-    {
-        return $this->normalizeNumericString(\bcmul($left, $right));
-    }
-
-    /**
-     * @param numeric-string $left
-     * @param numeric-string $right
-     *
-     * @return numeric-string
-     */
-    protected function addNumeric(string $left, string $right): string
-    {
-        return $this->normalizeNumericString(\bcadd($left, $right));
-    }
-
-    /**
-     * @param numeric-string $left
-     * @param numeric-string $right
-     */
-    protected function modNumeric(string $left, string $right): int
-    {
-        return (int) \bcmod($left, $right);
-    }
-
-    /**
-     * @param numeric-string $left
-     * @param numeric-string $right
-     *
-     * @return numeric-string
-     */
-    protected function divNumeric(string $left, string $right): string
-    {
-        return $this->normalizeNumericString(\bcdiv($left, $right));
-    }
-
-    /**
      * Process Sub Text Compaction
      *
      * @param array<int, int> $txtarr  Array of characters and sub-mode switching characters

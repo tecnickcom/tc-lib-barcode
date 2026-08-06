@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace Com\Tecnick\Barcode\Type;
 
 use Com\Tecnick\Barcode\Exception as BarcodeException;
+use Com\Tecnick\Barcode\Math;
 use Com\Tecnick\Color\Model\Rgb as Color;
 
 /**
@@ -200,6 +201,56 @@ abstract class Convert
     }
 
     /**
+     * Add two non-negative decimal integers.
+     *
+     * @param numeric-string $left  First operand
+     * @param numeric-string $right Second operand
+     *
+     * @return numeric-string
+     */
+    protected function addNumeric(string $left, string $right): string
+    {
+        return Math::add($left, $right);
+    }
+
+    /**
+     * Multiply two non-negative decimal integers.
+     *
+     * @param numeric-string $left  First operand
+     * @param numeric-string $right Second operand
+     *
+     * @return numeric-string
+     */
+    protected function mulNumeric(string $left, string $right): string
+    {
+        return Math::mul($left, $right);
+    }
+
+    /**
+     * Integer division of two non-negative decimal integers.
+     *
+     * @param numeric-string $left  Dividend
+     * @param numeric-string $right Divisor
+     *
+     * @return numeric-string
+     */
+    protected function divNumeric(string $left, string $right): string
+    {
+        return Math::div($left, $right);
+    }
+
+    /**
+     * Remainder of the integer division of two non-negative decimal integers.
+     *
+     * @param numeric-string $left  Dividend
+     * @param numeric-string $right Divisor
+     */
+    protected function modNumeric(string $left, string $right): int
+    {
+        return (int) Math::mod($left, $right);
+    }
+
+    /**
      * Convert large integer number to hexadecimal representation.
      *
      * @param string $number Number to convert (as string)
@@ -212,15 +263,16 @@ abstract class Convert
             return '00';
         }
 
-        /** @var numeric-string $number */
-        if ($number === '0') {
+        $number = \ltrim($number, '0');
+        if ($number === '') {
             return '00';
         }
 
+        /** @var numeric-string $number */
         $hex = [];
-        while ($number > 0) {
-            $hex[] = \strtoupper(\dechex((int) \bcmod($number, '16')));
-            $number = \bcdiv($number, '16', 0);
+        while ($number !== '0') {
+            $hex[] = \strtoupper(\dechex($this->modNumeric($number, '16')));
+            $number = $this->divNumeric($number, '16');
         }
 
         $hex = \array_reverse($hex);
@@ -232,7 +284,7 @@ abstract class Convert
      *
      * @param string $hex Hexadecimal number to convert (as string)
      *
-     * @return string hexadecimal representation
+     * @return numeric-string decimal representation
      */
     protected function convertHexToDec(string $hex): string
     {
@@ -240,8 +292,8 @@ abstract class Convert
         $bitval = '1';
         $len = \strlen($hex);
         for ($pos = $len - 1; $pos >= 0; --$pos) {
-            $dec = \bcadd($dec, \bcmul((string) \hexdec($hex[$pos]), $bitval));
-            $bitval = \bcmul($bitval, '16');
+            $dec = $this->addNumeric($dec, $this->mulNumeric((string) \hexdec($hex[$pos]), $bitval));
+            $bitval = $this->mulNumeric($bitval, '16');
         }
 
         return $dec;

@@ -413,48 +413,6 @@ class Imb extends \Com\Tecnick\Barcode\Type\Linear
     }
 
     /**
-     * @param numeric-string $left
-     * @param numeric-string $right
-     *
-     * @return numeric-string
-     */
-    protected function addNumeric(string $left, string $right): string
-    {
-        return \bcadd($left, $right);
-    }
-
-    /**
-     * @param numeric-string $left
-     * @param numeric-string $right
-     *
-     * @return numeric-string
-     */
-    protected function mulNumeric(string $left, string $right): string
-    {
-        return \bcmul($left, $right);
-    }
-
-    /**
-     * @param numeric-string $left
-     * @param numeric-string $right
-     */
-    protected function modNumeric(string $left, string $right): int
-    {
-        return (int) \bcmod($left, $right);
-    }
-
-    /**
-     * @param numeric-string $left
-     * @param numeric-string $right
-     *
-     * @return numeric-string
-     */
-    protected function divNumeric(string $left, string $right): string
-    {
-        return \bcdiv($left, $right);
-    }
-
-    /**
      * @param array<int, int> $table
      */
     protected function getTableCode(array $table, int $index): int

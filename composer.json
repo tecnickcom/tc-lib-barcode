@@ -62,9 +62,11 @@
     ],
     "require": {
         "php": ">=8.2",
-        "ext-bcmath": "*",
         "ext-gd": "*",
         "tecnickcom/tc-lib-color": "^2.13"
+    },
+    "suggest": {
+        "ext-bcmath": "Speeds up the arbitrary precision arithmetic used by the IMB and PDF417 barcode types (a pure-PHP implementation is used when missing)"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,

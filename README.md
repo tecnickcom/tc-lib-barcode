@@ -100,7 +100,8 @@ It focuses on deterministic output and specification-driven encoding, making it 
 ## Requirements
 
 - PHP 8.2 or later
-- Extensions: `bcmath`, `gd`
+- Extensions: `gd`
+- Optional extensions: `bcmath` (speeds up the arbitrary precision arithmetic used by the IMB and PDF417 types, a pure-PHP implementation is used when it is missing)
 - Composer
 
 ---
