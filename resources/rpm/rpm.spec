@@ -16,12 +16,14 @@ BuildArch: noarch
 
 Requires:  php(language) >= 8.2.0
 Requires:  php-composer(%{c_vendor}/tc-lib-color) < 3.0.0
-Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 2.13.1
+Requires:  php-composer(%{c_vendor}/tc-lib-color) >= 2.13.2
+Requires:  php-ctype
 Requires:  php-date
 Requires:  php-gd
 Requires:  php-pcre
 
 Recommends: php-bcmath
+Recommends: php-pecl-imagick
 
 Provides:  php-composer(%{c_vendor}/%{gh_project}) = %{version}
 Provides:  php-%{gh_project} = %{version}
