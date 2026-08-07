@@ -12,7 +12,7 @@ Vcs-Browser: https://github.com/~#VENDOR#~/~#PROJECT#~
 Package: ~#PKGNAME#~
 Provides: php-~#PROJECT#~
 Architecture: all
-Depends: php (>= 8.2.0), php-ctype, php-gd, php-tecnickcom-tc-lib-color (<< 3.0.0), php-tecnickcom-tc-lib-color (>= 2.13.2), ${misc:Depends}
+Depends: php (>= 8.2.0), php-ctype, php-gd, php-tecnickcom-tc-lib-color (<< 3.0.0), php-tecnickcom-tc-lib-color (>= 2.13.3), ${misc:Depends}
 Recommends: php-bcmath, php-imagick
 Description: PHP Barcode library
  This library includes PHP classes to generate linear
