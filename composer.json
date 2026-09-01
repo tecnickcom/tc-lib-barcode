@@ -1,8 +1,8 @@
 {
   "name": "tecnickcom/tc-lib-barcode",
-  "description": "PHP library to generate linear and bidimensional barcodes",
+  "description": "Deprecated 1.x series of the PHP library to generate linear and bidimensional barcodes. Upgrade to tecnickcom/tc-lib-barcode ^2.",
   "type": "library",
-  "homepage": "http://www.tecnick.com",
+  "homepage": "https://tcpdf.org",
   "license": "LGPL-3.0-or-later",
   "keywords": [
     "3 of 9",
@@ -59,6 +59,19 @@
     "ext-gd": "*",
     "ext-pcre": "*",
     "tecnickcom/tc-lib-color": "^1.14"
+  },
+  "suggest": {
+    "ext-imagick": "Alternative PNG renderer used by getPngData() when the extension is loaded"
+  },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/tecnickcom"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/tecnickcom/tc-lib-barcode/issues",
+    "source": "https://github.com/tecnickcom/tc-lib-barcode"
   },
   "require-dev": {
     "pdepend/pdepend": "2.13.0",

@@ -88,10 +88,11 @@ echo "
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Usage example of tc-lib-barcode library</title>
+        <title>Usage example of tc-lib-barcode library (deprecated 1.x)</title>
         <meta charset=\"utf-8\">
         <style>
             body {font-family:Arial, Helvetica, sans-serif;margin:30px;}
+            .deprecated {border:2px solid firebrick;color:firebrick;padding:10px;margin-bottom:20px;}
             table {border: 1px solid black;}
             th {border: 1px solid black;padding:4px;background-barcode:cornsilk;}
             td {border: 1px solid black;padding:4px;}
@@ -102,6 +103,10 @@ echo "
     </head>
     <body>
         <h1>Usage example of tc-lib-barcode library</h1>
+        <p class=\"deprecated\"><strong>tc-lib-barcode 1.x is DEPRECATED</strong> and receives no updates.
+        Upgrade to <a href=\"https://github.com/tecnickcom/tc-lib-barcode\">tc-lib-barcode 2.x</a>
+        with <code>composer require tecnickcom/tc-lib-barcode ^2</code>.
+        These examples document the frozen 1.x code and are not a recommendation to start new work on it.</p>
         <p>This is an usage example of <a href=\"https://github.com/tecnickcom/tc-lib-barcode\" title=\"tc-lib-barcode: PHP library to generate linear and bidimensional barcodes\">tc-lib-barcode</a> library.</p>
         <h2>Output Formats</h2>
         <h3>PNG Image</h3>

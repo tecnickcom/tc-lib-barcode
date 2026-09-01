@@ -30,9 +30,16 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @copyright   2010-2023 Nicola Asuni - Tecnick.com LTD
  * @license     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
  * @link        https://github.com/tecnickcom/tc-lib-barcode
+ * @deprecated tc-lib-barcode 1.x is deprecated: upgrade to tecnickcom/tc-lib-barcode ^2.
  */
 class Barcode
 {
+    /**
+     * Deprecation notice message.
+     */
+    const DEPRECATION_NOTICE = 'tc-lib-barcode 1.x is deprecated:'
+        . ' upgrade to tecnickcom/tc-lib-barcode ^2 (https://github.com/tecnickcom/tc-lib-barcode).';
+
     /**
      * Array containing the map between the barcode type and correspondent class
      */
@@ -75,6 +82,23 @@ class Barcode
         'QRCODE'     => 'Square\\QrCode',                     // QR-CODE
         'SRAW'       => 'Square\\Raw',                        // 2D RAW MODE (comma-separated rows of 01 strings)
     );
+
+    /**
+     * Initialize a new barcode factory
+     *
+     * @deprecated tc-lib-barcode 1.x is deprecated: upgrade to tecnickcom/tc-lib-barcode ^2.
+     */
+    public function __construct()
+    {
+        // Deprecation notice, raised once per process and silenced by defining
+        // TCLIB_BARCODE_SILENCE_DEPRECATION. The @ prevents the default handler
+        // from printing it into the generated output.
+        static $notice = true;
+        if ($notice && !(defined('TCLIB_BARCODE_SILENCE_DEPRECATION') && TCLIB_BARCODE_SILENCE_DEPRECATION)) {
+            $notice = false;
+            @trigger_error(self::DEPRECATION_NOTICE, E_USER_DEPRECATED);
+        }
+    }
 
     /**
      * Get the list of supported Barcode types

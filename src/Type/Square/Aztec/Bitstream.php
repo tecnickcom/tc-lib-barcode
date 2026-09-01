@@ -33,6 +33,7 @@ use Com\Tecnick\Barcode\Exception as BarcodeException;
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @deprecated tc-lib-barcode 1.x is deprecated: upgrade to tecnickcom/tc-lib-barcode ^2.
  */
 abstract class Bitstream extends \Com\Tecnick\Barcode\Type\Square\Aztec\Layers
 {

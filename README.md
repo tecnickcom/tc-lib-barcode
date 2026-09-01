@@ -1,14 +1,14 @@
-# tc-lib-barcode
-*PHP barcode library*
+# tc-lib-barcode 1.x (DEPRECATED → use [tc-lib-barcode 2.x](https://github.com/tecnickcom/tc-lib-barcode))
+
+> Legacy PHP barcode library. **DEPRECATED**: migrate to tc-lib-barcode 2.x.
 
 [![Latest Stable Version](https://poser.pugx.org/tecnickcom/tc-lib-barcode/version)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
-![Build](https://github.com/tecnickcom/tc-lib-barcode/actions/workflows/check.yml/badge.svg)
-[![Coverage](https://codecov.io/gh/tecnickcom/tc-lib-barcode/graph/badge.svg?token=PW6r97iVuW)](https://codecov.io/gh/tecnickcom/tc-lib-barcode)
 [![License](https://poser.pugx.org/tecnickcom/tc-lib-barcode/license)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
 [![Downloads](https://poser.pugx.org/tecnickcom/tc-lib-barcode/downloads)](https://packagist.org/packages/tecnickcom/tc-lib-barcode)
 
-[![Donate via PayPal](https://img.shields.io/badge/donate-paypal-87ceeb.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tc-lib-barcode%20project)
-*Please consider supporting this project by making a donation via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tc-lib-barcode%20project)*
+[![Sponsor on GitHub](https://img.shields.io/badge/sponsor-github-EA4AAA.svg?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/tecnickcom)
+
+> 💖 `tc-lib-barcode` is part of the [tc-lib-pdf / TCPDF](https://github.com/tecnickcom/tc-lib-pdf) ecosystem (100M+ installs). If your company depends on it, [become a sponsor](https://github.com/sponsors/tecnickcom) to keep this shared infrastructure secure and maintained.
 
 * **category**    Library
 * **package**     \Com\Tecnick\Barcode
@@ -18,9 +18,50 @@
 * **link**        https://github.com/tecnickcom/tc-lib-barcode
 * **SRC DOC**     https://tcpdf.org/docs/srcdoc/tc-lib-barcode
 
+---
+
+## Deprecation Notice
+
+The tc-lib-barcode **1.x** series is **DEPRECATED** and receives no updates of any kind: no new features, no bug fixes, and no security fixes.
+
+All users are invited to migrate to **tc-lib-barcode 2.x**, the maintained series.
+
+Using tc-lib-barcode 1.x constitutes [CWE-1104: Use of Unmaintained Third Party Components](https://cwe.mitre.org/data/definitions/1104.html). See [SECURITY.md](SECURITY.md).
+
+Instantiating the `\Com\Tecnick\Barcode\Barcode` class raises an `E_USER_DEPRECATED` notice once per process. The notice is raised with `@` so that PHP never prints it into the generated output: it reaches custom error handlers and deprecation collectors, not the barcode image. Define `TCLIB_BARCODE_SILENCE_DEPRECATION` before loading the library to disable it entirely:
+
+```php
+define('TCLIB_BARCODE_SILENCE_DEPRECATION', true);
+```
+
+Silencing the notice does not remove the need to migrate.
+
+### Migration Path
+
+```bash
+composer require tecnickcom/tc-lib-barcode ^2
+```
+
+- New projects: require `^2`. Do not start new work on 1.x.
+- Existing projects: 2.x requires PHP 8.2 or later and `tecnickcom/tc-lib-color` 3.x.
+- The `\Com\Tecnick\Barcode\Barcode::getBarcodeObj()` entry point and the barcode type codes are unchanged, so most call sites need no edit.
+- 2.x adds strict types and parameter type declarations, so callers passing loosely typed values must be reviewed.
+- Every migration requires regression checks to confirm that the generated symbols are unchanged for existing data.
+
+### Why Migrate to 2.x
+
+- Security and bug fixes are applied only to 2.x.
+- Supported PHP versions: 1.x targets PHP 5.6 and later, which no longer receives security fixes.
+- More barcode types and output formats, and stricter validation of input data.
+- Typed, static-analysis friendly code that integrates with modern CI and tooling.
+
+---
+
 ## Description
 
-This library includes utility PHP classes to generate linear and bidimensional barcodes:
+This library includes utility PHP classes to generate linear and bidimensional barcodes.
+
+The list below documents the frozen 1.x code as it stands. Nothing will be added to it, and nothing in it will be fixed. Use tc-lib-barcode 2.x instead.
 
 * C39        : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9
 * C39+       : CODE 39 with checksum
@@ -72,6 +113,8 @@ The initial source code has been derived from [TCPDF](<http://www.tcpdf.org>).
 
 
 ## Getting started
+
+The instructions below build and inspect the frozen 1.x code. Pull requests against the 1.x series are not accepted; contribute to 2.x instead.
 
 First, you need to install all development dependencies using [Composer](https://getcomposer.org/):
 
@@ -142,7 +185,13 @@ echo $bobj->getHtmlDiv();
 
 ## Installation
 
-Create a composer.json in your projects root-directory:
+**This series is deprecated. Install `^2` instead:**
+
+```bash
+composer require tecnickcom/tc-lib-barcode ^2
+```
+
+The 1.x series is documented here for reference only:
 
 ```json
 {
@@ -150,12 +199,6 @@ Create a composer.json in your projects root-directory:
         "tecnickcom/tc-lib-barcode": "^1.18"
     }
 }
-```
-
-Or add to an existing project with: 
-
-```bash
-composer require tecnickcom/tc-lib-barcode ^1.18
 ```
 
 ## Packaging

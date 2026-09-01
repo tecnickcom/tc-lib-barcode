@@ -31,6 +31,7 @@ use Com\Tecnick\Barcode\Type\Square\QrCode\Data;
  * @link        https://github.com/tecnickcom/tc-lib-barcode
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @deprecated tc-lib-barcode 1.x is deprecated: upgrade to tecnickcom/tc-lib-barcode ^2.
  */
 abstract class SpecRs
 {
