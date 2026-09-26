@@ -128,7 +128,7 @@ class DatamatrixTest extends TestUtil
             [
                 'DATAMATRIX',
                 '-=-1-=-2-=-3',
-                '75c6038d90476cec641ad07690989b36',
+                '6aa91f40f97f01d70e9d2011bf4bc1d4',
             ],
             [
                 'DATAMATRIX',
@@ -290,7 +290,7 @@ class DatamatrixTest extends TestUtil
             [
                 'DATAMATRIX',
                 'aABCDEFG',
-                'f074dee3f0f386d9b2f30b1ce4ad08a8',
+                '6cf5f4331ad88efef54285d23b67a49a',
             ],
             [
                 'DATAMATRIX',
@@ -324,7 +324,7 @@ class DatamatrixTest extends TestUtil
                     . '4#P d*b}gI2#DB|hl{!~[EYH*=cmR{lf'
                     . "\x7F"
                     . '=gcGIa.st286. #*"!eG[.Ryr?Kn,1mIyQqC3 6\'3N>',
-                '5a4f396e0665fde2fd60c2e4db713e98',
+                '975aed6dabeab63bfcde300912683618',
             ],
             [
                 'DATAMATRIX',
@@ -476,6 +476,33 @@ class DatamatrixTest extends TestUtil
                 "\xE8" . '01095011010209171719050810ABCD1234' . "\xE8" . '2110',
                 'ac53a192b50451f00c9452254b7e0201',
             ],
+            // a character outside the EDIFACT set followed by a long EDIFACT run
+            [
+                'DATAMATRIX',
+                '<MP U="XXX" l="de-DE" v="028"><P g="Konias" f="Michael" egk="A123456789"/>'
+                    . '<A n="Dr. med. NAME" lanr="010101010" t="2026-09-22T13:32:36"/>'
+                    . '<M p="12345678" du="1" t="2" i="Alle 2 Stunden; bis zu alle 6 - 8 h, max. 8 x / d,'
+                    . ' Mindesabstand 1 h" x="bei Schmerzen NRS 4 - 10"/></S></MP>',
+                '56cf04592111a131e06e77ab5405993c',
+            ],
+            ['DATAMATRIX', 'n NRS 4 - 10"/></S></MP>', 'c064ee48003fff1a864f27c7d678ba5f'],
+            ['DATAMATRIX,S,N,EDIFACT', 'an NRS 4 - 10"/></S></MP>', '154152956025ea3b0fd18e35afafdc10'],
+            // the last three EDIFACT characters are packed with the unlatch
+            ['DATAMATRIX,S,N,EDIFACT', 'ABCDEFGHIJK', 'e6a7b37721a8deb9b2fb2aa3e24e80a5'],
+            // the last four EDIFACT characters are packed, one pad codeword follows without the unlatch
+            ['DATAMATRIX,S,N,EDIFACT', 'ABCDEFGH', '72a02ec500c1faa0e91054ff886f8e03'],
+            // the last four EDIFACT characters are packed, the unlatch precedes the padding
+            ['DATAMATRIX,S,N,EDIFACT', 'ABCDEFGHIJKLMNOP', '9d9444d698bec939a90fd047caed41c8'],
+            // a trailing digit pair is shorter in ASCII
+            ['DATAMATRIX,S,N,EDIFACT', 'ABCDEF12', 'ed6e267956baa983bfe6e8b249e36c6c'],
+            // X12 cannot encode the first character, so it is not latched
+            ['DATAMATRIX,S,N,X12', 'aBC*DEF>', '42f5db2ad13115c7956e4b76a49bf811'],
+            // step K decides the encodation of the last four characters
+            ['DATAMATRIX', "&\x7F\n\x145z\xA5", '5432d53a738149f8ebfb1b3883212644'],
+            // an X12 separator after the C40 and X12 counts tie selects X12
+            ['DATAMATRIX', 'YJPWPLAXQ5G 1FFXP*FOAV9N4YVPGLP', '5f407775226cfd7a973e1ba5188c3629'],
+            // a whole X12 count is not rounded up by step K
+            ['DATAMATRIX', '609LV*SU*MJ', 'ff3b99383aa9cce43c322f8ee6945912'],
         ];
     }
 
@@ -527,6 +554,28 @@ class DatamatrixTest extends TestUtil
             // the extended characters go to Base 256
             'extended from ascii' => ["\xC0\xC1\xC2\xC3\xC4\xC5\xC6\xC7", 0, Data::ENC_ASCII, Data::ENC_BASE256],
             'extended from edifact' => ["\xC0\xC1\xC2\xC3\xC4\xC5\xC6\xC7", 0, Data::ENC_EDF, Data::ENC_BASE256],
+            // EDIFACT is not selected for a character outside its set
+            'edifact run after a lower case letter' => [
+                'n NRS 4 - 10"/></S></MP>',
+                0,
+                Data::ENC_ASCII,
+                Data::ENC_ASCII,
+            ],
+            'edifact selected at the end of a short run' => ['o2]ST 7-M!,.XZZ/LO', 0, Data::ENC_ASCII, Data::ENC_ASCII],
+            'edifact and its replacement selected at the end' => [
+                'fPUA/A8D.,G;5(KH)@',
+                0,
+                Data::ENC_ASCII,
+                Data::ENC_ASCII,
+            ],
+            // an X12 separator comes before any character outside the X12 set
+            'x12 separator after c40 characters' => ["B>>\rL2TSV*", 0, Data::ENC_C40, Data::ENC_X12],
+            // step K decides at the end of the data: ASCII and Base 256 take the same codewords
+            'short tail at the end of the data' => ["\x12@\xC7\xDA", 0, Data::ENC_ASCII, Data::ENC_ASCII],
+            // nine X12 characters count exactly 7, less than the EDIFACT count of 7.75
+            'whole x12 count at the end of the data' => ['609LV*SU*MJ', 2, Data::ENC_ASCII, Data::ENC_X12],
+            // C40 and X12 counts tie and a character outside X12 comes before any X12 separator
+            'c40 and x12 tie before a lower case letter' => ['ABCDEFGHIJKLMNOPa', 0, Data::ENC_ASCII, Data::ENC_C40],
             // the current encodation is kept when nothing follows
             'end of data from edifact' => ['ABCDEF', 6, Data::ENC_EDF, Data::ENC_EDF],
             'end of data from ascii' => ['ABCDEF', 6, Data::ENC_ASCII, Data::ENC_ASCII],

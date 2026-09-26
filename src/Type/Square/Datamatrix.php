@@ -167,7 +167,12 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
         }
 
         $lastEnc = (int) $this->dmx->last_enc;
-        if ($lastEnc !== Data::ENC_ASCII && $lastEnc !== Data::ENC_BASE256) {
+        if (
+            $lastEnc !== Data::ENC_ASCII
+            && $lastEnc !== Data::ENC_BASE256
+            // one or two codewords after the last EDIFACT triplet are ASCII without the unlatch
+            && ($lastEnc !== Data::ENC_EDF || ($size - $ncw) > 2)
+        ) {
             // return to ASCII encodation before padding
             $this->cdw[] = $lastEnc === Data::ENC_EDF ? 124 : 254;
 
@@ -337,8 +342,15 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
             }
 
             if ($latch) {
-                // Switch to the predefined encoding
                 $latch = false;
+                if (!$this->dmx->canStartEncodation(\ord($data[$pos]), $this->defenc)) {
+                    // the predefined encodation cannot encode the first character: it is not latched
+                    $this->dmx->encodeAsciiRange($cdw, $cdw_num, $data, $pos, $pos);
+                    ++$pos;
+                    continue;
+                }
+
+                // Switch to the predefined encoding
                 $enc = $this->defenc;
                 $this->dmx->last_enc = $enc;
                 $cdw[] = $this->dmx->getSwitchEncodingCodeword($enc);

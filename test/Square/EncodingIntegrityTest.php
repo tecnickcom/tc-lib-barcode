@@ -104,6 +104,26 @@ class EncodingIntegrityTest extends TestUtil
             'c40 extended character rewind' => [['S', 'N', 'C40'], "a\xE9"],
             'c40 end of symbol upper shift' => [['S', 'N', 'C40'], "\xFA"],
             'txt end of symbol upper shift' => [['S', 'N', 'TXT'], "\xDA"],
+            // a character outside the EDIFACT set followed by a long EDIFACT run
+            'edifact run after a lower case letter' => [[], 'n NRS 4 - 10"/></S></MP>'],
+            'edifact run after a lower case letter from edifact' => [
+                ['S', 'N', 'EDIFACT'],
+                'an NRS 4 - 10"/></S></MP>',
+            ],
+            // the last EDIFACT characters are packed in EDIFACT or left to ASCII
+            'edifact last three characters' => [['S', 'N', 'EDIFACT'], 'ABCDEFGHIJK'],
+            'edifact last four characters' => [['S', 'N', 'EDIFACT'], 'ABCDEFGH'],
+            'edifact last four characters before padding' => [['S', 'N', 'EDIFACT'], 'ABCDEFGHIJKLMNOP'],
+            'edifact trailing digit pair' => [['S', 'N', 'EDIFACT'], 'ABCDEF12'],
+            // a predefined encodation is not latched on a character it cannot encode
+            'x12 lower case first character' => [['S', 'N', 'X12'], 'aBC*DEF>'],
+            'edifact run in a long mixed payload' => [
+                [],
+                '<MP U="XXX" l="de-DE" v="028"><P g="Konias" f="Michael" egk="A123456789"/>'
+                    . '<A n="Dr. med. NAME" lanr="010101010" t="2026-09-22T13:32:36"/>'
+                    . '<M p="12345678" du="1" t="2" i="Alle 2 Stunden; bis zu alle 6 - 8 h, max. 8 x / d,'
+                    . ' Mindesabstand 1 h" x="bei Schmerzen NRS 4 - 10"/></S></MP>',
+            ],
         ];
     }
 
