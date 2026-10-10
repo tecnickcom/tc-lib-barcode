@@ -17,6 +17,7 @@
 namespace Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 /**
  * Barcode class test
@@ -376,11 +377,13 @@ class BarcodeTest extends TestUtil
             $this->assertEquals('PNG', \substr($pngik, 1, 3));
         }
 
-        $pnggd = $type->setBackgroundColor('white')->getPngData(false);
-        $this->assertEquals('PNG', \substr($pnggd, 1, 3));
+        if (\extension_loaded('gd')) {
+            $pnggd = $type->setBackgroundColor('white')->getPngData(false);
+            $this->assertEquals('PNG', \substr($pnggd, 1, 3));
 
-        $pnggd = $type->setBackgroundColor('')->getPngData(false);
-        $this->assertEquals('PNG', \substr($pnggd, 1, 3));
+            $pnggd = $type->setBackgroundColor('')->getPngData(false);
+            $this->assertEquals('PNG', \substr($pnggd, 1, 3));
+        }
     }
 
     /**
@@ -436,6 +439,7 @@ class BarcodeTest extends TestUtil
      * @throws \Com\Tecnick\Barcode\Exception
      * @throws \Com\Tecnick\Color\Exception
      */
+    #[RequiresPhpExtension('gd')]
     public function testGetPng(): void
     {
         $barcode = $this->getTestObject();
@@ -497,5 +501,88 @@ class BarcodeTest extends TestUtil
         $barcode = $this->getTestObject();
         $type = $barcode->getBarcodeObj('QRCODE', 'test', -100000, -100000);
         $type->getGd();
+    }
+
+    /**
+     * Returns a barcode whose loaded extensions are the given ones.
+     *
+     * @param array<string, bool> $loaded Loaded state by extension name.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    private function getTypeWithExtensions(array $loaded): \Com\Tecnick\Barcode\Type
+    {
+        $type = new class('12345') extends \Com\Tecnick\Barcode\Type\Linear\Codabar {
+            /** @var array<string, bool> */
+            public array $loaded = [];
+
+            #[\Override]
+            protected function isExtensionLoaded(string $extension): bool
+            {
+                return $this->loaded[$extension] ?? false;
+            }
+        };
+        $type->loaded = $loaded;
+
+        return $type;
+    }
+
+    /**
+     * @return array<string, array{0: array<string, bool>, 1: string, 2: string}>
+     */
+    public static function missingExtensionProvider(): array
+    {
+        return [
+            'png without gd and imagick' => [[], 'png', 'PNG output requires the gd or imagick extension'],
+            'png without gd' => [[], 'pnggd', 'PNG output requires the gd extension'],
+            'gd image without gd' => [['imagick' => true], 'gd', 'The gd extension is required for GD image output'],
+            'imagick png without imagick' => [
+                ['gd' => true],
+                'imagick',
+                'The imagick extension is required for Imagick PNG output',
+            ],
+        ];
+    }
+
+    /**
+     * Raster output without the extension it needs throws an exception naming it.
+     *
+     * @param array<string, bool> $loaded
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    #[DataProvider('missingExtensionProvider')]
+    public function testRasterOutputRequiresItsExtension(array $loaded, string $output, string $message): void
+    {
+        $type = $this->getTypeWithExtensions($loaded);
+
+        try {
+            match ($output) {
+                'png' => $type->getPngData(),
+                'pnggd' => $type->getPngData(false),
+                'gd' => $type->getGd(),
+                default => $type->getPngDataImagick(),
+            };
+        } catch (\Com\Tecnick\Barcode\Exception $exc) {
+            $this->assertSame($message, $exc->getMessage());
+            return;
+        }
+
+        $this->fail('Expected exception: ' . $message);
+    }
+
+    /**
+     * Without Imagick the PNG output uses GD.
+     *
+     * @throws \Com\Tecnick\Barcode\Exception
+     * @throws \Com\Tecnick\Color\Exception
+     */
+    #[RequiresPhpExtension('gd')]
+    public function testPngOutputFallsBackToGd(): void
+    {
+        $type = $this->getTypeWithExtensions(['gd' => true]);
+        $this->assertSame('PNG', \substr($type->getPngData(), 1, 3));
     }
 }
