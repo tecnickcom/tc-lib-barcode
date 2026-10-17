@@ -363,9 +363,9 @@ class Datamatrix extends \Com\Tecnick\Barcode\Type\Square
                     $this->dmx->encodeASCII($cdw, $cdw_num, $pos, $data_length, $data, $enc);
                     break;
                 case Data::ENC_C40:
-                // Upper-case alphanumeric
+                    // Upper-case alphanumeric
                 case Data::ENC_TXT:
-                // Lower-case alphanumeric
+                    // Lower-case alphanumeric
                 case Data::ENC_X12:
                     // ANSI X12
                     $this->dmx->encodeTXT($cdw, $cdw_num, $pos, $data_length, $data, $enc);
