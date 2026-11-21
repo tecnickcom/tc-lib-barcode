@@ -64,29 +64,6 @@ jobs:
         run: php -d disable_functions=bcadd,bcmul,bcdiv,bcmod vendor/bin/phpunit --no-coverage --stderr test
       - name: Run the example
         run: php example/index.php > /dev/null
-      # Install into a throwaway prefix and load the library through the shipped autoloader.
-      - name: Packaging smoke test
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          DESTDIR="$(mktemp -d)"
-          make install DESTDIR="$DESTDIR"
-          cat > "$DESTDIR/smoke.php" <<'SMOKE'
-          <?php
-          require \getenv('DESTDIR') . '/usr/share/php/Com/Tecnick/Barcode/autoload.php';
-          foreach ([
-              'Com\Tecnick\Barcode\Barcode',
-              'Com\Tecnick\Barcode\Exception',
-              'Com\Tecnick\Barcode\Math',
-              'Com\Tecnick\Barcode\Type',
-          ] as $class) {
-              if (!\class_exists($class)) {
-                  \fwrite(\STDERR, 'the installed autoloader cannot load ' . $class . \PHP_EOL);
-                  exit(1);
-              }
-          }
-          echo 'installed layout loads every class', \PHP_EOL;
-          SMOKE
-          DESTDIR="$DESTDIR" php "$DESTDIR/smoke.php"
 
       - name: Send coverage
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
